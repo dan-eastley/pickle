@@ -1,12 +1,12 @@
 {
     "platforms": [
         {
-            "id": "DXP",
+            "unique-key": "DXP",
             "name": "Digital Experience",
             "description": ""
         },
         {
-            "id": "CRM",
+            "unique-key": "CRM",
             "name": "Customer Relationship Management",
             "description": ""
         }
