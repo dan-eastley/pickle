@@ -1,1 +1,1 @@
-# ai-architecture-poc
+# AI Architecture PoC
