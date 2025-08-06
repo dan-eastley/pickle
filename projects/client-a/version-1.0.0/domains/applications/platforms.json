@@ -1,0 +1,14 @@
+{
+    "platforms": [
+        {
+            "id": "DXP",
+            "name": "Digital Experience",
+            "description": ""
+        },
+        {
+            "id": "CRM",
+            "name": "Customer Relationship Management",
+            "description": ""
+        }
+    ]
+}

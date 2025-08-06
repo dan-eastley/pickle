@@ -3,7 +3,6 @@
     "$id": "https://eastley.net/config/domains/applications/function",
     "key": "function",
     "name": "Function",
-    "domain": "applications",
     "level": "3",
     "description": ""
 }

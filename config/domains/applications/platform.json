@@ -3,7 +3,6 @@
     "$id": "https://eastley.net/config/domains/applications/platform",
     "key": "platform",
     "name": "Platform",
-    "domain": "applications",
     "level": "1",
     "description": ""
 }
