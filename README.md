@@ -5,7 +5,8 @@ Hierarchy:
     2. Architecture Principles - The Guidelines medium level statements, logical, could have
     3. Architecture Guardrails - The non-negotiables low level statements, physical, patterns, must have - non negotiables
 
-Architecture Decision Records - used to drive change to the above - the only way to instigate change. Recorded mechanism.
+Architecture Decision Records - used to drive change to the above - the only way to instigate change. Way of recording, generates a pull request against the architecture
+"New <node-type>" - "Update <node-type>"
 
 
 Domains:

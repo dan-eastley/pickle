@@ -1,0 +1,13 @@
+{
+    "node-types": {
+        "platform": {
+            "$ref": "./domains/applications/platform.json"
+        },
+        "application": {
+            "$ref": "./domains/applications/application.json"
+        },
+        "function": {
+            "$ref": "./domains/applications/function.json"
+        }
+    }
+}
