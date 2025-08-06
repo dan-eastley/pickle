@@ -24,6 +24,26 @@ Query using AI?
 Propose changes?
 Iterating the structure around architecture
 
+
+GitHub Workflows:
+
+
+Branch (If ADR):
+1. Match Branch Name "<client>/<release>/adr-#">"
+2. Validate folder + file exists and matches branch name"
+3. Generate HTML version of the ADR
+4. USE COPILOT TO UPDATE THE ARCHITECTURE
+
+
+Validate
+1. Validate all JSON and YAML files
+2. 
+
+
+
+
+
+
 Using that to then produce architecture content:
     An arch intent. 
     A solution design
