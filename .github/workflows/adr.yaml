@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - '/client-**/release-**/adr-**'
+      - 'client-**/release-**/adr-**'
 
 permissions:
   contents: read
@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: json-yaml-validate
+      - name: ADR Autogen
         id: json-yaml-validate
         uses: GrantBirki/json-yaml-validate@v3.3.2
