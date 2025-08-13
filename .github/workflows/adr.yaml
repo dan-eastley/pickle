@@ -7,11 +7,18 @@ permissions:
   contents: read
 
 jobs:
-  json-yaml-validate:
+  do-something-with-the-adr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
 
-      - name: ADR Autogen
-        id: json-yaml-validate
-        uses: GrantBirki/json-yaml-validate@v3.3.2
+      - name: Step 1
+        run: |
+          echo "something something something"
+          echo "something something something"
+
+      - name: Step 2
+        run: |
+          echo "something something something"
+          echo "something something something"
