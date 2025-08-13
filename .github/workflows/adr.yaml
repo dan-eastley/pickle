@@ -15,10 +15,21 @@ jobs:
 
       - name: Step 1
         run: |
-          echo "something something something"
-          echo "something something something"
+          ls -l
 
       - name: Step 2
         run: |
-          echo "something something something"
-          echo "something something something"
+          echo "something something something" > new-file.txt
+
+      - name: Step 3
+        run: |
+          ls -l
+
+      - name: Make and push changes
+        run: |
+          echo "1.0.0" > VERSION
+          git config user.email "whoever@whoeever"
+          git config user.name "whoever"
+          git add .
+          git commit -m "create version file"
+          git push
