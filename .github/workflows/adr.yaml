@@ -27,9 +27,4 @@ jobs:
 
       - name: Make and push changes
         run: |
-          echo "1.0.0" > VERSION
-          git config user.email "whoever@whoeever"
-          git config user.name "whoever"
-          git add .
-          git commit -m "create version file"
-          git push
+          gh copilot explain "sudo apt-get"
