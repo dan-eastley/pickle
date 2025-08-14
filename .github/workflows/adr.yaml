@@ -18,7 +18,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SUPER_SECRET: ${{ secrets.OAUTH_TOKEN }}
         run: |
+          echo "something >"
           echo "$SUPER_SECRET"
+          echo "< something"
           gh extension install github/gh-copilot
           gh auth status
           gh copilot explain "sudo apt-get"
