@@ -19,7 +19,4 @@ jobs:
         run: |
           gh extension install github/gh-copilot
           gh auth status
-
-      - name: Make and push changes
-        run: |
           gh copilot explain "sudo apt-get"
