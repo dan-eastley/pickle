@@ -16,7 +16,9 @@ jobs:
       - name: Install CoPilot Extension
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUPER_SECRET: ${{ secrets.OAUTH_TOKEN }}
         run: |
+          echo "$SUPER_SECRET"
           gh extension install github/gh-copilot
           gh auth status
           gh copilot explain "sudo apt-get"
