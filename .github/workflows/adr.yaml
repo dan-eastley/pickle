@@ -21,6 +21,11 @@ jobs:
           echo "something >"
           echo "$SUPER_SECRET"
           echo "< something"
+
+          echo "Installing GH CoPilot"
           gh extension install github/gh-copilot
+
+          echo "Authenticating"
           gh auth status
-          gh copilot explain "sudo apt-get"
+          gh auth login --web -h github.com
+#          gh copilot explain "sudo apt-get"
