@@ -26,6 +26,8 @@ jobs:
           ls -l
 
       - name: Install CoPilot Extension
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh extension install github/gh-copilot
 
