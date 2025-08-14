@@ -18,8 +18,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh extension install github/gh-copilot
+          gh auth status
 
       - name: Make and push changes
         run: |
-          gh auth status
           gh copilot explain "sudo apt-get"
