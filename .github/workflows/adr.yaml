@@ -15,8 +15,8 @@ jobs:
 
       - name: Install CoPilot Extension
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SUPER_SECRET: ${{ secrets.OAUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+          SUPER_SECRET: ${{ secrets.GH_ACTIONS_TOKEN }}
         run: |
           echo "something >"
           echo "$SUPER_SECRET"
