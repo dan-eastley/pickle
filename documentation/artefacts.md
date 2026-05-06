@@ -11,7 +11,7 @@ Each artefact has a folder under `architectures/<client>/<version>/artefacts/dom
 
 ## Registry
 
-The authoritative machine-readable registry is [`/schemas/artefacts.json`](../schemas/artefacts.json). The table below mirrors it.
+This table is the authoritative registry of every defined artefact. The schema-only index at [`/schemas/artefacts.json`](../schemas/artefacts.json) covers just the catalogues.
 
 | ID | Domain | Abstraction | Format | Output | Summary |
 |---|---|---|---|---|---|
@@ -26,7 +26,9 @@ The authoritative machine-readable registry is [`/schemas/artefacts.json`](../sc
 
 ## Adding a new artefact
 
-1. Add a row to the registry in `/schemas/artefacts.json` (and the table above).
-2. If it is a catalogue, define a JSON Schema at `/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`.
-3. Document the schema with a markdown page in `/documentation/schemas/<ID>.md`.
-4. Create an empty instance folder in each affected client version: `/architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`.
+1. Add a row to the registry table above.
+2. If it is a catalogue:
+   - Define a JSON Schema at `/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`.
+   - Add an entry for the new artefact ID to `/schemas/artefacts.json` (the schema index).
+   - Document the schema with a markdown page in `/documentation/schemas/<ID>.md`.
+3. Create an empty instance folder in each affected client version: `/architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`.

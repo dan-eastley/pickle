@@ -1,20 +1,24 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://eastley.net/schemas/versions",
+    "$id": "urn:pickle:schemas:versions",
     "title": "Versions Index",
     "description": "Authoritative list of version IDs for a client. Per-version metadata lives in architectures/<client>/<version>/version.json.",
     "type": "object",
-    "required": ["versions"],
+    "required": [
+        "versions"
+    ],
     "properties": {
         "versions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["version-id"],
+                "required": [
+                    "version-id"
+                ],
                 "properties": {
                     "version-id": {
                         "type": "string",
-                        "description": "Unique identifier — must match the version folder name (e.g. \"1.0.0\")"
+                        "description": "Unique identifier \u2014 must match the version folder name (e.g. \"1.0.0\")"
                     }
                 },
                 "additionalProperties": false

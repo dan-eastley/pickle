@@ -1,50 +1,27 @@
-# Artefacts Registry Schema
+# Artefact Schemas Index
 
 **File:** [`/schemas/artefacts.json`](../../schemas/artefacts.json)
 
 ## Purpose
 
-Authoritative machine-readable registry of every artefact this repository understands. Each entry classifies an artefact by domain, abstraction layer, and format, and (for catalogues) `$ref`s the JSON Schema that defines its shape.
+Index of all catalogue schemas in the repository, keyed by artefact ID. Each entry `$ref`s the underlying JSON Schema. Diagrams and matrices are intentionally absent — they have no schema yet.
+
+The full artefact registry (catalogues, diagrams, and matrices, with their domain/abstraction/format classifications) lives in [`/documentation/artefacts.md`](../artefacts.md).
 
 ## Shape
 
 ```json
 {
-    "artefacts": [
-        {
-            "id": "BUS-CAP",
-            "domain": "business",
-            "abstraction": "conceptual",
-            "format": "catalogue",
-            "name": "Business Capabilities",
-            "schema": { "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json" }
-        },
-        {
-            "id": "BUS-BCM",
-            "domain": "business",
-            "abstraction": "conceptual",
-            "format": "diagram",
-            "name": "Business Capability Model",
-            "summary": "Model of the Business Capabilities Catalogue (BUS-CAP)"
-        }
-    ]
+    "schemas": {
+        "BUS-CAP": { "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json" },
+        "BUS-PRO": { "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json" },
+        "DAT-DAC": { "$ref": "./artefacts/domains/data/conceptual/DAT-DAC.json" },
+        "APP-DAP": { "$ref": "./artefacts/domains/application/logical/APP-DAP.json" }
+    }
 }
 ```
 
-## Fields
-
-| Field | Required | Notes |
-|---|---|---|
-| `id` | yes | Domain-prefixed unique identifier (e.g. `BUS-CAP`) |
-| `domain` | yes | One of `business`, `data`, `integration`, `application`, `solution` |
-| `abstraction` | yes | One of `conceptual`, `logical`, `physical` |
-| `format` | yes | One of `catalogue`, `matrix`, `diagram` |
-| `name` | yes | Human-readable artefact name |
-| `summary` | no | Free-text summary, typically used by diagrams that model a catalogue |
-| `schema` | no | `$ref` to the JSON Schema. Present for catalogues; matrices and diagrams have no schema yet. |
-
 ## Conventions
 
-- Add a registry entry **first** when introducing a new artefact, before adding folders or schemas.
-- Catalogue entries must always include a `schema` field.
-- `id` prefixes encode the domain — see [domains.md](../domains.md).
+- When adding a new catalogue, add an entry here keyed by artefact ID with a `$ref` to the schema file.
+- Diagrams and matrices are not added here.

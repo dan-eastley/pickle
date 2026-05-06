@@ -1,16 +1,22 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://eastley.net/schemas/artefacts/domains/business/conceptual/BUS-CAP",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-CAP",
     "title": "Business Capabilities Catalogue",
     "description": "Hierarchical catalogue of business capabilities (what the business does, independent of how). Aligned to TOGAF and Business Architecture Guild conventions, with CMMI-inspired maturity and strategic-importance classification.",
     "type": "object",
-    "required": ["capabilities"],
+    "required": [
+        "capabilities"
+    ],
     "properties": {
         "capabilities": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["id", "name", "level"],
+                "required": [
+                    "id",
+                    "name",
+                    "level"
+                ],
                 "properties": {
                     "id": {
                         "type": "string",
@@ -26,7 +32,7 @@
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 3,
-                        "description": "Capability level — 1 (highest, e.g. Manage Customer) to 3 (most granular)"
+                        "description": "Capability level \u2014 1 (highest, e.g. Manage Customer) to 3 (most granular)"
                     },
                     "parent-id": {
                         "type": "string",
@@ -38,8 +44,12 @@
                     },
                     "importance": {
                         "type": "string",
-                        "enum": ["strategic", "differentiating", "foundational"],
-                        "description": "Strategic importance — strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
+                        "enum": [
+                            "strategic",
+                            "differentiating",
+                            "foundational"
+                        ],
+                        "description": "Strategic importance \u2014 strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
                     },
                     "maturity-current": {
                         "$ref": "#/$defs/maturity",
@@ -58,7 +68,13 @@
     "$defs": {
         "maturity": {
             "type": "string",
-            "enum": ["initial", "repeatable", "defined", "managed", "optimised"]
+            "enum": [
+                "initial",
+                "repeatable",
+                "defined",
+                "managed",
+                "optimised"
+            ]
         }
     }
 }

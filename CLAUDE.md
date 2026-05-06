@@ -118,7 +118,7 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 - `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
 - `architectures/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/<client>/<version>/version.json`)
 - `schemas/clients.json` and `schemas/versions.json` validate the index files; the singular metadata files have no schema yet
-- `schemas/artefacts.json` is the registry of all defined artefact types — add new entries here when introducing a new artefact
+- `schemas/artefacts.json` is a **schema index** — a flat map of artefact ID → catalogue schema `$ref`. The full artefact registry (catalogues, diagrams, matrices) lives in `documentation/artefacts.md`.
 - When adding or removing a client/version folder, update the corresponding index file
 
 ### Schema Conventions

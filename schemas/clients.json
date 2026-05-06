@@ -1,20 +1,24 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://eastley.net/schemas/clients",
+    "$id": "urn:pickle:schemas:clients",
     "title": "Clients Index",
     "description": "Authoritative list of client IDs. Per-client metadata lives in architectures/<client>/client.json.",
     "type": "object",
-    "required": ["clients"],
+    "required": [
+        "clients"
+    ],
     "properties": {
         "clients": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["client-id"],
+                "required": [
+                    "client-id"
+                ],
                 "properties": {
                     "client-id": {
                         "type": "string",
-                        "description": "Unique identifier — must match the client folder name"
+                        "description": "Unique identifier \u2014 must match the client folder name"
                     }
                 },
                 "additionalProperties": false

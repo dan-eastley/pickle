@@ -1,72 +1,12 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://eastley.net/schemas/artefacts",
-    "title": "Artefacts Registry",
-    "description": "Authoritative registry of all defined artefact types. Catalogues link to a JSON Schema; matrices and diagrams have no schema yet (their format conventions are TBD).",
-    "artefacts": [
-        {
-            "id": "BUS-CAP",
-            "domain": "business",
-            "abstraction": "conceptual",
-            "format": "catalogue",
-            "name": "Business Capabilities",
-            "schema": { "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json" }
-        },
-        {
-            "id": "BUS-BCM",
-            "domain": "business",
-            "abstraction": "conceptual",
-            "format": "diagram",
-            "name": "Business Capability Model",
-            "summary": "Model of the Business Capabilities Catalogue (BUS-CAP)"
-        },
-        {
-            "id": "BUS-PRO",
-            "domain": "business",
-            "abstraction": "conceptual",
-            "format": "catalogue",
-            "name": "Business Processes",
-            "schema": { "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json" }
-        },
-        {
-            "id": "BUS-BPM",
-            "domain": "business",
-            "abstraction": "conceptual",
-            "format": "diagram",
-            "name": "Business Process Model",
-            "summary": "Model of the Business Processes Catalogue (BUS-PRO)"
-        },
-        {
-            "id": "DAT-DAC",
-            "domain": "data",
-            "abstraction": "conceptual",
-            "format": "catalogue",
-            "name": "Domains & Concepts",
-            "schema": { "$ref": "./artefacts/domains/data/conceptual/DAT-DAC.json" }
-        },
-        {
-            "id": "DAT-CDM",
-            "domain": "data",
-            "abstraction": "conceptual",
-            "format": "diagram",
-            "name": "Conceptual Data Model",
-            "summary": "Model of the Domains & Concepts Catalogue (DAT-DAC)"
-        },
-        {
-            "id": "APP-DAP",
-            "domain": "application",
-            "abstraction": "logical",
-            "format": "catalogue",
-            "name": "Domains & Platforms",
-            "schema": { "$ref": "./artefacts/domains/application/logical/APP-DAP.json" }
-        },
-        {
-            "id": "APP-DPM",
-            "domain": "application",
-            "abstraction": "logical",
-            "format": "diagram",
-            "name": "Domains & Platforms Model",
-            "summary": "Model of the Domains & Platforms Catalogue (APP-DAP)"
-        }
-    ]
+    "$id": "urn:pickle:schemas:artefacts",
+    "title": "Artefact Schemas Index",
+    "description": "Index of catalogue schemas defined in this repository, keyed by artefact ID. Diagrams and matrices are not listed here — they have no schema yet. The full artefact registry (including non-catalogue entries) is documented in /documentation/artefacts.md.",
+    "schemas": {
+        "BUS-CAP": { "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json" },
+        "BUS-PRO": { "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json" },
+        "DAT-DAC": { "$ref": "./artefacts/domains/data/conceptual/DAT-DAC.json" },
+        "APP-DAP": { "$ref": "./artefacts/domains/application/logical/APP-DAP.json" }
+    }
 }

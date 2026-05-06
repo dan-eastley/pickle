@@ -1,16 +1,22 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://eastley.net/schemas/artefacts/domains/application/logical/APP-DAP",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DAP",
     "title": "Application Domains & Platforms Catalogue",
-    "description": "Two-tier logical catalogue of application domains (TOGAF Application Architecture groupings, e.g. Customer Engagement, Back Office) and the platforms that sit within them (e.g. DXP, CRM, ERP). Vendor-neutral — physical product instances belong in the Physical layer.",
+    "description": "Two-tier logical catalogue of application domains (TOGAF Application Architecture groupings, e.g. Customer Engagement, Back Office) and the platforms that sit within them (e.g. DXP, CRM, ERP). Vendor-neutral \u2014 physical product instances belong in the Physical layer.",
     "type": "object",
-    "required": ["domains", "platforms"],
+    "required": [
+        "domains",
+        "platforms"
+    ],
     "properties": {
         "domains": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["id", "name"],
+                "required": [
+                    "id",
+                    "name"
+                ],
                 "properties": {
                     "id": {
                         "type": "string",
@@ -34,7 +40,12 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["id", "name", "domain-id", "type"],
+                "required": [
+                    "id",
+                    "name",
+                    "domain-id",
+                    "type"
+                ],
                 "properties": {
                     "id": {
                         "type": "string",
@@ -52,12 +63,22 @@
                     },
                     "type": {
                         "type": "string",
-                        "enum": ["system-of-record", "system-of-engagement", "system-of-insight", "system-of-innovation"],
+                        "enum": [
+                            "system-of-record",
+                            "system-of-engagement",
+                            "system-of-insight",
+                            "system-of-innovation"
+                        ],
                         "description": "Pace-layered platform type (Gartner / Geoffrey Moore classification)"
                     },
                     "lifecycle": {
                         "type": "string",
-                        "enum": ["adopt", "trial", "hold", "retire"],
+                        "enum": [
+                            "adopt",
+                            "trial",
+                            "hold",
+                            "retire"
+                        ],
                         "description": "Lifecycle stance for this platform (TechRadar-style)"
                     }
                 },
