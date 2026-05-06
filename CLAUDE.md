@@ -57,14 +57,6 @@ This is a **proof of concept for Architecture as Code** — a structured approac
 
 ## Architecture Model
 
-### Hierarchy
-
-| Level | Name | Description |
-|---|---|---|
-| 1 | **Strategy** | Vision — high-level, conceptual ("should have") |
-| 2 | **Principles** | Guidelines — medium-level, logical ("could have") |
-| 3 | **Guardrails** | Non-negotiables — physical patterns and constraints ("must have") |
-
 ### Domains
 
 Each client version is modelled across five architecture domains.
@@ -86,6 +78,29 @@ Each domain is modelled at three layers of abstraction. Every folder under a dom
 | **Conceptual** | `conceptual/` | The *what* and *why*. Technology-agnostic models that capture intent, scope, and business context. Audience: business stakeholders and architects aligning on direction. |
 | **Logical** | `logical/` | The *how*. Vendor-neutral models that define structure, relationships, and rules without committing to specific products or infrastructure. Audience: architects and senior engineers designing solutions. |
 | **Physical** | `physical/` | The *where* and *with what*. Concrete, implementation-specific models tied to actual products, platforms, and environments. Audience: engineers building and operating the architecture. |
+
+### Output Formats
+
+All architecture artefacts must conform to one of three formats. This keeps outputs consistent, comparable, and machine-queryable.
+
+| Format | Description | Scope |
+|---|---|---|
+| **Catalogue** | A list of entities of a single type (e.g. applications, capabilities, data entities). Entities may be conceptual, logical, or physical. May be hierarchical — the hierarchy is captured within the catalogue itself. | Single domain, single abstraction layer |
+| **Matrix** | A grid expressing relationships between two sets of entities. Used to map links that cross abstraction layers (e.g. conceptual data model → logical data model) or that cross domains (e.g. application architecture → data architecture). | May span domains and/or abstraction layers |
+| **Diagram** | A visual representation of entities and their relationships (e.g. Business Capability Model, Conceptual Data Model, System Wiring Diagram). | May span one or more domains, but must be limited to a single abstraction layer |
+
+### Architecture Artefacts
+
+Every artefact produced is aligned to a single domain, a single abstraction layer, and one of the three output formats above. Each artefact has a unique ID. Catalogues are backed by a JSON Schema under `schemas/`; matrices and diagrams will follow their own format conventions (TBD).
+
+| ID | Domain | Abstraction | Format | Output | Summary |
+|---|---|---|---|---|---|
+| BCS | Business | Conceptual | Catalogue | Business Capabilities | |
+| BCM | Business | Conceptual | Diagram | Business Capability Model | Model of the Business Capabilities Catalogue (BCS) |
+| BPS | Business | Conceptual | Catalogue | Business Processes | |
+| BPM | Business | Conceptual | Diagram | Business Process Model | Model of the Business Processes Catalogue (BPS) |
+| DAC | Data | Conceptual | Catalogue | Domains & Concepts | |
+| CDM | Data | Conceptual | Diagram | Conceptual Data Model | Model of the Domains & Concepts Catalogue (DAC) |
 
 ### Change Control
 
