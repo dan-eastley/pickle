@@ -1,0 +1,59 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://eastley.net/schemas/artefacts/domains/data/conceptual/DAT-DAC",
+    "title": "Data Domains & Concepts Catalogue",
+    "description": "A two-tier catalogue capturing data domains (high-level subject areas, per DAMA-DMBOK) and the conceptual data entities they contain.",
+    "type": "object",
+    "required": ["domains", "concepts"],
+    "properties": {
+        "domains": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier for the data domain"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "Accountable data domain owner / steward"
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "concepts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["id", "name", "domain-id"],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier for the concept"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "domain-id": {
+                        "type": "string",
+                        "description": "ID of the data domain this concept belongs to"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

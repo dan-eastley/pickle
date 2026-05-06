@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://eastley.net/schemas/artefacts/domains/business/conceptual/BUS-CAP",
+    "title": "Business Capabilities Catalogue",
+    "description": "A hierarchical catalogue of business capabilities (what the business does, independent of how). Aligned to TOGAF / Business Architecture Guild conventions.",
+    "type": "object",
+    "required": ["capabilities"],
+    "properties": {
+        "capabilities": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["id", "name", "level"],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier for the capability"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "level": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 3,
+                        "description": "Capability level — 1 (highest, e.g. Manage Customer) to 3 (most granular)"
+                    },
+                    "parent-id": {
+                        "type": "string",
+                        "description": "ID of the parent capability. Required for level 2 and 3; omit for level 1."
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "Accountable business unit or role"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

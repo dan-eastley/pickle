@@ -16,39 +16,36 @@ This is a **proof of concept for Architecture as Code** — a structured approac
 
 ```
 /
-├── schemas/                        # JSON Schema definitions for all node types
-│   ├── node-types.json             # Registry of node types with $refs to domain schemas
-│   ├── client.json                 # Schema for architectures/<client>/client.json
-│   ├── version.json                # Schema for architectures/<client>/<version>/version.json
-│   └── domains/
-│       └── application/             # Schema files per node type (platform, application, function)
+├── schemas/                        # JSON Schema definitions — mirrors architectures/ layout
+│   ├── clients.json                # Schema for architectures/clients.json (index)
+│   ├── versions.json               # Schema for architectures/<client>/versions.json (index)
+│   ├── artefacts.json              # Registry of available artefact catalogue schemas
+│   └── artefacts/
+│       └── domains/
+│           ├── business/
+│           │   └── conceptual/
+│           │       ├── BUS-CAP.json   # Business Capabilities catalogue schema
+│           │       └── BUS-PRO.json   # Business Processes catalogue schema
+│           └── data/
+│               └── conceptual/
+│                   └── DAT-DAC.json   # Data Domains & Concepts catalogue schema
 │
-├── architectures/                       # Per-client architecture state, versioned by release
+├── architectures/                  # Per-client architecture state, versioned by release
+│   ├── clients.json                # Index of clients (IDs only)
 │   └── <client>/
 │       ├── client.json             # Client metadata (id, name)
+│       ├── versions.json           # Index of versions for this client (IDs only)
 │       └── <version>/
-│           ├── version.json        # Version metadata (status)
-│           ├── domains/
-│           │   ├── business/
-│           │   │   ├── conceptual/
-│           │   │   ├── logical/
-│           │   │   └── physical/
-│           │   ├── data/
-│           │   │   ├── conceptual/
-│           │   │   ├── logical/
-│           │   │   └── physical/
-│           │   ├── integration/
-│           │   │   ├── conceptual/
-│           │   │   ├── logical/
-│           │   │   └── physical/
-│           │   ├── application/
-│           │   │   ├── conceptual/
-│           │   │   ├── logical/
-│           │   │   └── physical/
-│           │   └── solution/
-│           │       ├── conceptual/
-│           │       ├── logical/
-│           │       └── physical/
+│           ├── version.json        # Version metadata (id, name, status)
+│           ├── artefacts/
+│           │   └── domains/
+│           │       ├── business/{conceptual,logical,physical}/
+│           │       │   └── <ARTEFACT-ID>/    # one folder per artefact (e.g. BUS-CAP/)
+│           │       ├── data/{conceptual,logical,physical}/
+│           │       │   └── <ARTEFACT-ID>/
+│           │       ├── integration/{conceptual,logical,physical}/
+│           │       ├── application/{conceptual,logical,physical}/
+│           │       └── solution/{conceptual,logical,physical}/
 │           └── adrs/               # Architecture Decision Records for this release
 │
 ```
@@ -91,16 +88,26 @@ All architecture artefacts must conform to one of three formats. This keeps outp
 
 ### Architecture Artefacts
 
-Every artefact produced is aligned to a single domain, a single abstraction layer, and one of the three output formats above. Each artefact has a unique ID. Catalogues are backed by a JSON Schema under `schemas/`; matrices and diagrams will follow their own format conventions (TBD).
+Every artefact produced is aligned to a single domain, a single abstraction layer, and one of the three output formats above. Each artefact has a unique ID prefixed with the domain acronym:
+
+| Domain | Acronym |
+|---|---|
+| Business | `BUS` |
+| Data | `DAT` |
+| Application | `APP` |
+| Integration | `INT` |
+| Solution | `SOL` |
+
+Each artefact has a folder under `artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>/` containing its instance data. Catalogues are backed by a JSON Schema in the matching path under `schemas/`; matrices and diagrams will follow their own format conventions (TBD).
 
 | ID | Domain | Abstraction | Format | Output | Summary |
 |---|---|---|---|---|---|
-| BCS | Business | Conceptual | Catalogue | Business Capabilities | |
-| BCM | Business | Conceptual | Diagram | Business Capability Model | Model of the Business Capabilities Catalogue (BCS) |
-| BPS | Business | Conceptual | Catalogue | Business Processes | |
-| BPM | Business | Conceptual | Diagram | Business Process Model | Model of the Business Processes Catalogue (BPS) |
-| DAC | Data | Conceptual | Catalogue | Domains & Concepts | |
-| CDM | Data | Conceptual | Diagram | Conceptual Data Model | Model of the Domains & Concepts Catalogue (DAC) |
+| BUS-CAP | Business | Conceptual | Catalogue | Business Capabilities | |
+| BUS-BCM | Business | Conceptual | Diagram | Business Capability Model | Model of the Business Capabilities Catalogue (BUS-CAP) |
+| BUS-PRO | Business | Conceptual | Catalogue | Business Processes | |
+| BUS-BPM | Business | Conceptual | Diagram | Business Process Model | Model of the Business Processes Catalogue (BUS-PRO) |
+| DAT-DAC | Data | Conceptual | Catalogue | Domains & Concepts | |
+| DAT-CDM | Data | Conceptual | Diagram | Conceptual Data Model | Model of the Domains & Concepts Catalogue (DAT-DAC) |
 
 ### Change Control
 
@@ -125,14 +132,22 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Standards & Conventions
 
 ### File Naming
-- Node instance files: plural noun matching the node type (e.g., `platforms.json`, `applications.json`)
+- Artefact folders: named with the artefact ID (e.g. `BUS-CAP/`, `DAT-DAC/`)
+- Catalogue schemas: named with the artefact ID and `.json` suffix (e.g. `BUS-CAP.json`)
 - ADR files: `adr-<number>.md` inside `adrs/`
 - Branch names for ADRs: `<client>/<release>/adr-<number>`
 
+### Indexes
+- `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
+- `architectures/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/<client>/<version>/version.json`)
+- `schemas/clients.json` and `schemas/versions.json` validate the index files; the singular metadata files have no schema yet
+- `schemas/artefacts.json` is a registry of all available artefact catalogue schemas — add new entries here when introducing a new artefact
+- When adding or removing a client/version folder, update the corresponding index file
+
 ### Schema Conventions
-- All node type schemas live under `schemas/domains/<domain>/`
-- `schemas/node-types.json` is the registry — add new node types here with a `$ref` to their schema
-- Instance data in `architectures/` must conform to the corresponding schema in `schemas/`
+- The `schemas/` tree mirrors the `architectures/<client>/<version>/` tree — schema and instance for the same artefact live at the same relative path
+- Catalogue schemas live at `schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.json`
+- Instance data in `architectures/` must conform to the matching schema in `schemas/`
 
 ### Versioning
 - Architecture state is versioned per client: `architectures/<client>/version-<semver>/`
@@ -144,21 +159,24 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Working with Claude
 
 ### Common Tasks
-- **Add a new node type:** Add a JSON Schema to `schemas/domains/<domain>/`, register it in `schemas/node-types.json`
-- **Add architecture data for a client:** Create or update files under `architectures/<client>/<version>/domains/`
+- **Add a new artefact:** Add a row to the Architecture Artefacts table, create a matching folder in each client version under `architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`, and (for catalogues) add a schema at `schemas/artefacts/domains/<domain>/<layer>/<ID>.json`
+- **Add architecture data for a client:** Create or update instance files inside the relevant artefact folder
 - **Raise an ADR:** Create a branch following the naming convention, add the ADR file to the correct `adrs/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `schemas/`
 
 ### Things to Preserve
-- JSON Schema `$ref` references — these are load-bearing for validation
+- The mirroring of `schemas/` and `architectures/<client>/<version>/` paths — this is how schemas are located for validation
+- Artefact ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the domain
 - Branch naming convention for ADRs — other tooling will depend on this pattern
-- The three-level hierarchy within each domain — don't flatten or skip levels
+- The three abstraction layers within each domain — don't flatten or skip levels
 
 ---
 
 ## Open Questions / Work in Progress
 
-- [ ] Schemas only exist for the Application domain node types — Business, Data, Integration, and Solution domain schemas are not yet defined
+- [ ] Catalogue schemas only exist for `BUS-CAP`, `BUS-PRO`, and `DAT-DAC` — schemas for other catalogues, plus all matrix and diagram formats, are not yet defined
+- [ ] No artefacts are yet defined for the Application, Integration, or Solution domains
+- [ ] No artefacts are yet defined at the Logical or Physical abstraction layers
 - [ ] No CI/CD workflows — JSON validation and ADR branch naming are not yet enforced automatically
 - [ ] No diagram/view generation implemented yet
 - [ ] Ingestion path into EA tooling (e.g. via CALM or similar) not decided

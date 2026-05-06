@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://eastley.net/schemas/artefacts",
+    "title": "Artefacts Registry",
+    "description": "Registry of available artefact catalogues. Each entry points at the JSON Schema that defines its shape.",
+    "artefacts": [
+        {
+            "id": "BUS-CAP",
+            "domain": "business",
+            "abstraction": "conceptual",
+            "format": "catalogue",
+            "name": "Business Capabilities",
+            "schema": { "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json" }
+        },
+        {
+            "id": "BUS-PRO",
+            "domain": "business",
+            "abstraction": "conceptual",
+            "format": "catalogue",
+            "name": "Business Processes",
+            "schema": { "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json" }
+        },
+        {
+            "id": "DAT-DAC",
+            "domain": "data",
+            "abstraction": "conceptual",
+            "format": "catalogue",
+            "name": "Domains & Concepts",
+            "schema": { "$ref": "./artefacts/domains/data/conceptual/DAT-DAC.json" }
+        }
+    ]
+}
