@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://eastley.net/schemas/artefacts/domains/business/conceptual/BUS-PRO",
     "title": "Business Processes Catalogue",
-    "description": "A hierarchical catalogue of business processes — sequences of activities that deliver value. Classified per APQC / Porter value-chain conventions (core, supporting, management).",
+    "description": "Hierarchical catalogue of business processes — sequences of activities that deliver value. Classified per APQC Process Classification Framework (PCF) levels and Porter's value chain (core, supporting, management).",
     "type": "object",
     "required": ["processes"],
     "properties": {
@@ -10,11 +10,11 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["id", "name", "type"],
+                "required": ["id", "name", "type", "level"],
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "Unique identifier for the process"
+                        "description": "Unique identifier (e.g. PROC-001)"
                     },
                     "name": {
                         "type": "string"
@@ -25,11 +25,17 @@
                     "type": {
                         "type": "string",
                         "enum": ["core", "supporting", "management"],
-                        "description": "Process classification: core (delivers value to customer), supporting (enables core), or management (governs/oversees)"
+                        "description": "Porter's value-chain classification: core (delivers value to customer), supporting (enables core), or management (governs/oversees)"
+                    },
+                    "level": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 4,
+                        "description": "APQC PCF level — 1 (Category) to 4 (Activity)"
                     },
                     "parent-id": {
                         "type": "string",
-                        "description": "ID of the parent process for sub-processes; omit for top-level processes"
+                        "description": "ID of the parent process for sub-processes; omit for level 1"
                     },
                     "trigger": {
                         "type": "string",
@@ -39,9 +45,24 @@
                         "type": "string",
                         "description": "Business outcome produced by the process"
                     },
+                    "inputs": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Information, materials, or resources consumed by the process"
+                    },
+                    "outputs": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Deliverables produced by the process"
+                    },
                     "owner": {
                         "type": "string",
                         "description": "Accountable role or business unit"
+                    },
+                    "kpis": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Key performance indicators used to measure the process"
                     }
                 },
                 "additionalProperties": false

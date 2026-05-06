@@ -12,23 +12,51 @@ This is a **proof of concept for Architecture as Code** — a structured approac
 
 ---
 
+## Documentation
+
+For full context on the architecture model — domains, abstraction layers, output formats, artefact registry, and per-schema documentation — read [`/documentation/`](documentation/). Start at [`/documentation/index.md`](documentation/index.md), which signposts every other page.
+
+**Before doing anything non-trivial in this repository, read at minimum:**
+- [`/documentation/domains.md`](documentation/domains.md) — the five domains and their acronyms
+- [`/documentation/abstraction-layers.md`](documentation/abstraction-layers.md) — Conceptual / Logical / Physical
+- [`/documentation/output-formats.md`](documentation/output-formats.md) — Catalogue / Matrix / Diagram
+- [`/documentation/artefacts.md`](documentation/artefacts.md) — registry of every defined artefact
+- The relevant schema page under [`/documentation/schemas/`](documentation/schemas/) when working with a specific catalogue
+
+---
+
 ## Repository Structure
 
 ```
 /
+├── documentation/                  # Markdown documentation, navigable in GitHub
+│   ├── index.md                    # Top-level documentation index
+│   ├── domains.md
+│   ├── abstraction-layers.md
+│   ├── output-formats.md
+│   ├── artefacts.md
+│   └── schemas/                    # One markdown page per JSON Schema
+│       ├── index.md
+│       ├── clients.md
+│       ├── versions.md
+│       ├── artefacts.md
+│       ├── BUS-CAP.md
+│       ├── BUS-PRO.md
+│       ├── DAT-DAC.md
+│       └── APP-DAP.md
+│
 ├── schemas/                        # JSON Schema definitions — mirrors architectures/ layout
 │   ├── clients.json                # Schema for architectures/clients.json (index)
 │   ├── versions.json               # Schema for architectures/<client>/versions.json (index)
-│   ├── artefacts.json              # Registry of available artefact catalogue schemas
+│   ├── artefacts.json              # Registry of all defined artefacts
 │   └── artefacts/
 │       └── domains/
-│           ├── business/
-│           │   └── conceptual/
-│           │       ├── BUS-CAP.json   # Business Capabilities catalogue schema
-│           │       └── BUS-PRO.json   # Business Processes catalogue schema
-│           └── data/
-│               └── conceptual/
-│                   └── DAT-DAC.json   # Data Domains & Concepts catalogue schema
+│           ├── business/{conceptual,logical,physical}/
+│           │   └── <ARTEFACT-ID>.json   # e.g. BUS-CAP.json (catalogues only)
+│           ├── data/{conceptual,logical,physical}/
+│           ├── integration/{conceptual,logical,physical}/
+│           ├── application/{conceptual,logical,physical}/
+│           └── solution/{conceptual,logical,physical}/
 │
 ├── architectures/                  # Per-client architecture state, versioned by release
 │   ├── clients.json                # Index of clients (IDs only)
@@ -45,71 +73,18 @@ This is a **proof of concept for Architecture as Code** — a structured approac
 │           │       │   └── <ARTEFACT-ID>/
 │           │       ├── integration/{conceptual,logical,physical}/
 │           │       ├── application/{conceptual,logical,physical}/
+│           │       │   └── <ARTEFACT-ID>/
 │           │       └── solution/{conceptual,logical,physical}/
 │           └── adrs/               # Architecture Decision Records for this release
 │
+└── CLAUDE.md                       # This file
 ```
+
+The `schemas/` and `architectures/<client>/<version>/` trees deliberately mirror each other — schema and instance for the same artefact share a relative path.
 
 ---
 
-## Architecture Model
-
-### Domains
-
-Each client version is modelled across five architecture domains.
-
-| Domain | Folder | Description |
-|---|---|---|
-| **Business Architecture** | `business/` | Captures the organisation's capabilities, processes, and operating model. Defines what the business does and why, providing the context that all other domains serve. |
-| **Data Architecture** | `data/` | Describes the data assets, structures, flows, and governance that support business operations. Ensures data is well-defined, trusted, and available where needed. |
-| **Integration Architecture** | `integration/` | Defines how systems, services, and data flows connect and communicate. Covers APIs, event streams, messaging patterns, and the rules governing inter-system exchange. |
-| **Application Architecture** | `application/` | Describes the software applications, platforms, and functions that deliver business capabilities. Covers the portfolio of applications and how they relate to each other and to business needs. |
-| **Solution Architecture** | `solution/` | Cross-cutting designs that span multiple domains to address a specific business problem or initiative. Brings together business, data, integration, and application concerns into a coherent delivery blueprint. |
-
-### Abstraction Layers
-
-Each domain is modelled at three layers of abstraction. Every folder under a domain maps to one of these layers.
-
-| Layer | Folder | Description |
-|---|---|---|
-| **Conceptual** | `conceptual/` | The *what* and *why*. Technology-agnostic models that capture intent, scope, and business context. Audience: business stakeholders and architects aligning on direction. |
-| **Logical** | `logical/` | The *how*. Vendor-neutral models that define structure, relationships, and rules without committing to specific products or infrastructure. Audience: architects and senior engineers designing solutions. |
-| **Physical** | `physical/` | The *where* and *with what*. Concrete, implementation-specific models tied to actual products, platforms, and environments. Audience: engineers building and operating the architecture. |
-
-### Output Formats
-
-All architecture artefacts must conform to one of three formats. This keeps outputs consistent, comparable, and machine-queryable.
-
-| Format | Description | Scope |
-|---|---|---|
-| **Catalogue** | A list of entities of a single type (e.g. applications, capabilities, data entities). Entities may be conceptual, logical, or physical. May be hierarchical — the hierarchy is captured within the catalogue itself. | Single domain, single abstraction layer |
-| **Matrix** | A grid expressing relationships between two sets of entities. Used to map links that cross abstraction layers (e.g. conceptual data model → logical data model) or that cross domains (e.g. application architecture → data architecture). | May span domains and/or abstraction layers |
-| **Diagram** | A visual representation of entities and their relationships (e.g. Business Capability Model, Conceptual Data Model, System Wiring Diagram). | May span one or more domains, but must be limited to a single abstraction layer |
-
-### Architecture Artefacts
-
-Every artefact produced is aligned to a single domain, a single abstraction layer, and one of the three output formats above. Each artefact has a unique ID prefixed with the domain acronym:
-
-| Domain | Acronym |
-|---|---|
-| Business | `BUS` |
-| Data | `DAT` |
-| Application | `APP` |
-| Integration | `INT` |
-| Solution | `SOL` |
-
-Each artefact has a folder under `artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>/` containing its instance data. Catalogues are backed by a JSON Schema in the matching path under `schemas/`; matrices and diagrams will follow their own format conventions (TBD).
-
-| ID | Domain | Abstraction | Format | Output | Summary |
-|---|---|---|---|---|---|
-| BUS-CAP | Business | Conceptual | Catalogue | Business Capabilities | |
-| BUS-BCM | Business | Conceptual | Diagram | Business Capability Model | Model of the Business Capabilities Catalogue (BUS-CAP) |
-| BUS-PRO | Business | Conceptual | Catalogue | Business Processes | |
-| BUS-BPM | Business | Conceptual | Diagram | Business Process Model | Model of the Business Processes Catalogue (BUS-PRO) |
-| DAT-DAC | Data | Conceptual | Catalogue | Domains & Concepts | |
-| DAT-CDM | Data | Conceptual | Diagram | Conceptual Data Model | Model of the Domains & Concepts Catalogue (DAT-DAC) |
-
-### Change Control
+## Change Control
 
 All architecture changes are driven by **Architecture Decision Records (ADRs)**. An ADR is the only way to propose a change to the architecture state.
 
@@ -124,7 +99,8 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 | Layer | Technology |
 |---|---|
 | Storage format | JSON |
-| Schema validation | JSON Schema (`$ref`-based, per domain) |
+| Schema validation | JSON Schema (`$ref`-based) |
+| Documentation | Markdown (GitHub-rendered) |
 | AI tooling | Claude Code |
 
 ---
@@ -132,8 +108,9 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Standards & Conventions
 
 ### File Naming
-- Artefact folders: named with the artefact ID (e.g. `BUS-CAP/`, `DAT-DAC/`)
+- Artefact folders: named with the artefact ID (e.g. `BUS-CAP/`, `DAT-DAC/`, `APP-DAP/`)
 - Catalogue schemas: named with the artefact ID and `.json` suffix (e.g. `BUS-CAP.json`)
+- Catalogue instance files: named with the artefact ID inside the artefact folder (e.g. `BUS-CAP/BUS-CAP.json`)
 - ADR files: `adr-<number>.md` inside `adrs/`
 - Branch names for ADRs: `<client>/<release>/adr-<number>`
 
@@ -141,12 +118,13 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 - `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
 - `architectures/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/<client>/<version>/version.json`)
 - `schemas/clients.json` and `schemas/versions.json` validate the index files; the singular metadata files have no schema yet
-- `schemas/artefacts.json` is a registry of all available artefact catalogue schemas — add new entries here when introducing a new artefact
+- `schemas/artefacts.json` is the registry of all defined artefact types — add new entries here when introducing a new artefact
 - When adding or removing a client/version folder, update the corresponding index file
 
 ### Schema Conventions
 - The `schemas/` tree mirrors the `architectures/<client>/<version>/` tree — schema and instance for the same artefact live at the same relative path
 - Catalogue schemas live at `schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.json`
+- Each catalogue schema has a corresponding markdown page in `documentation/schemas/<ARTEFACT-ID>.md`
 - Instance data in `architectures/` must conform to the matching schema in `schemas/`
 
 ### Versioning
@@ -159,13 +137,13 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Working with Claude
 
 ### Common Tasks
-- **Add a new artefact:** Add a row to the Architecture Artefacts table, create a matching folder in each client version under `architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`, and (for catalogues) add a schema at `schemas/artefacts/domains/<domain>/<layer>/<ID>.json`
+- **Add a new artefact:** See the procedure documented in [`/documentation/artefacts.md`](documentation/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
 - **Add architecture data for a client:** Create or update instance files inside the relevant artefact folder
 - **Raise an ADR:** Create a branch following the naming convention, add the ADR file to the correct `adrs/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `schemas/`
 
 ### Things to Preserve
-- The mirroring of `schemas/` and `architectures/<client>/<version>/` paths — this is how schemas are located for validation
+- The mirroring of `schemas/`, `architectures/<client>/<version>/artefacts/`, and `documentation/schemas/` paths — this is how schemas, instances, and docs are kept in lockstep
 - Artefact ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the domain
 - Branch naming convention for ADRs — other tooling will depend on this pattern
 - The three abstraction layers within each domain — don't flatten or skip levels
@@ -174,9 +152,9 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 
 ## Open Questions / Work in Progress
 
-- [ ] Catalogue schemas only exist for `BUS-CAP`, `BUS-PRO`, and `DAT-DAC` — schemas for other catalogues, plus all matrix and diagram formats, are not yet defined
-- [ ] No artefacts are yet defined for the Application, Integration, or Solution domains
-- [ ] No artefacts are yet defined at the Logical or Physical abstraction layers
+- [ ] Catalogue schemas only exist for `BUS-CAP`, `BUS-PRO`, `DAT-DAC`, and `APP-DAP` — schemas for other catalogues, plus all matrix and diagram formats, are not yet defined
+- [ ] No artefacts are yet defined for the Integration or Solution domains
+- [ ] Most domain × abstraction-layer slots are still empty
 - [ ] No CI/CD workflows — JSON validation and ADR branch naming are not yet enforced automatically
 - [ ] No diagram/view generation implemented yet
 - [ ] Ingestion path into EA tooling (e.g. via CALM or similar) not decided

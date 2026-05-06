@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://eastley.net/schemas/artefacts/domains/business/conceptual/BUS-CAP",
     "title": "Business Capabilities Catalogue",
-    "description": "A hierarchical catalogue of business capabilities (what the business does, independent of how). Aligned to TOGAF / Business Architecture Guild conventions.",
+    "description": "Hierarchical catalogue of business capabilities (what the business does, independent of how). Aligned to TOGAF and Business Architecture Guild conventions, with CMMI-inspired maturity and strategic-importance classification.",
     "type": "object",
     "required": ["capabilities"],
     "properties": {
@@ -14,7 +14,7 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "Unique identifier for the capability"
+                        "description": "Unique identifier (e.g. CAP-001)"
                     },
                     "name": {
                         "type": "string"
@@ -35,11 +35,30 @@
                     "owner": {
                         "type": "string",
                         "description": "Accountable business unit or role"
+                    },
+                    "importance": {
+                        "type": "string",
+                        "enum": ["strategic", "differentiating", "foundational"],
+                        "description": "Strategic importance — strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
+                    },
+                    "maturity-current": {
+                        "$ref": "#/$defs/maturity",
+                        "description": "Current capability maturity (CMMI-inspired)"
+                    },
+                    "maturity-target": {
+                        "$ref": "#/$defs/maturity",
+                        "description": "Target capability maturity"
                     }
                 },
                 "additionalProperties": false
             }
         }
     },
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$defs": {
+        "maturity": {
+            "type": "string",
+            "enum": ["initial", "repeatable", "defined", "managed", "optimised"]
+        }
+    }
 }

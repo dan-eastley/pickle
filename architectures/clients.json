@@ -1,6 +1,5 @@
 {
     "clients": [
-        { "client-id": "client-a" },
-        { "client-id": "client-b" }
+        { "client-id": "client-a" }
     ]
 }
