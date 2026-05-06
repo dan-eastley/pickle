@@ -1,7 +1,7 @@
 # BUS-PRO — Business Processes Catalogue
 
 **File:** [`/schemas/artefacts/domains/business/conceptual/BUS-PRO.json`](../../schemas/artefacts/domains/business/conceptual/BUS-PRO.json)
-**Domain / Layer:** Business / Conceptual
+**Architecture Domain / Layer:** Business / Conceptual
 **Format:** Catalogue
 
 ## Industry alignment

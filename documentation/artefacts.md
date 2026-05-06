@@ -1,19 +1,19 @@
-# Artefacts
+# Artefact Types
 
-An **artefact** is a single, classified piece of architecture content. Every artefact:
+An **artefact type** is a single, classified piece of architecture content. Every artefact type:
 
-- Is aligned to exactly one [domain](domains.md)
+- Is aligned to exactly one [architecture domain](domains.md)
 - Is aligned to exactly one [abstraction layer](abstraction-layers.md)
 - Conforms to exactly one [output format](output-formats.md)
-- Has a unique ID prefixed with the domain acronym (e.g. `BUS-CAP`, `APP-DAP`)
+- Has a unique ID prefixed with the architecture domain acronym (e.g. `BUS-CAP`, `APP-DAP`)
 
-Each artefact has a folder under `architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `schemas/`.
+Each artefact type has a folder under `architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `schemas/`.
 
 ## Registry
 
-This table is the authoritative registry of every defined artefact. The schema-only index at [`/schemas/artefacts.json`](../schemas/artefacts.json) covers just the catalogues.
+This table is the authoritative registry of every defined artefact type. The schema-only index at [`/schemas/artefacts.json`](../schemas/artefacts.json) covers just the catalogues.
 
-| ID | Domain | Abstraction | Format | Output | Summary |
+| ID | Architecture Domain | Abstraction | Format | Output | Summary |
 |---|---|---|---|---|---|
 | BUS-CAP | Business | Conceptual | Catalogue | Business Capabilities | |
 | BUS-BCM | Business | Conceptual | Diagram | Business Capability Model | Model of the Business Capabilities Catalogue (BUS-CAP) |
@@ -24,11 +24,11 @@ This table is the authoritative registry of every defined artefact. The schema-o
 | APP-DAP | Application | Logical | Catalogue | Domains & Platforms | |
 | APP-DPM | Application | Logical | Diagram | Domains & Platforms Model | Model of the Domains & Platforms Catalogue (APP-DAP) |
 
-## Adding a new artefact
+## Adding a new artefact type
 
 1. Add a row to the registry table above.
 2. If it is a catalogue:
    - Define a JSON Schema at `/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`.
-   - Add an entry for the new artefact ID to `/schemas/artefacts.json` (the schema index).
+   - Add an entry for the new artefact type ID to `/schemas/artefacts.json` (the schema index).
    - Document the schema with a markdown page in `/documentation/schemas/<ID>.md`.
 3. Create an empty instance folder in each affected client version: `/architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`.

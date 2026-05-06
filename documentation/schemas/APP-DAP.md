@@ -1,7 +1,7 @@
 # APP-DAP — Application Domains & Platforms Catalogue
 
 **File:** [`/schemas/artefacts/domains/application/logical/APP-DAP.json`](../../schemas/artefacts/domains/application/logical/APP-DAP.json)
-**Domain / Layer:** Application / Logical
+**Architecture Domain / Layer:** Application / Logical
 **Format:** Catalogue (two-tier)
 
 ## Industry alignment

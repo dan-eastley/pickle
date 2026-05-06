@@ -1,7 +1,7 @@
 # BUS-CAP — Business Capabilities Catalogue
 
 **File:** [`/schemas/artefacts/domains/business/conceptual/BUS-CAP.json`](../../schemas/artefacts/domains/business/conceptual/BUS-CAP.json)
-**Domain / Layer:** Business / Conceptual
+**Architecture Domain / Layer:** Business / Conceptual
 **Format:** Catalogue
 
 ## Industry alignment

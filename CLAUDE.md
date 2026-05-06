@@ -14,13 +14,13 @@ This is a **proof of concept for Architecture as Code** — a structured approac
 
 ## Documentation
 
-For full context on the architecture model — domains, abstraction layers, output formats, artefact registry, and per-schema documentation — read [`/documentation/`](documentation/). Start at [`/documentation/index.md`](documentation/index.md), which signposts every other page.
+For full context on the architecture model — architecture domains, abstraction layers, output formats, artefact-type registry, and per-schema documentation — read [`/documentation/`](documentation/). Start at [`/documentation/index.md`](documentation/index.md), which signposts every other page.
 
 **Before doing anything non-trivial in this repository, read at minimum:**
-- [`/documentation/domains.md`](documentation/domains.md) — the five domains and their acronyms
+- [`/documentation/domains.md`](documentation/domains.md) — the five architecture domains and their acronyms
 - [`/documentation/abstraction-layers.md`](documentation/abstraction-layers.md) — Conceptual / Logical / Physical
 - [`/documentation/output-formats.md`](documentation/output-formats.md) — Catalogue / Matrix / Diagram
-- [`/documentation/artefacts.md`](documentation/artefacts.md) — registry of every defined artefact
+- [`/documentation/artefacts.md`](documentation/artefacts.md) — registry of every defined artefact type
 - The relevant schema page under [`/documentation/schemas/`](documentation/schemas/) when working with a specific catalogue
 
 ---
@@ -48,7 +48,7 @@ For full context on the architecture model — domains, abstraction layers, outp
 ├── schemas/                        # JSON Schema definitions — mirrors architectures/ layout
 │   ├── clients.json                # Schema for architectures/clients.json (index)
 │   ├── versions.json               # Schema for architectures/<client>/versions.json (index)
-│   ├── artefacts.json              # Registry of all defined artefacts
+│   ├── artefacts.json              # Schema index — artefact-type ID -> catalogue schema $ref
 │   └── artefacts/
 │       └── domains/
 │           ├── business/{conceptual,logical,physical}/
@@ -68,7 +68,7 @@ For full context on the architecture model — domains, abstraction layers, outp
 │           ├── artefacts/
 │           │   └── domains/
 │           │       ├── business/{conceptual,logical,physical}/
-│           │       │   └── <ARTEFACT-ID>/    # one folder per artefact (e.g. BUS-CAP/)
+│           │       │   └── <ARTEFACT-ID>/    # one folder per artefact type (e.g. BUS-CAP/)
 │           │       ├── data/{conceptual,logical,physical}/
 │           │       │   └── <ARTEFACT-ID>/
 │           │       ├── integration/{conceptual,logical,physical}/
@@ -80,7 +80,7 @@ For full context on the architecture model — domains, abstraction layers, outp
 └── CLAUDE.md                       # This file
 ```
 
-The `schemas/` and `architectures/<client>/<version>/` trees deliberately mirror each other — schema and instance for the same artefact share a relative path.
+The `schemas/` and `architectures/<client>/<version>/` trees deliberately mirror each other — schema and instance for the same artefact type share a relative path.
 
 ---
 
@@ -108,9 +108,9 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Standards & Conventions
 
 ### File Naming
-- Artefact folders: named with the artefact ID (e.g. `BUS-CAP/`, `DAT-DAC/`, `APP-DAP/`)
-- Catalogue schemas: named with the artefact ID and `.json` suffix (e.g. `BUS-CAP.json`)
-- Catalogue instance files: named with the artefact ID inside the artefact folder (e.g. `BUS-CAP/BUS-CAP.json`)
+- Artefact-type folders: named with the artefact-type ID (e.g. `BUS-CAP/`, `DAT-DAC/`, `APP-DAP/`)
+- Catalogue schemas: named with the artefact-type ID and `.json` suffix (e.g. `BUS-CAP.json`)
+- Catalogue instance files: named with the artefact-type ID inside the artefact-type folder (e.g. `BUS-CAP/BUS-CAP.json`)
 - ADR files: `adr-<number>.md` inside `adrs/`
 - Branch names for ADRs: `<client>/<release>/adr-<number>`
 
@@ -118,11 +118,11 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 - `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
 - `architectures/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/<client>/<version>/version.json`)
 - `schemas/clients.json` and `schemas/versions.json` validate the index files; the singular metadata files have no schema yet
-- `schemas/artefacts.json` is a **schema index** — a flat map of artefact ID → catalogue schema `$ref`. The full artefact registry (catalogues, diagrams, matrices) lives in `documentation/artefacts.md`.
+- `schemas/artefacts.json` is a **schema index** — a flat map of artefact-type ID → catalogue schema `$ref`. The full artefact-type registry (catalogues, diagrams, matrices) lives in `documentation/artefacts.md`.
 - When adding or removing a client/version folder, update the corresponding index file
 
 ### Schema Conventions
-- The `schemas/` tree mirrors the `architectures/<client>/<version>/` tree — schema and instance for the same artefact live at the same relative path
+- The `schemas/` tree mirrors the `architectures/<client>/<version>/` tree — schema and instance for the same artefact type live at the same relative path
 - Catalogue schemas live at `schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.json`
 - Each catalogue schema has a corresponding markdown page in `documentation/schemas/<ARTEFACT-ID>.md`
 - Instance data in `architectures/` must conform to the matching schema in `schemas/`
@@ -137,24 +137,24 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Working with Claude
 
 ### Common Tasks
-- **Add a new artefact:** See the procedure documented in [`/documentation/artefacts.md`](documentation/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
-- **Add architecture data for a client:** Create or update instance files inside the relevant artefact folder
+- **Add a new artefact type:** See the procedure documented in [`/documentation/artefacts.md`](documentation/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
+- **Add architecture data for a client:** Create or update instance files inside the relevant artefact-type folder
 - **Raise an ADR:** Create a branch following the naming convention, add the ADR file to the correct `adrs/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `schemas/`
 
 ### Things to Preserve
 - The mirroring of `schemas/`, `architectures/<client>/<version>/artefacts/`, and `documentation/schemas/` paths — this is how schemas, instances, and docs are kept in lockstep
-- Artefact ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the domain
+- Artefact-type ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the architecture domain
 - Branch naming convention for ADRs — other tooling will depend on this pattern
-- The three abstraction layers within each domain — don't flatten or skip levels
+- The three abstraction layers within each architecture domain — don't flatten or skip levels
 
 ---
 
 ## Open Questions / Work in Progress
 
 - [ ] Catalogue schemas only exist for `BUS-CAP`, `BUS-PRO`, `DAT-DAC`, and `APP-DAP` — schemas for other catalogues, plus all matrix and diagram formats, are not yet defined
-- [ ] No artefacts are yet defined for the Integration or Solution domains
-- [ ] Most domain × abstraction-layer slots are still empty
+- [ ] No artefact types are yet defined for the Integration or Solution architecture domains
+- [ ] Most architecture domain × abstraction-layer slots are still empty
 - [ ] No CI/CD workflows — JSON validation and ADR branch naming are not yet enforced automatically
 - [ ] No diagram/view generation implemented yet
 - [ ] Ingestion path into EA tooling (e.g. via CALM or similar) not decided

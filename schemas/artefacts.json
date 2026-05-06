@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts",
-    "title": "Artefact Schemas Index",
-    "description": "Index of catalogue schemas defined in this repository, keyed by artefact ID. Diagrams and matrices are not listed here — they have no schema yet. The full artefact registry (including non-catalogue entries) is documented in /documentation/artefacts.md.",
+    "title": "Artefact-Type Schemas Index",
+    "description": "Index of catalogue schemas defined in this repository, keyed by artefact-type ID. Diagrams and matrices are not listed here — they have no schema yet. The full artefact-type registry (including non-catalogue entries) is documented in /documentation/artefacts.md.",
     "schemas": {
         "BUS-CAP": { "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json" },
         "BUS-PRO": { "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json" },

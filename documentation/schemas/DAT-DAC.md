@@ -1,7 +1,7 @@
 # DAT-DAC — Data Domains & Concepts Catalogue
 
 **File:** [`/schemas/artefacts/domains/data/conceptual/DAT-DAC.json`](../../schemas/artefacts/domains/data/conceptual/DAT-DAC.json)
-**Domain / Layer:** Data / Conceptual
+**Architecture Domain / Layer:** Data / Conceptual
 **Format:** Catalogue (two-tier)
 
 ## Industry alignment

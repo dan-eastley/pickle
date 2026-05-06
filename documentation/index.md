@@ -1,15 +1,15 @@
 # Documentation
 
-This is the navigable documentation for the Architecture as Code proof of concept. Start here when looking for how the architecture model works, what artefacts exist, or how schemas are structured.
+This is the navigable documentation for the Architecture as Code proof of concept. Start here when looking for how the architecture model works, what artefact types exist, or how schemas are structured.
 
 ## Architecture Model
 
 | Topic | Description |
 |---|---|
-| [Domains](domains.md) | The five architecture domains (Business, Data, Integration, Application, Solution) |
-| [Abstraction Layers](abstraction-layers.md) | The three layers each domain is modelled at (Conceptual, Logical, Physical) |
-| [Output Formats](output-formats.md) | The three permitted artefact formats (Catalogue, Matrix, Diagram) |
-| [Artefacts](artefacts.md) | Registry of all defined artefacts and their classification |
+| [Architecture Domains](domains.md) | The five architecture domains (Business, Data, Integration, Application, Solution) |
+| [Abstraction Layers](abstraction-layers.md) | The three layers each architecture domain is modelled at (Conceptual, Logical, Physical) |
+| [Output Formats](output-formats.md) | The three permitted artefact-type formats (Catalogue, Matrix, Diagram) |
+| [Artefact Types](artefacts.md) | Registry of all defined artefact types and their classification |
 
 ## Schemas
 
@@ -19,7 +19,7 @@ The [schemas/](schemas/) folder contains a markdown page for each JSON Schema, e
 |---|---|
 | Clients index | [schemas/clients.md](schemas/clients.md) |
 | Versions index | [schemas/versions.md](schemas/versions.md) |
-| Artefacts registry | [schemas/artefacts.md](schemas/artefacts.md) |
+| Artefact-type schema index | [schemas/artefacts.md](schemas/artefacts.md) |
 | BUS-CAP | [schemas/BUS-CAP.md](schemas/BUS-CAP.md) |
 | BUS-PRO | [schemas/BUS-PRO.md](schemas/BUS-PRO.md) |
 | DAT-DAC | [schemas/DAT-DAC.md](schemas/DAT-DAC.md) |

@@ -8,11 +8,11 @@ Each schema in [`/schemas/`](../../schemas/) is documented here. Click through f
 |---|---|---|
 | [clients.md](clients.md) | `architectures/clients.json` | Authoritative list of client IDs |
 | [versions.md](versions.md) | `architectures/<client>/versions.json` | Authoritative list of version IDs for a client |
-| [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Registry of all defined artefacts |
+| [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Index of all defined catalogue schemas |
 
 ## Catalogue schemas
 
-| Schema | Artefact | Domain / Layer | Aligned to |
+| Schema | Artefact Type | Architecture Domain / Layer | Aligned to |
 |---|---|---|---|
 | [BUS-CAP.md](BUS-CAP.md) | Business Capabilities | Business / Conceptual | TOGAF, Business Architecture Guild, CMMI |
 | [BUS-PRO.md](BUS-PRO.md) | Business Processes | Business / Conceptual | APQC PCF, Porter value chain |
