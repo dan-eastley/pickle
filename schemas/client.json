@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://eastley.net/schemas/client",
+    "type": "object",
+    "required": ["client-id", "name"],
+    "properties": {
+        "client-id": {
+            "type": "string",
+            "description": "Unique identifier — must match the client folder name"
+        },
+        "name": {
+            "type": "string",
+            "description": "Human-readable client name"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,8 +1,0 @@
-{
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://eastley.net/config/domains/applications/application",
-    "unique-key": "application",
-    "name": "Application",
-    "level": "2",
-    "description": ""
-}
