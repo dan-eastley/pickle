@@ -1,0 +1,37 @@
+name: Strategy Alignment
+
+# Stub. Implementation pending.
+# Chains after Referential Integrity via workflow_run.
+# Reads the decision JSON, writes a stub to the `strategy-alignment` section,
+# commits back via GITHUB_TOKEN.
+
+on:
+  workflow_run:
+    workflows: ["Referential Integrity"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  strategy_alignment:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout decision branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write strategy-alignment stub to decision JSON
+        env:
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: "Strategy Alignment"
+          SECTION_KEY: "strategy-alignment"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash .github/scripts/decision-stub.sh

@@ -16,6 +16,7 @@ Each schema in [`/schemas/`](../../schemas/) is documented here. Click through f
 |---|---|---|
 | [client.md](client.md) | `architectures/<client>/client.json` | Per-client metadata (name, etc.) |
 | [version.md](version.md) | `architectures/<client>/<version>/version.json` | Per-version metadata (name, status) |
+| [decision.md](decision.md) | `architectures/<client>/<version>/decisions/<decision-id>.json` | Architecture Decision Record (machine-readable) |
 
 ## Strategy / Principles / Guardrails (one per architecture domain)
 
