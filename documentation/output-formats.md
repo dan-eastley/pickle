@@ -2,6 +2,18 @@
 
 All architecture artefact types must conform to one of three formats. This keeps outputs consistent, comparable, and machine-queryable.
 
+```mermaid
+flowchart TB
+    A[Any artefact type]
+
+    A --> C["<b>Catalogue</b><br/><sub>list of entities<br/>1 domain × 1 layer</sub>"]
+    A --> D["<b>Diagram</b><br/><sub>visual representation<br/>≥1 domain × 1 layer</sub>"]
+    A --> M["<b>Matrix</b><br/><sub>grid of relationships<br/>crosses layers or domains</sub>"]
+
+    classDef format fill:#f3e5f5,stroke:#7b1fa2,color:#000
+    class C,D,M format
+```
+
 | Format | Description | Scope |
 |---|---|---|
 | **Catalogue** | A list of entities of a single type (e.g. applications, capabilities, data entities). Entities may be conceptual, logical, or physical. May be hierarchical — the hierarchy is captured within the catalogue itself. | Single architecture domain, single abstraction layer |

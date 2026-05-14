@@ -7,6 +7,34 @@
 
 Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the seven decision-pipeline workflows. Each workflow fills in its own section progressively as the chain runs.
 
+## Structure at a glance
+
+A decision JSON has three zones — author-written metadata, a deterministic gate filled by Validate Context, and six analysis sections filled by Claude through the decision pipeline.
+
+```mermaid
+flowchart TB
+    DJ[Decision JSON]
+
+    DJ --> Author["<b>Author-written</b><br/>required, hand-edited<br/><sub>decision-id, title, status, narrative</sub>"]
+    DJ --> Det["<b>Deterministic gate</b><br/>filled by Validate Context<br/><sub>context-validation</sub>"]
+    DJ --> AI["<b>Six analysis sections</b><br/>filled by Claude — each an array of<br/>{finding, impact, recommendation, rationale}"]
+
+    AI --> AR[architecture-review]
+    AI --> RI[referential-integrity]
+    AI --> SA[strategy-alignment]
+    AI --> PA[principles-alignment]
+    AI --> PR[proponent-analysis]
+    AI --> CH[challenger-analysis]
+
+    classDef auth fill:#fff3e0,stroke:#fb8c00,color:#000
+    classDef det fill:#e3f2fd,stroke:#1976d2,color:#000
+    classDef ai fill:#f3e5f5,stroke:#7b1fa2,color:#000
+
+    class Author auth
+    class Det det
+    class AI,AR,RI,SA,PA,PR,CH ai
+```
+
 ## Lifecycle
 
 1. **Author** creates `architectures/<client>/<version>/decisions/<decision-id>.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
