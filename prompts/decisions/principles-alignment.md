@@ -18,7 +18,7 @@ If the changes touch Logical-layer artefacts in any architecture domain, read th
 
 ## Output
 
-Write exactly one JSON object to the decision JSON's `principles-alignment` property, containing the four fields below (no other keys allowed):
+Write a JSON **array** to the decision JSON's `principles-alignment` property. Each element of the array is an object containing the four fields below (and no other keys). Emit a single element if you have one finding to report; emit several elements for distinct findings.
 
 | Field | Description |
 |---|---|
@@ -27,7 +27,7 @@ Write exactly one JSON object to the decision JSON's `principles-alignment` prop
 | `recommendation` | What the author should do in response. |
 | `rationale` | Why the recommendation is the right action. |
 
-Keep each field a single string (markdown allowed). Do not add metadata fields — the schema rejects them.
+Keep each field a single string (markdown allowed). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
 
 ## Constraints
 

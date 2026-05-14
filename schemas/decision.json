@@ -38,35 +38,53 @@
             "description": "Output of the Validate Context workflow. Permissive shape — produces a deterministic outcome + violation list, not the 4-string analysis section shape."
         },
         "architecture-review": {
-            "$ref": "#/$defs/section",
-            "description": "Output of the Architecture Review workflow"
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/section"
+            },
+            "description": "Output of the Architecture Review workflow — one or more findings."
         },
         "referential-integrity": {
-            "$ref": "#/$defs/section",
-            "description": "Output of the Referential Integrity workflow"
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/section"
+            },
+            "description": "Output of the Referential Integrity workflow — one or more findings."
         },
         "strategy-alignment": {
-            "$ref": "#/$defs/section",
-            "description": "Output of the Strategy Alignment workflow"
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/section"
+            },
+            "description": "Output of the Strategy Alignment workflow — one or more findings."
         },
         "principles-alignment": {
-            "$ref": "#/$defs/section",
-            "description": "Output of the Principles Alignment workflow"
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/section"
+            },
+            "description": "Output of the Principles Alignment workflow — one or more findings."
         },
         "proponent-analysis": {
-            "$ref": "#/$defs/section",
-            "description": "Output of the Proponent Analysis workflow"
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/section"
+            },
+            "description": "Output of the Proponent Analysis workflow — one or more findings."
         },
         "challenger-analysis": {
-            "$ref": "#/$defs/section",
-            "description": "Output of the Challenger Analysis workflow"
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/section"
+            },
+            "description": "Output of the Challenger Analysis workflow — one or more findings."
         }
     },
     "additionalProperties": false,
     "$defs": {
         "section": {
             "type": "object",
-            "description": "Shared shape for every analysis section produced by a decision workflow.",
+            "description": "Shape of a single finding within an analysis section. Each analysis section is an array of these — a workflow may emit multiple findings.",
             "required": [
                 "finding",
                 "impact",
