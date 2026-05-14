@@ -62,10 +62,12 @@ jobs:
               3. Read any other inputs the prompt asks for (schemas, catalogues,
                  prior decision-JSON sections).
               4. Follow the prompt's task.
-              5. Write your result as a four-field object {finding, impact,
-                 recommendation, rationale} into the decision JSON's
-                 `${{ env.SECTION_KEY }}` property. Use the Edit or Write
-                 tool. Schema is at schemas/decision.json.
+              5. Write your result as a JSON array of four-field objects
+                 {finding, impact, recommendation, rationale} into the
+                 decision JSON's `${{ env.SECTION_KEY }}` property. Use
+                 the Edit or Write tool. Schema is at schemas/decision.json.
+                 The array may have one element (single finding) or several
+                 (distinct findings).
 
             Do not commit or push — the workflow handles that.
 

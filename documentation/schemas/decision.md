@@ -36,7 +36,7 @@ Each workflow writes to a property whose name is the kebab-cased workflow name:
 
 ## Section shape (six workflows)
 
-Six of the seven workflows — Architecture Review, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — write to a section with a common shape, defined once at `$defs/section` in the schema:
+Six of the seven workflows — Architecture Review, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — write to a section that is an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -45,7 +45,7 @@ Six of the seven workflows — Architecture Review, Referential Integrity, Strat
 | `recommendation` | string | yes | What the author should do in response to the finding |
 | `rationale` | string | yes | Why the recommendation is the right course of action |
 
-`additionalProperties: false` — these sections carry only the four strings.
+`additionalProperties: false` on each finding — only the four strings, no metadata. A section can carry a single finding (one-element array) or several distinct findings.
 
 Validate Context is structurally different (deterministic outcome + violation list) and uses its own permissive shape.
 
@@ -62,22 +62,32 @@ Validate Context is structurally different (deterministic outcome + violation li
         "outcome": "pass",
         "violations": []
     },
-    "architecture-review": {
-        "finding": "The proposal will require new artefacts in INT (conceptual and logical) and updates to APP-DAP to capture the API gateway as a platform.",
-        "impact": "Without the new INT artefacts, downstream alignment checks cannot reason about the integration shift.",
-        "recommendation": "Add INT-STR-001 to the integration strategy and an INT-PRN-NEW principle for API-first.",
-        "rationale": "Strategy and principles must be in place before guardrails and physical patterns can be evaluated against them."
-    },
-    "referential-integrity": {
-        "finding": "Two platform IDs in APP-DAP reference application-domains that do not exist.",
-        "impact": "Cross-domain matrices targeting those platforms will be incomplete.",
-        "recommendation": "Add the missing application domains or correct the platform domain-id references.",
-        "rationale": "Orphaned references silently break catalogue-to-catalogue traceability."
-    },
-    "strategy-alignment":   { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." },
-    "principles-alignment": { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." },
-    "proponent-analysis":   { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." },
-    "challenger-analysis":  { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." }
+    "architecture-review": [
+        {
+            "finding": "The proposal will require new artefacts in INT (conceptual and logical) and updates to APP-DAP to capture the API gateway as a platform.",
+            "impact": "Without the new INT artefacts, downstream alignment checks cannot reason about the integration shift.",
+            "recommendation": "Add INT-STR-001 to the integration strategy and an INT-PRN-NEW principle for API-first.",
+            "rationale": "Strategy and principles must be in place before guardrails and physical patterns can be evaluated against them."
+        }
+    ],
+    "referential-integrity": [
+        {
+            "finding": "Two platform IDs in APP-DAP reference application-domains that do not exist.",
+            "impact": "Cross-domain matrices targeting those platforms will be incomplete.",
+            "recommendation": "Add the missing application domains or correct the platform domain-id references.",
+            "rationale": "Orphaned references silently break catalogue-to-catalogue traceability."
+        },
+        {
+            "finding": "DAT-DAC concept CON-CUSTOMER references domain DOM-ACCOUNT which does not exist in the domains array.",
+            "impact": "Customer lookups would fail downstream consumers expecting a valid domain reference.",
+            "recommendation": "Either add DOM-ACCOUNT to the data domains or correct the concept's domain-id.",
+            "rationale": "Catalogue references must resolve for the data model to be self-consistent."
+        }
+    ],
+    "strategy-alignment":   [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "principles-alignment": [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "proponent-analysis":   [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "challenger-analysis":  [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ]
 }
 ```
 
@@ -90,9 +100,9 @@ Validate Context is structurally different (deterministic outcome + violation li
 | `status` | enum | yes | `draft` \| `proposed` \| `accepted` \| `rejected` \| `superseded` |
 | `narrative` | string | yes | Author's narrative of the proposed change |
 | `context-validation` | object | no | Output of Validate Context (permissive object) |
-| `architecture-review` | section | no | Output of Architecture Review |
-| `referential-integrity` | section | no | Output of Referential Integrity |
-| `strategy-alignment` | section | no | Output of Strategy Alignment |
-| `principles-alignment` | section | no | Output of Principles Alignment |
-| `proponent-analysis` | section | no | Output of Proponent Analysis |
-| `challenger-analysis` | section | no | Output of Challenger Analysis |
+| `architecture-review` | array of section | no | Output of Architecture Review |
+| `referential-integrity` | array of section | no | Output of Referential Integrity |
+| `strategy-alignment` | array of section | no | Output of Strategy Alignment |
+| `principles-alignment` | array of section | no | Output of Principles Alignment |
+| `proponent-analysis` | array of section | no | Output of Proponent Analysis |
+| `challenger-analysis` | array of section | no | Output of Challenger Analysis |
