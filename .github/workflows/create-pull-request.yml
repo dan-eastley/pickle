@@ -1,0 +1,89 @@
+name: Create Pull Request
+
+on:
+  push:
+    branches:
+      - 'features/**'
+      - 'decisions/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine target branch
+        id: target
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          case "$BRANCH" in
+            features/*)  TARGET=develop ;;
+            decisions/*) TARGET=main ;;
+            *)
+              echo "::error::Unexpected branch '$BRANCH'"
+              exit 1 ;;
+          esac
+          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+          echo "Target branch: $TARGET"
+
+      - name: Skip if PR already exists
+        id: check
+        env:
+          BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "::notice::PR #$EXISTING already open for $BRANCH; nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if branch has no new commits
+        if: steps.check.outputs.skip == 'false'
+        id: diverged
+        env:
+          TARGET: ${{ steps.target.outputs.target }}
+        run: |
+          git fetch origin "$TARGET"
+          if git merge-base --is-ancestor HEAD "origin/$TARGET"; then
+            echo "::notice::Branch has no commits ahead of origin/$TARGET; nothing to open."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open PR
+        if: steps.check.outputs.skip == 'false' && steps.diverged.outputs.skip == 'false'
+        env:
+          BRANCH: ${{ github.ref_name }}
+          TARGET: ${{ steps.target.outputs.target }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Stub title/body. AI-generated title and body will be wired in later.
+          TITLE=$(git log -1 --pretty=%s)
+
+          {
+            echo "## Summary"
+            echo ""
+            echo "_Auto-generated PR. Edit before merging._"
+            echo ""
+            echo "## Commits"
+            echo ""
+            git log "origin/$TARGET..HEAD" --pretty='- %s'
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --base "$TARGET" \
+            --head "$BRANCH" \
+            --title "$TITLE" \
+            --body-file /tmp/pr-body.md
