@@ -7,7 +7,7 @@ name: Architecture Review
 
 on:
   workflow_run:
-    workflows: ["Scope Validation"]
+    workflows: ["Validate Context"]
     types: [completed]
 
 permissions:

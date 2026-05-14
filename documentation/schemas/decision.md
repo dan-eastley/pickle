@@ -11,7 +11,7 @@ Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.
 
 1. **Author** creates `architectures/<client>/<version>/decisions/<decision-id>.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
 2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires the seven workflows in sequence (see `.github/workflows/decisions-*.yml`):
-   1. Scope Validation
+   1. Validate Context
    2. Architecture Review
    3. Referential Integrity
    4. Strategy Alignment
@@ -26,7 +26,7 @@ Each workflow writes to a property whose name is the kebab-cased workflow name:
 
 | Workflow | Schema property |
 |---|---|
-| Scope Validation | `scope-validation` |
+| Validate Context | `context-validation` |
 | Architecture Review | `architecture-review` |
 | Referential Integrity | `referential-integrity` |
 | Strategy Alignment | `strategy-alignment` |
@@ -47,7 +47,7 @@ Six of the seven workflows — Architecture Review, Referential Integrity, Strat
 
 `additionalProperties: false` — these sections carry only the four strings.
 
-Scope Validation is structurally different (deterministic outcome + violation list) and uses its own permissive shape.
+Validate Context is structurally different (deterministic outcome + violation list) and uses its own permissive shape.
 
 ## Example
 
@@ -58,7 +58,7 @@ Scope Validation is structurally different (deterministic outcome + violation li
     "status": "draft",
     "narrative": "We propose moving all new inter-system traffic to managed APIs. Today...",
 
-    "scope-validation": {
+    "context-validation": {
         "outcome": "pass",
         "violations": []
     },
@@ -89,7 +89,7 @@ Scope Validation is structurally different (deterministic outcome + violation li
 | `title` | string | yes | Short human-readable title |
 | `status` | enum | yes | `draft` \| `proposed` \| `accepted` \| `rejected` \| `superseded` |
 | `narrative` | string | yes | Author's narrative of the proposed change |
-| `scope-validation` | object | no | Output of Scope Validation (permissive object) |
+| `context-validation` | object | no | Output of Validate Context (permissive object) |
 | `architecture-review` | section | no | Output of Architecture Review |
 | `referential-integrity` | section | no | Output of Referential Integrity |
 | `strategy-alignment` | section | no | Output of Strategy Alignment |

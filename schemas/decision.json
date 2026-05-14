@@ -4,7 +4,12 @@
     "title": "Decision Record",
     "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative) when starting a decisions/<client>/<version>/<decision-id> branch. The .github/workflows/decisions-*.yml chain progressively writes each section. Section property names match the kebab-cased workflow names.",
     "type": "object",
-    "required": ["decision-id", "title", "status", "narrative"],
+    "required": [
+        "decision-id",
+        "title",
+        "status",
+        "narrative"
+    ],
     "properties": {
         "decision-id": {
             "type": "string",
@@ -16,15 +21,21 @@
         },
         "status": {
             "type": "string",
-            "enum": ["draft", "proposed", "accepted", "rejected", "superseded"]
+            "enum": [
+                "draft",
+                "proposed",
+                "accepted",
+                "rejected",
+                "superseded"
+            ]
         },
         "narrative": {
             "type": "string",
             "description": "Author's narrative of the proposed change. Read by all downstream workflows."
         },
-        "scope-validation": {
+        "context-validation": {
             "type": "object",
-            "description": "Output of the Scope Validation workflow. Permissive shape — Scope Validation produces a deterministic outcome + violation list, not the 4-string section shape."
+            "description": "Output of the Validate Context workflow. Permissive shape — produces a deterministic outcome + violation list, not the 4-string analysis section shape."
         },
         "architecture-review": {
             "$ref": "#/$defs/section",
@@ -56,7 +67,12 @@
         "section": {
             "type": "object",
             "description": "Shared shape for every analysis section produced by a decision workflow.",
-            "required": ["finding", "impact", "recommendation", "rationale"],
+            "required": [
+                "finding",
+                "impact",
+                "recommendation",
+                "rationale"
+            ],
             "properties": {
                 "finding": {
                     "type": "string",
