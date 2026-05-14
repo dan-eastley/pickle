@@ -10,6 +10,13 @@ Each schema in [`/schemas/`](../../schemas/) is documented here. Click through f
 | [versions.md](versions.md) | `architectures/<client>/versions.json` | Authoritative list of version IDs for a client |
 | [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Index of all defined catalogue schemas |
 
+## Singular metadata
+
+| Schema | Documents | Purpose |
+|---|---|---|
+| [client.md](client.md) | `architectures/<client>/client.json` | Per-client metadata (name, etc.) |
+| [version.md](version.md) | `architectures/<client>/<version>/version.json` | Per-version metadata (name, status) |
+
 ## Strategy / Principles / Guardrails (one per architecture domain)
 
 Each architecture domain carries a Strategy (Conceptual), Principles (Logical), and Guardrails (Physical) catalogue. The schemas share their shape across domains; each documentation page below carries a domain-specific example.

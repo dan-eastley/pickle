@@ -1,0 +1,165 @@
+name: Validate Schema
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine base ref to diff against
+        id: base
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          case "$BRANCH" in
+            main)        BASE="HEAD~1" ;;
+            develop)     BASE="origin/main" ;;
+            decisions/*) BASE="origin/main" ;;
+            features/*)  BASE="origin/develop" ;;
+            *)           BASE="origin/main" ;;
+          esac
+
+          # Fetch the remote ref so the diff has something to compare against.
+          case "$BASE" in
+            origin/*)
+              REMOTE_BRANCH="${BASE#origin/}"
+              git fetch origin "$REMOTE_BRANCH" 2>/dev/null || true
+              ;;
+          esac
+
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "Comparing against: $BASE"
+
+      - name: Find changed JSON files
+        id: files
+        env:
+          BASE: ${{ steps.base.outputs.base }}
+        run: |
+          CHANGED=$(git diff --name-only --diff-filter=AM "$BASE" HEAD -- '*.json' || true)
+          if [ -z "$CHANGED" ]; then
+            echo "::notice::No JSON files changed since $BASE."
+          else
+            echo "Changed JSON files:"
+            printf '  %s\n' $CHANGED
+          fi
+          {
+            echo "files<<__EOF__"
+            echo "$CHANGED"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Install jsonschema
+        if: steps.files.outputs.files != ''
+        run: pip install jsonschema
+
+      - name: Validate JSON syntax and (where applicable) against schema
+        if: steps.files.outputs.files != ''
+        env:
+          FILES: ${{ steps.files.outputs.files }}
+        run: |
+          python3 <<'PYEOF'
+          import json
+          import os
+          import pathlib
+          import sys
+
+          from jsonschema import Draft202012Validator
+
+          files = [f for f in os.environ.get('FILES', '').strip().split('\n') if f]
+
+
+          def schema_for(path):
+              """Return the schema path for a data file, or None if no schema applies."""
+              p = pathlib.Path(path)
+              parts = p.parts
+
+              # architectures/clients.json -> schemas/clients.json
+              if path == 'architectures/clients.json':
+                  return pathlib.Path('schemas/clients.json')
+
+              # architectures/<client>/client.json -> schemas/client.json
+              if len(parts) == 3 and parts[0] == 'architectures' and parts[-1] == 'client.json':
+                  return pathlib.Path('schemas/client.json')
+
+              # architectures/<client>/versions.json -> schemas/versions.json
+              if len(parts) == 3 and parts[0] == 'architectures' and parts[-1] == 'versions.json':
+                  return pathlib.Path('schemas/versions.json')
+
+              # architectures/<client>/<version>/version.json -> schemas/version.json
+              if len(parts) == 4 and parts[0] == 'architectures' and parts[-1] == 'version.json':
+                  return pathlib.Path('schemas/version.json')
+
+              # architectures/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json
+              #   -> schemas/artefacts/domains/<dom>/<layer>/<ID>.json
+              if (
+                  len(parts) >= 9
+                  and parts[0] == 'architectures'
+                  and parts[3] == 'artefacts'
+                  and parts[4] == 'domains'
+              ):
+                  dom, layer, artefact_id = parts[5], parts[6], parts[7]
+                  return pathlib.Path(f'schemas/artefacts/domains/{dom}/{layer}/{artefact_id}.json')
+
+              # Schema files themselves have no cross-reference target — JSON-parse only.
+              return None
+
+
+          failed = []
+
+          for f in files:
+              fp = pathlib.Path(f)
+              if not fp.exists():
+                  print(f"[skip] {f}: deleted")
+                  continue
+
+              # 1. JSON syntax check
+              try:
+                  with open(fp) as fh:
+                      data = json.load(fh)
+                  print(f"[json-ok] {f}")
+              except Exception as e:
+                  print(f"::error file={f}::Invalid JSON: {e}")
+                  failed.append(f)
+                  continue
+
+              # 2. Cross-reference schema (if one applies)
+              schema_path = schema_for(f)
+              if schema_path is None:
+                  print(f"[no-schema] {f}: JSON-parse only (no schema mapping)")
+                  continue
+
+              if not schema_path.exists():
+                  print(f"::error file={f}::Expected schema at {schema_path} but it does not exist")
+                  failed.append(f)
+                  continue
+
+              with open(schema_path) as fh:
+                  schema = json.load(fh)
+
+              validator = Draft202012Validator(schema)
+              errors = sorted(validator.iter_errors(data), key=lambda e: list(e.absolute_path))
+              if errors:
+                  for err in errors:
+                      loc = '/'.join(str(p) for p in err.absolute_path) or '(root)'
+                      print(f"::error file={f}::{err.message} (at {loc})")
+                  failed.append(f)
+              else:
+                  print(f"[schema-ok] {f} -> {schema_path}")
+
+          if failed:
+              print(f"\nValidation failed for {len(failed)} file(s):")
+              for f in failed:
+                  print(f"  - {f}")
+              sys.exit(1)
+
+          print("\nAll changed JSON files passed validation.")
+          PYEOF
