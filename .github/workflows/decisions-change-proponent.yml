@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Started
-        run: echo "::notice::Started: Decision Change Proponent"
+        run: |
+          echo "::notice::Started: Decision Change Proponent"
 
       - name: Checkout decision branch
         uses: actions/checkout@v4
@@ -41,4 +42,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: Decision Change Proponent"
+        run: |
+          echo "::notice::Finished: Decision Change Proponent"

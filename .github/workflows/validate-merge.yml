@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Started
-        run: echo "::notice::Started: Validate Merge"
+        run: |
+          echo "::notice::Started: Validate Merge"
 
       - name: Checkout branch
         uses: actions/checkout@v4
@@ -107,4 +108,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: Validate Merge"
+        run: |
+          echo "::notice::Finished: Validate Merge"

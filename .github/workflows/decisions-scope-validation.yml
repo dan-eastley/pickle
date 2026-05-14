@@ -18,7 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Started
-        run: echo "::notice::Started: Scope Validation"
+        run: |
+          echo "::notice::Started: Scope Validation"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,4 +39,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: Scope Validation"
+        run: |
+          echo "::notice::Finished: Scope Validation"

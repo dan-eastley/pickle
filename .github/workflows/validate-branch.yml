@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Started
-        run: echo "::notice::Started: Validate Branch"
+        run: |
+          echo "::notice::Started: Validate Branch"
 
       - name: Check branch name
         env:
@@ -46,4 +47,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: Validate Branch"
+        run: |
+          echo "::notice::Finished: Validate Branch"

@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Started
-        run: echo "::notice::Started: Validate Schema"
+        run: |
+          echo "::notice::Started: Validate Schema"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -169,4 +170,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: Validate Schema"
+        run: |
+          echo "::notice::Finished: Validate Schema"

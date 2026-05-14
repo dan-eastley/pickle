@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Started
-        run: echo "::notice::Started: Create Pull Request"
+        run: |
+          echo "::notice::Started: Create Pull Request"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -93,4 +94,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: Create Pull Request"
+        run: |
+          echo "::notice::Finished: Create Pull Request"
