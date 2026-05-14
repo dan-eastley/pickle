@@ -1,0 +1,13 @@
+name: Validate Schema
+
+# Stub. Schema validation logic to be implemented.
+
+on:
+  push:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stub
+        run: echo "Validate Schema workflow — stub. Implementation pending."
