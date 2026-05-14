@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-STR",
+    "title": "Business Strategy Catalogue",
+    "description": "Catalogue of strategic statements for the Business architecture domain — the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
+    "type": "object",
+    "required": [
+        "strategies"
+    ],
+    "properties": {
+        "strategies": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "statement"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier (e.g. BUS-STR-001)"
+                    },
+                    "statement": {
+                        "type": "string",
+                        "description": "Strategic statement — outcome-oriented, time-bound where appropriate"
+                    },
+                    "driver": {
+                        "type": "string",
+                        "description": "Business driver or external force motivating this strategy"
+                    },
+                    "target-outcome": {
+                        "type": "string",
+                        "description": "Measurable success criterion (what does success look like?)"
+                    },
+                    "horizon": {
+                        "type": "string",
+                        "enum": [
+                            "short-term",
+                            "medium-term",
+                            "long-term"
+                        ],
+                        "description": "Time horizon"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "Accountable role or business unit"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

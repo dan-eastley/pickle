@@ -20,6 +20,9 @@ The [schemas/](schemas/) folder contains a markdown page for each JSON Schema, e
 | Clients index | [schemas/clients.md](schemas/clients.md) |
 | Versions index | [schemas/versions.md](schemas/versions.md) |
 | Artefact-type schema index | [schemas/artefacts.md](schemas/artefacts.md) |
+| Strategy (`<DOM>-STR`) | [schemas/strategy.md](schemas/strategy.md) |
+| Principles (`<DOM>-PRN`) | [schemas/principles.md](schemas/principles.md) |
+| Guardrails (`<DOM>-GRD`) | [schemas/guardrails.md](schemas/guardrails.md) |
 | BUS-CAP | [schemas/BUS-CAP.md](schemas/BUS-CAP.md) |
 | BUS-PRO | [schemas/BUS-PRO.md](schemas/BUS-PRO.md) |
 | DAT-DAC | [schemas/DAT-DAC.md](schemas/DAT-DAC.md) |

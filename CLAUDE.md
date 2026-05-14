@@ -152,9 +152,8 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 
 ## Open Questions / Work in Progress
 
-- [ ] Catalogue schemas only exist for `BUS-CAP`, `BUS-PRO`, `DAT-DAC`, and `APP-DAP` — schemas for other catalogues, plus all matrix and diagram formats, are not yet defined
-- [ ] No artefact types are yet defined for the Integration or Solution architecture domains
-- [ ] Most architecture domain × abstraction-layer slots are still empty
+- [ ] Every architecture domain × abstraction layer slot now has a baseline `<DOM>-STR` / `<DOM>-PRN` / `<DOM>-GRD` catalogue. Domain-specific catalogues exist for `BUS-CAP`, `BUS-PRO`, `DAT-DAC`, and `APP-DAP` — others (e.g. integration patterns, solution blueprints) are not yet defined.
+- [ ] Matrix and diagram formats not yet defined (only catalogues are schema-backed)
 - [ ] No CI/CD workflows — JSON validation and ADR branch naming are not yet enforced automatically
 - [ ] No diagram/view generation implemented yet
 - [ ] Ingestion path into EA tooling (e.g. via CALM or similar) not decided

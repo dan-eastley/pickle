@@ -10,7 +10,17 @@ Each schema in [`/schemas/`](../../schemas/) is documented here. Click through f
 | [versions.md](versions.md) | `architectures/<client>/versions.json` | Authoritative list of version IDs for a client |
 | [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Index of all defined catalogue schemas |
 
-## Catalogue schemas
+## Cross-domain shape catalogues
+
+These three shapes are reused across every architecture domain. Each architecture domain has its own `<DOM>-STR` / `<DOM>-PRN` / `<DOM>-GRD` schema, but all five `<DOM>-STR` schemas share the Strategy shape (and likewise for Principles and Guardrails).
+
+| Shape | Used by | Layer |
+|---|---|---|
+| [strategy.md](strategy.md) | `BUS-STR`, `DAT-STR`, `INT-STR`, `APP-STR`, `SOL-STR` | Conceptual |
+| [principles.md](principles.md) | `BUS-PRN`, `DAT-PRN`, `INT-PRN`, `APP-PRN`, `SOL-PRN` | Logical |
+| [guardrails.md](guardrails.md) | `BUS-GRD`, `DAT-GRD`, `INT-GRD`, `APP-GRD`, `SOL-GRD` | Physical |
+
+## Domain-specific catalogue schemas
 
 | Schema | Artefact Type | Architecture Domain / Layer | Aligned to |
 |---|---|---|---|
