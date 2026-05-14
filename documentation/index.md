@@ -35,3 +35,4 @@ GitHub Actions workflows live at [`/.github/workflows/`](../.github/workflows/).
 - The repository structure, conventions, and AI working notes live in [`/CLAUDE.md`](../CLAUDE.md) at the repo root.
 - The actual schemas live under [`/schemas/`](../schemas/).
 - The actual architecture data lives under [`/architectures/`](../architectures/).
+- Claude prompts driving the AI-assisted decision workflows live under [`/prompts/`](../prompts/).

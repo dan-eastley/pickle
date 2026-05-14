@@ -109,12 +109,20 @@ jobs:
 
           elif parts[0] == 'features':
               # features/<feature-id> — changes must NOT touch any
-              # architectures/<client>/ folder.
+              # architectures/<client>/ folder, with one exception: the
+              # decisions.json index files are organisational metadata and
+              # may be updated from a feature branch (e.g. when registering
+              # a new decision id).
               changed = diff_against('develop')
 
               def in_client_folder(path):
                   segs = path.split('/')
-                  return len(segs) >= 3 and segs[0] == 'architectures'
+                  if len(segs) < 3 or segs[0] != 'architectures':
+                      return False
+                  # Allowed exception: decisions.json index files.
+                  if segs[-1] == 'decisions.json':
+                      return False
+                  return True
 
               violations = [f for f in changed if in_client_folder(f)]
 

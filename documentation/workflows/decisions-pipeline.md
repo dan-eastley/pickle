@@ -11,10 +11,42 @@ Six analysis workflows that run in sequence after [Validate Context](validate-co
 
 - Validate Context is the trigger workflow — it runs on `push` to `decisions/**`.
 - The six analysis workflows below are triggered by `workflow_run` on the prior workflow's successful completion.
-- Each workflow checks out the decision branch, reads the decision JSON, fills its section, and commits back via `GITHUB_TOKEN`. The commit push does **not** re-trigger push events (GitHub anti-recursion), so the chain is linear and finite.
-- The shared logic for the six analysis stubs lives in [`/.github/scripts/decision-stub.sh`](../../.github/scripts/decision-stub.sh).
+- Each workflow checks out the decision branch, invokes `anthropics/claude-code-base-action@beta` with the prompt loaded from [`/prompts/decisions/`](../../prompts/decisions/), then commits the updated decision JSON back via `GITHUB_TOKEN`. The commit push does **not** re-trigger push events (GitHub anti-recursion), so the chain is linear and finite.
+- The Claude API key is read from the `ANTHROPIC_API_KEY` repository secret. Without that secret configured, the analysis steps fail at the Claude action call.
 
 > **`workflow_run` only fires from workflow files on the default branch.** The chain is dormant until these workflows reach `main`.
+
+## Visual flow
+
+```mermaid
+flowchart TD
+    Push[/"Push to decisions/&lt;client&gt;/&lt;version&gt;/&lt;decision-id&gt;"/]
+    Push --> VC
+
+    VC["Validate Context<br/><i>writes context-validation</i>"]:::det
+    VC -- "out-of-context change" --> Halt(((halt))):::term
+    VC -- "in-context" --> AR
+
+    AR["Architecture Review<br/><i>writes architecture-review</i>"]:::ai
+    AR --> RI["Referential Integrity<br/><i>writes referential-integrity</i>"]:::ai
+    RI --> SA["Strategy Alignment<br/><i>writes strategy-alignment</i>"]:::ai
+    SA --> PA["Principles Alignment<br/><i>writes principles-alignment</i>"]:::ai
+    PA --> PR["Proponent Analysis<br/><i>writes proponent-analysis</i>"]:::ai
+    PR --> CH["Challenger Analysis<br/><i>writes challenger-analysis</i>"]:::ai
+    CH --> Done(((decision JSON complete))):::term
+
+    classDef det fill:#e3f2fd,stroke:#1976d2,color:#000
+    classDef ai fill:#f3e5f5,stroke:#7b1fa2,color:#000
+    classDef term fill:#eeeeee,stroke:#616161,color:#000
+```
+
+| | Workflow type |
+|---|---|
+| 🟦 Blue | Deterministic — runs without Claude |
+| 🟪 Purple | Claude-driven — loads its prompt from `/prompts/decisions/<workflow>.md` |
+| ⬜ Grey | Terminal — pipeline exit |
+
+A failure (or skip) at any step halts everything downstream, because each link uses `workflow_run` with `if: github.event.workflow_run.conclusion == 'success'`.
 
 ## The six analysis workflows
 
@@ -56,6 +88,12 @@ Six analysis workflows that run in sequence after [Validate Context](validate-co
 
 ## Current status
 
-All six analysis workflows are **structural stubs**. Each writes the 4-string `{finding, impact, recommendation, rationale}` shape defined at `$defs/section` in [schemas/decision.json](../../schemas/decision.json) with placeholder content. Real logic — both AI-driven analysis and deterministic checks — is pending.
+All six analysis workflows are now **Claude-driven** end to end:
 
-[Validate Context](validate-context.md) is the only fully-implemented decision-related workflow.
+- Each loads its prompt from [`/prompts/decisions/<workflow>.md`](../../prompts/decisions/).
+- Claude reads the decision JSON, follows the prompt, and writes the four-string `{finding, impact, recommendation, rationale}` shape into the matching section.
+- The workflow commits the updated decision JSON back to the branch.
+
+The **prompts themselves are stubs** — they describe the role and output contract but the task descriptions are placeholders. Iterate the prompt content in `/prompts/decisions/` without touching the workflow YAML; the file is loaded at runtime.
+
+[Validate Context](validate-context.md) remains deterministic and does not call Claude.

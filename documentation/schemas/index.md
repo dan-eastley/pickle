@@ -8,6 +8,7 @@ Each schema in [`/schemas/`](../../schemas/) is documented here. Click through f
 |---|---|---|
 | [clients.md](clients.md) | `architectures/clients.json` | Authoritative list of client IDs |
 | [versions.md](versions.md) | `architectures/<client>/versions.json` | Authoritative list of version IDs for a client |
+| [decisions.md](decisions.md) | `architectures/<client>/<version>/decisions/decisions.json` | Authoritative list of decision IDs for a version |
 | [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Index of all defined catalogue schemas |
 
 ## Singular metadata

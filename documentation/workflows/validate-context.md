@@ -39,8 +39,9 @@ A decision branch is for client-specific architecture change. A feature branch i
 ### Feature branches
 
 1. Diffs the branch against `origin/develop`.
-2. Any changed file matching `architectures/<some-client>/...` (i.e. depth ≥ 3 under `architectures/`) is a violation.
-3. Files at `architectures/clients.json` and similar top-level index files are **not** violations — they sit outside any client folder.
+2. Any changed file matching `architectures/<some-client>/...` (i.e. depth ≥ 3 under `architectures/`) is a violation, with one exception:
+   - **`decisions.json` index files are allowed.** They are organisational metadata (decision IDs only), not architecture content, and may be updated from a feature branch — for example, when registering a new decision ID ahead of the decision branch that fills it in.
+3. Files at `architectures/clients.json` and similar top-level index files are **not** violations either — they sit outside any client folder.
 4. No decision JSON to update; the result is reported via build status and workflow logs.
 5. Exits non-zero on violation.
 
