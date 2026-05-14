@@ -14,7 +14,7 @@ Captures strategic intent for the Integration architecture domain — outcome-or
 - **OKR pattern** — `target-outcome` carries measurable success criteria
 - **Horizon framing** — Short / medium / long term aligns with portfolio planning conventions
 
-## Shape
+## Example
 
 ```json
 {

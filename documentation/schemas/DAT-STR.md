@@ -14,7 +14,7 @@ Captures strategic intent for the Data architecture domain — outcome-oriented,
 - **OKR pattern** — `target-outcome` carries measurable success criteria
 - **Horizon framing** — Short / medium / long term aligns with portfolio planning conventions
 
-## Shape
+## Example
 
 ```json
 {

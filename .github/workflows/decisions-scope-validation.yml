@@ -2,7 +2,7 @@ name: Scope Validation
 
 # Stub. Implementation pending.
 # Fires on push to a decisions/<client>/<version>/<decision-id> branch.
-# Reads the decision JSON, writes a stub to the `scope` section,
+# Reads the decision JSON, writes a stub to the `scope-validation` section,
 # commits back via GITHUB_TOKEN (which does not re-trigger push events).
 
 on:
@@ -26,12 +26,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Write scope stub to decision JSON
+      - name: Write scope-validation stub to decision JSON
         env:
           BRANCH: ${{ github.ref_name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WORKFLOW_NAME: "Scope Validation"
-          SECTION_KEY: "scope"
+          SECTION_KEY: "scope-validation"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

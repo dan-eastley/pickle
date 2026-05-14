@@ -12,7 +12,7 @@ Vendor-neutral guidelines that shape design decisions in the Application archite
 
 - **TOGAF Architecture Principles** — Name, Statement, Rationale, Implications (the de-facto standard)
 
-## Shape
+## Example
 
 ```json
 {

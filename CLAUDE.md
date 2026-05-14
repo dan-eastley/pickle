@@ -29,25 +29,33 @@ For full context on the architecture model — architecture domains, abstraction
 
 ```
 /
+├── .github/
+│   ├── scripts/                    # Shared helper scripts used by workflows
+│   └── workflows/                  # GitHub Actions — see /documentation/workflows/
+│
 ├── documentation/                  # Markdown documentation, navigable in GitHub
 │   ├── index.md                    # Top-level documentation index
-│   ├── domains.md
-│   ├── abstraction-layers.md
-│   ├── output-formats.md
-│   ├── artefacts.md
-│   └── schemas/                    # One markdown page per JSON Schema
+│   ├── domains.md                  # The five architecture domains
+│   ├── abstraction-layers.md       # Conceptual / Logical / Physical
+│   ├── output-formats.md           # Catalogue / Matrix / Diagram
+│   ├── artefacts.md                # Artefact-type registry
+│   ├── schemas/                    # One markdown page per JSON Schema
+│   │   ├── index.md
+│   │   ├── clients.md, client.md, versions.md, version.md
+│   │   ├── artefacts.md            # The schema-index file
+│   │   ├── decision.md             # Machine-readable ADR
+│   │   ├── BUS-CAP.md, BUS-PRO.md, DAT-DAC.md, APP-DAP.md
+│   │   └── <DOM>-STR.md, <DOM>-PRN.md, <DOM>-GRD.md   # Five domains x three layers
+│   └── workflows/                  # One markdown page per GitHub Actions workflow
 │       ├── index.md
-│       ├── clients.md
-│       ├── versions.md
-│       ├── artefacts.md
-│       ├── BUS-CAP.md
-│       ├── BUS-PRO.md
-│       ├── DAT-DAC.md
-│       └── APP-DAP.md
+│       ├── validate-{branch,merge,schema}.md
+│       ├── create-{pull-request,release}.md
+│       └── decisions-pipeline.md   # Covers all seven decisions-* workflows
 │
 ├── schemas/                        # JSON Schema definitions — mirrors architectures/ layout
-│   ├── clients.json                # Schema for architectures/clients.json (index)
-│   ├── versions.json               # Schema for architectures/<client>/versions.json (index)
+│   ├── clients.json, client.json
+│   ├── versions.json, version.json
+│   ├── decision.json               # ADR schema (used by decisions/<id>.json)
 │   ├── artefacts.json              # Schema index — artefact-type ID -> catalogue schema $ref
 │   └── artefacts/
 │       └── domains/

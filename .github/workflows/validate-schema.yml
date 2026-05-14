@@ -102,6 +102,14 @@ jobs:
               if len(parts) == 4 and parts[0] == 'architectures' and parts[-1] == 'version.json':
                   return pathlib.Path('schemas/version.json')
 
+              # architectures/<client>/<version>/decisions/<decision-id>.json -> schemas/decision.json
+              if (
+                  len(parts) == 5
+                  and parts[0] == 'architectures'
+                  and parts[3] == 'decisions'
+              ):
+                  return pathlib.Path('schemas/decision.json')
+
               # architectures/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json
               #   -> schemas/artefacts/domains/<dom>/<layer>/<ID>.json
               if (

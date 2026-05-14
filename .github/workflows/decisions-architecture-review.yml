@@ -1,26 +1,26 @@
-name: Decision Change Challenger
+name: Architecture Review
 
 # Stub. Implementation pending.
-# Chains after Decision Change Proponent via workflow_run.
-# Reads the decision JSON, writes a stub to the `challenger` section,
+# Chains after Scope Validation via workflow_run.
+# Reads the decision JSON, writes a stub to the `architecture-review` section,
 # commits back via GITHUB_TOKEN.
 
 on:
   workflow_run:
-    workflows: ["Decision Change Proponent"]
+    workflows: ["Scope Validation"]
     types: [completed]
 
 permissions:
   contents: write
 
 jobs:
-  challenger:
+  discovery:
     if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
     runs-on: ubuntu-latest
     steps:
       - name: Started
         run: |
-          echo "::notice::Started: Decision Change Challenger"
+          echo "::notice::Started: Decision Change Discovery"
 
       - name: Checkout decision branch
         uses: actions/checkout@v4
@@ -29,12 +29,12 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Write challenger stub to decision JSON
+      - name: Write architecture-review stub to decision JSON
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKFLOW_NAME: "Decision Change Challenger"
-          SECTION_KEY: "challenger"
+          WORKFLOW_NAME: "Architecture Review"
+          SECTION_KEY: "architecture-review"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -43,4 +43,4 @@ jobs:
       - name: Finished
         if: always()
         run: |
-          echo "::notice::Finished: Decision Change Challenger"
+          echo "::notice::Finished: Decision Change Discovery"

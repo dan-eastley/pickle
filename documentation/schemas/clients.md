@@ -7,7 +7,7 @@
 
 Authoritative list of client IDs that have an architecture in this repository. Per-client metadata (name, etc.) lives in `architectures/<client>/client.json` — this index intentionally only carries the IDs.
 
-## Shape
+## Example
 
 ```json
 {

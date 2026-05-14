@@ -19,14 +19,16 @@ GitHub Actions workflows live at [`/.github/workflows/`](../../.github/workflows
 
 ## Decision pipeline (7-workflow chain)
 
-| Workflow | File | Triggers after | Purpose |
-|---|---|---|---|
-| [Scope Validation](decisions-pipeline.md#1-scope-validation) | `decisions-scope-validation.yml` | push to decisions/** | First link in the chain |
-| [Decision Change Discovery](decisions-pipeline.md#2-decision-change-discovery) | `decisions-change-discovery.yml` | Scope Validation | Recommend artefact-type changes |
-| [Referential Integrity](decisions-pipeline.md#3-referential-integrity) | `decisions-referential-integrity.yml` | Decision Change Discovery | Cross-reference IDs, flag orphans |
-| [Strategy Alignment](decisions-pipeline.md#4-strategy-alignment) | `decisions-strategy-alignment.yml` | Referential Integrity | Review conceptual changes against domain Strategy |
-| [Principles Alignment](decisions-pipeline.md#5-principles-alignment) | `decisions-principles-alignment.yml` | Strategy Alignment | Review logical changes against domain Principles |
-| [Decision Change Proponent](decisions-pipeline.md#6-decision-change-proponent) | `decisions-change-proponent.yml` | Principles Alignment | Narrative arguing FOR the change |
-| [Decision Change Challenger](decisions-pipeline.md#7-decision-change-challenger) | `decisions-change-challenger.yml` | Decision Change Proponent | Narrative arguing AGAINST the change |
+Each workflow writes to a section in the decision JSON whose property name equals the kebab-cased workflow name.
+
+| # | Workflow | File | Triggers after | Decision-JSON section |
+|---|---|---|---|---|
+| 1 | [Scope Validation](decisions-pipeline.md#1-scope-validation) | `decisions-scope-validation.yml` | push to decisions/** | `scope-validation` |
+| 2 | [Architecture Review](decisions-pipeline.md#2-architecture-review) | `decisions-architecture-review.yml` | Scope Validation | `architecture-review` |
+| 3 | [Referential Integrity](decisions-pipeline.md#3-referential-integrity) | `decisions-referential-integrity.yml` | Architecture Review | `referential-integrity` |
+| 4 | [Strategy Alignment](decisions-pipeline.md#4-strategy-alignment) | `decisions-strategy-alignment.yml` | Referential Integrity | `strategy-alignment` |
+| 5 | [Principles Alignment](decisions-pipeline.md#5-principles-alignment) | `decisions-principles-alignment.yml` | Strategy Alignment | `principles-alignment` |
+| 6 | [Proponent Analysis](decisions-pipeline.md#6-proponent-analysis) | `decisions-proponent-analysis.yml` | Principles Alignment | `proponent-analysis` |
+| 7 | [Challenger Analysis](decisions-pipeline.md#7-challenger-analysis) | `decisions-challenger-analysis.yml` | Proponent Analysis | `challenger-analysis` |
 
 All seven decision-pipeline workflows are currently structural **stubs** — see [decisions-pipeline.md](decisions-pipeline.md) for the shared mechanism and what each workflow will eventually do.

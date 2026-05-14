@@ -11,7 +11,7 @@
 - **CMMI** — Maturity scale used for `maturity-current` / `maturity-target`
 - **Strategic classification** — `strategic` / `differentiating` / `foundational` follows common practice for portfolio prioritisation
 
-## Shape
+## Example
 
 ```json
 {

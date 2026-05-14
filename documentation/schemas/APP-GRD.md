@@ -13,7 +13,7 @@ Non-negotiable constraints, mandatory standards, and concrete patterns for the A
 - **AWS Service Control Policies** / **Azure Policy** — Rule + scope + effect framing
 - **Policy-as-Code** — Each guardrail expected to be enforceable, ideally automatically
 
-## Shape
+## Example
 
 ```json
 {

@@ -13,7 +13,6 @@ python3 - "$BRANCH" "$SECTION_KEY" "$WORKFLOW_NAME" <<'PYEOF'
 import json
 import pathlib
 import sys
-from datetime import datetime, timezone
 
 branch, section_key, workflow_name = sys.argv[1], sys.argv[2], sys.argv[3]
 
@@ -35,11 +34,14 @@ if not decision_path.exists():
 with open(decision_path) as fh:
     decision = json.load(fh)
 
+# Every section conforms to schemas/decision.json#/$defs/section: four strings.
+# Real workflow implementations will replace these placeholders with the
+# analytical output.
 decision[section_key] = {
-    "status": "stub",
-    "workflow": workflow_name,
-    "ran-at": datetime.now(timezone.utc).isoformat(timespec='seconds'),
-    "note": f"Stub for {workflow_name}. Real logic to be implemented."
+    "finding":         f"[stub] {workflow_name} has not been implemented yet.",
+    "impact":          f"[stub] The {workflow_name} contribution to this decision is unknown until the workflow is built.",
+    "recommendation":  f"[stub] Implement {workflow_name} before relying on this section.",
+    "rationale":       f"[stub] Placeholder content emitted by the {workflow_name} stub script."
 }
 
 with open(decision_path, 'w') as fh:

@@ -10,7 +10,7 @@
 - **Porter's Value Chain** — `type` (`core`, `supporting`, `management`)
 - **BPMN** — Concepts of `trigger`, `inputs`, `outputs` (catalogue captures the metadata; the visual flow lives in the BUS-BPM diagram)
 
-## Shape
+## Example
 
 ```json
 {

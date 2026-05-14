@@ -8,7 +8,7 @@ Index of all catalogue schemas in the repository, keyed by artefact-type ID. Eac
 
 The full artefact-type registry (catalogues, diagrams, and matrices, with their architecture domain / abstraction / format classifications) lives in [`/documentation/artefacts.md`](../artefacts.md).
 
-## Shape
+## Example
 
 ```json
 {

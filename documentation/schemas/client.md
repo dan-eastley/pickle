@@ -7,7 +7,7 @@
 
 Per-client metadata file living inside each client's folder. Carries human-readable information about the client. The plural index at [`architectures/clients.json`](../../architectures/clients.json) only lists IDs — names and other metadata live here.
 
-## Shape
+## Example
 
 ```json
 {
