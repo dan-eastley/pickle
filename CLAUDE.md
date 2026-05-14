@@ -30,8 +30,10 @@ For full context on the architecture model — architecture domains, abstraction
 ```
 /
 ├── .github/
-│   ├── scripts/                    # Shared helper scripts used by workflows
 │   └── workflows/                  # GitHub Actions — see /documentation/workflows/
+│
+├── prompts/                        # Prompts loaded by Claude-driven workflows
+│   └── decisions/                  # One markdown prompt per decision-analysis workflow
 │
 ├── documentation/                  # Markdown documentation, navigable in GitHub
 │   ├── index.md                    # Top-level documentation index
@@ -55,7 +57,7 @@ For full context on the architecture model — architecture domains, abstraction
 ├── schemas/                        # JSON Schema definitions — mirrors architectures/ layout
 │   ├── clients.json, client.json
 │   ├── versions.json, version.json
-│   ├── decision.json               # ADR schema (used by decisions/<id>.json)
+│   ├── decisions.json, decision.json   # Decisions index + per-decision ADR schema
 │   ├── artefacts.json              # Schema index — artefact-type ID -> catalogue schema $ref
 │   └── artefacts/
 │       └── domains/
@@ -83,7 +85,9 @@ For full context on the architecture model — architecture domains, abstraction
 │           │       ├── application/{conceptual,logical,physical}/
 │           │       │   └── <ARTEFACT-ID>/
 │           │       └── solution/{conceptual,logical,physical}/
-│           └── decisions/          # Architecture Decision Records (ADRs) for this release
+│           └── decisions/
+│               ├── decisions.json  # Index of decision IDs for this version
+│               └── <decision-id>.json  # One file per ADR
 │
 └── CLAUDE.md                       # This file
 ```
@@ -136,7 +140,8 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 ### Indexes
 - `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
 - `architectures/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/<client>/<version>/version.json`)
-- `schemas/clients.json` and `schemas/versions.json` validate the index files; `schemas/client.json` and `schemas/version.json` validate the singular metadata files
+- `architectures/<client>/<version>/decisions/decisions.json` is the authoritative list of decision IDs for a version (no metadata — that lives in `<decision-id>.json` alongside it)
+- `schemas/clients.json` / `schemas/versions.json` / `schemas/decisions.json` validate the index files; `schemas/client.json` / `schemas/version.json` / `schemas/decision.json` validate the corresponding singular metadata / content files
 - `schemas/artefacts.json` is a **schema index** — a flat map of artefact-type ID → catalogue schema `$ref`. The full artefact-type registry (catalogues, diagrams, matrices) lives in `documentation/artefacts.md`.
 - When adding or removing a client/version folder, update the corresponding index file
 
