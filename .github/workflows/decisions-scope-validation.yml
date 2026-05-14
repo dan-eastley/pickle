@@ -17,6 +17,9 @@ jobs:
   scope_validation:
     runs-on: ubuntu-latest
     steps:
+      - name: Started
+        run: echo "::notice::Started: Scope Validation"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -32,3 +35,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           bash .github/scripts/decision-stub.sh
+
+      - name: Finished
+        if: always()
+        run: echo "::notice::Finished: Scope Validation"

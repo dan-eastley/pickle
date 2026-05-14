@@ -26,6 +26,10 @@ The [schemas/](schemas/) folder contains a markdown page for each JSON Schema, e
 | DAT-DAC | [schemas/DAT-DAC.md](schemas/DAT-DAC.md) |
 | APP-DAP | [schemas/APP-DAP.md](schemas/APP-DAP.md) |
 
+## Workflows
+
+GitHub Actions workflows live at [`/.github/workflows/`](../.github/workflows/). Each is documented in [`workflows/`](workflows/) — start at the [workflows index](workflows/index.md) for the full list.
+
 ## Where else to look
 
 - The repository structure, conventions, and AI working notes live in [`/CLAUDE.md`](../CLAUDE.md) at the repo root.

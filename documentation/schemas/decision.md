@@ -10,14 +10,14 @@ Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.
 ## Lifecycle
 
 1. **Author** creates `architectures/<client>/<version>/decisions/<decision-id>.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
-2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires the seven workflows in sequence (see `.github/workflows/decision-*.yml`):
+2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires the seven workflows in sequence (see `.github/workflows/decisions-*.yml`):
    1. Scope Validation
-   2. Decision Discovery
+   2. Decision Change Discovery
    3. Referential Integrity
    4. Strategy Alignment
    5. Principles Alignment
-   6. Decision Proponent
-   7. Decision Challenger
+   6. Decision Change Proponent
+   7. Decision Change Challenger
 3. Each workflow checks out the branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next workflow in the chain (`workflow_run` trigger) then runs.
 
 ## Shape

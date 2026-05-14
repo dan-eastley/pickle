@@ -10,6 +10,9 @@ jobs:
   validate-schema:
     runs-on: ubuntu-latest
     steps:
+      - name: Started
+        run: echo "::notice::Started: Validate Schema"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -163,3 +166,7 @@ jobs:
 
           print("\nAll changed JSON files passed validation.")
           PYEOF
+
+      - name: Finished
+        if: always()
+        run: echo "::notice::Finished: Validate Schema"

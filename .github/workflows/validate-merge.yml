@@ -1,4 +1,4 @@
-name: Validate merge
+name: Validate Merge
 
 on:
   push:
@@ -14,6 +14,9 @@ jobs:
   attempt-merge:
     runs-on: ubuntu-latest
     steps:
+      - name: Started
+        run: echo "::notice::Started: Validate Merge"
+
       - name: Checkout branch
         uses: actions/checkout@v4
         with:
@@ -101,3 +104,7 @@ jobs:
           echo "::error::Merge of origin/$UPSTREAM failed for an unknown reason; see logs above."
           git merge --abort 2>/dev/null || true
           exit 1
+
+      - name: Finished
+        if: always()
+        run: echo "::notice::Finished: Validate Merge"

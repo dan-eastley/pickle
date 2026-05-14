@@ -1,4 +1,4 @@
-name: Decision Proponent
+name: Decision Change Proponent
 
 # Stub. Implementation pending.
 # Chains after Principles Alignment via workflow_run.
@@ -18,6 +18,9 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Started
+        run: echo "::notice::Started: Decision Change Proponent"
+
       - name: Checkout decision branch
         uses: actions/checkout@v4
         with:
@@ -29,9 +32,13 @@ jobs:
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKFLOW_NAME: "Decision Proponent"
+          WORKFLOW_NAME: "Decision Change Proponent"
           SECTION_KEY: "proponent"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           bash .github/scripts/decision-stub.sh
+
+      - name: Finished
+        if: always()
+        run: echo "::notice::Finished: Decision Change Proponent"

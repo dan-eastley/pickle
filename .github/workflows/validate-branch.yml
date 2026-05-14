@@ -1,4 +1,4 @@
-name: Validate branch
+name: Validate Branch
 
 on:
   create:
@@ -11,6 +11,9 @@ jobs:
     if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
     steps:
+      - name: Started
+        run: echo "::notice::Started: Validate Branch"
+
       - name: Check branch name
         env:
           BRANCH: ${{ github.event.ref }}
@@ -40,3 +43,7 @@ jobs:
           echo ""
           echo "Rename your branch locally (git branch -m <new-name>) and re-push."
           exit 1
+
+      - name: Finished
+        if: always()
+        run: echo "::notice::Finished: Validate Branch"
