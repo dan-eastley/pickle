@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes
+
+      - name: Sync main back into develop
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin develop main
+          git checkout develop
+
+          if git merge --no-edit origin/main; then
+            git push origin develop
+            echo "::notice::Merged main back into develop."
+          else
+            echo "::error::Could not merge main into develop cleanly. Resolve manually."
+            git merge --abort 2>/dev/null || true
+            exit 1
+          fi
