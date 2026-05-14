@@ -1,3 +1,70 @@
 {
-    "principles": []
+    "principles": [
+        {
+            "id": "INT-PRN-001",
+            "name": "Async by default for non-critical paths",
+            "statement": "Use asynchronous messaging for any integration not on the critical synchronous path",
+            "rationale": "Async messaging decouples failure domains and absorbs throughput variability",
+            "implications": [
+                "New integrations default to event-driven; sync calls require justification",
+                "Producers publish events to a broker rather than calling consumers directly",
+                "Consumers must be idempotent — duplicates are normal"
+            ]
+        },
+        {
+            "id": "INT-PRN-002",
+            "name": "Contracts before code",
+            "statement": "API and event schemas are authored, reviewed, and published before implementation begins",
+            "rationale": "Implementation-driven contracts leak internal models and lock in design errors",
+            "implications": [
+                "OpenAPI / AsyncAPI specs are the source of truth for any integration",
+                "Mocked services produced from the spec are available before the producer is built",
+                "Breaking changes to a published contract follow a documented deprecation lifecycle"
+            ]
+        },
+        {
+            "id": "INT-PRN-003",
+            "name": "Versioned interfaces with explicit deprecation",
+            "statement": "Every published interface carries a semantic version; obsolete versions remain available for a documented period before retirement",
+            "rationale": "Silent breaking changes erode trust; permanent backward-compatibility ossifies the estate",
+            "implications": [
+                "Major version bumps require explicit consumer migration plans",
+                "Deprecated versions emit telemetry that surfaces remaining consumers",
+                "Documented sunset dates are enforced"
+            ]
+        },
+        {
+            "id": "INT-PRN-004",
+            "name": "Mediated through the gateway",
+            "statement": "All inter-system traffic crossing a trust boundary passes through the managed API gateway or messaging broker",
+            "rationale": "Centralised mediation is the only practical control point for auth, rate limiting, observability, and audit",
+            "implications": [
+                "Direct service-to-service URLs across zones are network-policy denied",
+                "CI checks flag hard-coded inter-zone endpoints",
+                "Gateway and broker capacity scales as a strategic platform, not per-consumer"
+            ]
+        },
+        {
+            "id": "INT-PRN-005",
+            "name": "Idempotency is the consumer's contract",
+            "statement": "Event consumers handle duplicate delivery gracefully; producers do not guarantee exactly-once",
+            "rationale": "Exactly-once across distributed systems is hard and expensive; idempotency is cheaper and more robust",
+            "implications": [
+                "Events carry idempotency keys",
+                "Consumers maintain deduplication state where required",
+                "Producers may retry without coordinating with consumers"
+            ]
+        },
+        {
+            "id": "INT-PRN-006",
+            "name": "Internal model does not leak into the integration model",
+            "statement": "Published events and API payloads express domain concepts in shared language, not the producer's internal data structures",
+            "rationale": "Leaked internal models tightly couple consumers to producer implementation choices",
+            "implications": [
+                "Producer-internal IDs and structures are translated at the boundary",
+                "Shared concepts (per DAT-DAC) are used in payloads where they exist",
+                "Internal schema changes do not propagate without explicit contract review"
+            ]
+        }
+    ]
 }
