@@ -1,13 +1,13 @@
-name: Decision Change Discovery
+name: Architecture Review
 
 # Stub. Implementation pending.
 # Chains after Scope Validation via workflow_run.
-# Reads the decision JSON, writes a stub to the `discovery` section,
+# Reads the decision JSON, writes a stub to the `architecture-review` section,
 # commits back via GITHUB_TOKEN.
 
 on:
   workflow_run:
-    workflows: ["Scope Validation"]
+    workflows: ["Validate Context"]
     types: [completed]
 
 permissions:
@@ -29,12 +29,12 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Write discovery stub to decision JSON
+      - name: Write architecture-review stub to decision JSON
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKFLOW_NAME: "Decision Change Discovery"
-          SECTION_KEY: "discovery"
+          WORKFLOW_NAME: "Architecture Review"
+          SECTION_KEY: "architecture-review"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

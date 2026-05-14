@@ -7,7 +7,7 @@ name: Referential Integrity
 
 on:
   workflow_run:
-    workflows: ["Decision Change Discovery"]
+    workflows: ["Architecture Review"]
     types: [completed]
 
 permissions:

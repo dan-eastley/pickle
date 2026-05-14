@@ -10,7 +10,7 @@
 - **Gartner Pace Layers** / **Geoffrey Moore's CORE/CONTEXT** — `type` classification (`system-of-record`, `system-of-engagement`, `system-of-insight`, `system-of-innovation`)
 - **TechRadar (ThoughtWorks)** — `lifecycle` stance (`adopt`, `trial`, `hold`, `retire`)
 
-## Shape
+## Example
 
 ```json
 {

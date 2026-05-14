@@ -1,13 +1,13 @@
-name: Decision Change Challenger
+name: Challenger Analysis
 
 # Stub. Implementation pending.
-# Chains after Decision Change Proponent via workflow_run.
-# Reads the decision JSON, writes a stub to the `challenger` section,
+# Chains after Proponent Analysis via workflow_run.
+# Reads the decision JSON, writes a stub to the `challenger-analysis` section,
 # commits back via GITHUB_TOKEN.
 
 on:
   workflow_run:
-    workflows: ["Decision Change Proponent"]
+    workflows: ["Proponent Analysis"]
     types: [completed]
 
 permissions:
@@ -29,12 +29,12 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Write challenger stub to decision JSON
+      - name: Write challenger-analysis stub to decision JSON
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKFLOW_NAME: "Decision Change Challenger"
-          SECTION_KEY: "challenger"
+          WORKFLOW_NAME: "Challenger Analysis"
+          SECTION_KEY: "challenger-analysis"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -7,7 +7,7 @@
 
 Per-version metadata file living inside each version folder. Carries human-readable information and status for an architecture version (release baseline). The plural index at `architectures/<client>/versions.json` only lists IDs — names and statuses live here.
 
-## Shape
+## Example
 
 ```json
 {

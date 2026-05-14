@@ -1,0 +1,167 @@
+name: Validate Context
+
+# Context-of-change gate. The allowed change surface depends on the branch type:
+#   * decisions/<client>/<version>/<decision-id>
+#       — changes restricted to architectures/<client>/
+#         (writes the outcome to the decision JSON's context-validation property)
+#   * features/<feature-id>
+#       — changes restricted to everything OUTSIDE architectures/<any-client>/
+#         (no decision JSON exists; result is reported via build status only)
+
+on:
+  push:
+    branches:
+      - 'decisions/**'
+      - 'features/**'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Validate Context"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Check context
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          python3 - "$BRANCH" <<'PYEOF'
+          import json
+          import pathlib
+          import subprocess
+          import sys
+          from datetime import datetime, timezone
+
+          branch = sys.argv[1]
+          parts = branch.split('/')
+
+          subprocess.run(['git', 'fetch', 'origin', 'main', 'develop'],
+                         capture_output=True)
+
+          def diff_against(ref):
+              return [
+                  f for f in subprocess.run(
+                      ['git', 'diff', '--name-only', f'origin/{ref}...HEAD'],
+                      capture_output=True, text=True, check=True
+                  ).stdout.strip().split('\n')
+                  if f
+              ]
+
+          if parts[0] == 'decisions':
+              # decisions/<client>/<version>/<decision-id> — changes confined to
+              # architectures/<client>/.
+              if len(parts) != 4:
+                  print(f"::error::Unexpected decision branch shape: {branch}")
+                  sys.exit(1)
+              _, client_id, version_id, decision_id = parts
+
+              allowed_prefix = f"architectures/{client_id}/"
+              decision_path = pathlib.Path(
+                  f"architectures/{client_id}/{version_id}/decisions/{decision_id}.json"
+              )
+              if not decision_path.exists():
+                  print(f"::error::Decision file not found at {decision_path}.")
+                  print("The author must create the decision JSON with id, title, "
+                        "status, and narrative when starting the branch.")
+                  sys.exit(1)
+
+              changed = diff_against('main')
+              violations = [f for f in changed if not f.startswith(allowed_prefix)]
+
+              with open(decision_path) as fh:
+                  decision = json.load(fh)
+              decision['context-validation'] = {
+                  'branch-type':    'decision',
+                  'outcome':        'fail' if violations else 'pass',
+                  'allowed-prefix': allowed_prefix,
+                  'changed-files':  changed,
+                  'violations':     violations,
+                  'checked-at':     datetime.now(timezone.utc).isoformat(timespec='seconds'),
+              }
+              with open(decision_path, 'w') as fh:
+                  json.dump(decision, fh, indent=4, ensure_ascii=False)
+                  fh.write('\n')
+
+              if violations:
+                  print(f"::error::Decision branch context violation — "
+                        f"{len(violations)} file(s) outside {allowed_prefix}:")
+                  for v in violations:
+                      print(f"  - {v}")
+                  sys.exit(1)
+              print(f"::notice::Decision context OK: {len(changed)} file(s) "
+                    f"changed, all within {allowed_prefix}")
+
+          elif parts[0] == 'features':
+              # features/<feature-id> — changes must NOT touch any
+              # architectures/<client>/ folder.
+              changed = diff_against('develop')
+
+              def in_client_folder(path):
+                  segs = path.split('/')
+                  return len(segs) >= 3 and segs[0] == 'architectures'
+
+              violations = [f for f in changed if in_client_folder(f)]
+
+              if violations:
+                  print(f"::error::Feature branch context violation — "
+                        f"{len(violations)} file(s) inside a client folder:")
+                  for v in violations:
+                      print(f"  - {v}")
+                  print("Feature branches must not modify client architecture data.")
+                  print("Raise the change via a decisions/<client>/<version>/"
+                        "<decision-id> branch instead.")
+                  sys.exit(1)
+              print(f"::notice::Feature context OK: {len(changed)} file(s) "
+                    f"changed, none touching architectures/<client>/")
+
+          else:
+              # Trigger filter restricts us to the two cases above, but keep an
+              # explicit branch for clarity.
+              print(f"::notice::No context rules defined for branch '{branch}'; "
+                    f"passing.")
+          PYEOF
+
+      - name: Commit context-validation update (decision branches only)
+        if: always() && startsWith(github.ref_name, 'decisions/')
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          DECISION_FILE_PATH=$(python3 - "$BRANCH" <<'PYEOF'
+          import sys
+          parts = sys.argv[1].split('/')
+          print(f"architectures/{parts[1]}/{parts[2]}/decisions/{parts[3]}.json")
+          PYEOF
+          )
+          if [ ! -f "$DECISION_FILE_PATH" ]; then
+            echo "::notice::No decision file to commit; skipping."
+            exit 0
+          fi
+          git add "$DECISION_FILE_PATH"
+          if git diff --cached --quiet; then
+            echo "::notice::No changes to decision file; nothing to commit."
+            exit 0
+          fi
+          git commit -m "[Validate Context] Update context-validation in ${DECISION_FILE_PATH}"
+          git push origin "$BRANCH"
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Validate Context"

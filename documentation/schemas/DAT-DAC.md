@@ -10,7 +10,7 @@
 - **Conceptual Data Modelling** — Concepts represent entities, events, or reference data without committing to a logical/physical structure
 - **ISO 27001** — Information classification (`public`, `internal`, `confidential`, `restricted`)
 
-## Shape
+## Example
 
 ```json
 {

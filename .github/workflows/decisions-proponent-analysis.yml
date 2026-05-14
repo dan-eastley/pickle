@@ -1,8 +1,8 @@
-name: Decision Change Proponent
+name: Proponent Analysis
 
 # Stub. Implementation pending.
 # Chains after Principles Alignment via workflow_run.
-# Reads the decision JSON, writes a stub to the `proponent` section,
+# Reads the decision JSON, writes a stub to the `proponent-analysis` section,
 # commits back via GITHUB_TOKEN.
 
 on:
@@ -29,12 +29,12 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Write proponent stub to decision JSON
+      - name: Write proponent-analysis stub to decision JSON
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKFLOW_NAME: "Decision Change Proponent"
-          SECTION_KEY: "proponent"
+          WORKFLOW_NAME: "Proponent Analysis"
+          SECTION_KEY: "proponent-analysis"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

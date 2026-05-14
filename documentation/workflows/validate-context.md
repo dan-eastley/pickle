@@ -1,0 +1,51 @@
+# Validate Context
+
+**File:** [`/.github/workflows/validate-context.yml`](../../.github/workflows/validate-context.yml)
+**Trigger:** push to `decisions/**` or `features/**`.
+
+## Purpose
+
+Gate the change surface a branch is allowed to touch, based on its branch type.
+
+| Branch | Allowed surface | Disallowed surface |
+|---|---|---|
+| `decisions/<client>/<version>/<decision-id>` | `architectures/<client>/...` only | anything outside `architectures/<client>/` |
+| `features/<feature-id>` | everything outside `architectures/<client>/...` | any file inside `architectures/<some-client>/...` |
+
+A decision branch is for client-specific architecture change. A feature branch is for everything else (schemas, workflows, docs, tooling). The two surfaces are deliberately disjoint — no branch type can touch both worlds at once.
+
+## Behaviour
+
+### Decision branches
+
+1. Parses the branch name → `(client, version, decision)`.
+2. Diffs the branch against `origin/main`.
+3. Any changed file not starting with `architectures/<client>/` is a violation.
+4. Verifies the decision JSON exists; fails if the author hasn't created it.
+5. Writes the outcome to the decision JSON's `context-validation` property:
+   ```json
+   {
+     "branch-type":    "decision",
+     "outcome":        "pass" | "fail",
+     "allowed-prefix": "architectures/<client>/",
+     "changed-files": ["..."],
+     "violations":    ["..."],
+     "checked-at":    "<iso8601>"
+   }
+   ```
+6. Commits the decision file back via `GITHUB_TOKEN`.
+7. Exits non-zero on violation, which halts the rest of the decision pipeline (Architecture Review chains via `workflow_run` and only fires on success).
+
+### Feature branches
+
+1. Diffs the branch against `origin/develop`.
+2. Any changed file matching `architectures/<some-client>/...` (i.e. depth ≥ 3 under `architectures/`) is a violation.
+3. Files at `architectures/clients.json` and similar top-level index files are **not** violations — they sit outside any client folder.
+4. No decision JSON to update; the result is reported via build status and workflow logs.
+5. Exits non-zero on violation.
+
+## Notes
+
+- Logic is deterministic; no AI involvement.
+- The two diff bases differ deliberately: decision branches integrate to `main`, feature branches integrate to `develop`.
+- The shape of `context-validation` is permissive in [`schemas/decision.json`](../../schemas/decision.json) — it deviates from the 4-string `$defs/section` shape used by the analysis workflows because the output is structured data, not narrative.

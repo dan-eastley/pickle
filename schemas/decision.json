@@ -2,9 +2,14 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:decision",
     "title": "Decision Record",
-    "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative) when starting a decisions/<client>/<version>/<decision-id> branch. The .github/workflows/decision-*.yml chain progressively writes the scope, discovery, referential-integrity, strategy-alignment, principles-alignment, proponent, and challenger sections.",
+    "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative) when starting a decisions/<client>/<version>/<decision-id> branch. The .github/workflows/decisions-*.yml chain progressively writes each section. Section property names match the kebab-cased workflow names.",
     "type": "object",
-    "required": ["decision-id", "title", "status", "narrative"],
+    "required": [
+        "decision-id",
+        "title",
+        "status",
+        "narrative"
+    ],
     "properties": {
         "decision-id": {
             "type": "string",
@@ -16,40 +21,77 @@
         },
         "status": {
             "type": "string",
-            "enum": ["draft", "proposed", "accepted", "rejected", "superseded"]
+            "enum": [
+                "draft",
+                "proposed",
+                "accepted",
+                "rejected",
+                "superseded"
+            ]
         },
         "narrative": {
             "type": "string",
             "description": "Author's narrative of the proposed change. Read by all downstream workflows."
         },
-        "scope": {
+        "context-validation": {
             "type": "object",
-            "description": "Output of the Scope Validation workflow"
+            "description": "Output of the Validate Context workflow. Permissive shape — produces a deterministic outcome + violation list, not the 4-string analysis section shape."
         },
-        "discovery": {
-            "type": "object",
-            "description": "Output of the Decision Discovery workflow"
+        "architecture-review": {
+            "$ref": "#/$defs/section",
+            "description": "Output of the Architecture Review workflow"
         },
         "referential-integrity": {
-            "type": "object",
+            "$ref": "#/$defs/section",
             "description": "Output of the Referential Integrity workflow"
         },
         "strategy-alignment": {
-            "type": "object",
+            "$ref": "#/$defs/section",
             "description": "Output of the Strategy Alignment workflow"
         },
         "principles-alignment": {
-            "type": "object",
+            "$ref": "#/$defs/section",
             "description": "Output of the Principles Alignment workflow"
         },
-        "proponent": {
-            "type": "object",
-            "description": "Output of the Decision Proponent workflow"
+        "proponent-analysis": {
+            "$ref": "#/$defs/section",
+            "description": "Output of the Proponent Analysis workflow"
         },
-        "challenger": {
-            "type": "object",
-            "description": "Output of the Decision Challenger workflow"
+        "challenger-analysis": {
+            "$ref": "#/$defs/section",
+            "description": "Output of the Challenger Analysis workflow"
         }
     },
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$defs": {
+        "section": {
+            "type": "object",
+            "description": "Shared shape for every analysis section produced by a decision workflow.",
+            "required": [
+                "finding",
+                "impact",
+                "recommendation",
+                "rationale"
+            ],
+            "properties": {
+                "finding": {
+                    "type": "string",
+                    "description": "What the workflow observed — the analytical output."
+                },
+                "impact": {
+                    "type": "string",
+                    "description": "Why the finding matters — consequence for the proposed change."
+                },
+                "recommendation": {
+                    "type": "string",
+                    "description": "What the author should do in response to the finding."
+                },
+                "rationale": {
+                    "type": "string",
+                    "description": "Why the recommendation is the right course of action."
+                }
+            },
+            "additionalProperties": false
+        }
+    }
 }

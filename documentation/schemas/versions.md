@@ -7,7 +7,7 @@
 
 Authoritative list of version IDs for a client. Per-version metadata (name, status) lives in `architectures/<client>/<version>/version.json` — this index intentionally only carries the IDs.
 
-## Shape
+## Example
 
 ```json
 {
