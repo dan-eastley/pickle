@@ -12,6 +12,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Create Release"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -44,3 +48,8 @@ jobs:
             git merge --abort 2>/dev/null || true
             exit 1
           fi
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Create Release"

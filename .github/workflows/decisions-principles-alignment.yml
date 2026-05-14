@@ -1,0 +1,46 @@
+name: Principles Alignment
+
+# Stub. Implementation pending.
+# Chains after Strategy Alignment via workflow_run.
+# Reads the decision JSON, writes a stub to the `principles-alignment` section,
+# commits back via GITHUB_TOKEN.
+
+on:
+  workflow_run:
+    workflows: ["Strategy Alignment"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  principles_alignment:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Principles Alignment"
+
+      - name: Checkout decision branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write principles-alignment stub to decision JSON
+        env:
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: "Principles Alignment"
+          SECTION_KEY: "principles-alignment"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash .github/scripts/decision-stub.sh
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Principles Alignment"

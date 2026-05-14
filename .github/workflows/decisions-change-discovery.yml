@@ -1,0 +1,46 @@
+name: Decision Change Discovery
+
+# Stub. Implementation pending.
+# Chains after Scope Validation via workflow_run.
+# Reads the decision JSON, writes a stub to the `discovery` section,
+# commits back via GITHUB_TOKEN.
+
+on:
+  workflow_run:
+    workflows: ["Scope Validation"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  discovery:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Decision Change Discovery"
+
+      - name: Checkout decision branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write discovery stub to decision JSON
+        env:
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: "Decision Change Discovery"
+          SECTION_KEY: "discovery"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash .github/scripts/decision-stub.sh
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Decision Change Discovery"

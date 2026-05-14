@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:decision",
+    "title": "Decision Record",
+    "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative) when starting a decisions/<client>/<version>/<decision-id> branch. The .github/workflows/decision-*.yml chain progressively writes the scope, discovery, referential-integrity, strategy-alignment, principles-alignment, proponent, and challenger sections.",
+    "type": "object",
+    "required": ["decision-id", "title", "status", "narrative"],
+    "properties": {
+        "decision-id": {
+            "type": "string",
+            "description": "Unique identifier — must match the JSON file name and the trailing segment of the decision branch name"
+        },
+        "title": {
+            "type": "string",
+            "description": "Short human-readable title of the decision"
+        },
+        "status": {
+            "type": "string",
+            "enum": ["draft", "proposed", "accepted", "rejected", "superseded"]
+        },
+        "narrative": {
+            "type": "string",
+            "description": "Author's narrative of the proposed change. Read by all downstream workflows."
+        },
+        "scope": {
+            "type": "object",
+            "description": "Output of the Scope Validation workflow"
+        },
+        "discovery": {
+            "type": "object",
+            "description": "Output of the Decision Discovery workflow"
+        },
+        "referential-integrity": {
+            "type": "object",
+            "description": "Output of the Referential Integrity workflow"
+        },
+        "strategy-alignment": {
+            "type": "object",
+            "description": "Output of the Strategy Alignment workflow"
+        },
+        "principles-alignment": {
+            "type": "object",
+            "description": "Output of the Principles Alignment workflow"
+        },
+        "proponent": {
+            "type": "object",
+            "description": "Output of the Decision Proponent workflow"
+        },
+        "challenger": {
+            "type": "object",
+            "description": "Output of the Decision Challenger workflow"
+        }
+    },
+    "additionalProperties": false
+}

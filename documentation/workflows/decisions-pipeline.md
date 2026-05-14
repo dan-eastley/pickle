@@ -1,0 +1,64 @@
+# Decision Pipeline
+
+Seven workflows that run in sequence when a `decisions/<client>/<version>/<decision-id>` branch is pushed. Each fills in a section of the [decision JSON](../schemas/decision.md) at `architectures/<client>/<version>/decisions/<decision-id>.json`.
+
+## Pre-requisite: the author creates the decision file
+
+The author hand-creates the decision JSON at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. The seven workflows below progressively add the analysis sections; they refuse to run if the decision file is missing.
+
+## Chain mechanism
+
+- The first workflow (Scope Validation) is triggered by `push` to a `decisions/**` branch.
+- The other six are triggered by `workflow_run` on the prior workflow's successful completion.
+- Each workflow checks out the decision branch, reads the decision JSON, fills its section, and commits back via `GITHUB_TOKEN`. The commit push does **not** re-trigger push events (GitHub anti-recursion), so the chain is linear and finite.
+- The shared logic lives in [`/.github/scripts/decision-stub.sh`](../../.github/scripts/decision-stub.sh).
+
+> **`workflow_run` only fires from workflow files on the default branch.** The chain is dormant until these workflows reach `main`.
+
+## The seven workflows
+
+### 1. Scope Validation
+- **File:** `decisions-scope-validation.yml`
+- **Trigger:** push to `decisions/**`
+- **Will eventually do:** reject the build if any file *outside* `architectures/<client>/<version>/` is touched on the branch.
+- **Section written:** `scope`
+
+### 2. Decision Change Discovery
+- **File:** `decisions-change-discovery.yml`
+- **Trigger:** `workflow_run` after Scope Validation
+- **Will eventually do:** take the narrative; recommend the artefact-type changes that ought to be made.
+- **Section written:** `discovery`
+
+### 3. Referential Integrity
+- **File:** `decisions-referential-integrity.yml`
+- **Trigger:** `workflow_run` after Decision Change Discovery
+- **Will eventually do:** check IDs align, no orphans (especially across matrix content); recommend updates to the ADR.
+- **Section written:** `referential-integrity`
+
+### 4. Strategy Alignment
+- **File:** `decisions-strategy-alignment.yml`
+- **Trigger:** `workflow_run` after Referential Integrity
+- **Will eventually do:** if Conceptual artefacts are changing, review against the Strategy for the affected domain; recommend ADR updates.
+- **Section written:** `strategy-alignment`
+
+### 5. Principles Alignment
+- **File:** `decisions-principles-alignment.yml`
+- **Trigger:** `workflow_run` after Strategy Alignment
+- **Will eventually do:** if Logical artefacts are changing, review against the Principles for the affected domain; recommend ADR updates.
+- **Section written:** `principles-alignment`
+
+### 6. Decision Change Proponent
+- **File:** `decisions-change-proponent.yml`
+- **Trigger:** `workflow_run` after Principles Alignment
+- **Will eventually do:** read the outputs from Referential Integrity, Strategy Alignment, Principles Alignment, and produce a narrative arguing FOR the change.
+- **Section written:** `proponent`
+
+### 7. Decision Change Challenger
+- **File:** `decisions-change-challenger.yml`
+- **Trigger:** `workflow_run` after Decision Change Proponent
+- **Will eventually do:** read the same upstream outputs and produce a narrative arguing AGAINST the change.
+- **Section written:** `challenger`
+
+## Current status
+
+All seven workflows are **structural stubs**. Each writes a `{ "status": "stub", "workflow": "...", "ran-at": "...", "note": "..." }` object to its section. Real logic — both AI-driven analysis and deterministic checks — is pending.

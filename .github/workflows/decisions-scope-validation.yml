@@ -1,0 +1,43 @@
+name: Scope Validation
+
+# Stub. Implementation pending.
+# Fires on push to a decisions/<client>/<version>/<decision-id> branch.
+# Reads the decision JSON, writes a stub to the `scope` section,
+# commits back via GITHUB_TOKEN (which does not re-trigger push events).
+
+on:
+  push:
+    branches:
+      - 'decisions/**'
+
+permissions:
+  contents: write
+
+jobs:
+  scope_validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Scope Validation"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Write scope stub to decision JSON
+        env:
+          BRANCH: ${{ github.ref_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: "Scope Validation"
+          SECTION_KEY: "scope"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash .github/scripts/decision-stub.sh
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Scope Validation"
