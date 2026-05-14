@@ -88,9 +88,9 @@ The `schemas/` and `architectures/<client>/<version>/` trees deliberately mirror
 
 All architecture changes are driven by **Architecture Decision Records (ADRs)**. An ADR is the only way to propose a change to the architecture state.
 
-- ADR branch naming: `<client>/<release>/adr-<number>`
+- ADR branch naming: `decisions/<client-id>/<version-id>/<decision-id>`
 - Each ADR lives under `architectures/<client>/<version>/adrs/`
-- The ADR branch naming convention is enforced by convention — validate manually or via a future CI workflow
+- Branch naming for all branches is enforced by `.github/workflows/validate-branch.yml` (see Branch Naming below)
 
 ---
 
@@ -112,7 +112,18 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 - Catalogue schemas: named with the artefact-type ID and `.json` suffix (e.g. `BUS-CAP.json`)
 - Catalogue instance files: named with the artefact-type ID inside the artefact-type folder (e.g. `BUS-CAP/BUS-CAP.json`)
 - ADR files: `adr-<number>.md` inside `adrs/`
-- Branch names for ADRs: `<client>/<release>/adr-<number>`
+
+### Branch Naming
+The only branch names accepted by the remote are:
+
+| Pattern | Purpose |
+|---|---|
+| `main` | Default branch |
+| `develop` | Integration branch |
+| `features/<feature-id>` | Codebase changes (anything not driven by an ADR) |
+| `decisions/<client-id>/<version-id>/<decision-id>` | Architecture changes driven by an ADR |
+
+Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate-branch.yml), which runs on the GitHub `create` event whenever a new branch ref lands on the remote (including renames). The workflow fails — and the branch creation is flagged — if the name doesn't match one of the patterns above. Existing branches at the time the workflow was introduced are grandfathered in.
 
 ### Indexes
 - `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
@@ -139,13 +150,13 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ### Common Tasks
 - **Add a new artefact type:** See the procedure documented in [`/documentation/artefacts.md`](documentation/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
 - **Add architecture data for a client:** Create or update instance files inside the relevant artefact-type folder
-- **Raise an ADR:** Create a branch following the naming convention, add the ADR file to the correct `adrs/` folder
+- **Raise an ADR:** Create a `decisions/<client-id>/<version-id>/<decision-id>` branch, add the ADR file to the matching `architectures/<client>/<version>/adrs/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `schemas/`
 
 ### Things to Preserve
 - The mirroring of `schemas/`, `architectures/<client>/<version>/artefacts/`, and `documentation/schemas/` paths — this is how schemas, instances, and docs are kept in lockstep
 - Artefact-type ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the architecture domain
-- Branch naming convention for ADRs — other tooling will depend on this pattern
+- Branch naming patterns (`main`, `develop`, `features/...`, `decisions/...`) — enforced by `validate-branch.yml`; other tooling will depend on these
 - The three abstraction layers within each architecture domain — don't flatten or skip levels
 
 ---
@@ -154,7 +165,7 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 
 - [ ] Every architecture domain × abstraction layer slot now has a baseline `<DOM>-STR` / `<DOM>-PRN` / `<DOM>-GRD` catalogue. Domain-specific catalogues exist for `BUS-CAP`, `BUS-PRO`, `DAT-DAC`, and `APP-DAP` — others (e.g. integration patterns, solution blueprints) are not yet defined.
 - [ ] Matrix and diagram formats not yet defined (only catalogues are schema-backed)
-- [ ] No CI/CD workflows — JSON validation and ADR branch naming are not yet enforced automatically
+- [ ] Branch naming is enforced by CI (`validate-branch.yml`); no other CI/CD workflows yet — JSON validation and ADR folder/file consistency are not yet enforced automatically
 - [ ] No diagram/view generation implemented yet
 - [ ] Ingestion path into EA tooling (e.g. via CALM or similar) not decided
 - [ ] AI-driven architecture change application (using ADRs to update architecture state) not yet implemented

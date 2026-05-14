@@ -1,0 +1,42 @@
+name: Validate branch
+
+on:
+  create:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-branch:
+    if: github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        env:
+          BRANCH: ${{ github.event.ref }}
+        run: |
+          if [[ "$BRANCH" =~ ^(main|develop)$ ]]; then
+            echo "::notice::Branch '$BRANCH' is an allowed top-level branch."
+            exit 0
+          fi
+
+          if [[ "$BRANCH" =~ ^features/[A-Za-z0-9._-]+$ ]]; then
+            echo "::notice::Branch '$BRANCH' is a valid feature branch."
+            exit 0
+          fi
+
+          if [[ "$BRANCH" =~ ^decisions/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]]; then
+            echo "::notice::Branch '$BRANCH' is a valid architecture decision branch."
+            exit 0
+          fi
+
+          echo "::error::Branch name '$BRANCH' does not match any allowed pattern."
+          echo ""
+          echo "Allowed patterns:"
+          echo "  main"
+          echo "  develop"
+          echo "  features/<feature-id>"
+          echo "  decisions/<client-id>/<version-id>/<decision-id>"
+          echo ""
+          echo "Rename your branch locally (git branch -m <new-name>) and re-push."
+          exit 1
