@@ -13,11 +13,29 @@ Each artefact type has a folder under `architectures/<client>/<version>/artefact
 
 Every architecture domain carries three artefact types that capture the abstraction-layer semantics directly:
 
+```mermaid
+flowchart LR
+    STR["<b>&lt;DOM&gt;-STR</b><br/>Conceptual<br/><sub>strategic intent<br/>(what & why)</sub>"]
+    PRN["<b>&lt;DOM&gt;-PRN</b><br/>Logical<br/><sub>design principles<br/>(how)</sub>"]
+    GRD["<b>&lt;DOM&gt;-GRD</b><br/>Physical<br/><sub>non-negotiable guardrails<br/>(where & with what)</sub>"]
+
+    STR -- "refined into" --> PRN
+    PRN -- "made concrete by" --> GRD
+
+    classDef c fill:#e3f2fd,stroke:#1976d2,color:#000
+    classDef l fill:#fff3e0,stroke:#f57c00,color:#000
+    classDef p fill:#fce4ec,stroke:#c2185b,color:#000
+
+    class STR c
+    class PRN l
+    class GRD p
+```
+
 - **`<DOM>-STR`** (Conceptual) — strategic intent; the *what* and *why*
 - **`<DOM>-PRN`** (Logical) — design principles; the *how*
 - **`<DOM>-GRD`** (Physical) — non-negotiable guardrails; the *where* and *with what*
 
-The shapes are shared across all five architecture domains, but each domain has its own schema doc page with a domain-specific example. See the matrix in [schemas/index.md](schemas/index.md).
+The shapes are shared across all five architecture domains (so all five `<DOM>-STR` schemas have the same fields, just domain-specific examples), but each domain has its own schema doc page with a domain-specific example. See the matrix in [schemas/index.md](schemas/index.md).
 
 ## Registry
 
