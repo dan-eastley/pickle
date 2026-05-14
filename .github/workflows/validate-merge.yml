@@ -1,0 +1,103 @@
+name: Validate merge
+
+on:
+  push:
+    branches:
+      - develop
+      - 'features/**'
+      - 'decisions/**'
+
+permissions:
+  contents: read
+
+jobs:
+  attempt-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine upstream
+        id: upstream
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          case "$BRANCH" in
+            develop|decisions/*)
+              UPSTREAM=main ;;
+            features/*)
+              UPSTREAM=develop ;;
+            *)
+              echo "::error::No upstream rule defined for branch '$BRANCH'"
+              exit 1 ;;
+          esac
+          echo "upstream=$UPSTREAM" >> "$GITHUB_OUTPUT"
+          echo "Upstream for $BRANCH is $UPSTREAM"
+
+      - name: Test-merge upstream
+        env:
+          UPSTREAM: ${{ steps.upstream.outputs.upstream }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set +e
+
+          if ! git fetch origin "$UPSTREAM"; then
+            echo "::error::Could not fetch origin/$UPSTREAM. Does the branch exist on the remote?"
+            exit 1
+          fi
+
+          # Nothing to merge: branch already contains every commit on upstream.
+          if git merge-base --is-ancestor "origin/$UPSTREAM" HEAD; then
+            echo "::notice::$BRANCH already contains origin/$UPSTREAM; nothing to merge."
+            exit 0
+          fi
+
+          # Attempt the merge without committing. Git will auto-resolve
+          # non-overlapping changes; only true conflicts remain after this.
+          git merge --no-edit --no-commit "origin/$UPSTREAM"
+          MERGE_STATUS=$?
+
+          if [ $MERGE_STATUS -eq 0 ]; then
+            echo "::notice::origin/$UPSTREAM merges cleanly into $BRANCH (non-overlapping changes auto-resolved by git)."
+            git merge --abort 2>/dev/null || true
+            exit 0
+          fi
+
+          CONFLICTS=$(git diff --name-only --diff-filter=U)
+          if [ -n "$CONFLICTS" ]; then
+            {
+              echo "## Merge conflict detected"
+              echo ""
+              echo "Merging \`origin/$UPSTREAM\` into branch \`$BRANCH\` produced unresolved conflicts that require human attention."
+              echo ""
+              echo "### Conflicting files"
+              echo ""
+              echo "$CONFLICTS" | sed 's/^/- `/' | sed 's/$/`/'
+              echo ""
+              echo "### How to resolve locally"
+              echo ""
+              echo '```bash'
+              echo "git fetch origin $UPSTREAM"
+              echo "git checkout $BRANCH"
+              echo "git merge origin/$UPSTREAM"
+              echo "# edit the files listed above to resolve the conflicts"
+              echo "git commit"
+              echo "git push"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            echo "::error::Merge conflicts when merging origin/$UPSTREAM into $BRANCH. See the workflow summary for the list of files."
+            git merge --abort 2>/dev/null || true
+            exit 1
+          fi
+
+          echo "::error::Merge of origin/$UPSTREAM failed for an unknown reason; see logs above."
+          git merge --abort 2>/dev/null || true
+          exit 1
