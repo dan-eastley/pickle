@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:client",
+    "title": "Client Metadata",
+    "description": "Per-client metadata file at architectures/<client>/client.json.",
+    "type": "object",
+    "required": ["client-id", "name"],
+    "properties": {
+        "client-id": {
+            "type": "string",
+            "description": "Unique identifier — must match the client folder name"
+        },
+        "name": {
+            "type": "string",
+            "description": "Human-readable client name"
+        }
+    },
+    "additionalProperties": false
+}

@@ -128,7 +128,7 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 ### Indexes
 - `architectures/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/<client>/client.json`)
 - `architectures/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/<client>/<version>/version.json`)
-- `schemas/clients.json` and `schemas/versions.json` validate the index files; the singular metadata files have no schema yet
+- `schemas/clients.json` and `schemas/versions.json` validate the index files; `schemas/client.json` and `schemas/version.json` validate the singular metadata files
 - `schemas/artefacts.json` is a **schema index** — a flat map of artefact-type ID → catalogue schema `$ref`. The full artefact-type registry (catalogues, diagrams, matrices) lives in `documentation/artefacts.md`.
 - When adding or removing a client/version folder, update the corresponding index file
 
