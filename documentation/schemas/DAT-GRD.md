@@ -1,14 +1,12 @@
-# Guardrails Catalogue Schemas (`<DOM>-GRD`)
+# DAT-GRD — Data Guardrails Catalogue
 
-**Shared shape used by:** `BUS-GRD`, `DAT-GRD`, `INT-GRD`, `APP-GRD`, `SOL-GRD` — one per architecture domain.
-
-**Schema files:** `/schemas/artefacts/domains/<domain>/physical/<DOM>-GRD.json`
-**Architecture Domain / Layer:** Any of the five architecture domains / Physical
+**File:** [`/schemas/artefacts/domains/data/physical/DAT-GRD.json`](../../schemas/artefacts/domains/data/physical/DAT-GRD.json)
+**Architecture Domain / Layer:** Data / Physical
 **Format:** Catalogue
 
 ## Purpose
 
-Captures the *where* and *with what* — non-negotiable constraints, mandatory standards, and concrete patterns. Guardrails are **binary**: comply, or raise a formal exception. They answer *"what must always be true?"*
+Non-negotiable constraints, mandatory standards, and concrete patterns for the Data architecture domain. Binary: comply or raise a formal exception. Answers *"what must always be true?"*
 
 ## Industry alignment
 

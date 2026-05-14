@@ -75,7 +75,7 @@ For full context on the architecture model — architecture domains, abstraction
 │           │       ├── application/{conceptual,logical,physical}/
 │           │       │   └── <ARTEFACT-ID>/
 │           │       └── solution/{conceptual,logical,physical}/
-│           └── adrs/               # Architecture Decision Records for this release
+│           └── decisions/          # Architecture Decision Records (ADRs) for this release
 │
 └── CLAUDE.md                       # This file
 ```
@@ -89,7 +89,7 @@ The `schemas/` and `architectures/<client>/<version>/` trees deliberately mirror
 All architecture changes are driven by **Architecture Decision Records (ADRs)**. An ADR is the only way to propose a change to the architecture state.
 
 - ADR branch naming: `decisions/<client-id>/<version-id>/<decision-id>`
-- Each ADR lives under `architectures/<client>/<version>/adrs/`
+- Each ADR lives under `architectures/<client>/<version>/decisions/`
 - Branch naming for all branches is enforced by `.github/workflows/validate-branch.yml` (see Branch Naming below)
 
 ---
@@ -111,7 +111,7 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 - Artefact-type folders: named with the artefact-type ID (e.g. `BUS-CAP/`, `DAT-DAC/`, `APP-DAP/`)
 - Catalogue schemas: named with the artefact-type ID and `.json` suffix (e.g. `BUS-CAP.json`)
 - Catalogue instance files: named with the artefact-type ID inside the artefact-type folder (e.g. `BUS-CAP/BUS-CAP.json`)
-- ADR files: `adr-<number>.md` inside `adrs/`
+- ADR files: `adr-<number>.md` inside `decisions/`
 
 ### Branch Naming
 The only branch names accepted by the remote are:
@@ -150,7 +150,7 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 ### Common Tasks
 - **Add a new artefact type:** See the procedure documented in [`/documentation/artefacts.md`](documentation/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
 - **Add architecture data for a client:** Create or update instance files inside the relevant artefact-type folder
-- **Raise an ADR:** Create a `decisions/<client-id>/<version-id>/<decision-id>` branch, add the ADR file to the matching `architectures/<client>/<version>/adrs/` folder
+- **Raise an ADR:** Create a `decisions/<client-id>/<version-id>/<decision-id>` branch, add the ADR file to the matching `architectures/<client>/<version>/decisions/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `schemas/`
 
 ### Things to Preserve

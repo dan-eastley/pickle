@@ -17,7 +17,7 @@ Every architecture domain carries three artefact types that capture the abstract
 - **`<DOM>-PRN`** (Logical) — design principles; the *how*
 - **`<DOM>-GRD`** (Physical) — non-negotiable guardrails; the *where* and *with what*
 
-These share their shape across all five architecture domains. See [schemas/strategy.md](schemas/strategy.md), [schemas/principles.md](schemas/principles.md), [schemas/guardrails.md](schemas/guardrails.md).
+The shapes are shared across all five architecture domains, but each domain has its own schema doc page with a domain-specific example. See the matrix in [schemas/index.md](schemas/index.md).
 
 ## Registry
 

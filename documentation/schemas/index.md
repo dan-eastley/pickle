@@ -1,6 +1,6 @@
 # Schemas
 
-Each schema in [`/schemas/`](../../schemas/) is documented here. Click through for the structure, what industry standard it draws from, and an example shape.
+Each schema in [`/schemas/`](../../schemas/) is documented here. Click through for the structure, what industry standard it draws from, and a domain-specific example.
 
 ## Index files
 
@@ -10,15 +10,17 @@ Each schema in [`/schemas/`](../../schemas/) is documented here. Click through f
 | [versions.md](versions.md) | `architectures/<client>/versions.json` | Authoritative list of version IDs for a client |
 | [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Index of all defined catalogue schemas |
 
-## Cross-domain shape catalogues
+## Strategy / Principles / Guardrails (one per architecture domain)
 
-These three shapes are reused across every architecture domain. Each architecture domain has its own `<DOM>-STR` / `<DOM>-PRN` / `<DOM>-GRD` schema, but all five `<DOM>-STR` schemas share the Strategy shape (and likewise for Principles and Guardrails).
+Each architecture domain carries a Strategy (Conceptual), Principles (Logical), and Guardrails (Physical) catalogue. The schemas share their shape across domains; each documentation page below carries a domain-specific example.
 
-| Shape | Used by | Layer |
-|---|---|---|
-| [strategy.md](strategy.md) | `BUS-STR`, `DAT-STR`, `INT-STR`, `APP-STR`, `SOL-STR` | Conceptual |
-| [principles.md](principles.md) | `BUS-PRN`, `DAT-PRN`, `INT-PRN`, `APP-PRN`, `SOL-PRN` | Logical |
-| [guardrails.md](guardrails.md) | `BUS-GRD`, `DAT-GRD`, `INT-GRD`, `APP-GRD`, `SOL-GRD` | Physical |
+| Architecture Domain | Strategy | Principles | Guardrails |
+|---|---|---|---|
+| Business | [BUS-STR.md](BUS-STR.md) | [BUS-PRN.md](BUS-PRN.md) | [BUS-GRD.md](BUS-GRD.md) |
+| Data | [DAT-STR.md](DAT-STR.md) | [DAT-PRN.md](DAT-PRN.md) | [DAT-GRD.md](DAT-GRD.md) |
+| Integration | [INT-STR.md](INT-STR.md) | [INT-PRN.md](INT-PRN.md) | [INT-GRD.md](INT-GRD.md) |
+| Application | [APP-STR.md](APP-STR.md) | [APP-PRN.md](APP-PRN.md) | [APP-GRD.md](APP-GRD.md) |
+| Solution | [SOL-STR.md](SOL-STR.md) | [SOL-PRN.md](SOL-PRN.md) | [SOL-GRD.md](SOL-GRD.md) |
 
 ## Domain-specific catalogue schemas
 

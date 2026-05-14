@@ -1,14 +1,12 @@
-# Strategy Catalogue Schemas (`<DOM>-STR`)
+# DAT-STR — Data Strategy Catalogue
 
-**Shared shape used by:** `BUS-STR`, `DAT-STR`, `INT-STR`, `APP-STR`, `SOL-STR` — one per architecture domain.
-
-**Schema files:** `/schemas/artefacts/domains/<domain>/conceptual/<DOM>-STR.json`
-**Architecture Domain / Layer:** Any of the five architecture domains / Conceptual
+**File:** [`/schemas/artefacts/domains/data/conceptual/DAT-STR.json`](../../schemas/artefacts/domains/data/conceptual/DAT-STR.json)
+**Architecture Domain / Layer:** Data / Conceptual
 **Format:** Catalogue
 
 ## Purpose
 
-Captures strategic intent for an architecture domain — the *what* and *why* at the highest level. Strategy is **outcome-oriented** and **time-bound**; it deliberately does not prescribe how. It answers *"where are we headed and why does it matter?"*
+Captures strategic intent for the Data architecture domain — outcome-oriented, time-bound, non-prescriptive about how. Answers *"where are we headed and why does it matter?"*
 
 ## Industry alignment
 
