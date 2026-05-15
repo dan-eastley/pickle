@@ -21,16 +21,23 @@ GitHub Actions workflows live at [`/.github/workflows/`](../../.github/workflows
 
 ## Decision analysis pipeline (chained after Validate Context)
 
-Each workflow writes to a section in the decision JSON whose property name equals the kebab-cased workflow name.
+A single orchestrator workflow runs six Claude-driven analyses as sequential jobs, then updates the PR description. Each analysis writes to a section in the decision JSON whose property name equals the kebab-cased step name.
 
-| # | Workflow | File | Triggers after | Decision-JSON section |
-|---|---|---|---|---|
-| 1 | [Architecture Review](decisions-pipeline.md#1-architecture-review) | `decisions-architecture-review.yml` | Validate Context | `architecture-review` |
-| 2 | [Referential Integrity](decisions-pipeline.md#2-referential-integrity) | `decisions-referential-integrity.yml` | Architecture Review | `referential-integrity` |
-| 3 | [Strategy Alignment](decisions-pipeline.md#3-strategy-alignment) | `decisions-strategy-alignment.yml` | Referential Integrity | `strategy-alignment` |
-| 4 | [Principles Alignment](decisions-pipeline.md#4-principles-alignment) | `decisions-principles-alignment.yml` | Strategy Alignment | `principles-alignment` |
-| 5 | [Proponent Analysis](decisions-pipeline.md#5-proponent-analysis) | `decisions-proponent-analysis.yml` | Principles Alignment | `proponent-analysis` |
-| 6 | [Challenger Analysis](decisions-pipeline.md#6-challenger-analysis) | `decisions-challenger-analysis.yml` | Proponent Analysis | `challenger-analysis` |
-| 7 | [Update Pull Request](decisions-update-pull-request.md) | `decisions-update-pull-request.yml` | Challenger Analysis | _(updates PR body, no JSON section)_ |
+| Workflow | File | Trigger | Purpose |
+|---|---|---|---|
+| [Decisions Pipeline](decisions-pipeline.md) | `decisions-pipeline.yml` | `workflow_run` after Validate Context | Orchestrates the six analyses + PR update as sequential jobs |
+| (reusable analysis step) | `decisions-analysis-step.yml` | `workflow_call` from orchestrator | One Claude analysis pass — parameterised by section key, prompt file, and branch |
 
-All six analysis workflows are currently structural **stubs** — see [decisions-pipeline.md](decisions-pipeline.md) for the shared mechanism and what each workflow will eventually do. Validate Context and Update Pull Request are the fully-implemented decision-related workflows.
+Within the orchestrator, jobs run in this order — each writes its result to the matching decision-JSON section:
+
+| # | Job | Decision-JSON section |
+|---|---|---|
+| 1 | `architecture-review` | `architecture-review` |
+| 2 | `referential-integrity` | `referential-integrity` |
+| 3 | `strategy-alignment` | `strategy-alignment` |
+| 4 | `principles-alignment` | `principles-alignment` |
+| 5 | `proponent-analysis` | `proponent-analysis` |
+| 6 | `challenger-analysis` | `challenger-analysis` |
+| 7 | `update-pull-request` | _(updates PR body, no JSON section)_ |
+
+All six analysis jobs are currently **prompt stubs** — see [decisions-pipeline.md](decisions-pipeline.md) for the orchestration mechanism and what each step will eventually do. Validate Context and Update Pull Request are the fully-implemented deterministic links bookending the chain.

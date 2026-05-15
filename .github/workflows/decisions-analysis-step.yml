@@ -1,36 +1,55 @@
-name: Referential Integrity
+name: Decisions Analysis Step
 
-# Referential Integrity — Claude-driven analysis step in the decision pipeline.
-# Chains after "Architecture Review" via workflow_run.
-# Loads its prompt from prompts/decisions/referential-integrity.md and writes the
-# four-string {finding, impact, recommendation, rationale} result to the
-# decision JSON's `referential-integrity` property.
+# Reusable workflow — runs one Claude-driven analysis step in the decisions
+# pipeline. Invoked once per section by the orchestrator (decisions-pipeline.yml).
+# Each call: checks out the decision branch, runs Claude with the supplied
+# prompt, writes the four-string {finding, impact, recommendation, rationale}
+# array into the supplied section-key of the decision JSON, and pushes the
+# updated file back to the branch.
 
 on:
-  workflow_run:
-    workflows: ["Architecture Review"]
-    types: [completed]
+  workflow_call:
+    inputs:
+      analysis-name:
+        description: "Human-readable analysis name (e.g. Architecture Review)"
+        required: true
+        type: string
+      prompt-file:
+        description: "Path to the prompt markdown file under prompts/decisions/"
+        required: true
+        type: string
+      section-key:
+        description: "Decision JSON property to write the result to"
+        required: true
+        type: string
+      branch:
+        description: "Decision branch to operate on"
+        required: true
+        type: string
+    secrets:
+      ANTHROPIC_API_KEY:
+        required: true
 
 permissions:
   contents: write
 
 jobs:
-  referential-integrity:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
+  analyse:
     runs-on: ubuntu-latest
     env:
-      BRANCH: ${{ github.event.workflow_run.head_branch }}
-      PROMPT_FILE: prompts/decisions/referential-integrity.md
-      SECTION_KEY: referential-integrity
+      BRANCH: ${{ inputs.branch }}
+      PROMPT_FILE: ${{ inputs.prompt-file }}
+      SECTION_KEY: ${{ inputs.section-key }}
+      ANALYSIS_NAME: ${{ inputs.analysis-name }}
     steps:
       - name: Started
         run: |
-          echo "::notice::Started: Referential Integrity"
+          echo "::notice::Started: ${ANALYSIS_NAME}"
 
       - name: Checkout decision branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ inputs.branch }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -46,7 +65,7 @@ jobs:
           model: claude-sonnet-4-6
           allowed_tools: "Bash,Read,Edit,Write,Grep,Glob"
           prompt: |
-            You are running the "Referential Integrity" step of the architecture decision pipeline.
+            You are running the "${{ inputs.analysis-name }}" step of the architecture decision pipeline.
 
             Branch:        ${{ env.BRANCH }}
             Prompt file:   ${{ env.PROMPT_FILE }}
@@ -88,10 +107,10 @@ jobs:
             echo "::notice::No changes to decision file; nothing to commit."
             exit 0
           fi
-          git commit -m "[Referential Integrity] Update ${DECISION_FILE_PATH}"
+          git commit -m "[${ANALYSIS_NAME}] Update ${DECISION_FILE_PATH}"
           git push origin "$BRANCH"
 
       - name: Finished
         if: always()
         run: |
-          echo "::notice::Finished: Referential Integrity"
+          echo "::notice::Finished: ${ANALYSIS_NAME}"

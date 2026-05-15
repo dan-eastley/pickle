@@ -34,7 +34,7 @@ A decision branch is for client-specific architecture change. A feature branch i
    }
    ```
 6. Commits the decision file back via `GITHUB_TOKEN`.
-7. Exits non-zero on violation, which halts the rest of the decision pipeline (Architecture Review chains via `workflow_run` and only fires on success).
+7. Exits non-zero on violation, which halts the rest of the decision pipeline ([Decisions Pipeline](decisions-pipeline.md) chains via `workflow_run` and only fires on success).
 
 ### Feature branches
 
