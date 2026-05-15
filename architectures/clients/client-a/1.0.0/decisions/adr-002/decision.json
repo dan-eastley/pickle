@@ -29,6 +29,26 @@
             "rationale": "Reusing existing artefact types is the correct approach when the required content fits within already-defined schemas. New artefact types are only warranted when an entirely new output format or domain-layer combination is needed, which is not the case here."
         }
     ],
+    "referential-integrity": [
+        {
+            "finding": "All parent-id references in BUS-CAP are internally consistent. Every level-2 capability references a defined level-1 parent (CAP-001 through CAP-009), and every level-3 capability references a defined level-2 parent (CAP-001-01, CAP-002-02, CAP-003-02, CAP-004-04, CAP-006-03). No dangling parent-id values exist in architectures/clients/client-a/1.0.0/artefacts/domains/business/conceptual/BUS-CAP/BUS-CAP.json.",
+            "impact": "The existing BUS-CAP catalogue is internally coherent. No remediation is required for the current state. The proposed addition of CAP-010 and its level-2 sub-capabilities (as recommended by the architecture review) will introduce new IDs; those new entries must themselves carry no unresolvable parent-id values when authored.",
+            "recommendation": "When adding CAP-010 and its level-2 sub-capabilities to BUS-CAP, ensure each level-2 entry carries parent-id set to CAP-010, and that no level-3 entries are added without a corresponding level-2 parent already present in the same commit.",
+            "rationale": "The BUS-CAP schema requires parent-id to reference an existing capability ID. Authoring parent and child entries atomically in a single commit prevents a window where a dangling parent-id could be introduced and not caught until validation runs."
+        },
+        {
+            "finding": "All domain-id references in APP-DAP are internally consistent. Every platform entry in architectures/clients/client-a/1.0.0/artefacts/domains/application/logical/APP-DAP/APP-DAP.json references one of the eleven domain IDs defined in the domains array of the same file (APP-DOM-CUSTOMER, APP-DOM-FIELD, APP-DOM-TRADING, APP-DOM-NETWORK, APP-DOM-BILLING, APP-DOM-METERING, APP-DOM-REGULATORY, APP-DOM-SUSTAIN, APP-DOM-DATA, APP-DOM-ENTERPRISE, APP-DOM-INTEGRATION). No duplicate platform or domain IDs exist.",
+            "impact": "The existing APP-DAP catalogue is internally coherent. The proposed addition of PLAT-PPM (as recommended by the architecture review) will reference APP-DOM-ENTERPRISE; that domain ID is already defined, so the new platform entry will resolve correctly without any additional domain-level change.",
+            "recommendation": "When adding PLAT-PPM to APP-DAP, set its domain-id to APP-DOM-ENTERPRISE. No new domain entry is needed. Verify no other new platform IDs clash with existing PLAT-* identifiers in the same file before committing.",
+            "rationale": "APP-DOM-ENTERPRISE already covers corporate services including the ERP platform; PPM is a natural extension of that domain boundary. Reusing an existing domain ID avoids introducing an unvalidated new domain and keeps the catalogue consistent with the current domain taxonomy."
+        },
+        {
+            "finding": "BUS-PRO at architectures/clients/client-a/1.0.0/artefacts/domains/business/conceptual/BUS-PRO/BUS-PRO.json contains an empty processes array. There are no cross-catalogue references from BUS-PRO to BUS-CAP capability IDs in the current schema or instance, so no dangling references exist. However, the BUS-PRO schema does not currently define a capability-id or parent-capability-id link field, making forward traceability from processes to capabilities impossible to validate structurally.",
+            "impact": "Once processes are added to BUS-PRO (as recommended by the architecture review following the addition of CAP-010), there is no schema-enforced foreign key from a process to its owning capability. Referential integrity between BUS-PRO and BUS-CAP cannot be automatically checked with the current schema definition.",
+            "recommendation": "When authoring new process entries in BUS-PRO, include a convention-based capability-id field referencing the relevant CAP-NNN identifier from BUS-CAP, even if the field is not yet schema-enforced. Note the absence of schema-level cross-catalogue validation as a gap to be addressed in a future schema update to BUS-PRO.",
+            "rationale": "Establishing the capability-to-process link by convention now, even without schema enforcement, provides a traceable record that can be mechanically validated once the BUS-PRO schema is updated. Waiting until the schema is updated before adding the field would leave the traceability gap unresolvable in retrospect."
+        }
+    ],
     "context-validation": {
         "branch-type": "decision",
         "outcome": "pass",
