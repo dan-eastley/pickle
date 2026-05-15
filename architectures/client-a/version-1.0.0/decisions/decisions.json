@@ -1,3 +1,5 @@
 {
-    "decisions": []
+    "decisions": [
+        { "decision-id": "project-and-programme-management" }
+    ]
 }
