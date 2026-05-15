@@ -1,11 +1,11 @@
 # Version Metadata Schema
 
 **File:** [`/schemas/version.json`](../../schemas/version.json)
-**Validates:** `/architectures/<client>/<version>/version.json`
+**Validates:** `/architectures/clients/<client>/<version>/version.json`
 
 ## Purpose
 
-Per-version metadata file living inside each version folder. Carries human-readable information and status for an architecture version (release baseline). The plural index at `architectures/<client>/versions.json` only lists IDs — names and statuses live here.
+Per-version metadata file living inside each version folder. Carries human-readable information and status for an architecture version (release baseline). The plural index at `architectures/clients/<client>/versions.json` only lists IDs — names and statuses live here.
 
 ## Example
 
@@ -27,6 +27,6 @@ Per-version metadata file living inside each version folder. Carries human-reada
 
 ## Conventions
 
-- The `version-id` value must equal the parent folder name under `architectures/<client>/`.
-- Add a matching entry to `architectures/<client>/versions.json` (the index) when creating a new version folder.
+- The `version-id` value must equal the parent folder name under `architectures/clients/<client>/`.
+- Add a matching entry to `architectures/clients/<client>/versions.json` (the index) when creating a new version folder.
 - Do not edit a version's data after it is `published` or `archived` — create a new version folder instead.

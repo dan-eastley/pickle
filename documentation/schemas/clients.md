@@ -1,11 +1,11 @@
 # Clients Index Schema
 
 **File:** [`/schemas/clients.json`](../../schemas/clients.json)
-**Validates:** [`/architectures/clients.json`](../../architectures/clients.json)
+**Validates:** [`/architectures/clients/clients.json`](../../architectures/clients/clients.json)
 
 ## Purpose
 
-Authoritative list of client IDs that have an architecture in this repository. Per-client metadata (name, etc.) lives in `architectures/<client>/client.json` — this index intentionally only carries the IDs.
+Authoritative list of client IDs that have an architecture in this repository. Per-client metadata (name, etc.) lives in `architectures/clients/<client>/client.json` — this index intentionally only carries the IDs.
 
 ## Example
 

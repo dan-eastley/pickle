@@ -1,11 +1,11 @@
 # Decisions Index Schema
 
 **File:** [`/schemas/decisions.json`](../../schemas/decisions.json)
-**Validates:** `/architectures/<client>/<version>/decisions/decisions.json`
+**Validates:** `/architectures/clients/<client>/<version>/decisions/decisions.json`
 
 ## Purpose
 
-Authoritative list of decision IDs for a client version. Per-decision content (narrative, status, the seven analysis sections) lives in the corresponding `architectures/<client>/<version>/decisions/<decision-id>.json` — this index intentionally only carries the IDs, mirroring the [clients](clients.md) / [versions](versions.md) pattern.
+Authoritative list of decision IDs for a client version. Per-decision content (narrative, status, the seven analysis sections) lives in the corresponding `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — one folder per decision — this index intentionally only carries the IDs, mirroring the [clients](clients.md) / [versions](versions.md) pattern.
 
 ## Example
 
@@ -23,10 +23,10 @@ Authoritative list of decision IDs for a client version. Per-decision content (n
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `decisions` | array | yes | List of decision entries |
-| `decisions[].decision-id` | string | yes | Unique identifier — must match the decision JSON file name (without `.json`) and the trailing segment of the decision branch name |
+| `decisions[].decision-id` | string | yes | Unique identifier in the form `adr-NNN`. Must match the decision folder name under `decisions/` and the trailing segment of the decision branch name. |
 
 ## Conventions
 
 - When raising a new decision (via a `decisions/<client>/<version>/<decision-id>` branch + matching JSON file), add a corresponding entry here in the same commit.
-- The `decision-id` value must equal the JSON file name (e.g. `adr-001.json` → `decision-id: "adr-001"`).
+- The `decision-id` value must equal the decision folder name (e.g. folder `adr-001/` → `decision-id: "adr-001"`). The decision content always lives at `<decision-id>/decision.json`.
 - This is the index that drives discovery — listing this file gives you the decisions for that version without scanning the folder.

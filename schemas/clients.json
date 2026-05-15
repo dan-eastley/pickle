@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:clients",
     "title": "Clients Index",
-    "description": "Authoritative list of client IDs. Per-client metadata lives in architectures/<client>/client.json.",
+    "description": "Authoritative list of client IDs. Per-client metadata lives in architectures/clients/<client>/client.json.",
     "type": "object",
     "required": [
         "clients"
@@ -18,7 +18,7 @@
                 "properties": {
                     "client-id": {
                         "type": "string",
-                        "description": "Unique identifier \u2014 must match the client folder name"
+                        "description": "Unique identifier — must match the client folder name"
                     }
                 },
                 "additionalProperties": false

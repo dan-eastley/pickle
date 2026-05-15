@@ -2,9 +2,13 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:version",
     "title": "Version Metadata",
-    "description": "Per-version metadata file at architectures/<client>/<version>/version.json.",
+    "description": "Per-version metadata file at architectures/clients/<client>/<version>/version.json.",
     "type": "object",
-    "required": ["version-id", "name", "status"],
+    "required": [
+        "version-id",
+        "name",
+        "status"
+    ],
     "properties": {
         "version-id": {
             "type": "string",
@@ -16,7 +20,11 @@
         },
         "status": {
             "type": "string",
-            "enum": ["draft", "published", "archived"]
+            "enum": [
+                "draft",
+                "published",
+                "archived"
+            ]
         }
     },
     "additionalProperties": false

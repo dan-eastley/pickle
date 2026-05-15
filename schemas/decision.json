@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:decision",
     "title": "Decision Record",
-    "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative) when starting a decisions/<client>/<version>/<decision-id> branch. The .github/workflows/decisions-*.yml chain progressively writes each section. Section property names match the kebab-cased workflow names.",
+    "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative) at the start of a decisions/<client>/<version>/<decision-id> branch. The decision lives at architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json — one folder per decision, file always named decision.json. The .github/workflows/decisions-*.yml chain progressively writes each section. Section property names match the kebab-cased workflow names.",
     "type": "object",
     "required": [
         "decision-id",
@@ -13,7 +13,7 @@
     "properties": {
         "decision-id": {
             "type": "string",
-            "description": "Unique identifier — must match the JSON file name and the trailing segment of the decision branch name"
+            "description": "Unique identifier in the form adr-NNN (three-digit number). Must match the parent folder name and the trailing segment of the decision branch name."
         },
         "title": {
             "type": "string",

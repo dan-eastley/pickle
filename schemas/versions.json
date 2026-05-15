@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:versions",
     "title": "Versions Index",
-    "description": "Authoritative list of version IDs for a client. Per-version metadata lives in architectures/<client>/<version>/version.json.",
+    "description": "Authoritative list of version IDs for a client. Per-version metadata lives in architectures/clients/<client>/<version>/version.json.",
     "type": "object",
     "required": [
         "versions"
@@ -18,7 +18,7 @@
                 "properties": {
                     "version-id": {
                         "type": "string",
-                        "description": "Unique identifier \u2014 must match the version folder name (e.g. \"1.0.0\")"
+                        "description": "Unique identifier — must match the version folder name (e.g. \"1.0.0\")"
                     }
                 },
                 "additionalProperties": false

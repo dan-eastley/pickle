@@ -1,0 +1,71 @@
+name: Update Pull Request
+
+# Final link in the decision analysis chain — formats the decision JSON into
+# markdown and writes it to the open PR's description so reviewers see the
+# fully-populated decision content (narrative + the 7 analysis sections)
+# without having to open the JSON file.
+#
+# Triggers via workflow_run after "Challenger Analysis" completes
+# successfully. Each commit made by an upstream workflow in the chain is
+# eventually superseded by the final commit from Challenger Analysis; this
+# workflow reads the post-chain state and updates the PR once.
+
+on:
+  workflow_run:
+    workflows: ["Challenger Analysis"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  sync-pr-description:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: ${{ github.event.workflow_run.head_branch }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Update Pull Request"
+
+      - name: Checkout decision branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH }}
+          fetch-depth: 1
+
+      - name: Format decision and update PR
+        run: |
+          set -euo pipefail
+
+          DECISION_FILE=$(python3 - "$BRANCH" <<'PYEOF'
+          import sys
+          parts = sys.argv[1].split('/')
+          print(f"architectures/clients/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json")
+          PYEOF
+          )
+
+          if [ ! -f "$DECISION_FILE" ]; then
+            echo "::error::Decision file not found at $DECISION_FILE"
+            exit 1
+          fi
+
+          python3 .github/scripts/format-decision-for-pr.py "$DECISION_FILE" > /tmp/pr-body.md
+
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+
+          if [ -z "$PR_NUMBER" ]; then
+            echo "::notice::No open PR for $BRANCH — skipping description update."
+            exit 0
+          fi
+
+          echo "::notice::Updating PR #$PR_NUMBER description with formatted decision content."
+          gh pr edit "$PR_NUMBER" --body-file /tmp/pr-body.md
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Update Pull Request"

@@ -1,6 +1,6 @@
 # Decision Pipeline
 
-Six analysis workflows that run in sequence after [Validate Context](validate-context.md) passes on a `decisions/<client>/<version>/<decision-id>` branch push. Each fills in a section of the [decision JSON](../schemas/decision.md) at `architectures/<client>/<version>/decisions/<decision-id>.json`. **Schema property names match the kebab-cased workflow names** — e.g., the `Architecture Review` workflow writes to the `architecture-review` property.
+Six analysis workflows that run in sequence after [Validate Context](validate-context.md) passes on a `decisions/<client>/<version>/<decision-id>` branch push. Each fills in a section of the [decision JSON](../schemas/decision.md) at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`. **Schema property names match the kebab-cased workflow names** — e.g., the `Architecture Review` workflow writes to the `architecture-review` property.
 
 ## Pre-requisites
 
@@ -33,7 +33,8 @@ flowchart TD
     SA --> PA["Principles Alignment<br/><i>writes principles-alignment</i>"]:::ai
     PA --> PR["Proponent Analysis<br/><i>writes proponent-analysis</i>"]:::ai
     PR --> CH["Challenger Analysis<br/><i>writes challenger-analysis</i>"]:::ai
-    CH --> Done(((decision JSON complete))):::term
+    CH --> SY["Update Pull Request<br/><i>updates open PR body</i>"]:::det
+    SY --> Done(((decision JSON complete & PR updated))):::term
 
     classDef det fill:#e3f2fd,stroke:#1976d2,color:#000
     classDef ai fill:#f3e5f5,stroke:#7b1fa2,color:#000
@@ -86,6 +87,12 @@ A failure (or skip) at any step halts everything downstream, because each link u
 - **Will eventually do:** read the same upstream outputs and produce a narrative arguing AGAINST the change.
 - **Section written:** `challenger-analysis`
 
+### 7. Update Pull Request (closing link)
+- **File:** `decisions-update-pull-request.yml`
+- **Trigger:** `workflow_run` after Challenger Analysis
+- **What it does:** formats the now-populated decision JSON into markdown and replaces the open PR's description so reviewers see the narrative + all seven analysis sections without opening the JSON.
+- See [decisions-update-pull-request.md](decisions-update-pull-request.md) for details.
+
 ## Current status
 
 All six analysis workflows are now **Claude-driven** end to end:
@@ -96,4 +103,4 @@ All six analysis workflows are now **Claude-driven** end to end:
 
 The **prompts themselves are stubs** — they describe the role and output contract but the task descriptions are placeholders. Iterate the prompt content in `/prompts/decisions/` without touching the workflow YAML; the file is loaded at runtime.
 
-[Validate Context](validate-context.md) remains deterministic and does not call Claude.
+[Validate Context](validate-context.md) and [Update Pull Request](decisions-update-pull-request.md) are the deterministic links in the chain — they bookend the Claude-driven analysis and do not call Claude themselves.

@@ -51,18 +51,18 @@ Each pair below is one row of that mapping. Index files (plural) carry IDs only;
 
 | Schema | Documents | Purpose |
 |---|---|---|
-| [clients.md](clients.md) | `architectures/clients.json` | Authoritative list of client IDs |
-| [versions.md](versions.md) | `architectures/<client>/versions.json` | Authoritative list of version IDs for a client |
-| [decisions.md](decisions.md) | `architectures/<client>/<version>/decisions/decisions.json` | Authoritative list of decision IDs for a version |
+| [clients.md](clients.md) | `architectures/clients/clients.json` | Authoritative list of client IDs |
+| [versions.md](versions.md) | `architectures/clients/<client>/versions.json` | Authoritative list of version IDs for a client |
+| [decisions.md](decisions.md) | `architectures/clients/<client>/<version>/decisions/decisions.json` | Authoritative list of decision IDs for a version |
 | [artefacts.md](artefacts.md) | `schemas/artefacts.json` | Index of all defined catalogue schemas |
 
 ## Singular metadata
 
 | Schema | Documents | Purpose |
 |---|---|---|
-| [client.md](client.md) | `architectures/<client>/client.json` | Per-client metadata (name, etc.) |
-| [version.md](version.md) | `architectures/<client>/<version>/version.json` | Per-version metadata (name, status) |
-| [decision.md](decision.md) | `architectures/<client>/<version>/decisions/<decision-id>.json` | Architecture Decision Record (machine-readable) |
+| [client.md](client.md) | `architectures/clients/<client>/client.json` | Per-client metadata (name, etc.) |
+| [version.md](version.md) | `architectures/clients/<client>/<version>/version.json` | Per-version metadata (name, status) |
+| [decision.md](decision.md) | `architectures/clients/<client>/<version>/decisions/<decision-id>.json` | Architecture Decision Record (machine-readable) |
 
 ## Strategy / Principles / Guardrails (one per architecture domain)
 

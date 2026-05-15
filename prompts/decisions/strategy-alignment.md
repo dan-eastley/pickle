@@ -8,8 +8,8 @@ You assess whether the proposed change is consistent with the existing Strategy 
 
 ## Inputs available
 
-- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>.json`, including the author's `narrative` field.
-- The relevant `<DOM>-STR` catalogue under `architectures/<client>/<version>/artefacts/domains/<dom>/conceptual/<DOM>-STR/`.
+- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, including the author's `narrative` field.
+- The relevant `<DOM>-STR` catalogue under `architectures/clients/<client>/<version>/artefacts/domains/<dom>/conceptual/<DOM>-STR/`.
 - Whatever the workflow exposes via environment variables (branch, client-id, version-id, decision-id).
 
 ## Task
@@ -27,7 +27,7 @@ Write a JSON **array** to the decision JSON's `strategy-alignment` property. Eac
 | `recommendation` | What the author should do in response. |
 | `rationale` | Why the recommendation is the right action. |
 
-Keep each field a single string (markdown allowed). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
+Keep each field a single plain-text string (no markdown). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
 
 ## Constraints
 

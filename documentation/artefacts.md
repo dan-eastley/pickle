@@ -7,7 +7,7 @@ An **artefact type** is a single, classified piece of architecture content. Ever
 - Conforms to exactly one [output format](output-formats.md)
 - Has a unique ID prefixed with the architecture domain acronym (e.g. `BUS-CAP`, `APP-DAP`)
 
-Each artefact type has a folder under `architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `schemas/`.
+Each artefact type has a folder under `architectures/clients/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `schemas/`.
 
 ## Cross-domain baseline (Strategy / Principles / Guardrails)
 
@@ -74,4 +74,4 @@ This table is the authoritative registry of every defined artefact type. The sch
    - Define a JSON Schema at `/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`.
    - Add an entry for the new artefact-type ID to `/schemas/artefacts.json` (the schema index).
    - Document the schema with a markdown page in `/documentation/schemas/<ID>.md` (or, for shared shapes, link to an existing shape page).
-3. Create an empty instance folder in each affected client version: `/architectures/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`.
+3. Create an empty instance folder in each affected client version: `/architectures/clients/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`.

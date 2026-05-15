@@ -86,48 +86,52 @@ jobs:
               p = pathlib.Path(path)
               parts = p.parts
 
-              # architectures/clients.json -> schemas/clients.json
-              if path == 'architectures/clients.json':
+              # architectures/clients/clients.json -> schemas/clients.json
+              if path == 'architectures/clients/clients.json':
                   return pathlib.Path('schemas/clients.json')
 
-              # architectures/<client>/client.json -> schemas/client.json
-              if len(parts) == 3 and parts[0] == 'architectures' and parts[-1] == 'client.json':
+              # architectures/clients/<client>/client.json -> schemas/client.json
+              if len(parts) == 4 and parts[0] == 'architectures' and parts[1] == 'clients' and parts[-1] == 'client.json':
                   return pathlib.Path('schemas/client.json')
 
-              # architectures/<client>/versions.json -> schemas/versions.json
-              if len(parts) == 3 and parts[0] == 'architectures' and parts[-1] == 'versions.json':
+              # architectures/clients/<client>/versions.json -> schemas/versions.json
+              if len(parts) == 4 and parts[0] == 'architectures' and parts[1] == 'clients' and parts[-1] == 'versions.json':
                   return pathlib.Path('schemas/versions.json')
 
-              # architectures/<client>/<version>/version.json -> schemas/version.json
-              if len(parts) == 4 and parts[0] == 'architectures' and parts[-1] == 'version.json':
+              # architectures/clients/<client>/<version>/version.json -> schemas/version.json
+              if len(parts) == 5 and parts[0] == 'architectures' and parts[1] == 'clients' and parts[-1] == 'version.json':
                   return pathlib.Path('schemas/version.json')
 
-              # architectures/<client>/<version>/decisions/decisions.json -> schemas/decisions.json (index)
+              # architectures/clients/<client>/<version>/decisions/decisions.json -> schemas/decisions.json (index)
               if (
-                  len(parts) == 5
+                  len(parts) == 6
                   and parts[0] == 'architectures'
-                  and parts[3] == 'decisions'
-                  and parts[4] == 'decisions.json'
+                  and parts[1] == 'clients'
+                  and parts[4] == 'decisions'
+                  and parts[5] == 'decisions.json'
               ):
                   return pathlib.Path('schemas/decisions.json')
 
-              # architectures/<client>/<version>/decisions/<decision-id>.json -> schemas/decision.json
+              # architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json -> schemas/decision.json
               if (
-                  len(parts) == 5
+                  len(parts) == 7
                   and parts[0] == 'architectures'
-                  and parts[3] == 'decisions'
+                  and parts[1] == 'clients'
+                  and parts[4] == 'decisions'
+                  and parts[6] == 'decision.json'
               ):
                   return pathlib.Path('schemas/decision.json')
 
-              # architectures/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json
+              # architectures/clients/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json
               #   -> schemas/artefacts/domains/<dom>/<layer>/<ID>.json
               if (
-                  len(parts) >= 9
+                  len(parts) >= 10
                   and parts[0] == 'architectures'
-                  and parts[3] == 'artefacts'
-                  and parts[4] == 'domains'
+                  and parts[1] == 'clients'
+                  and parts[4] == 'artefacts'
+                  and parts[5] == 'domains'
               ):
-                  dom, layer, artefact_id = parts[5], parts[6], parts[7]
+                  dom, layer, artefact_id = parts[6], parts[7], parts[8]
                   return pathlib.Path(f'schemas/artefacts/domains/{dom}/{layer}/{artefact_id}.json')
 
               # Schema files themselves have no cross-reference target — JSON-parse only.
