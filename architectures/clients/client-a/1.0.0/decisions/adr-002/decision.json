@@ -2,5 +2,16 @@
     "decision-id": "adr-002",
     "title": "Supporting Large Capital Delivery",
     "status": "draft",
-    "narrative": "We require a project and programme management capability in the architecture, represented in the business and application domains. This is based on a requirement for the business to support Large Capital Project delivery going forward"
+    "narrative": "We require a project and programme management capability in the architecture, represented in the business and application domains. This is based on a requirement for the business to support Large Capital Project delivery going forward",
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/client-a/",
+        "changed-files": [
+            "architectures/clients/client-a/1.0.0/decisions/adr-002/decision.json",
+            "architectures/clients/client-a/1.0.0/decisions/decisions.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-05-15T09:14:59+00:00"
+    }
 }
