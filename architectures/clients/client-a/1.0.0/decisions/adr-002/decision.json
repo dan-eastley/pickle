@@ -2,7 +2,7 @@
     "decision-id": "adr-002",
     "title": "Supporting Large Capital Delivery",
     "status": "draft",
-    "narrative": "We require a project and programme management capability in the architecture, represented in the business and application domains. This is based on a requirement for the business to support Large Capital Project delivery going forward",
+    "narrative": "We require a project and programme management capability in the architecture, represented in the business and application domains. This is based on a requirement for the business to support Large Capital Project delivery going forward, enabling delivery both internally and through external vendors and suppliers.",
     "architecture-review": [
         {
             "finding": "The BUS-CAP catalogue at architectures/clients/client-a/1.0.0/artefacts/domains/business/conceptual/BUS-CAP/BUS-CAP.json contains no Project and Programme Management capability. The closest entries are CAP-005 (Asset Management) and CAP-009 (Enterprise Support), neither of which covers project governance, programme delivery, or capital project lifecycle management.",
