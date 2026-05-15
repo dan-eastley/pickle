@@ -43,6 +43,7 @@ jobs:
         uses: anthropics/claude-code-base-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-6
           allowed_tools: "Bash,Read,Edit,Write,Grep,Glob"
           prompt: |
             You are running the "Architecture Review" step of the architecture decision pipeline.
