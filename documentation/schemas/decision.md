@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the seven decision-pipeline workflows. Each workflow fills in its own section progressively as the chain runs.
+Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the seven decision-pipeline steps (Validate Context gate + six analysis jobs in the Decisions Pipeline). Each step fills in its own section progressively as the pipeline runs.
 
 ## Structure at a glance
 
@@ -38,21 +38,22 @@ flowchart TB
 ## Lifecycle
 
 1. **Author** creates `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
-2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires the seven workflows in sequence (see `.github/workflows/decisions-*.yml`):
-   1. Validate Context
-   2. Architecture Review
-   3. Referential Integrity
-   4. Strategy Alignment
-   5. Principles Alignment
-   6. Proponent Analysis
-   7. Challenger Analysis
-3. Each workflow checks out the branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next workflow in the chain (`workflow_run` trigger) then runs.
+2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires:
+   - `Validate Context` (gate; deterministic — writes `context-validation`)
+   - `Decisions Pipeline` (orchestrator workflow with six sequential analysis jobs plus a final PR-update job)
+     1. Architecture Review
+     2. Referential Integrity
+     3. Strategy Alignment
+     4. Principles Alignment
+     5. Proponent Analysis
+     6. Challenger Analysis
+3. Each analysis job checks out the branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next job in the pipeline runs via `needs:` ordering — one workflow, sequential jobs, no `workflow_run` chaining beyond the single hop from Validate Context. See [decisions-pipeline.md](../workflows/decisions-pipeline.md).
 
-## Section property names match workflow names
+## Section property names match step names
 
-Each workflow writes to a property whose name is the kebab-cased workflow name:
+Each step writes to a property whose name is the kebab-cased step name:
 
-| Workflow | Schema property |
+| Step | Schema property |
 |---|---|
 | Validate Context | `context-validation` |
 | Architecture Review | `architecture-review` |
@@ -62,9 +63,9 @@ Each workflow writes to a property whose name is the kebab-cased workflow name:
 | Proponent Analysis | `proponent-analysis` |
 | Challenger Analysis | `challenger-analysis` |
 
-## Section shape (six workflows)
+## Section shape (six analyses)
 
-Six of the seven workflows — Architecture Review, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — write to a section that is an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
+The six analysis sections — Architecture Review, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
