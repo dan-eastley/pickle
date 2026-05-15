@@ -101,6 +101,32 @@
             "rationale": "APP-PRN-002 makes replaceability a first-class design quality assessed at architecture review. Recording the integration posture at the time the platform entry is authored ensures this quality can be evaluated now rather than discovered as a constraint when an integration or replacement is needed."
         }
     ],
+    "proponent-analysis": [
+        {
+            "finding": "All four upstream analysis sections confirm that the proposed change is architecturally additive: no existing artefact needs to be removed or restructured, only new entries added to BUS-CAP, BUS-PRO, and APP-DAP. The referential-integrity check found no violations in the current catalogues, and the architecture-review confirms that all three target artefact types are already schema-backed and in scope for instance-level changes.",
+            "impact": "The path to implementation is low-friction. There are no blocking defects in the existing catalogues, no new artefact types to define, no schema authoring required, and no folder structure changes needed. The change can be executed entirely through instance file edits in three existing files.",
+            "recommendation": "Proceed with authoring the three instance file changes identified by the architecture-review: add CAP-010 to BUS-CAP/BUS-CAP.json, add process entries to BUS-PRO/BUS-PRO.json, and add PLAT-PPM to APP-DAP/APP-DAP.json. No other files need to change to implement the core of this ADR.",
+            "rationale": "When upstream checks confirm clean referential integrity and a clear, bounded set of file changes using existing schemas, the risk profile for proceeding is low. Deferring a well-scoped, non-breaking addition does not reduce risk; it only delays the traceability benefits the change provides."
+        },
+        {
+            "finding": "The strategy-alignment section identified positive alignment between the proposed PLAT-PPM application platform and both BUS-STR-005 (top 20 processes digital end-to-end by 2026) and APP-STR-002 (buy or assemble commodity capability). Capital project processes are explicitly the kind of manual, document-heavy workflows BUS-STR-005 targets, and PPM tooling is a mature commodity software category consistent with APP-STR-002.",
+            "impact": "The change simultaneously advances two documented strategic outcomes: process digitisation and commodity sourcing. This dual alignment strengthens the business case for the ADR and reduces the likelihood of it being challenged in a future strategy or investment review.",
+            "recommendation": "Make the BUS-STR-005 and APP-STR-002 alignments explicit in the PLAT-PPM entry description in APP-DAP/APP-DAP.json. Reference process digitisation as a stated objective and anchor the platform to a commercial product category to satisfy the buy-or-assemble intent.",
+            "rationale": "Traceable strategy alignment in the artefact data itself — not only in the ADR narrative — means the alignment is discoverable in any future capability-to-strategy or platform-to-strategy query against the architecture model, providing durable justification for the investment."
+        },
+        {
+            "finding": "The principles-alignment section confirmed that BUS-PRN-001 (capability-first investment mapping) actively supports the sequencing already recommended by the architecture-review: BUS-CAP must be updated before BUS-PRO or APP-DAP are authored. BUS-PRN-006 (process digital by default) and APP-PRN-002 (composable over monolithic) both have clear, actionable compliance paths that can be satisfied within this ADR by including digital execution statements in BUS-PRO entries and integration posture metadata in the PLAT-PPM description.",
+            "impact": "The principles provide a ready-made compliance checklist for the authoring work. Meeting BUS-PRN-001, BUS-PRN-006, and APP-PRN-002 within this ADR produces a set of artefacts that will pass a principles-compliance review without requiring follow-up remediation work.",
+            "recommendation": "Use the sequencing and content guidance from the principles-alignment findings as an authoring checklist: (1) add CAP-010 first, (2) include digital execution statements in each BUS-PRO process entry referencing PLAT-PPM, (3) include integration posture metadata in the PLAT-PPM APP-DAP entry. This satisfies BUS-PRN-001, BUS-PRN-006, and APP-PRN-002 in a single authoring pass.",
+            "rationale": "Principles compliance is easier and cheaper to build in at authoring time than to retrofit. The upstream analysis has already identified exactly what metadata is needed; including it now avoids a future remediation ADR and keeps the architecture coherent from the first version of these artefacts."
+        },
+        {
+            "finding": "The strategy-alignment section identified two tensions — with BUS-STR-002 (product teams over project delivery) and BUS-STR-004 (continuous discovery over big design up front) — but both are resolvable by explicit scoping rather than by withdrawing the proposed change. The proposed capability is only in conflict if it is read as endorsing project-based delivery as a general model; scoped to large capital infrastructure investment, it is a necessary and documented exception.",
+            "impact": "The tensions with BUS-STR-002 and BUS-STR-004 do not invalidate the ADR. They are boundary conditions that, once documented in the capability and process descriptions, convert the apparent contradictions into traceable, defensible exceptions. The change remains justified; it requires qualification, not rejection.",
+            "recommendation": "Add explicit scoping language to the CAP-010 description in BUS-CAP/BUS-CAP.json that restricts the capability to large capital infrastructure or asset investment programmes. Add stage-gated learning checkpoints as an explicit step in the BUS-PRO process entries for capital project initiation and delivery. Reference BUS-STR-002 and BUS-PRN-004 as boundary conditions in the ADR narrative.",
+            "rationale": "Documenting exceptions with their rationale and boundary conditions is architecturally sound practice. The alternative — leaving the scoping implicit — creates ambiguity that will be raised in every future review. A single, explicit qualification now eliminates a recurring objection and makes the architecture self-documenting on this point."
+        }
+    ],
     "context-validation": {
         "branch-type": "decision",
         "outcome": "pass",
