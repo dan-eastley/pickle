@@ -53,7 +53,7 @@ jobs:
 
             Derive the decision file path from the branch name. The branch is
             decisions/<client>/<version>/<decision-id> and the decision JSON
-            lives at architectures/<client>/<version>/decisions/<decision-id>.json.
+            lives at architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json.
 
             Steps:
               1. Read the prompt instructions at ${{ env.PROMPT_FILE }}.
@@ -79,7 +79,7 @@ jobs:
           DECISION_FILE_PATH=$(python3 - "$BRANCH" <<'PYEOF_INNER'
           import sys
           parts = sys.argv[1].split('/')
-          print(f"architectures/{parts[1]}/{parts[2]}/decisions/{parts[3]}.json")
+          print(f"architectures/clients/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json")
           PYEOF_INNER
           )
           git add "$DECISION_FILE_PATH"

@@ -2,9 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:client",
     "title": "Client Metadata",
-    "description": "Per-client metadata file at architectures/<client>/client.json.",
+    "description": "Per-client metadata file at architectures/clients/<client>/client.json.",
     "type": "object",
-    "required": ["client-id", "name"],
+    "required": [
+        "client-id",
+        "name"
+    ],
     "properties": {
         "client-id": {
             "type": "string",

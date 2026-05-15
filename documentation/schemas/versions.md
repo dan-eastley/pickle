@@ -1,11 +1,11 @@
 # Versions Index Schema
 
 **File:** [`/schemas/versions.json`](../../schemas/versions.json)
-**Validates:** `/architectures/<client>/versions.json`
+**Validates:** `/architectures/clients/<client>/versions.json`
 
 ## Purpose
 
-Authoritative list of version IDs for a client. Per-version metadata (name, status) lives in `architectures/<client>/<version>/version.json` — this index intentionally only carries the IDs.
+Authoritative list of version IDs for a client. Per-version metadata (name, status) lives in `architectures/clients/<client>/<version>/version.json` — this index intentionally only carries the IDs.
 
 ## Example
 
@@ -27,4 +27,4 @@ Authoritative list of version IDs for a client. Per-version metadata (name, stat
 ## Conventions
 
 - When creating a new version folder for a client, add a matching entry here.
-- The `version-id` value must equal the folder name under `architectures/<client>/`.
+- The `version-id` value must equal the folder name under `architectures/clients/<client>/`.

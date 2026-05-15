@@ -1,7 +1,7 @@
 # Decision Record Schema
 
 **File:** [`/schemas/decision.json`](../../schemas/decision.json)
-**Validates:** `/architectures/<client>/<version>/decisions/<decision-id>.json`
+**Validates:** `/architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`
 
 ## Purpose
 
@@ -37,7 +37,7 @@ flowchart TB
 
 ## Lifecycle
 
-1. **Author** creates `architectures/<client>/<version>/decisions/<decision-id>.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
+1. **Author** creates `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
 2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires the seven workflows in sequence (see `.github/workflows/decisions-*.yml`):
    1. Validate Context
    2. Architecture Review
@@ -123,7 +123,7 @@ Validate Context is structurally different (deterministic outcome + violation li
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `decision-id` | string | yes | Unique identifier; must match the JSON file name and the trailing branch segment |
+| `decision-id` | string | yes | Unique identifier in the form `adr-NNN`; must match the parent folder name and the trailing branch segment |
 | `title` | string | yes | Short human-readable title |
 | `status` | enum | yes | `draft` \| `proposed` \| `accepted` \| `rejected` \| `superseded` |
 | `narrative` | string | yes | Author's narrative of the proposed change |

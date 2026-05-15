@@ -2,19 +2,23 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:decisions",
     "title": "Decisions Index",
-    "description": "Authoritative list of decision IDs for a client version. Per-decision content lives in architectures/<client>/<version>/decisions/<decision-id>.json.",
+    "description": "Authoritative list of decision IDs for a client version. Per-decision content lives in architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json (one folder per decision, file always named decision.json).",
     "type": "object",
-    "required": ["decisions"],
+    "required": [
+        "decisions"
+    ],
     "properties": {
         "decisions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["decision-id"],
+                "required": [
+                    "decision-id"
+                ],
                 "properties": {
                     "decision-id": {
                         "type": "string",
-                        "description": "Unique identifier — must match the decision JSON file name (without .json) and the trailing segment of the decision branch name"
+                        "description": "Unique identifier in the form adr-NNN. Must match the decision folder name under decisions/ and the trailing segment of the decision branch name."
                     }
                 },
                 "additionalProperties": false

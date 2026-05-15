@@ -1,0 +1,35 @@
+name: Validate Structure
+
+# Walk the architectures/ tree and assert structural invariants:
+#   - every index entry has a matching folder (no missing)
+#   - every folder has a matching index entry (no orphans)
+#   - required files at each level (client.json, versions.json, version.json,
+#     decisions.json, decision.json)
+#   - the 5 x 3 architecture-domain x abstraction-layer grid is complete
+#     under each version's artefacts/
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Validate Structure"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run structure check
+        run: |
+          python3 .github/scripts/validate-structure.py
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Validate Structure"

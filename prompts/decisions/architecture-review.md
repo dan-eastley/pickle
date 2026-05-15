@@ -8,7 +8,7 @@ You review the proposed change against the repository's existing artefact-type m
 
 ## Inputs available
 
-- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>.json`, including the author's `narrative` field.
+- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, including the author's `narrative` field.
 - The architecture domains, abstraction layers, output formats, and existing artefact-type registry under `/documentation/` and `/schemas/`.
 - Whatever the workflow exposes via environment variables (branch, client-id, version-id, decision-id).
 
@@ -27,7 +27,7 @@ Write a JSON **array** to the decision JSON's `architecture-review` property. Ea
 | `recommendation` | What the author should do in response. |
 | `rationale` | Why the recommendation is the right action. |
 
-Keep each field a single string (markdown allowed). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
+Keep each field a single plain-text string (no markdown). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
 
 ## Constraints
 

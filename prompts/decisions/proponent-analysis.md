@@ -8,7 +8,7 @@ You argue FOR the proposed change, drawing on the outputs of the earlier analysi
 
 ## Inputs available
 
-- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>.json`, including the author's `narrative` field.
+- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, including the author's `narrative` field.
 - The decision JSON, specifically the `architecture-review`, `referential-integrity`, `strategy-alignment`, and `principles-alignment` properties.
 - Whatever the workflow exposes via environment variables (branch, client-id, version-id, decision-id).
 
@@ -27,7 +27,7 @@ Write a JSON **array** to the decision JSON's `proponent-analysis` property. Eac
 | `recommendation` | What the author should do in response. |
 | `rationale` | Why the recommendation is the right action. |
 
-Keep each field a single string (markdown allowed). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
+Keep each field a single plain-text string (no markdown). Do not add metadata fields — the schema rejects them. The wrapping array may have one or many items.
 
 ## Constraints
 

@@ -20,11 +20,11 @@ For every `.json` file changed by the push, JSON-parse it (syntax check) and —
 
 | Instance file | Schema |
 |---|---|
-| `architectures/clients.json` | `schemas/clients.json` |
-| `architectures/<client>/versions.json` | `schemas/versions.json` |
-| `architectures/<client>/client.json` | `schemas/client.json` |
-| `architectures/<client>/<version>/version.json` | `schemas/version.json` |
-| `architectures/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json` | `schemas/artefacts/domains/<dom>/<layer>/<ID>.json` |
+| `architectures/clients/clients.json` | `schemas/clients.json` |
+| `architectures/clients/<client>/versions.json` | `schemas/versions.json` |
+| `architectures/clients/<client>/client.json` | `schemas/client.json` |
+| `architectures/clients/<client>/<version>/version.json` | `schemas/version.json` |
+| `architectures/clients/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json` | `schemas/artefacts/domains/<dom>/<layer>/<ID>.json` |
 
 Files outside these mappings (e.g. schema files themselves) get a JSON-parse check only.
 
