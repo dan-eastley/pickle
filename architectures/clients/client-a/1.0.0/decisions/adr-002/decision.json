@@ -3,6 +3,26 @@
     "title": "Supporting Large Capital Delivery",
     "status": "draft",
     "narrative": "We require a project and programme management capability in the architecture, represented in the business and application domains. This is based on a requirement for the business to support Large Capital Project delivery going forward",
+    "architecture-review": [
+        {
+            "finding": "The BUS-CAP catalogue at architectures/clients/client-a/1.0.0/artefacts/domains/business/conceptual/BUS-CAP/BUS-CAP.json contains no Project and Programme Management capability. The closest entries are CAP-005 (Asset Management) and CAP-009 (Enterprise Support), neither of which covers project governance, programme delivery, or capital project lifecycle management.",
+            "impact": "Without a recognised business capability for Project and Programme Management, the proposed change has no anchor in the Business domain. Downstream artefacts — BUS-PRO processes, BUS-PRN principles, and application domain alignment — cannot be traced back to a declared capability, which will block referential-integrity and strategy-alignment checks.",
+            "recommendation": "Add a new top-level capability (e.g. CAP-010 Project and Programme Management) to BUS-CAP/BUS-CAP.json, with appropriate level-2 sub-capabilities covering at least: Portfolio and Programme Governance, Capital Project Delivery, and Project Controls and Reporting. Ensure the importance rating reflects strategic intent for Large Capital Project delivery.",
+            "rationale": "BUS-CAP is the authoritative source of business capabilities in this model. Every material business function must be represented there before related processes, applications, or data artefacts can be linked to it. Adding the capability at level 1 now establishes the correct anchor and enables all subsequent artefact work to be coherent and traceable."
+        },
+        {
+            "finding": "The APP-DAP catalogue at architectures/clients/client-a/1.0.0/artefacts/domains/application/logical/APP-DAP/APP-DAP.json contains no application domain or platform for Project and Programme Management tooling. The APP-DOM-ENTERPRISE domain exists for corporate services, and PLAT-ERP covers project accounting within it, but there is no platform representing end-to-end project/programme management (e.g. a PPM or scheduling tool).",
+            "impact": "Without a platform entry in APP-DAP, the application architecture cannot support the capability being introduced in the Business domain. The gap means there is no traceable path from the business requirement for Large Capital Project delivery to the application layer, which will be flagged in any subsequent capability-to-application mapping.",
+            "recommendation": "Add a Project and Programme Management platform entry to APP-DAP/APP-DAP.json, associated with the APP-DOM-ENTERPRISE domain (or a new APP-DOM-PPM domain if the scope warrants separation). At minimum, the platform should cover project scheduling, resource management, programme governance, and integration with PLAT-ERP for project accounting. Set an appropriate lifecycle status (e.g. trial or adopt) reflecting current tooling maturity.",
+            "rationale": "APP-DAP is the logical application catalogue for this client version. Introducing a business capability without a corresponding application platform leaves the architecture incomplete at the logical layer and prevents any physical-layer or solution-layer work from being grounded in the model."
+        },
+        {
+            "finding": "No new artefact types are required to represent this change. The existing BUS-CAP (Business Capabilities catalogue) and APP-DAP (Application Domains and Platforms catalogue) are the correct artefact types for the additions described above. The artefact-type registry in documentation/artefacts.md does not need to be modified.",
+            "impact": "Using existing, schema-validated artefact types keeps the change contained to instance data and avoids the overhead of schema creation, schema documentation, and artefact-type registry updates that would be needed for a new artefact type.",
+            "recommendation": "Proceed by updating instance files only: BUS-CAP/BUS-CAP.json and APP-DAP/APP-DAP.json as described in the preceding findings. Do not create new artefact-type folders, schemas, or documentation pages.",
+            "rationale": "The artefact-type model is designed to be extended through new instance data before new types are warranted. Introducing a new artefact type is only appropriate when an entirely new output format or domain-layer combination is needed, which is not the case here."
+        }
+    ],
     "context-validation": {
         "branch-type": "decision",
         "outcome": "pass",
