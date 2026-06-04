@@ -1,25 +1,16 @@
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { getDomain, ABSTRACTIONS, getArtefactsForDomain, DOMAIN_COLORS, ABSTRACTION_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
-import FormatIcon from '../components/ui/FormatIcon'
+import ArtefactRow from '../components/artefacts/ArtefactRow'
 import usePageTitle from '../hooks/usePageTitle'
 
-function KeyStar() {
-  return (
-    <svg className="w-3 h-3 text-amber-500 flex-shrink-0" viewBox="0 0 12 12" fill="currentColor">
-      <path d="M6 1l1.29 3.09L10.5 4.5 8.25 6.65l.54 3.1L6 8.25 3.21 9.75l.54-3.1L1.5 4.5l3.21-.41z" />
-    </svg>
-  )
-}
-
-function AbstractionSection({ abstraction, artefacts, base, domain }) {
+function AbstractionSection({ abstraction, artefacts, base, domain, clientId, versionId }) {
   const colors = ABSTRACTION_COLORS[abstraction.id]
-  const keyArtefacts = artefacts.filter(a => a.key)
-  const otherArtefacts = artefacts.filter(a => !a.key)
-  const sorted = [...keyArtefacts, ...otherArtefacts]
+  const sorted = [...artefacts.filter(a => a.key), ...artefacts.filter(a => !a.key)]
 
   return (
     <div className="border border-gray-200 bg-white">
+      {/* Abstraction header row */}
       <Link
         to={`${base}/domains/${domain}/${abstraction.id}`}
         className="group flex items-center justify-between px-5 py-3 border-b border-gray-200 hover:bg-gray-50 transition-colors"
@@ -38,29 +29,17 @@ function AbstractionSection({ abstraction, artefacts, base, domain }) {
         </svg>
       </Link>
 
-      <div>
-        {sorted.map((artefact, i) => (
-          <Link
-            key={artefact.id}
-            to={`${base}/domains/${domain}/${abstraction.id}/${artefact.id}`}
-            className={`group flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors border-l-4 ${artefact.key ? 'border-amber-400' : 'border-transparent'} ${i > 0 ? 'border-t border-gray-100' : ''}`}
-          >
-            <span className="text-gray-400 group-hover:text-gray-600 flex-shrink-0">
-              <FormatIcon format={artefact.format} className="w-4 h-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                {artefact.key && <KeyStar />}
-                <p className={`text-sm font-medium truncate ${artefact.key ? 'text-gray-900' : 'text-gray-700'} group-hover:text-gray-900 transition-colors`}>
-                  {artefact.name}
-                </p>
-              </div>
-              <p className="text-xs text-gray-400 truncate">{artefact.description}</p>
-            </div>
-            <span className="text-xs font-mono text-gray-300 flex-shrink-0">{artefact.id}</span>
-          </Link>
-        ))}
-      </div>
+      {/* Artefact rows — same style as AbstractionPage */}
+      {sorted.map((artefact, i) => (
+        <ArtefactRow
+          key={artefact.id}
+          artefact={artefact}
+          to={`${base}/domains/${domain}/${abstraction.id}/${artefact.id}`}
+          clientId={clientId}
+          versionId={versionId}
+          divider={i > 0}
+        />
+      ))}
     </div>
   )
 }
@@ -98,6 +77,8 @@ export default function DomainPage() {
               artefacts={artefacts}
               base={base}
               domain={domain}
+              clientId={clientId}
+              versionId={versionId}
             />
           )
         })}

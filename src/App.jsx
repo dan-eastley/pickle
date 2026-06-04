@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
 import Layout from './components/layout/Layout'
+import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
 import HomePage from './pages/HomePage'
+import ClientsPage from './pages/ClientsPage'
 import DomainsPage from './pages/DomainsPage'
 import DomainPage from './pages/DomainPage'
 import AbstractionPage from './pages/AbstractionPage'
@@ -34,7 +36,13 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      {/* Public / marketing pages */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/clients" element={<ClientsPage />} />
+      </Route>
+
+      {/* Architecture browser */}
       <Route path="/clients/:clientId/:versionId" element={<Layout />}>
         <Route index element={<Navigate to="domains" replace />} />
         <Route path="domains" element={<DomainsPage />} />
@@ -42,10 +50,13 @@ function AppRoutes() {
         <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
         <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
       </Route>
+
+      {/* Docs */}
       <Route path="/docs" element={<DocsLayout />}>
         <Route index element={<Navigate to="/docs/index" replace />} />
         <Route path="*" element={<DocsPage />} />
       </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LayersThree01 } from '@untitled-ui/icons-react'
 import Badge from '../ui/Badge'
 
 // ── Schema helpers ───────────────────────────────────────────────────────────
@@ -179,8 +180,12 @@ export default function CatalogueView({ data, schema }) {
   const items = data[rootKey]
   if (!items || items.length === 0) {
     return (
-      <div className="border border-gray-200 bg-white p-8 text-center">
-        <p className="text-sm text-gray-500">No entries in this catalogue yet.</p>
+      <div className="border border-gray-200 bg-white py-16 text-center">
+        <div className="flex items-center justify-center mx-auto mb-5 w-20 h-20 bg-gray-50 border border-gray-200">
+          <LayersThree01 className="w-10 h-10 text-gray-300" />
+        </div>
+        <p className="text-sm font-medium text-gray-700">Nothing here yet</p>
+        <p className="mt-1 text-sm text-gray-400">No entries have been added to this catalogue for this version.</p>
       </div>
     )
   }
