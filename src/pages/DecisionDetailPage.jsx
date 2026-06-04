@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link, Navigate } from 'react-router-dom'
+import { useParams, Navigate } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDomain, getAbstraction, getArtefact } from '../lib/artefacts'
 import Spinner from '../components/ui/Spinner'
@@ -179,31 +179,27 @@ export default function DecisionDetailPage() {
   const hasAnalysis = ANALYSIS_SECTIONS.some(s => decision[s.key]?.length)
 
   return (
-    <div className="py-8 max-w-4xl">
-      {/* Back link */}
-      <div className="mb-4">
-        <Link
-          to={`/clients/${clientId}/${versionId}/decisions`}
-          className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-        >
-          ← All decisions
-        </Link>
-      </div>
-
-      {/* Title row */}
-      <div className="flex items-start justify-between gap-4 mb-6 pb-5 border-b border-gray-200">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
-          </div>
-          <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
+    <div className="py-8">
+      {/* Header — matches ArtefactPage style */}
+      <div className="mb-6 pb-5 border-b border-gray-200">
+        {/* Status badge */}
+        <div className="flex items-center gap-2 mb-3">
+          <StatusBadge status={decision.status} />
         </div>
-        <Link
-          to={`/clients/${clientId}/${versionId}/decisions/new`}
-          className="flex-shrink-0 flex items-center gap-1.5 text-xs text-gray-400 hover:text-brand-600 transition-colors"
-        >
-          Edit
-        </Link>
+        {/* Icon + title + ID */}
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <svg className="w-5 h-5 text-gray-500" viewBox="0 0 14 14" fill="none">
+              <path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
+          </div>
+          <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1 flex-shrink-0 self-start">
+            {decision['decision-id']}
+          </span>
+        </div>
       </div>
 
       {/* Status progress */}

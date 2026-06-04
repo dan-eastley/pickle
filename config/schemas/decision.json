@@ -13,7 +13,7 @@
     "properties": {
         "decision-id": {
             "type": "string",
-            "description": "Unique identifier in the form adr-NNN (three-digit number). Must match the parent folder name and the trailing segment of the decision branch name."
+            "description": "Unique identifier in the form ADR-NNN (three-digit number, uppercase). Must match the parent folder name and the trailing segment of the decision branch name."
         },
         "title": {
             "type": "string",

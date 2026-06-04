@@ -1,6 +1,6 @@
 {
     "decisions": [
-        { "decision-id": "adr-001" },
-        { "decision-id": "adr-002" }
+        { "decision-id": "ADR-001" },
+        { "decision-id": "ADR-002" }
     ]
 }

@@ -77,7 +77,7 @@ export default function DecisionEditorPage() {
     : []
 
   const decision = {
-    'decision-id': 'adr-NEW',
+    'decision-id': 'ADR-NEW',
     title: title || '(untitled)',
     status: 'draft',
     narrative: narrative || '',

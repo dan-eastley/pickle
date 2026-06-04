@@ -1,5 +1,5 @@
 {
-    "decision-id": "adr-001",
+    "decision-id": "ADR-001",
     "title": "Project and Programme Management",
     "status": "draft",
     "narrative": "We require a project and programme management capability in the architecture, represented in the business and application domains",
