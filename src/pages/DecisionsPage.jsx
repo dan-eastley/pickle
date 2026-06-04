@@ -92,8 +92,13 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
             <Link
               key={i}
               to={`/clients/${clientId}/${versionId}/decisions/${decision['decision-id']}`}
-              className="group flex items-start justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+              className="group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
+              <div className="w-8 h-8 bg-gray-100 flex items-center justify-center flex-shrink-0 group-hover:bg-gray-200 transition-colors">
+                <svg className="w-4 h-4 text-gray-500" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
+                </svg>
+              </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
