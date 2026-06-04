@@ -1,6 +1,6 @@
 name: Decisions Pipeline
 
-# Orchestrator for the decision analysis pipeline. Runs all six Claude
+# Orchestrator for the decision analysis pipeline. Runs all Claude
 # analyses sequentially as jobs in a single workflow, then updates the PR
 # description. Triggered by Validate Context completion on a decisions/**
 # branch.
@@ -15,7 +15,7 @@ name: Decisions Pipeline
 #   and yields a single, linearly-readable run on the Actions tab.
 #
 # Each analysis job uses the reusable decisions-analysis-step.yml workflow
-# (kept DRY — six near-identical step bodies). The final job is inlined
+# (kept DRY — near-identical step bodies). The final job is inlined
 # because it has a different shape (formats decision JSON, updates PR).
 
 on:
@@ -28,12 +28,22 @@ permissions:
   pull-requests: write
 
 jobs:
-  architecture-review:
+  narrative-validation:
     if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
+      analysis-name: "Narrative Validation"
+      prompt-file: config/prompts/decisions/narrative-validation.md
+      section-key: narrative-validation
+      branch: ${{ github.event.workflow_run.head_branch }}
+    secrets: inherit
+
+  architecture-review:
+    needs: narrative-validation
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
       analysis-name: "Architecture Review"
-      prompt-file: prompts/decisions/architecture-review.md
+      prompt-file: config/prompts/decisions/architecture-review.md
       section-key: architecture-review
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
@@ -43,7 +53,7 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Referential Integrity"
-      prompt-file: prompts/decisions/referential-integrity.md
+      prompt-file: config/prompts/decisions/referential-integrity.md
       section-key: referential-integrity
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
@@ -53,7 +63,7 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Strategy Alignment"
-      prompt-file: prompts/decisions/strategy-alignment.md
+      prompt-file: config/prompts/decisions/strategy-alignment.md
       section-key: strategy-alignment
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
@@ -63,7 +73,7 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Principles Alignment"
-      prompt-file: prompts/decisions/principles-alignment.md
+      prompt-file: config/prompts/decisions/principles-alignment.md
       section-key: principles-alignment
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
@@ -73,7 +83,7 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Proponent Analysis"
-      prompt-file: prompts/decisions/proponent-analysis.md
+      prompt-file: config/prompts/decisions/proponent-analysis.md
       section-key: proponent-analysis
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
@@ -83,7 +93,7 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Challenger Analysis"
-      prompt-file: prompts/decisions/challenger-analysis.md
+      prompt-file: config/prompts/decisions/challenger-analysis.md
       section-key: challenger-analysis
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit

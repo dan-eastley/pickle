@@ -1,0 +1,65 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts",
+    "title": "Artefact-Type Schemas Index",
+    "description": "Index of catalogue schemas defined in this repository, keyed by artefact-type ID. Diagrams and matrices are not listed here — they have no schema yet. The full artefact-type registry (including non-catalogue entries) is documented in /docs/artefacts.md.",
+    "schemas": {
+        "BUS-CAP": {
+            "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json"
+        },
+        "BUS-PRO": {
+            "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json"
+        },
+        "DAT-DAC": {
+            "$ref": "./artefacts/domains/data/conceptual/DAT-DAC.json"
+        },
+        "APP-DAP": {
+            "$ref": "./artefacts/domains/application/logical/APP-DAP.json"
+        },
+        "BUS-STR": {
+            "$ref": "./artefacts/domains/business/conceptual/BUS-STR.json"
+        },
+        "BUS-PRN": {
+            "$ref": "./artefacts/domains/business/logical/BUS-PRN.json"
+        },
+        "BUS-GRD": {
+            "$ref": "./artefacts/domains/business/physical/BUS-GRD.json"
+        },
+        "DAT-STR": {
+            "$ref": "./artefacts/domains/data/conceptual/DAT-STR.json"
+        },
+        "DAT-PRN": {
+            "$ref": "./artefacts/domains/data/logical/DAT-PRN.json"
+        },
+        "DAT-GRD": {
+            "$ref": "./artefacts/domains/data/physical/DAT-GRD.json"
+        },
+        "INT-STR": {
+            "$ref": "./artefacts/domains/integration/conceptual/INT-STR.json"
+        },
+        "INT-PRN": {
+            "$ref": "./artefacts/domains/integration/logical/INT-PRN.json"
+        },
+        "INT-GRD": {
+            "$ref": "./artefacts/domains/integration/physical/INT-GRD.json"
+        },
+        "APP-STR": {
+            "$ref": "./artefacts/domains/application/conceptual/APP-STR.json"
+        },
+        "APP-PRN": {
+            "$ref": "./artefacts/domains/application/logical/APP-PRN.json"
+        },
+        "APP-GRD": {
+            "$ref": "./artefacts/domains/application/physical/APP-GRD.json"
+        },
+        "SOL-STR": {
+            "$ref": "./artefacts/domains/solution/conceptual/SOL-STR.json"
+        },
+        "SOL-PRN": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-PRN.json"
+        },
+        "SOL-GRD": {
+            "$ref": "./artefacts/domains/solution/physical/SOL-GRD.json"
+        }
+    }
+}
