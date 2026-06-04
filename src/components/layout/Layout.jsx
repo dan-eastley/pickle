@@ -1,4 +1,5 @@
-import { Outlet, useParams, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useParams } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import TopBar from './TopBar'
 import DomainNav from './DomainNav'
@@ -7,14 +8,17 @@ import Spinner from '../ui/Spinner'
 
 export default function Layout() {
   const { clientId, versionId } = useParams()
-  const { selectedClientId, selectedVersionId, loading } = useArchitecture()
+  const { selectedClientId, selectedVersionId, loading, setClientId, setVersionId } = useArchitecture()
 
-  // If context has resolved a different client/version, redirect
-  if (!loading && selectedClientId && selectedVersionId) {
-    if (clientId !== selectedClientId || versionId !== selectedVersionId) {
-      return <Navigate to={`/clients/${selectedClientId}/${selectedVersionId}/domains`} replace />
-    }
-  }
+  // URL is the source of truth — sync params into context when navigating directly to a URL.
+  // This fixes the case where localStorage has a different client than the URL being visited.
+  useEffect(() => {
+    if (clientId && clientId !== selectedClientId) setClientId(clientId)
+  }, [clientId])
+
+  useEffect(() => {
+    if (versionId && versionId !== selectedVersionId) setVersionId(versionId)
+  }, [versionId])
 
   if (loading) {
     return (

@@ -34,19 +34,22 @@ export default function Breadcrumb() {
   }
 
   return (
-    <nav className="flex items-center gap-1.5 py-3 text-sm" aria-label="Breadcrumb">
-      {crumbs.map((crumb, i) => (
-        <span key={i} className="flex items-center gap-1.5">
-          {i > 0 && <ChevronRight />}
-          {crumb.to ? (
-            <Link to={crumb.to} className="text-gray-500 hover:text-gray-700 transition-colors">
-              {crumb.label}
-            </Link>
-          ) : (
-            <span className="text-gray-900 font-medium">{crumb.label}</span>
-          )}
-        </span>
-      ))}
-    </nav>
+    <div>
+      <nav className="flex items-center gap-1.5 py-3 text-sm" aria-label="Breadcrumb">
+        {crumbs.map((crumb, i) => (
+          <span key={i} className="flex items-center gap-1.5">
+            {i > 0 && <ChevronRight />}
+            {crumb.to ? (
+              <Link to={crumb.to} className="text-gray-500 hover:text-gray-700 transition-colors">
+                {crumb.label}
+              </Link>
+            ) : (
+              <span className="text-gray-900 font-medium">{crumb.label}</span>
+            )}
+          </span>
+        ))}
+      </nav>
+      <div className="border-b border-gray-200 mb-5" />
+    </div>
   )
 }
