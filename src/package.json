@@ -16,7 +16,7 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.23.1",
     "remark-gfm": "^4.0.1",
-    "vite-plugin-static-copy": "^4.1.0"
+    "vite-plugin-static-copy": "^1.0.6"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
