@@ -86,23 +86,23 @@ jobs:
               p = pathlib.Path(path)
               parts = p.parts
 
-              # architectures/clients/clients.json -> schemas/clients.json
+              # architectures/clients/clients.json -> config/schemas/clients.json
               if path == 'architectures/clients/clients.json':
-                  return pathlib.Path('schemas/clients.json')
+                  return pathlib.Path('config/schemas/clients.json')
 
-              # architectures/clients/<client>/client.json -> schemas/client.json
+              # architectures/clients/<client>/client.json -> config/schemas/client.json
               if len(parts) == 4 and parts[0] == 'architectures' and parts[1] == 'clients' and parts[-1] == 'client.json':
-                  return pathlib.Path('schemas/client.json')
+                  return pathlib.Path('config/schemas/client.json')
 
-              # architectures/clients/<client>/versions.json -> schemas/versions.json
+              # architectures/clients/<client>/versions.json -> config/schemas/versions.json
               if len(parts) == 4 and parts[0] == 'architectures' and parts[1] == 'clients' and parts[-1] == 'versions.json':
-                  return pathlib.Path('schemas/versions.json')
+                  return pathlib.Path('config/schemas/versions.json')
 
-              # architectures/clients/<client>/<version>/version.json -> schemas/version.json
+              # architectures/clients/<client>/<version>/version.json -> config/schemas/version.json
               if len(parts) == 5 and parts[0] == 'architectures' and parts[1] == 'clients' and parts[-1] == 'version.json':
-                  return pathlib.Path('schemas/version.json')
+                  return pathlib.Path('config/schemas/version.json')
 
-              # architectures/clients/<client>/<version>/decisions/decisions.json -> schemas/decisions.json (index)
+              # architectures/clients/<client>/<version>/decisions/decisions.json -> config/schemas/decisions.json (index)
               if (
                   len(parts) == 6
                   and parts[0] == 'architectures'
@@ -110,9 +110,9 @@ jobs:
                   and parts[4] == 'decisions'
                   and parts[5] == 'decisions.json'
               ):
-                  return pathlib.Path('schemas/decisions.json')
+                  return pathlib.Path('config/schemas/decisions.json')
 
-              # architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json -> schemas/decision.json
+              # architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json -> config/schemas/decision.json
               if (
                   len(parts) == 7
                   and parts[0] == 'architectures'
@@ -120,10 +120,10 @@ jobs:
                   and parts[4] == 'decisions'
                   and parts[6] == 'decision.json'
               ):
-                  return pathlib.Path('schemas/decision.json')
+                  return pathlib.Path('config/schemas/decision.json')
 
               # architectures/clients/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json
-              #   -> schemas/artefacts/domains/<dom>/<layer>/<ID>.json
+              #   -> config/schemas/artefacts/domains/<dom>/<layer>/<ID>.json
               if (
                   len(parts) >= 10
                   and parts[0] == 'architectures'
@@ -132,7 +132,7 @@ jobs:
                   and parts[5] == 'domains'
               ):
                   dom, layer, artefact_id = parts[6], parts[7], parts[8]
-                  return pathlib.Path(f'schemas/artefacts/domains/{dom}/{layer}/{artefact_id}.json')
+                  return pathlib.Path(f'config/schemas/artefacts/domains/{dom}/{layer}/{artefact_id}.json')
 
               # Schema files themselves have no cross-reference target — JSON-parse only.
               return None

@@ -1,0 +1,57 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:integration:physical:INT-GRD",
+    "title": "Integration Guardrails Catalogue",
+    "description": "Catalogue of non-negotiable constraints, mandatory standards, and concrete patterns for the Integration architecture domain. Aligned to Policy-as-Code conventions (AWS Service Control Policies, Azure Policy).",
+    "meta": {
+        "domain": "integration",
+        "abstraction": "physical",
+        "format": "catalogue"
+    },
+    "type": "object",
+    "required": [
+        "guardrails"
+    ],
+    "properties": {
+        "guardrails": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "rule",
+                    "scope",
+                    "rationale"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier (e.g. INT-GRD-001)"
+                    },
+                    "rule": {
+                        "type": "string",
+                        "description": "The mandatory constraint or required pattern"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "description": "What the rule applies to (systems, environments, data classifications, etc.)"
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "description": "Why this is mandatory — often references a principle or compliance requirement"
+                    },
+                    "enforcement": {
+                        "type": "string",
+                        "description": "How compliance is checked (automated scan, review gate, manual audit, etc.)"
+                    },
+                    "exception-process": {
+                        "type": "string",
+                        "description": "How an exception can be raised (or 'No exceptions')"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

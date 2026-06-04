@@ -15,7 +15,7 @@ on:
         required: true
         type: string
       prompt-file:
-        description: "Path to the prompt markdown file under prompts/decisions/"
+        description: "Path to the prompt markdown file under config/prompts/decisions/"
         required: true
         type: string
       section-key:
@@ -85,7 +85,7 @@ jobs:
               5. Write your result as a JSON array of four-field objects
                  {finding, impact, recommendation, rationale} into the
                  decision JSON's `${{ env.SECTION_KEY }}` property. Use
-                 the Edit or Write tool. Schema is at schemas/decision.json.
+                 the Edit or Write tool. Schema is at config/schemas/decision.json.
                  The array may have one element (single finding) or several
                  (distinct findings).
 
