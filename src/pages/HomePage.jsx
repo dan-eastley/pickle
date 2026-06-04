@@ -5,41 +5,38 @@ const FEATURE_CARDS = [
   {
     icon: LayersThree01,
     title: 'Architecture as Code',
-    what: 'Enterprise architecture stored as structured, version-controlled data — not documents, diagrams, or spreadsheets.',
+    what: 'Enterprise architecture stored as structured, version-controlled data — not documents or spreadsheets.',
     points: [
-      'Architecture lives in a Git repository — versioned, auditable, and reviewable like any other codebase',
-      'Every artefact is machine-readable JSON, validated against a published schema',
+      'Architecture lives in a Git repository — versioned, auditable, and reviewable',
+      'Every artefact is machine-readable JSON, validated against a schema',
       'Changes require a formal Decision Record — no undocumented drift',
-      'Teams can query, diff, and compare architecture state the same way they compare source code',
-      'Architecture becomes a living, queryable asset rather than a static document that falls out of date',
+      'Query, diff, and compare architecture state like source code',
     ],
-    usp: 'Pickle implements the Architecture as Code pattern out of the box — giving you a structured, schema-validated repository for your enterprise architecture from day one.',
+    usp: 'Pickle gives you a structured, schema-validated architecture repository from day one.',
   },
   {
     icon: CpuChip01,
     title: 'Agentic AI Architecture',
-    what: 'AI agents that actively participate in the architecture process — proposing, analysing, and validating changes alongside your architects.',
+    what: 'AI agents that actively participate in the process — analysing and validating changes alongside your architects.',
     points: [
-      'Every architecture decision is automatically analysed across six dimensions — strategy, principles, referential integrity, architecture review, proponent and challenger analysis',
-      'Agents surface conflicts, gaps, and opportunities before a change reaches the review board',
-      'AI-generated analysis is structured and traceable — not free-form commentary',
-      'The human stays in the loop — AI informs and supports, architects decide',
-      'Analysis runs on every pull request, building a continuous intelligence layer over your architecture',
+      'Every decision is analysed across six dimensions: strategy, principles, integrity, review, proponent and challenger',
+      'Agents surface conflicts and gaps before a change reaches the review board',
+      'Analysis is structured and traceable — not free-form commentary',
+      'The human stays in the loop — AI informs, architects decide',
     ],
-    usp: 'Pickle integrates Claude AI agents directly into the governance workflow — every decision gets automated, structured analysis before it reaches your architects for review.',
+    usp: 'Pickle integrates Claude AI agents into the governance workflow — every decision gets automated analysis before it reaches your architects.',
   },
   {
     icon: GitBranch01,
     title: 'Architectural Governance',
-    what: 'A governed, traceable process for changing your architecture — driven by Architecture Decision Records and enforced through code review.',
+    what: 'A governed, traceable process for changing your architecture — driven by Decision Records and enforced through code review.',
     points: [
-      'Every architecture change must be justified in an Architecture Decision Record before it is applied',
-      'ADRs capture intent, rationale, and analysis — not just the change itself',
-      'Git history provides an immutable audit trail of every architectural decision ever made',
-      'Human architects review and approve changes through a standard pull request workflow',
-      'Guardrails and principles are codified in the architecture — not just stated in documents',
+      'Every change must be justified in an Architecture Decision Record',
+      'ADRs capture intent, rationale, and analysis — not just the change',
+      'Git history provides an immutable audit trail of every decision',
+      'Guardrails and principles are codified, not just documented',
     ],
-    usp: 'Pickle combines the rigour of formal decision records with the practicality of pull request workflows — giving you governance that developers and architects can both live with.',
+    usp: 'Pickle combines the rigour of decision records with the practicality of pull requests — governance that developers and architects can both live with.',
   },
 ]
 
@@ -95,8 +92,8 @@ export default function HomePage() {
 
                 {/* USP */}
                 <div className="px-6 pb-6">
-                  <div className="bg-brand-50 border-l-2 border-brand-400 px-3 py-2">
-                    <p className="text-xs text-brand-700 leading-relaxed">{card.usp}</p>
+                  <div className="bg-brand-50 border-l-2 border-brand-500 px-4 py-3">
+                    <p className="text-sm font-semibold text-brand-700 leading-snug">{card.usp}</p>
                   </div>
                 </div>
               </div>
