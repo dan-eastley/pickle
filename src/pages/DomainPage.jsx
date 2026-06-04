@@ -99,19 +99,21 @@ export default function DomainPage() {
         </div>
       </div>
 
-      <div className="space-y-4">
-        {ABSTRACTIONS.map(abstraction => {
+      <div>
+        {ABSTRACTIONS.map((abstraction, idx) => {
           const artefacts = getArtefactsForDomain(domain, abstraction.id)
           return (
-            <AbstractionSection
-              key={abstraction.id}
-              abstraction={abstraction}
-              artefacts={artefacts}
-              base={base}
-              domain={domain}
-              clientId={clientId}
-              versionId={versionId}
-            />
+            <div key={abstraction.id}>
+              {idx > 0 && <div className="h-px bg-gray-300 my-5" />}
+              <AbstractionSection
+                abstraction={abstraction}
+                artefacts={artefacts}
+                base={base}
+                domain={domain}
+                clientId={clientId}
+                versionId={versionId}
+              />
+            </div>
           )
         })}
       </div>

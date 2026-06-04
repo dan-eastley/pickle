@@ -10,6 +10,7 @@ import NewDecisionModal from '../components/decisions/NewDecisionModal'
 import Badge from '../components/ui/Badge'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
+import JsonPreview from '../components/ui/JsonPreview'
 import usePageTitle from '../hooks/usePageTitle'
 
 const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
@@ -196,6 +197,8 @@ export default function ArtefactPage() {
           </p>
         </div>
       )}
+
+      <JsonPreview data={data ?? undefined} label={`${artefact.id}.json`} />
 
       {!loading && !error && data !== null && data !== undefined && (
         <>

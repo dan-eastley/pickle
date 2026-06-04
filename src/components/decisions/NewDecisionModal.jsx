@@ -103,7 +103,7 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
                     Narrative <span className="text-error-500">*</span>
                   </label>
                   <p className="text-xs text-gray-400 mb-1.5">
-                    What is being proposed and why? Describe the context and the intended change.
+                    State the business context, the problem being solved, and the proposed direction. Be specific — name the artefacts, capabilities, or systems affected, and explain why the change is needed now.
                   </p>
                   <textarea
                     value={narrative}
@@ -118,6 +118,9 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
                 {/* Requirements */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
+                  <p className="text-xs text-gray-400 mb-2">
+                    List the specific things this decision must achieve. Each requirement should be testable, free of implementation detail, and state the <em>what</em> not the <em>how</em>.
+                  </p>
                   <RequirementsList requirements={requirements} onChange={setRequirements} />
                 </div>
               </>

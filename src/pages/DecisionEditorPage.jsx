@@ -102,12 +102,7 @@ export default function DecisionEditorPage() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10">
-      <div className="mb-2">
-        <Link to={`/clients/${clientId}/${versionId}/decisions`} className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
-          ← Decisions
-        </Link>
-      </div>
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">New Architecture Decision Record</h1>

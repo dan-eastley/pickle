@@ -89,12 +89,12 @@
             },
             "description": "Output of the Narrative Validation workflow — recommendations to improve the narrative and requirements for clarity, completeness, and business readability."
         },
-        "architecture-review": {
+        "impact-assessment": {
             "type": "array",
             "items": {
                 "$ref": "#/$defs/section"
             },
-            "description": "Output of the Architecture Review workflow — one or more findings."
+            "description": "Output of the Impact Assessment workflow — one or more findings on the architectural impact of the proposed change."
         },
         "referential-integrity": {
             "type": "array",
