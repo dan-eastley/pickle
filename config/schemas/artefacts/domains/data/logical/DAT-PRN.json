@@ -6,7 +6,15 @@
     "meta": {
         "domain": "data",
         "abstraction": "logical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The guiding principles that shape how Data architecture decisions are made.",
+        "purpose": [
+            "Ensures data decisions align with data strategy and wider business direction",
+            "Provides consistent guidance on data quality, ownership, and access patterns",
+            "Reduces technical debt caused by inconsistent data design choices",
+            "Enables automated analysis of data decisions against established principles",
+            "Creates a shared contract between data, application, and integration teams"
+        ]
     },
     "type": "object",
     "required": [

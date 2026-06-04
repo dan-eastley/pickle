@@ -6,7 +6,15 @@
     "meta": {
         "domain": "solution",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "A catalogue of strategic goals and direction for the Solution domain.",
+        "purpose": [
+            "Establishes the organisation's intent for how cross-domain solutions are designed",
+            "Provides the strategic context for solution architecture investment and prioritisation",
+            "Aligns solution design with business outcomes spanning multiple architecture domains",
+            "Anchors solution principles and guardrails to a traceable set of intentions",
+            "Enables assessment of whether proposed solutions serve a coherent strategic purpose"
+        ]
     },
     "type": "object",
     "required": [

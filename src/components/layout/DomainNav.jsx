@@ -158,6 +158,19 @@ export default function DomainNav() {
               </button>
             )
           })}
+
+          {/* Decisions — right-aligned */}
+          <div className="flex-1" />
+          <Link
+            to={`/clients/${clientId}/decisions`}
+            onClick={() => setActiveDropdown(null)}
+            className="flex items-center gap-1.5 px-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+              <path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
+            </svg>
+            Decisions
+          </Link>
         </div>
       </div>
 

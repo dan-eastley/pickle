@@ -6,7 +6,15 @@
     "meta": {
         "domain": "data",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "A catalogue of strategic goals and direction for the Data domain.",
+        "purpose": [
+            "Establishes data as a strategic asset with explicit organisational intent behind it",
+            "Aligns data investment with business outcomes rather than technical preferences",
+            "Provides the 'why' behind data governance, quality, and architecture decisions",
+            "Creates accountability for data outcomes at the executive level",
+            "Anchors all Data architecture decisions to a traceable set of intentions"
+        ]
     },
     "type": "object",
     "required": [

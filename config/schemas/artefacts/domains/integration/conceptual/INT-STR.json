@@ -6,7 +6,15 @@
     "meta": {
         "domain": "integration",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "A catalogue of strategic goals and direction for the Integration domain.",
+        "purpose": [
+            "Establishes the organisation's intent for how systems connect and communicate",
+            "Prevents point-to-point proliferation by codifying a strategic direction for integration",
+            "Aligns API and event design with broader technology and business strategy",
+            "Provides the anchor for integration principles and guardrail decisions",
+            "Enables assessment of whether proposed integration patterns serve the strategy"
+        ]
     },
     "type": "object",
     "required": [

@@ -5,6 +5,9 @@ import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
 import HomePage from './pages/HomePage'
 import ClientsPage from './pages/ClientsPage'
+import VersionsPage from './pages/VersionsPage'
+import DecisionsPage from './pages/DecisionsPage'
+import DecisionEditorPage from './pages/DecisionEditorPage'
 import DomainsPage from './pages/DomainsPage'
 import DomainPage from './pages/DomainPage'
 import AbstractionPage from './pages/AbstractionPage'
@@ -40,6 +43,9 @@ function AppRoutes() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/clients" element={<ClientsPage />} />
+        <Route path="/clients/:clientId/versions" element={<VersionsPage />} />
+        <Route path="/clients/:clientId/decisions" element={<DecisionsPage />} />
+        <Route path="/clients/:clientId/decisions/new" element={<DecisionEditorPage />} />
       </Route>
 
       {/* Architecture browser */}

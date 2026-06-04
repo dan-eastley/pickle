@@ -56,10 +56,12 @@ function AdrActionBar({ artefact }) {
   )
 }
 
-function ArtefactHeader({ artefact }) {
+function ArtefactHeader({ artefact, schema }) {
   const domain = getDomain(artefact.domain)
   const abstraction = getAbstraction(artefact.abstraction)
   const colors = DOMAIN_COLORS[artefact.domain]
+  const metaDescription = schema?.meta?.description
+  const metaPurpose = schema?.meta?.purpose
 
   return (
     <div className="mb-6 pb-5 border-b border-gray-200">
@@ -68,10 +70,7 @@ function ArtefactHeader({ artefact }) {
         <span className="text-gray-300">·</span>
         <Badge label={abstraction?.name ?? artefact.abstraction} variant="gray" />
         <span className="text-gray-300">·</span>
-        <Badge
-          label={FORMAT_LABELS[artefact.format]}
-          variant={FORMAT_VARIANTS[artefact.format]}
-        />
+        <Badge label={FORMAT_LABELS[artefact.format]} variant={FORMAT_VARIANTS[artefact.format]} />
         {artefact.key && (
           <>
             <span className="text-gray-300">·</span>
@@ -89,7 +88,20 @@ function ArtefactHeader({ artefact }) {
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-xl font-semibold text-gray-900">{artefact.name}</h1>
-          <p className="mt-1 text-sm text-gray-500">{artefact.description}</p>
+          <p className="mt-1 text-sm text-gray-500">{metaDescription ?? artefact.description}</p>
+          {metaPurpose?.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Purpose</p>
+              <ul className="space-y-1">
+                {metaPurpose.map((point, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="mt-1.5 w-1.5 h-1.5 bg-gray-300 flex-shrink-0" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1 flex-shrink-0 self-start">
           {artefact.id}
@@ -137,7 +149,7 @@ export default function ArtefactPage() {
 
   return (
     <div>
-      <ArtefactHeader artefact={artefact} />
+      <ArtefactHeader artefact={artefact} schema={schema} />
       <AdrActionBar artefact={artefact} />
 
       {loading && (

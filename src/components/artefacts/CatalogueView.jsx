@@ -25,10 +25,11 @@ function getSchemaColumns(schema) {
 
   return keys.map(key => {
     const prop = itemProps[key]
-    const rawLabel = prop?.description
-      ? prop.description.split('—')[0].split('(')[0].trim()
-      : key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    return { key, label: rawLabel, type: prop?.type, enum: prop?.enum }
+    // title = the field key, formatted for display
+    const title = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    // subtitle = the full description from the schema property
+    const subtitle = prop?.description ?? null
+    return { key, title, subtitle, type: prop?.type, enum: prop?.enum }
   })
 }
 
@@ -246,9 +247,10 @@ export default function CatalogueView({ data, schema }) {
             {columns.map(col => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap bg-gray-50 sticky top-0"
+                className="px-4 py-3 text-left bg-gray-50 sticky top-0 whitespace-nowrap"
               >
-                {col.label}
+                <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
+                {col.subtitle && <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>}
               </th>
             ))}
           </tr>
@@ -291,8 +293,9 @@ export default function CatalogueView({ data, schema }) {
           <thead>
             <tr className="border-b border-gray-200">
               {columns.map(col => (
-                <th key={col.key} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap bg-gray-50">
-                  {col.label}
+                <th key={col.key} className="px-4 py-3 text-left bg-gray-50 whitespace-nowrap">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
+                  {col.subtitle && <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>}
                 </th>
               ))}
             </tr>

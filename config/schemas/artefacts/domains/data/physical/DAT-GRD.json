@@ -6,7 +6,15 @@
     "meta": {
         "domain": "data",
         "abstraction": "physical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "Rules and minimum standards that must be followed in Data Architecture.",
+        "purpose": [
+            "Codifies data compliance requirements — privacy, classification, and retention — in the architecture",
+            "Prevents data decisions that create regulatory or security risk",
+            "Provides clear enforcement criteria for data architecture review",
+            "Makes data quality standards enforceable rather than aspirational",
+            "Supports automated guardrail checking during decision governance"
+        ]
     },
     "type": "object",
     "required": [

@@ -6,7 +6,15 @@
     "meta": {
         "domain": "application",
         "abstraction": "logical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The organisation's application landscape, grouped by business domain and the platforms within each.",
+        "purpose": [
+            "Makes the application portfolio visible and navigable across the organisation",
+            "Identifies platform overlaps and gaps at the business domain level",
+            "Provides the mapping between business capabilities and the applications that support them",
+            "Enables rationalisation by making duplication and fragmentation visible",
+            "Supports investment decisions by showing where applications cluster and where coverage is thin"
+        ]
     },
     "type": "object",
     "required": [

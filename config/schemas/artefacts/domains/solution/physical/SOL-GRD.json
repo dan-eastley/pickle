@@ -6,7 +6,15 @@
     "meta": {
         "domain": "solution",
         "abstraction": "physical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "Rules and minimum standards that must be followed in Solution Architecture.",
+        "purpose": [
+            "Prevents solution designs that violate constraints from multiple contributing domains",
+            "Provides enforcement criteria that span the full architecture at the point of delivery",
+            "Codifies the minimum quality bar for cross-domain solution review",
+            "Enables automated guardrail checking for solutions before they are committed to delivery",
+            "Reduces delivery risk by catching architectural violations before implementation begins"
+        ]
     },
     "type": "object",
     "required": [

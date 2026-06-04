@@ -6,7 +6,15 @@
     "meta": {
         "domain": "solution",
         "abstraction": "logical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The guiding principles that shape how Solution architecture decisions are made.",
+        "purpose": [
+            "Ensures cross-domain solutions are designed consistently and coherently",
+            "Provides guidance on balancing business, data, integration, and application concerns in a solution",
+            "Reduces the risk of solutions that optimise one domain at the expense of another",
+            "Enables automated analysis of proposed solutions against established design criteria",
+            "Creates a shared language for assessing solution quality across architecture disciplines"
+        ]
     },
     "type": "object",
     "required": [

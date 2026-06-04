@@ -6,7 +6,15 @@
     "meta": {
         "domain": "business",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "A catalogue of strategic goals and direction for the Business domain — the outcomes the organisation is trying to achieve and why.",
+        "purpose": [
+            "Aligns leadership on organisational direction before any architecture decisions are made",
+            "Provides the 'why' that justifies investment in all other architecture domains",
+            "Creates a traceable link between business intent and architecture change",
+            "Enables strategy-to-design traceability across the full architecture",
+            "Serves as the anchor for assessing whether proposed changes serve the business"
+        ]
     },
     "type": "object",
     "required": [

@@ -6,7 +6,15 @@
     "meta": {
         "domain": "integration",
         "abstraction": "logical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The guiding principles that shape how Integration architecture decisions are made.",
+        "purpose": [
+            "Establishes consistent patterns for how systems exchange data and events",
+            "Reduces integration complexity by making the preferred approach explicit",
+            "Provides decision criteria for API, event, and messaging design choices",
+            "Enables automated analysis of proposed integrations against established patterns",
+            "Supports technology-independent reasoning about system connectivity"
+        ]
     },
     "type": "object",
     "required": [

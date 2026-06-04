@@ -6,7 +6,15 @@
     "meta": {
         "domain": "application",
         "abstraction": "physical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "Rules and minimum standards that must be followed in Application Architecture.",
+        "purpose": [
+            "Prevents adoption of application patterns that introduce security or quality risk",
+            "Codifies technology standards and approved platforms at the architecture layer",
+            "Provides enforceable criteria for application design review",
+            "Enables automated guardrail checking during application decision governance",
+            "Reduces maintenance burden caused by non-standard technology choices"
+        ]
     },
     "type": "object",
     "required": [

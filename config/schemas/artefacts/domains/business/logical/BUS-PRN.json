@@ -6,7 +6,15 @@
     "meta": {
         "domain": "business",
         "abstraction": "logical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The guiding principles that shape how Business architecture decisions are made.",
+        "purpose": [
+            "Provides consistent decision-making criteria across teams and time",
+            "Ensures individual decisions are coherent with the organisation's direction",
+            "Reduces architectural drift by making the rules explicit and traceable",
+            "Enables automated analysis of new decisions against established principles",
+            "Builds a body of architectural wisdom that accumulates over time"
+        ]
     },
     "type": "object",
     "required": [
