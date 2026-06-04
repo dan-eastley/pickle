@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
+import { getDomain, getAbstraction, getArtefact } from '../lib/artefacts'
 import Spinner from '../components/ui/Spinner'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -35,6 +36,20 @@ const STATUS_LABELS = {
   accepted:   'Accepted',
   rejected:   'Rejected',
   superseded: 'Superseded',
+}
+
+function ScopeChip({ scope }) {
+  const parts = [
+    scope.domain ? getDomain(scope.domain)?.name ?? scope.domain : null,
+    scope.abstraction ? getAbstraction(scope.abstraction)?.name ?? scope.abstraction : null,
+    scope.artefact ? getArtefact(scope.artefact)?.id ?? scope.artefact : null,
+  ].filter(Boolean)
+  if (!parts.length) return null
+  return (
+    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
+      {parts.join(' › ')}
+    </span>
+  )
 }
 
 function StatusBadge({ status }) {
@@ -82,6 +97,7 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
+                  {decision.scope && <ScopeChip scope={decision.scope} />}
                 </div>
                 <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
                   {decision.title}
