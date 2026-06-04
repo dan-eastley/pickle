@@ -1,27 +1,25 @@
 # Output Formats
 
-All architecture artefact types must conform to one of three formats. This keeps outputs consistent, comparable, and machine-queryable.
+Every architecture artefact type conforms to one of four formats. The format determines how the content is structured, stored, and displayed.
 
-```mermaid
-flowchart TB
-    A[Any artefact type]
+Valid format values (enforced as an enum in `lib/artefacts.js` and referenced in each schema's `meta.format` field):
 
-    A --> C["<b>Catalogue</b><br/><sub>list of entities<br/>1 domain × 1 layer</sub>"]
-    A --> D["<b>Diagram</b><br/><sub>visual representation<br/>≥1 domain × 1 layer</sub>"]
-    A --> M["<b>Matrix</b><br/><sub>grid of relationships<br/>crosses layers or domains</sub>"]
+| Format | Display order | Description | Scope |
+|---|---|---|---|
+| **Catalogue** | 1 | A structured list of architecture entities of a single type (e.g. capabilities, applications, data concepts). May be hierarchical — parent/child relationships are captured within the catalogue. Validated by a JSON Schema. | Single domain, single abstraction layer |
+| **Matrix** | 2 | A grid expressing relationships between two sets of entities. Used to map connections that cross abstraction layers (e.g. conceptual → logical) or architecture domains (e.g. application → data). | May span domains and/or abstraction layers |
+| **Diagram** | 3 | A visual representation of entities and their relationships (e.g. Business Capability Model, Conceptual Data Model, System Context Diagram). Authored separately; typically generated from catalogue and matrix content. | May span one or more domains; single abstraction layer |
+| **Document** | 4 | Free-form narrative content authored in Markdown. Used for contextual, explanatory, or reference artefacts that do not fit a structured schema. | Single domain, single abstraction layer |
 
-    classDef format fill:#f3e5f5,stroke:#7b1fa2,color:#000
-    class C,D,M format
-```
+## Format order
 
-| Format | Description | Scope |
-|---|---|---|
-| **Catalogue** | A list of entities of a single type (e.g. applications, capabilities, data entities). Entities may be conceptual, logical, or physical. May be hierarchical — the hierarchy is captured within the catalogue itself. | Single architecture domain, single abstraction layer |
-| **Matrix** | A grid expressing relationships between two sets of entities. Used to map links that cross abstraction layers (e.g. conceptual data model → logical data model) or that cross architecture domains (e.g. application architecture → data architecture). | May span architecture domains and/or abstraction layers |
-| **Diagram** | A visual representation of entities and their relationships (e.g. Business Capability Model, Conceptual Data Model, System Wiring Diagram). | May span one or more architecture domains, but must be limited to a single abstraction layer |
+Artefact types are displayed in format order: **Catalogues → Matrices → Diagrams → Documents**. Within each format group, starred (key) artefact types are shown first.
 
 ## Storage
 
-- **Catalogues** are stored as JSON, validated by a JSON Schema in `/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`.
-- **Matrices** — format conventions TBD.
-- **Diagrams** — format conventions TBD (likely an output of catalogues + matrices rather than authored directly).
+| Format | Storage | Validation |
+|---|---|---|
+| **Catalogue** | JSON | JSON Schema at `config/schemas/artefacts/domains/<domain>/<layer>/<ID>.json` |
+| **Matrix** | TBD | TBD |
+| **Diagram** | TBD | Typically derived from catalogue/matrix content rather than authored directly |
+| **Document** | Markdown | No schema — free-form |

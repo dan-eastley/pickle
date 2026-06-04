@@ -1,6 +1,4 @@
-// Icons for artefact formats: catalogue, matrix, diagram.
-// Using inline SVGs to avoid dependency on exact icon package naming.
-// Replace with @untitled-ui/icons-react equivalents as needed.
+// Icons for artefact format types: catalogue, matrix, diagram, document.
 
 function CatalogueIcon({ className }) {
   return (
@@ -13,10 +11,10 @@ function CatalogueIcon({ className }) {
 function MatrixIcon({ className }) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="3" y="3" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="11" y="3" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="3" y="11" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
+      <rect x="11" y="11" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   )
 }
@@ -29,9 +27,20 @@ function DiagramIcon({ className }) {
   )
 }
 
+function DocumentIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 2h7l4 4v12H5V2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M12 2v4h4" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M7 9h6M7 12h6M7 15h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export default function FormatIcon({ format, className = 'w-4 h-4' }) {
   if (format === 'catalogue') return <CatalogueIcon className={className} />
   if (format === 'matrix')    return <MatrixIcon className={className} />
   if (format === 'diagram')   return <DiagramIcon className={className} />
+  if (format === 'document')  return <DocumentIcon className={className} />
   return null
 }

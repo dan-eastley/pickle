@@ -1,3 +1,34 @@
+// Authoritative list of permitted artefact format types.
+// Any artefact added to ARTEFACTS must use one of these IDs.
+// The same enum should be reflected in config/schemas/artefacts/*/meta.format.
+export const FORMATS = [
+  {
+    id: 'catalogue',
+    label: 'Catalogues',
+    description: 'Structured lists of architecture entities, validated by JSON Schema.',
+  },
+  {
+    id: 'matrix',
+    label: 'Matrices',
+    description: 'Grids mapping relationships between entity sets, spanning abstraction layers or domains.',
+  },
+  {
+    id: 'diagram',
+    label: 'Diagrams',
+    description: 'Visual representations of architecture entities and their relationships.',
+  },
+  {
+    id: 'document',
+    label: 'Documents',
+    description: 'Free-form narrative content authored in Markdown, used for contextual or explanatory artefacts.',
+  },
+]
+
+// Canonical display order for format groups in menus and list views.
+export const FORMAT_ORDER = ['catalogue', 'matrix', 'diagram', 'document']
+
+export const getFormat = (id) => FORMATS.find(f => f.id === id)
+
 export const DOMAINS = [
   {
     id: 'business',
