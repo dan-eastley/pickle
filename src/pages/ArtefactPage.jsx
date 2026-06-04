@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
-import { getArtefact, getDomain, getAbstraction } from '../lib/artefacts'
+import { getArtefact, getDomain, getAbstraction, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
@@ -8,12 +8,20 @@ import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
 import Badge from '../components/ui/Badge'
 import Spinner from '../components/ui/Spinner'
-import FormatIcon from '../components/ui/FormatIcon'
 import DomainIcon from '../components/ui/DomainIcon'
 import usePageTitle from '../hooks/usePageTitle'
 
 const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
 const FORMAT_VARIANTS = { catalogue: 'blue', matrix: 'violet', diagram: 'amber' }
+
+// Solid button colour per domain — matches DOMAIN_COLORS palette
+const DOMAIN_BUTTON = {
+  business:    'bg-violet-600 hover:bg-violet-700 text-white',
+  data:        'bg-blue-600 hover:bg-blue-700 text-white',
+  integration: 'bg-emerald-600 hover:bg-emerald-700 text-white',
+  application: 'bg-amber-500 hover:bg-amber-600 text-white',
+  solution:    'bg-rose-600 hover:bg-rose-700 text-white',
+}
 
 function KeyStar() {
   return (
@@ -24,8 +32,9 @@ function KeyStar() {
 }
 
 function AdrActionBar({ artefact }) {
+  const btnClass = DOMAIN_BUTTON[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700 text-white'
   return (
-    <div className="mb-4 flex items-center justify-between gap-4 bg-gray-50 border border-gray-200 px-4 py-2">
+    <div className="mb-5 flex items-center justify-between gap-4 bg-gray-50 border border-gray-200 px-5 py-3">
       <div className="flex items-center gap-2 min-w-0">
         <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
           <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
@@ -35,7 +44,7 @@ function AdrActionBar({ artefact }) {
         </span>
       </div>
       <button
-        className="flex-shrink-0 flex items-center gap-2 px-3 py-1 bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors"
+        className={`flex-shrink-0 flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
         onClick={() => {/* TODO: ADR workflow */}}
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
@@ -50,9 +59,10 @@ function AdrActionBar({ artefact }) {
 function ArtefactHeader({ artefact }) {
   const domain = getDomain(artefact.domain)
   const abstraction = getAbstraction(artefact.abstraction)
+  const colors = DOMAIN_COLORS[artefact.domain]
 
   return (
-    <div className="mb-4 pb-3 border-b border-gray-200">
+    <div className="mb-6 pb-5 border-b border-gray-200">
       <div className="flex items-center gap-2 mb-3">
         <Badge label={domain?.name ?? artefact.domain} variant="gray" />
         <span className="text-gray-300">·</span>
@@ -71,9 +81,9 @@ function ArtefactHeader({ artefact }) {
           </>
         )}
       </div>
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 bg-gray-100 flex items-center justify-center flex-shrink-0">
-          <span className="text-gray-500">
+      <div className="flex items-start gap-4">
+        <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}>
+          <span className={colors?.text ?? 'text-gray-500'}>
             <DomainIcon domain={artefact.domain} className="w-5 h-5" />
           </span>
         </div>

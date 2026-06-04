@@ -29,7 +29,7 @@ export default function Layout() {
       <TopBar />
       <DomainNav />
       <main className="flex-1">
-        <div className="max-w-[1400px] mx-auto px-5 pb-8">
+        <div className="max-w-[1400px] mx-auto px-6 pb-12">
           <Breadcrumb />
           <Outlet />
         </div>

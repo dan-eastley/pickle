@@ -28,7 +28,7 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 transition-colors border-0"
+        className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 transition-colors border-0"
       >
         <span className="max-w-[200px] truncate">{currentOpt ? getLabel(currentOpt) : label}</span>
         <ChevronDown />
@@ -40,7 +40,7 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
             <button
               key={getId(opt)}
               onClick={() => { onSelect(getId(opt)); setOpen(false) }}
-              className={`w-full text-left px-3 py-1.5 text-sm transition-colors ${
+              className={`w-full text-left px-3 py-2 text-sm transition-colors ${
                 getId(opt) === value
                   ? 'bg-brand-600 text-white font-medium'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -78,7 +78,7 @@ export default function TopBar() {
   }
 
   return (
-    <header className="h-10 bg-white border-b-2 border-brand-600 flex items-center px-5 gap-4 sticky top-0 z-40">
+    <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-6 gap-6 sticky top-0 z-40">
       {/* Pickle brand */}
       <div className="flex items-baseline gap-3 flex-shrink-0">
         <span className="text-lg font-bold tracking-tight text-gray-900 uppercase">Pickle</span>
@@ -97,7 +97,7 @@ export default function TopBar() {
       <NavLink
         to="/docs"
         className={({ isActive }) =>
-          `text-sm font-medium px-2.5 py-1 transition-colors flex-shrink-0 ${
+          `text-sm font-medium px-3 py-1.5 transition-colors flex-shrink-0 ${
             isActive ? 'text-brand-700 bg-brand-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
           }`
         }

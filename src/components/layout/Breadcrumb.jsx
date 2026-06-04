@@ -34,7 +34,7 @@ export default function Breadcrumb() {
   }
 
   return (
-    <nav className="flex items-center gap-1.5 py-2 text-sm" aria-label="Breadcrumb">
+    <nav className="flex items-center gap-1.5 py-3 text-sm" aria-label="Breadcrumb">
       {crumbs.map((crumb, i) => (
         <span key={i} className="flex items-center gap-1.5">
           {i > 0 && <ChevronRight />}

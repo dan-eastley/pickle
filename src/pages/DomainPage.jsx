@@ -22,7 +22,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain }) {
     <div className="border border-gray-200 bg-white">
       <Link
         to={`${base}/domains/${domain}/${abstraction.id}`}
-        className="group flex items-center justify-between px-4 py-2 border-b border-gray-200 hover:bg-gray-50 transition-colors"
+        className="group flex items-center justify-between px-5 py-3 border-b border-gray-200 hover:bg-gray-50 transition-colors"
       >
         <div className="flex items-center gap-3">
           <span className={`text-xs font-semibold px-2 py-0.5 ${colors.badge}`}>
@@ -43,7 +43,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain }) {
           <Link
             key={artefact.id}
             to={`${base}/domains/${domain}/${abstraction.id}/${artefact.id}`}
-            className={`group flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors ${i > 0 ? 'border-t border-gray-100' : ''}`}
+            className={`group flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors border-l-4 ${artefact.key ? 'border-amber-400' : 'border-transparent'} ${i > 0 ? 'border-t border-gray-100' : ''}`}
           >
             <span className="text-gray-400 group-hover:text-gray-600 flex-shrink-0">
               <FormatIcon format={artefact.format} className="w-4 h-4" />
@@ -76,7 +76,7 @@ export default function DomainPage() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center gap-3 pb-3 border-b border-gray-200">
+      <div className="mb-6 flex items-center gap-4 pb-5 border-b border-gray-200">
         <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg}`}>
           <span className={colors?.text}>
             <DomainIcon domain={domain} className="w-5 h-5" />
@@ -84,11 +84,11 @@ export default function DomainPage() {
         </div>
         <div>
           <h1 className="text-xl font-semibold text-gray-900">{domainData.name} Architecture</h1>
-          <p className="mt-0.5 text-sm text-gray-500">{domainData.description}</p>
+          <p className="mt-1 text-sm text-gray-500 max-w-3xl">{domainData.description}</p>
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         {ABSTRACTIONS.map(abstraction => {
           const artefacts = getArtefactsForDomain(domain, abstraction.id)
           return (

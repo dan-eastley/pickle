@@ -34,16 +34,17 @@ export default function AbstractionPage() {
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
           <span className={`text-xs font-semibold px-2 py-0.5 ${colors?.badge}`}>
             {abstractionData.label}
           </span>
+          <span className="text-xs text-gray-400">{domainData.name} Architecture</span>
         </div>
         <h1 className="text-xl font-semibold text-gray-900">
-          {abstractionData.name} — {domainData.name}
+          {abstractionData.name}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">{abstractionData.description}</p>
+        <p className="mt-1 text-sm text-gray-500 max-w-3xl">{abstractionData.description}</p>
       </div>
 
       <div className="border border-gray-200 divide-y divide-gray-100 bg-white">
@@ -51,7 +52,7 @@ export default function AbstractionPage() {
           <Link
             key={artefact.id}
             to={`${base}/domains/${domain}/${abstraction}/${artefact.id}`}
-            className={`group flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors ${artefact.key ? 'border-l-4 border-amber-400' : 'border-l-4 border-transparent'}`}
+            className={`group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors ${artefact.key ? 'border-l-4 border-amber-400' : 'border-l-4 border-transparent'}`}
           >
             <div className="w-8 h-8 bg-gray-100 flex items-center justify-center flex-shrink-0 group-hover:bg-gray-200 transition-colors">
               <span className="text-gray-500">

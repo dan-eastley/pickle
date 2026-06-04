@@ -113,7 +113,7 @@ function FlatRow({ item, columns }) {
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {columns.map(col => (
-        <td key={col.key} className="px-3 py-2 text-sm align-top">
+        <td key={col.key} className="px-4 py-3 text-sm align-top">
           <CellValue value={item[col.key]} colDef={col} />
         </td>
       ))}
@@ -129,7 +129,7 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
     <>
       <tr className="hover:bg-gray-50 transition-colors">
         {columns.map((col, ci) => (
-          <td key={col.key} className="px-3 py-2 text-sm align-top">
+          <td key={col.key} className="px-4 py-3 text-sm align-top">
             {ci === 1 ? ( // indent on name/statement column
               <div className="flex items-start gap-2" style={{ paddingLeft: depth * 20 }}>
                 {hasChildren ? (
@@ -230,7 +230,7 @@ export default function CatalogueView({ data, schema }) {
               {columns.map(col => (
                 <th
                   key={col.key}
-                  className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap bg-gray-50"
+                  className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap bg-gray-50"
                 >
                   {col.label}
                 </th>
@@ -256,7 +256,7 @@ export default function CatalogueView({ data, schema }) {
         </table>
       </div>
 
-      <div className="px-3 py-1.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400">
+      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400">
         {items.length} {items.length === 1 ? 'entry' : 'entries'}
       </div>
     </div>

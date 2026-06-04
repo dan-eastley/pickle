@@ -45,9 +45,9 @@ function DomainDropdown({ domain, base, onClose }) {
 
   return (
     <div className="absolute left-0 right-0 top-full bg-white border-b-2 border-gray-200 shadow-lg z-40">
-      <div className="max-w-[1400px] mx-auto px-5 py-3">
+      <div className="max-w-[1400px] mx-auto px-6 py-5">
         {/* Domain header */}
-        <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-100">
+        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
           <div className={`w-7 h-7 flex items-center justify-center flex-shrink-0 ${colors.bg}`}>
             <span className={colors.text}>
               <DomainIcon domain={domain.id} className="w-4 h-4" />
@@ -60,7 +60,7 @@ function DomainDropdown({ domain, base, onClose }) {
         </div>
 
         {/* Format columns */}
-        <div className={`grid gap-4`} style={{ gridTemplateColumns: `repeat(${fmtKeys.length}, minmax(0, 1fr))` }}>
+        <div className={`grid gap-6`} style={{ gridTemplateColumns: `repeat(${fmtKeys.length}, minmax(0, 1fr))` }}>
           {fmtKeys.map(fmt => (
             <div key={fmt}>
               <div className="flex items-center gap-1.5 mb-2">
@@ -75,7 +75,7 @@ function DomainDropdown({ domain, base, onClose }) {
                     key={artefact.id}
                     to={`${base}/domains/${domain.id}/${artefact.abstraction}/${artefact.id}`}
                     onClick={onClose}
-                    className={`flex items-center gap-2 px-2.5 py-1 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors group ${artefact.key ? 'border-l-2 border-amber-400' : 'border-l-2 border-transparent'}`}
+                    className={`flex items-center gap-2 px-2.5 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors group ${artefact.key ? 'border-l-2 border-amber-400' : 'border-l-2 border-transparent'}`}
                   >
                     {artefact.key && <KeyStar />}
                     <span className="truncate flex-1">{artefact.name}</span>
@@ -118,12 +118,12 @@ export default function DomainNav() {
   return (
     <div ref={navRef} className="relative bg-white border-b border-gray-200 z-30">
       <div className="max-w-[1400px] mx-auto px-5">
-        <div className="flex items-stretch h-9 gap-0">
+        <div className="flex items-stretch h-11 gap-0">
           {/* Overview link */}
           <Link
             to={`${base}/domains`}
             onClick={() => setActiveDropdown(null)}
-            className={`flex items-center px-3 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex items-center px-4 text-sm font-medium border-b-2 transition-colors ${
               !activeDomain && activeDropdown === null
                 ? 'border-brand-600 text-brand-700 bg-brand-50'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
