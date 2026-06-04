@@ -8,6 +8,7 @@ import ClientsPage from './pages/ClientsPage'
 import VersionsPage from './pages/VersionsPage'
 import DecisionsPage from './pages/DecisionsPage'
 import DecisionEditorPage from './pages/DecisionEditorPage'
+import DecisionDetailPage from './pages/DecisionDetailPage'
 import DomainsPage from './pages/DomainsPage'
 import DomainPage from './pages/DomainPage'
 import AbstractionPage from './pages/AbstractionPage'
@@ -55,6 +56,7 @@ function AppRoutes() {
         <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
         <Route path="decisions" element={<DecisionsPage />} />
         <Route path="decisions/new" element={<DecisionEditorPage />} />
+        <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
       </Route>
 
       {/* Docs */}
