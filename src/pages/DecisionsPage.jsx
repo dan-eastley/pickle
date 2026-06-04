@@ -17,6 +17,10 @@ async function fetchDecision(clientId, versionId, decisionId) {
   return res.json()
 }
 
+// Status order — drives grouping and default expand state
+const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'rejected', 'superseded']
+const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
+
 const STATUS_STYLES = {
   draft:      'bg-amber-50 text-amber-700',
   proposed:   'bg-blue-50 text-blue-700',
@@ -25,12 +29,75 @@ const STATUS_STYLES = {
   superseded: 'bg-gray-100 text-gray-500',
 }
 
+const STATUS_LABELS = {
+  draft:      'Draft',
+  proposed:   'Proposed',
+  accepted:   'Accepted',
+  rejected:   'Rejected',
+  superseded: 'Superseded',
+}
+
 function StatusBadge({ status }) {
   if (!status) return null
   return (
     <span className={`text-xs font-medium px-2 py-0.5 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}>
       {status}
     </span>
+  )
+}
+
+function DecisionGroup({ status, decisions, clientId, versionId }) {
+  const [open, setOpen] = useState(STATUS_DEFAULT_OPEN.has(status))
+
+  return (
+    <div className="border border-gray-200 bg-white">
+      {/* Group header */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-200"
+      >
+        <div className="flex items-center gap-3">
+          <span className={`text-xs font-semibold px-2 py-0.5 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}>
+            {STATUS_LABELS[status] ?? status}
+          </span>
+          <span className="text-xs text-gray-400">{decisions.length} {decisions.length === 1 ? 'record' : 'records'}</span>
+        </div>
+        <svg
+          className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+          viewBox="0 0 16 16" fill="none"
+        >
+          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+        </svg>
+      </button>
+
+      {/* Rows */}
+      {open && (
+        <div className="divide-y divide-gray-100">
+          {decisions.map((decision, i) => (
+            <Link
+              key={i}
+              to={`/clients/${clientId}/${versionId}/decisions/${decision['decision-id']}`}
+              className="group flex items-start justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
+                </div>
+                <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+                  {decision.title}
+                </p>
+                {decision.narrative && (
+                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{decision.narrative}</p>
+                )}
+              </div>
+              <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 ml-4 transition-colors" viewBox="0 0 16 16" fill="none">
+                <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+              </svg>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -52,6 +119,17 @@ export default function DecisionsPage() {
     }
     load()
   }, [clientId, versionId])
+
+  // Group decisions by status, preserving STATUS_ORDER
+  const grouped = STATUS_ORDER.reduce((acc, status) => {
+    const group = decisions.filter(d => (d.status ?? 'draft') === status)
+    if (group.length > 0) acc.push({ status, decisions: group })
+    return acc
+  }, [])
+  // Any decisions with an unknown status go at the end
+  const knownStatuses = new Set(STATUS_ORDER)
+  const unknown = decisions.filter(d => !knownStatuses.has(d.status ?? 'draft'))
+  if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
 
   return (
     <div className="py-8">
@@ -81,29 +159,15 @@ export default function DecisionsPage() {
           <p className="mt-1 text-sm text-gray-400">Architecture Decision Records will appear here once raised.</p>
         </div>
       ) : (
-        <div className="border border-gray-200 bg-white divide-y divide-gray-100">
-          {decisions.map((decision, i) => (
-            <Link
-              key={i}
-              to={`/clients/${clientId}/${versionId}/decisions/${decision['decision-id']}`}
-              className="group flex items-start justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <StatusBadge status={decision.status} />
-                  <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
-                </div>
-                <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
-                  {decision.title}
-                </p>
-                {decision.narrative && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{decision.narrative}</p>
-                )}
-              </div>
-              <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 ml-4 transition-colors" viewBox="0 0 16 16" fill="none">
-                <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-              </svg>
-            </Link>
+        <div className="space-y-3">
+          {grouped.map(({ status, decisions: group }) => (
+            <DecisionGroup
+              key={status}
+              status={status}
+              decisions={group}
+              clientId={clientId}
+              versionId={versionId}
+            />
           ))}
         </div>
       )}
