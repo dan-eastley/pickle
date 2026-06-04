@@ -1,0 +1,56 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:logical:BUS-PRN",
+    "title": "Business Principles Catalogue",
+    "description": "Catalogue of architecture principles for the Business architecture domain — vendor-neutral guidelines that shape design decisions. Aligned to TOGAF Architecture Principles (Name, Statement, Rationale, Implications).",
+    "meta": {
+        "domain": "business",
+        "abstraction": "logical",
+        "format": "catalogue"
+    },
+    "type": "object",
+    "required": [
+        "principles"
+    ],
+    "properties": {
+        "principles": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "statement",
+                    "rationale"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier (e.g. BUS-PRN-001)"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Short, memorable principle name"
+                    },
+                    "statement": {
+                        "type": "string",
+                        "description": "The principle, stated as a directive"
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "description": "Why this principle exists — the underlying motivation"
+                    },
+                    "implications": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Consequences for design and decision-making if this principle is adopted"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}
