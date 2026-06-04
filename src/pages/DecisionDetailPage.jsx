@@ -5,6 +5,25 @@ import { getDomain, getAbstraction, getArtefact } from '../lib/artefacts'
 import Spinner from '../components/ui/Spinner'
 import usePageTitle from '../hooks/usePageTitle'
 
+// ── Status badge ─────────────────────────────────────────────────────────────
+
+const STATUS_STYLES = {
+  draft:      'bg-amber-50 text-amber-700',
+  proposed:   'bg-blue-50 text-blue-700',
+  accepted:   'bg-success-50 text-success-700',
+  rejected:   'bg-error-50 text-error-700',
+  superseded: 'bg-gray-100 text-gray-500',
+}
+
+function StatusBadge({ status }) {
+  if (!status) return null
+  return (
+    <span className={`text-xs font-medium px-2 py-0.5 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}>
+      {status}
+    </span>
+  )
+}
+
 // ── Status progress bar ───────────────────────────────────────────────────────
 
 const STATUS_STEPS = ['draft', 'proposed', 'accepted']
