@@ -1,6 +1,6 @@
 # Abstraction Layers
 
-Every architecture domain is modelled at three layers of abstraction. Every artefact type lives at exactly one layer.
+Every architecture domain is modelled at three levels of detail. Every artefact type sits at exactly one level.
 
 ```mermaid
 flowchart TB
@@ -20,10 +20,10 @@ flowchart TB
     class P p
 ```
 
-| Layer | Folder | Description | Audience |
-|---|---|---|---|
-| **Conceptual** | `conceptual/` | The *what* and *why*. Technology-agnostic models that capture intent, scope, and business context. | Business stakeholders and architects aligning on direction |
-| **Logical** | `logical/` | The *how*. Vendor-neutral models that define structure, relationships, and rules without committing to specific products or infrastructure. | Architects and senior engineers designing solutions |
-| **Physical** | `physical/` | The *where* and *with what*. Concrete, implementation-specific models tied to actual products, platforms, and environments. | Engineers building and operating the architecture |
+| Layer | Description | Audience |
+|---|---|---|
+| **Conceptual** | The *what* and *why*. Sets direction and intent — what the architecture needs to achieve and why, without any technology choices. | Business stakeholders and architects aligning on direction |
+| **Logical** | The *how*. Defines the rules and principles that guide design decisions, without committing to any specific tool or product. | Architects and senior engineers designing solutions |
+| **Physical** | The *where* and *with what*. Specifies the concrete standards and technology decisions that govern how the architecture is built and operated. | Engineers building and operating the architecture |
 
-The layers are progressive: Logical artefact types realise Conceptual ones; Physical artefact types realise Logical ones. Cross-layer relationships are captured in **Matrix** artefact types (see [output-formats.md](output-formats.md)).
+The layers are progressive: Logical artefacts build on Conceptual ones; Physical artefacts make Logical ones concrete. Relationships that cross layers are captured in **Matrix** artefact types (see [output-formats.md](output-formats.md)).

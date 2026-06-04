@@ -40,7 +40,7 @@ function AdrActionBar({ artefact }) {
           <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
         </svg>
         <span className="text-sm text-gray-600">
-          Changes to this artefact must be made through an Architecture Decision Record.
+          To propose changes to this content, raise an Architecture Decision Record.
         </span>
       </div>
       <button
@@ -50,7 +50,7 @@ function AdrActionBar({ artefact }) {
         <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
           <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
         </svg>
-        Open ADR
+        New Decision
       </button>
     </div>
   )
@@ -154,10 +154,9 @@ export default function ArtefactPage() {
 
       {!loading && !error && data === null && (
         <div className="border border-gray-200 bg-white p-8 text-center">
-          <p className="text-sm font-medium text-gray-700">No data yet</p>
+          <p className="text-sm font-medium text-gray-700">Nothing here yet</p>
           <p className="mt-1 text-sm text-gray-500">
-            This artefact hasn't been populated for this architecture version.
-            Raise an Architecture Decision Record to add entries.
+            No content has been added for this version. Use the button above to raise an Architecture Decision Record and propose changes.
           </p>
         </div>
       )}

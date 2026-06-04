@@ -22,7 +22,7 @@ function KeyStar() {
 
 const FORMAT_ORDER = ['catalogue', 'diagram', 'matrix']
 const FORMAT_LABELS = { catalogue: 'Catalogues', diagram: 'Diagrams', matrix: 'Matrices' }
-const ABSTRACTION_SHORT = { conceptual: 'CON', logical: 'LOG', physical: 'PHY' }
+const ABSTRACTION_SHORT = { conceptual: 'Conceptual', logical: 'Logical', physical: 'Physical' }
 
 function DomainDropdown({ domain, base, onClose }) {
   // Gather all artefacts for this domain, grouped by format
