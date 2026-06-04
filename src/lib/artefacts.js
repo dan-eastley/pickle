@@ -57,35 +57,37 @@ export const ABSTRACTIONS = [
   },
 ]
 
+// key: true marks STR/PRN/GRD as the three foundational artefacts per domain.
+// They are pinned to the top of menus and visually highlighted throughout the UI.
 export const ARTEFACTS = [
   // Business
-  { id: 'BUS-STR', domain: 'business', abstraction: 'conceptual', format: 'catalogue', name: 'Business Strategy',          description: 'Outcome-oriented strategic statements for the Business domain' },
-  { id: 'BUS-CAP', domain: 'business', abstraction: 'conceptual', format: 'catalogue', name: 'Business Capabilities',      description: 'Hierarchical catalogue of what the business does' },
-  { id: 'BUS-BCM', domain: 'business', abstraction: 'conceptual', format: 'diagram',   name: 'Business Capability Model',  description: 'Visual map of business capabilities' },
-  { id: 'BUS-PRO', domain: 'business', abstraction: 'conceptual', format: 'catalogue', name: 'Business Processes',         description: 'Sequences of activities that deliver business value' },
-  { id: 'BUS-BPM', domain: 'business', abstraction: 'conceptual', format: 'diagram',   name: 'Business Process Model',     description: 'Visual flow of business processes' },
-  { id: 'BUS-PRN', domain: 'business', abstraction: 'logical',    format: 'catalogue', name: 'Business Principles',        description: 'Design guidelines for the Business domain' },
-  { id: 'BUS-GRD', domain: 'business', abstraction: 'physical',   format: 'catalogue', name: 'Business Guardrails',        description: 'Non-negotiable constraints for the Business domain' },
+  { id: 'BUS-STR', domain: 'business', abstraction: 'conceptual', format: 'catalogue', key: true,  name: 'Business Strategy',          description: 'Outcome-oriented strategic statements for the Business domain' },
+  { id: 'BUS-CAP', domain: 'business', abstraction: 'conceptual', format: 'catalogue', key: false, name: 'Business Capabilities',      description: 'Hierarchical catalogue of what the business does' },
+  { id: 'BUS-BCM', domain: 'business', abstraction: 'conceptual', format: 'diagram',   key: false, name: 'Business Capability Model',  description: 'Visual map of business capabilities' },
+  { id: 'BUS-PRO', domain: 'business', abstraction: 'conceptual', format: 'catalogue', key: false, name: 'Business Processes',         description: 'Sequences of activities that deliver business value' },
+  { id: 'BUS-BPM', domain: 'business', abstraction: 'conceptual', format: 'diagram',   key: false, name: 'Business Process Model',     description: 'Visual flow of business processes' },
+  { id: 'BUS-PRN', domain: 'business', abstraction: 'logical',    format: 'catalogue', key: true,  name: 'Business Principles',        description: 'Design guidelines for the Business domain' },
+  { id: 'BUS-GRD', domain: 'business', abstraction: 'physical',   format: 'catalogue', key: true,  name: 'Business Guardrails',        description: 'Non-negotiable constraints for the Business domain' },
   // Data
-  { id: 'DAT-STR', domain: 'data',        abstraction: 'conceptual', format: 'catalogue', name: 'Data Strategy',              description: 'Strategic statements for the Data domain' },
-  { id: 'DAT-DAC', domain: 'data',        abstraction: 'conceptual', format: 'catalogue', name: 'Data Domains & Concepts',    description: 'Data subject areas and conceptual entities' },
-  { id: 'DAT-CDM', domain: 'data',        abstraction: 'conceptual', format: 'diagram',   name: 'Conceptual Data Model',      description: 'Visual conceptual data model' },
-  { id: 'DAT-PRN', domain: 'data',        abstraction: 'logical',    format: 'catalogue', name: 'Data Principles',            description: 'Design guidelines for the Data domain' },
-  { id: 'DAT-GRD', domain: 'data',        abstraction: 'physical',   format: 'catalogue', name: 'Data Guardrails',            description: 'Non-negotiable constraints for data' },
+  { id: 'DAT-STR', domain: 'data',        abstraction: 'conceptual', format: 'catalogue', key: true,  name: 'Data Strategy',              description: 'Strategic statements for the Data domain' },
+  { id: 'DAT-DAC', domain: 'data',        abstraction: 'conceptual', format: 'catalogue', key: false, name: 'Data Domains & Concepts',    description: 'Data subject areas and conceptual entities' },
+  { id: 'DAT-CDM', domain: 'data',        abstraction: 'conceptual', format: 'diagram',   key: false, name: 'Conceptual Data Model',      description: 'Visual conceptual data model' },
+  { id: 'DAT-PRN', domain: 'data',        abstraction: 'logical',    format: 'catalogue', key: true,  name: 'Data Principles',            description: 'Design guidelines for the Data domain' },
+  { id: 'DAT-GRD', domain: 'data',        abstraction: 'physical',   format: 'catalogue', key: true,  name: 'Data Guardrails',            description: 'Non-negotiable constraints for data' },
   // Integration
-  { id: 'INT-STR', domain: 'integration', abstraction: 'conceptual', format: 'catalogue', name: 'Integration Strategy',       description: 'Strategic statements for Integration' },
-  { id: 'INT-PRN', domain: 'integration', abstraction: 'logical',    format: 'catalogue', name: 'Integration Principles',     description: 'Design guidelines for Integration' },
-  { id: 'INT-GRD', domain: 'integration', abstraction: 'physical',   format: 'catalogue', name: 'Integration Guardrails',     description: 'Non-negotiable constraints for integration' },
+  { id: 'INT-STR', domain: 'integration', abstraction: 'conceptual', format: 'catalogue', key: true,  name: 'Integration Strategy',       description: 'Strategic statements for Integration' },
+  { id: 'INT-PRN', domain: 'integration', abstraction: 'logical',    format: 'catalogue', key: true,  name: 'Integration Principles',     description: 'Design guidelines for Integration' },
+  { id: 'INT-GRD', domain: 'integration', abstraction: 'physical',   format: 'catalogue', key: true,  name: 'Integration Guardrails',     description: 'Non-negotiable constraints for integration' },
   // Application
-  { id: 'APP-STR', domain: 'application', abstraction: 'conceptual', format: 'catalogue', name: 'Application Strategy',       description: 'Strategic statements for Application' },
-  { id: 'APP-DAP', domain: 'application', abstraction: 'logical',    format: 'catalogue', name: 'Application Domains & Platforms', description: 'Application groupings and the platforms within them' },
-  { id: 'APP-DPM', domain: 'application', abstraction: 'logical',    format: 'diagram',   name: 'Domains & Platforms Model',  description: 'Visual application model' },
-  { id: 'APP-PRN', domain: 'application', abstraction: 'logical',    format: 'catalogue', name: 'Application Principles',     description: 'Design guidelines for Application' },
-  { id: 'APP-GRD', domain: 'application', abstraction: 'physical',   format: 'catalogue', name: 'Application Guardrails',     description: 'Non-negotiable constraints for applications' },
+  { id: 'APP-STR', domain: 'application', abstraction: 'conceptual', format: 'catalogue', key: true,  name: 'Application Strategy',       description: 'Strategic statements for Application' },
+  { id: 'APP-DAP', domain: 'application', abstraction: 'logical',    format: 'catalogue', key: false, name: 'Application Domains & Platforms', description: 'Application groupings and the platforms within them' },
+  { id: 'APP-DPM', domain: 'application', abstraction: 'logical',    format: 'diagram',   key: false, name: 'Domains & Platforms Model',  description: 'Visual application model' },
+  { id: 'APP-PRN', domain: 'application', abstraction: 'logical',    format: 'catalogue', key: true,  name: 'Application Principles',     description: 'Design guidelines for Application' },
+  { id: 'APP-GRD', domain: 'application', abstraction: 'physical',   format: 'catalogue', key: true,  name: 'Application Guardrails',     description: 'Non-negotiable constraints for applications' },
   // Solution
-  { id: 'SOL-STR', domain: 'solution',    abstraction: 'conceptual', format: 'catalogue', name: 'Solution Strategy',          description: 'Strategic statements for Solution' },
-  { id: 'SOL-PRN', domain: 'solution',    abstraction: 'logical',    format: 'catalogue', name: 'Solution Principles',        description: 'Design guidelines for Solution' },
-  { id: 'SOL-GRD', domain: 'solution',    abstraction: 'physical',   format: 'catalogue', name: 'Solution Guardrails',        description: 'Non-negotiable constraints for solutions' },
+  { id: 'SOL-STR', domain: 'solution',    abstraction: 'conceptual', format: 'catalogue', key: true,  name: 'Solution Strategy',          description: 'Strategic statements for Solution' },
+  { id: 'SOL-PRN', domain: 'solution',    abstraction: 'logical',    format: 'catalogue', key: true,  name: 'Solution Principles',        description: 'Design guidelines for Solution' },
+  { id: 'SOL-GRD', domain: 'solution',    abstraction: 'physical',   format: 'catalogue', key: true,  name: 'Solution Guardrails',        description: 'Non-negotiable constraints for solutions' },
 ]
 
 export const getArtefact = (id) => ARTEFACTS.find(a => a.id === id)

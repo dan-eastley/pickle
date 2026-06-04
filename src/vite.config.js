@@ -17,7 +17,7 @@ function architectureApiPlugin() {
           return
         }
 
-        let basePath, relPath
+        let basePath, relPath, isMarkdown = false
 
         if (req.url.startsWith('/api/arch/')) {
           basePath = resolve(REPO_ROOT, 'architectures')
@@ -25,6 +25,10 @@ function architectureApiPlugin() {
         } else if (req.url.startsWith('/api/schemas/')) {
           basePath = resolve(REPO_ROOT, 'config/schemas')
           relPath = decodeURIComponent(req.url.slice('/api/schemas/'.length).split('?')[0])
+        } else if (req.url.startsWith('/api/docs/')) {
+          basePath = resolve(REPO_ROOT, 'docs')
+          relPath = decodeURIComponent(req.url.slice('/api/docs/'.length).split('?')[0])
+          isMarkdown = true
         } else {
           next()
           return
@@ -39,7 +43,7 @@ function architectureApiPlugin() {
           return
         }
 
-        res.setHeader('Content-Type', 'application/json')
+        res.setHeader('Content-Type', isMarkdown ? 'text/markdown; charset=utf-8' : 'application/json')
         res.setHeader('Cache-Control', 'no-cache')
 
         try {
@@ -55,6 +59,7 @@ function architectureApiPlugin() {
               name,
               isDir: statSync(resolve(filePath, name)).isDirectory(),
             }))
+            res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({ entries }))
           } else {
             res.end(readFileSync(filePath, 'utf-8'))

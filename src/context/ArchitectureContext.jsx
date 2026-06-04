@@ -5,6 +5,7 @@ const ArchitectureContext = createContext(null)
 
 export function ArchitectureProvider({ children }) {
   const [clients, setClients] = useState([])
+  const [clientsMetadata, setClientsMetadata] = useState({})
   const [selectedClientId, setSelectedClientId] = useState(
     () => localStorage.getItem('arch_clientId') || null
   )
@@ -23,6 +24,13 @@ export function ArchitectureProvider({ children }) {
         if (!selectedClientId && list.length > 0) {
           setSelectedClientId(list[0]['client-id'])
         }
+        Promise.all(
+          list.map(c =>
+            getClient(c['client-id']).then(meta => [c['client-id'], meta])
+          )
+        ).then(entries => {
+          setClientsMetadata(Object.fromEntries(entries.filter(([, m]) => m)))
+        })
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
@@ -57,6 +65,7 @@ export function ArchitectureProvider({ children }) {
     <ArchitectureContext.Provider
       value={{
         clients,
+        clientsMetadata,
         selectedClientId,
         selectedVersionId,
         clientMeta,

@@ -16,7 +16,7 @@ export default function Badge({ label, variant = 'gray', size = 'sm' }) {
     md: 'px-2.5 py-1 text-sm font-medium',
   }
   return (
-    <span className={`inline-flex items-center rounded-full ${variants[variant]} ${sizes[size]}`}>
+    <span className={`inline-flex items-center ${variants[variant]} ${sizes[size]}`}>
       {label}
     </span>
   )

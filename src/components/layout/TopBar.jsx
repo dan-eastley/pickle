@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 
 function ChevronDown() {
   return (
-    <svg className="w-4 h-4 text-gray-400" viewBox="0 0 16 16" fill="none">
-      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg className="w-3.5 h-3.5 text-gray-400" viewBox="0 0 14 14" fill="none">
+      <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" />
     </svg>
   )
 }
@@ -22,26 +22,28 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
+  const currentOpt = value ? options.find(o => getId(o) === value) : null
+
   return (
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-xs"
+        className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 transition-colors border-0"
       >
-        <span className="max-w-[120px] truncate">{value ? getLabel(options.find(o => getId(o) === value)) : label}</span>
+        <span className="max-w-[200px] truncate">{currentOpt ? getLabel(currentOpt) : label}</span>
         <ChevronDown />
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-gray-200 bg-white shadow-lg z-50 py-1 overflow-hidden">
+        <div className="absolute right-0 top-full mt-0 w-72 bg-white border border-gray-300 z-50 py-1 overflow-hidden shadow-md">
           {options.map(opt => (
             <button
               key={getId(opt)}
               onClick={() => { onSelect(getId(opt)); setOpen(false) }}
-              className={`w-full text-left px-3 py-2 text-sm transition-colors ${
+              className={`w-full text-left px-3 py-1.5 text-sm transition-colors ${
                 getId(opt) === value
-                  ? 'bg-brand-50 text-brand-700 font-medium'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-brand-600 text-white font-medium'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               {getLabel(opt)}
@@ -57,13 +59,11 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
 }
 
 export default function TopBar() {
-  const { clients, selectedClientId, selectedVersionId, clientMeta, versions, setClientId, setVersionId } = useArchitecture()
+  const { clients, clientsMetadata, selectedClientId, selectedVersionId, clientMeta, versions, setClientId, setVersionId } = useArchitecture()
   const navigate = useNavigate()
-  const [logoError, setLogoError] = useState(false)
 
   const handleClientChange = (clientId) => {
     setClientId(clientId)
-    // Navigation happens via context effect when version resolves
   }
 
   const handleVersionChange = (versionId) => {
@@ -71,34 +71,39 @@ export default function TopBar() {
     navigate(`/clients/${selectedClientId}/${versionId}/domains`)
   }
 
-  const logoUrl = selectedClientId && !logoError
-    ? `/api/arch/clients/${selectedClientId}/logo.png`
-    : null
+  const getClientLabel = (opt) => {
+    if (!opt) return ''
+    const id = opt['client-id']
+    return clientsMetadata[id]?.name ?? id
+  }
 
   return (
-    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-6 gap-4 sticky top-0 z-40">
-      {/* Logo / brand */}
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        {logoUrl ? (
-          <img
-            src={logoUrl}
-            alt={clientMeta?.name ?? 'Client logo'}
-            className="h-7 w-auto object-contain"
-            onError={() => setLogoError(true)}
-          />
-        ) : (
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-white" viewBox="0 0 16 16" fill="none">
-                <path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-            <span className="text-sm font-semibold text-gray-900 truncate">
-              {clientMeta?.name ?? 'Architecture Browser'}
-            </span>
-          </div>
-        )}
+    <header className="h-10 bg-white border-b-2 border-brand-600 flex items-center px-5 gap-4 sticky top-0 z-40">
+      {/* Pickle brand */}
+      <div className="flex items-baseline gap-3 flex-shrink-0">
+        <span className="text-lg font-bold tracking-tight text-gray-900 uppercase">Pickle</span>
+        <span className="text-xs text-gray-400 hidden sm:block">Agentic Architecture as a Service</span>
       </div>
+
+      {/* Divider */}
+      <div className="h-5 w-px bg-gray-200 flex-shrink-0" />
+
+      {/* Client name */}
+      <div className="min-w-0 flex-1 text-sm font-medium text-gray-600 truncate">
+        {clientMeta?.name ?? ''}
+      </div>
+
+      {/* Docs link */}
+      <NavLink
+        to="/docs"
+        className={({ isActive }) =>
+          `text-sm font-medium px-2.5 py-1 transition-colors flex-shrink-0 ${
+            isActive ? 'text-brand-700 bg-brand-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+          }`
+        }
+      >
+        Docs
+      </NavLink>
 
       {/* Selectors */}
       <div className="flex items-center gap-2 flex-shrink-0">
@@ -108,7 +113,7 @@ export default function TopBar() {
             value={selectedClientId}
             options={clients}
             onSelect={handleClientChange}
-            getLabel={o => o['client-id']}
+            getLabel={getClientLabel}
             getId={o => o['client-id']}
           />
         )}
