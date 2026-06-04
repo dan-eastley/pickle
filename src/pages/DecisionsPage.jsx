@@ -166,10 +166,10 @@ function SlideOut({ decision, onClose }) {
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function DecisionsPage() {
-  const { clientId } = useParams()
+  const { clientId, versionId } = useParams()
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
-  const [decisions, setDecisions] = useState([]) // [{ versionId, decision }]
+  const [decisions, setDecisions] = useState([])
   const [selected, setSelected] = useState(null)
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
@@ -177,41 +177,25 @@ export default function DecisionsPage() {
 
   useEffect(() => {
     async function load() {
-      const versions = await getVersions(clientId)
-      const all = []
-      await Promise.all(versions.map(async v => {
-        const vId = v['version-id']
-        const ids = await fetchDecisionIds(clientId, vId)
-        const loaded = await Promise.all(ids.map(id => fetchDecision(clientId, vId, id)))
-        loaded.forEach((d, i) => d && all.push({ versionId: vId, decision: d }))
-      }))
-      // Sort by decision-id within each version
-      all.sort((a, b) => {
-        if (a.versionId !== b.versionId) return a.versionId.localeCompare(b.versionId)
-        return (a.decision['decision-id'] ?? '').localeCompare(b.decision['decision-id'] ?? '')
-      })
-      setDecisions(all)
+      const ids = await fetchDecisionIds(clientId, versionId)
+      const loaded = await Promise.all(ids.map(id => fetchDecision(clientId, versionId, id)))
+      setDecisions(loaded.filter(Boolean))
       setLoading(false)
     }
     load()
-  }, [clientId])
+  }, [clientId, versionId])
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10">
-      <div className="mb-2">
-        <Link to={`/clients`} className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
-          ← Clients
-        </Link>
-      </div>
+    <div className="py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Architecture Decisions</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {clientName} — all Architecture Decision Records across all versions.
+            {clientName} · v{versionId} — Architecture Decision Records for this version.
           </p>
         </div>
         <Link
-          to={`/clients/${clientId}/decisions/new`}
+          to={`/clients/${clientId}/${versionId}/decisions/new`}
           className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors"
         >
           <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
@@ -230,7 +214,7 @@ export default function DecisionsPage() {
         </div>
       ) : (
         <div className="border border-gray-200 bg-white divide-y divide-gray-100">
-          {decisions.map(({ versionId, decision }, i) => (
+          {decisions.map((decision, i) => (
             <button
               key={i}
               onClick={() => setSelected(decision)}
@@ -240,8 +224,6 @@ export default function DecisionsPage() {
                 <div className="flex items-center gap-2 mb-1">
                   <StatusBadge status={decision.status} />
                   <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
-                  <span className="text-xs text-gray-300">·</span>
-                  <span className="text-xs text-gray-400">v{versionId}</span>
                 </div>
                 <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
                   {decision.title}

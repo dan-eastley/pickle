@@ -55,7 +55,7 @@ export default function DomainPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-4 pb-5 border-b border-gray-200">
+      <div className="mb-6 flex items-start gap-4 pb-5 border-b border-gray-200">
         <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg}`}>
           <span className={colors?.text}>
             <DomainIcon domain={domain} className="w-5 h-5" />

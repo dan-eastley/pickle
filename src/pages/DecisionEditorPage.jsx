@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { DOMAINS, ABSTRACTIONS, ARTEFACTS } from '../lib/artefacts'
 import usePageTitle from '../hooks/usePageTitle'
@@ -53,7 +53,8 @@ function PreviewPanel({ decision }) {
 }
 
 export default function DecisionEditorPage() {
-  const { clientId } = useParams()
+  const { clientId, versionId } = useParams()
+  const [searchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`New Decision — ${clientName}`)
@@ -61,9 +62,9 @@ export default function DecisionEditorPage() {
   const [title, setTitle] = useState('')
   const [narrative, setNarrative] = useState('')
   const [requirements, setRequirements] = useState([])
-  const [scopeDomain, setScopeDomain] = useState('')
-  const [scopeAbstraction, setScopeAbstraction] = useState('')
-  const [scopeArtefact, setScopeArtefact] = useState('')
+  const [scopeDomain, setScopeDomain] = useState(searchParams.get('domain') ?? '')
+  const [scopeAbstraction, setScopeAbstraction] = useState(searchParams.get('abstraction') ?? '')
+  const [scopeArtefact, setScopeArtefact] = useState(searchParams.get('artefact') ?? '')
   const [showPreview, setShowPreview] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -103,7 +104,7 @@ export default function DecisionEditorPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-10">
       <div className="mb-2">
-        <Link to={`/clients/${clientId}/decisions`} className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        <Link to={`/clients/${clientId}/${versionId}/decisions`} className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
           ← Decisions
         </Link>
       </div>
@@ -178,7 +179,7 @@ export default function DecisionEditorPage() {
 
           {/* Scope */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scope constraint</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
             <p className="text-xs text-gray-400 mb-2">
               Optional. Constrain the decision to a specific domain, abstraction layer, or artefact type.
             </p>

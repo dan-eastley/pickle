@@ -44,17 +44,17 @@ function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/clients" element={<ClientsPage />} />
         <Route path="/clients/:clientId/versions" element={<VersionsPage />} />
-        <Route path="/clients/:clientId/decisions" element={<DecisionsPage />} />
-        <Route path="/clients/:clientId/decisions/new" element={<DecisionEditorPage />} />
       </Route>
 
-      {/* Architecture browser */}
+      {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
       <Route path="/clients/:clientId/:versionId" element={<Layout />}>
         <Route index element={<Navigate to="domains" replace />} />
         <Route path="domains" element={<DomainsPage />} />
         <Route path="domains/:domain" element={<DomainPage />} />
         <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
         <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
+        <Route path="decisions" element={<DecisionsPage />} />
+        <Route path="decisions/new" element={<DecisionEditorPage />} />
       </Route>
 
       {/* Docs */}

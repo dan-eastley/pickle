@@ -6,6 +6,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
+import NewDecisionModal from '../components/decisions/NewDecisionModal'
 import Badge from '../components/ui/Badge'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
@@ -14,13 +15,22 @@ import usePageTitle from '../hooks/usePageTitle'
 const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
 const FORMAT_VARIANTS = { catalogue: 'blue', matrix: 'violet', diagram: 'amber' }
 
-// Solid button colour per domain — matches DOMAIN_COLORS palette
+// Button colours per domain
 const DOMAIN_BUTTON = {
   business:    'bg-violet-600 hover:bg-violet-700 text-white',
   data:        'bg-blue-600 hover:bg-blue-700 text-white',
   integration: 'bg-emerald-600 hover:bg-emerald-700 text-white',
   application: 'bg-amber-500 hover:bg-amber-600 text-white',
   solution:    'bg-rose-600 hover:bg-rose-700 text-white',
+}
+
+// Light background per domain for the action bar
+const DOMAIN_ACTION_BG = {
+  business:    'bg-violet-50',
+  data:        'bg-blue-50',
+  integration: 'bg-emerald-50',
+  application: 'bg-amber-50',
+  solution:    'bg-rose-50',
 }
 
 function KeyStar() {
@@ -31,28 +41,42 @@ function KeyStar() {
   )
 }
 
-function AdrActionBar({ artefact }) {
+function AdrActionBar({ artefact, clientId, versionId }) {
+  const [modalOpen, setModalOpen] = useState(false)
+  const bgClass = DOMAIN_ACTION_BG[artefact.domain] ?? 'bg-gray-50'
   const btnClass = DOMAIN_BUTTON[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700 text-white'
+
   return (
-    <div className="mb-5 flex items-center justify-between gap-4 bg-gray-50 border border-gray-200 px-5 py-3">
-      <div className="flex items-center gap-2 min-w-0">
-        <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
-          <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
-        <span className="text-sm text-gray-600">
-          To propose changes to this content, raise an Architecture Decision Record.
-        </span>
+    <>
+      <div className={`mb-5 flex items-center justify-between gap-4 px-5 py-3 ${bgClass}`}>
+        <div className="flex items-center gap-2 min-w-0">
+          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+          </svg>
+          <span className="text-sm text-gray-600">
+            To propose changes to this content, raise an Architecture Decision Record.
+          </span>
+        </div>
+        <button
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
+          onClick={() => setModalOpen(true)}
+        >
+          <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+          </svg>
+          New Decision
+        </button>
       </div>
-      <button
-        className={`flex-shrink-0 flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
-        onClick={() => {/* TODO: ADR workflow */}}
-      >
-        <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-          <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
-        New Decision
-      </button>
-    </div>
+
+      {modalOpen && (
+        <NewDecisionModal
+          artefact={artefact}
+          clientId={clientId}
+          versionId={versionId}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   )
 }
 
@@ -150,7 +174,7 @@ export default function ArtefactPage() {
   return (
     <div>
       <ArtefactHeader artefact={artefact} schema={schema} />
-      <AdrActionBar artefact={artefact} />
+      <AdrActionBar artefact={artefact} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
 
       {loading && (
         <div className="flex items-center justify-center py-16">

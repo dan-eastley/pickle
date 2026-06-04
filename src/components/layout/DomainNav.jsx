@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useMatch } from 'react-router-dom'
 import { DOMAINS, ABSTRACTIONS, getArtefactsForDomain, DOMAIN_COLORS } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
@@ -24,19 +24,23 @@ const FORMAT_ORDER = ['catalogue', 'diagram', 'matrix']
 const FORMAT_LABELS = { catalogue: 'Catalogues', diagram: 'Diagrams', matrix: 'Matrices' }
 const ABSTRACTION_SHORT = { conceptual: 'Conceptual', logical: 'Logical', physical: 'Physical' }
 
+// Per-domain active tab colours — border / text / bg / icon
+const DOMAIN_ACTIVE = {
+  business:    { border: 'border-violet-500',  text: 'text-violet-700',  bg: 'bg-violet-50',  icon: 'text-violet-600' },
+  data:        { border: 'border-blue-500',    text: 'text-blue-700',    bg: 'bg-blue-50',    icon: 'text-blue-600' },
+  integration: { border: 'border-emerald-500', text: 'text-emerald-700', bg: 'bg-emerald-50', icon: 'text-emerald-600' },
+  application: { border: 'border-amber-500',   text: 'text-amber-700',   bg: 'bg-amber-50',   icon: 'text-amber-600' },
+  solution:    { border: 'border-rose-500',    text: 'text-rose-700',    bg: 'bg-rose-50',    icon: 'text-rose-600' },
+}
+
 function DomainDropdown({ domain, base, onClose }) {
-  // Gather all artefacts for this domain, grouped by format
   const allArtefacts = ABSTRACTIONS.flatMap(abs => getArtefactsForDomain(domain.id, abs.id))
 
   const byFormat = {}
   for (const fmt of FORMAT_ORDER) {
     const items = allArtefacts.filter(a => a.format === fmt)
     if (items.length > 0) {
-      // Pin key artefacts to top within each format group
-      byFormat[fmt] = [
-        ...items.filter(a => a.key),
-        ...items.filter(a => !a.key),
-      ]
+      byFormat[fmt] = [...items.filter(a => a.key), ...items.filter(a => !a.key)]
     }
   }
 
@@ -46,7 +50,6 @@ function DomainDropdown({ domain, base, onClose }) {
   return (
     <div className="absolute left-0 right-0 top-full bg-white border-b-2 border-gray-200 shadow-lg z-40">
       <div className="max-w-[1400px] mx-auto px-6 py-5">
-        {/* Domain header */}
         <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
           <div className={`w-7 h-7 flex items-center justify-center flex-shrink-0 ${colors.bg}`}>
             <span className={colors.text}>
@@ -59,8 +62,7 @@ function DomainDropdown({ domain, base, onClose }) {
           </div>
         </div>
 
-        {/* Format columns */}
-        <div className={`grid gap-6`} style={{ gridTemplateColumns: `repeat(${fmtKeys.length}, minmax(0, 1fr))` }}>
+        <div className="grid gap-6" style={{ gridTemplateColumns: `repeat(${fmtKeys.length}, minmax(0, 1fr))` }}>
           {fmtKeys.map(fmt => (
             <div key={fmt}>
               <div className="flex items-center gap-1.5 mb-2">
@@ -99,11 +101,13 @@ export default function DomainNav() {
   const { clientId, versionId, domain: activeDomain } = useParams()
   const base = `/clients/${clientId}/${versionId}`
 
+  // Detect if we're on a decisions page
+  const decisionsMatch = useMatch('/clients/:clientId/:versionId/decisions/*')
+  const onDecisionsPage = !!decisionsMatch
+
   useEffect(() => {
     function handleClick(e) {
-      if (navRef.current && !navRef.current.contains(e.target)) {
-        setActiveDropdown(null)
-      }
+      if (navRef.current && !navRef.current.contains(e.target)) setActiveDropdown(null)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
@@ -119,12 +123,12 @@ export default function DomainNav() {
     <div ref={navRef} className="relative bg-white border-b border-gray-200 z-30">
       <div className="max-w-[1400px] mx-auto px-5">
         <div className="flex items-stretch h-11 gap-0">
-          {/* Overview link */}
+          {/* Overview */}
           <Link
             to={`${base}/domains`}
             onClick={() => setActiveDropdown(null)}
             className={`flex items-center px-4 text-sm font-medium border-b-2 transition-colors ${
-              !activeDomain && activeDropdown === null
+              !activeDomain && !onDecisionsPage && activeDropdown === null
                 ? 'border-brand-600 text-brand-700 bg-brand-50'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
             }`}
@@ -134,9 +138,9 @@ export default function DomainNav() {
 
           {/* Domain tabs */}
           {DOMAINS.map(domain => {
-            const colors = DOMAIN_COLORS[domain.id]
             const isActive = activeDomain === domain.id
             const isOpen = activeDropdown === domain.id
+            const ac = DOMAIN_ACTIVE[domain.id]
 
             return (
               <button
@@ -144,11 +148,11 @@ export default function DomainNav() {
                 onClick={() => setActiveDropdown(prev => prev === domain.id ? null : domain.id)}
                 className={`flex items-center gap-2 px-4 text-sm font-medium border-b-2 transition-colors ${
                   isActive || isOpen
-                    ? 'border-brand-600 text-brand-700 bg-brand-50'
+                    ? `${ac.border} ${ac.text} ${ac.bg}`
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                <span className={`flex-shrink-0 ${isActive || isOpen ? 'text-brand-600' : colors.text}`}>
+                <span className={`flex-shrink-0 ${isActive || isOpen ? ac.icon : DOMAIN_COLORS[domain.id].text}`}>
                   <DomainIcon domain={domain.id} className="w-3.5 h-3.5" />
                 </span>
                 {domain.name}
@@ -162,9 +166,13 @@ export default function DomainNav() {
           {/* Decisions — right-aligned */}
           <div className="flex-1" />
           <Link
-            to={`/clients/${clientId}/decisions`}
+            to={`${base}/decisions`}
             onClick={() => setActiveDropdown(null)}
-            className="flex items-center gap-1.5 px-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors"
+            className={`flex items-center gap-1.5 px-4 text-sm font-medium border-b-2 transition-colors ${
+              onDecisionsPage
+                ? 'border-gray-400 text-gray-700 bg-gray-100'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+            }`}
           >
             <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
               <path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
