@@ -153,7 +153,7 @@ export default function DecisionsPage() {
   if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
 
   return (
-    <div className="py-8">
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Architecture Decisions</h1>

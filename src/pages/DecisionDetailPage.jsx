@@ -198,7 +198,7 @@ export default function DecisionDetailPage() {
   const hasAnalysis = ANALYSIS_SECTIONS.some(s => decision[s.key]?.length)
 
   return (
-    <div className="py-8">
+    <div>
       {/* Header — matches ArtefactPage style */}
       <div className="mb-6 pb-5 border-b border-gray-200">
         {/* Status badge */}
