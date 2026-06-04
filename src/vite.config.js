@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
 import { readFileSync, existsSync, statSync, readdirSync } from 'fs'
@@ -74,6 +75,18 @@ function architectureApiPlugin() {
 }
 
 export default defineConfig({
-  plugins: [react(), architectureApiPlugin()],
+  plugins: [
+    react(),
+    architectureApiPlugin(),
+    // Copies data files into the build output so /api/arch/, /api/schemas/,
+    // and /api/docs/ work as static assets on Vercel (and any other static host).
+    viteStaticCopy({
+      targets: [
+        { src: '../architectures/*', dest: 'api/arch' },
+        { src: '../config/schemas/*', dest: 'api/schemas' },
+        { src: '../docs/*', dest: 'api/docs' },
+      ],
+    }),
+  ],
   server: { port: 3000 },
 })
