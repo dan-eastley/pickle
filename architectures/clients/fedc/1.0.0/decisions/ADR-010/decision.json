@@ -2,7 +2,7 @@
     "decision-id": "ADR-010",
     "title": "Implement Predictive Asset Maintenance Using Operational Telemetry",
     "status": "draft",
-    "narrative": "FEDC maintains approximately 14,000 assets across the distribution network, including substations, transformers, switchgear, and underground cables. Asset maintenance is currently scheduled on fixed intervals, irrespective of actual asset condition. This results in unnecessary maintenance activity on healthy assets, while assets exhibiting early-stage degradation are not identified until failure. Unplanned outages caused by asset failure cost FEDC an average of \u00a32.4M per year in lost network availability penalties and emergency repair costs. We propose implementing a predictive maintenance capability that uses operational telemetry \u2014 temperature, load, harmonics, and fault events \u2014 to model asset health scores and predict failure probability. Maintenance scheduling will be updated to prioritise assets based on predicted risk rather than age alone.",
+    "narrative": "FEDC maintains approximately 14,000 assets across the distribution network, including substations, transformers, switchgear, and underground cables. Asset maintenance is currently scheduled on fixed intervals, irrespective of actual asset condition. This results in unnecessary maintenance activity on healthy assets, while assets exhibiting early-stage degradation are not identified until failure. Unplanned outages caused by asset failure cost FEDC an average of £2.4M per year in lost network availability penalties and emergency repair costs. We propose implementing a predictive maintenance capability that uses operational telemetry — temperature, load, harmonics, and fault events — to model asset health scores and predict failure probability. Maintenance scheduling will be updated to prioritise assets based on predicted risk rather than age alone.",
     "requirements": [
         {
             "title": "Asset health scoring",
@@ -24,5 +24,15 @@
         "domain": "application",
         "abstraction": "logical",
         "artefact": "APP-DAP"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-010/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:49+00:00"
     }
 }
