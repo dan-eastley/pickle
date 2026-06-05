@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
+import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -10,9 +11,12 @@ import usePageTitle from '../hooks/usePageTitle'
 const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'staged', 'committed', 'rejected']
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
 
+// Colours aligned with the status progress bar on the decision detail page:
+// in-flight steps use brand blue; staged uses emerald; committed is dark/done;
+// rejected is error red; draft is neutral (step 1, not yet active).
 const STATUS_STYLES = {
-  draft:     'bg-amber-50 text-amber-700',
-  proposed:  'bg-blue-50 text-blue-700',
+  draft:     'bg-gray-100 text-gray-600',
+  proposed:  'bg-brand-50 text-brand-700',
   accepted:  'bg-success-50 text-success-700',
   staged:    'bg-emerald-100 text-emerald-800',
   committed: 'bg-gray-800 text-white',
@@ -46,7 +50,8 @@ function ScopeChip({ scope }) {
 }
 
 function DecisionGroup({ status, decisions, clientId, versionId }) {
-  const [open, setOpen] = useState(STATUS_DEFAULT_OPEN.has(status))
+  // Empty groups always start collapsed; non-empty follow the default open set
+  const [open, setOpen] = useState(decisions.length > 0 && STATUS_DEFAULT_OPEN.has(status))
 
   return (
     <div className="border border-gray-200 bg-white">
@@ -65,7 +70,11 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
         </svg>
       </button>
 
-      {open && (
+      {open && decisions.length === 0 && (
+        <div className="px-5 py-3 text-xs text-gray-400 italic">No decisions at this stage.</div>
+      )}
+
+      {open && decisions.length > 0 && (
         <div className="divide-y divide-gray-100">
           {decisions.map((d, i) => (
             <Link
@@ -124,11 +133,10 @@ export default function DecisionsPage() {
       .catch(() => setLoading(false))
   }, [clientId, versionId])
 
-  const grouped = STATUS_ORDER.reduce((acc, status) => {
-    const group = decisions.filter(d => (d.status ?? 'draft') === status)
-    if (group.length > 0) acc.push({ status, decisions: group })
-    return acc
-  }, [])
+  const grouped = STATUS_ORDER.map(status => ({
+    status,
+    decisions: decisions.filter(d => (d.status ?? 'draft') === status),
+  }))
   const knownStatuses = new Set(STATUS_ORDER)
   const unknown = decisions.filter(d => !knownStatuses.has(d.status ?? 'draft'))
   if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
@@ -155,11 +163,6 @@ export default function DecisionsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
-      ) : decisions.length === 0 ? (
-        <div className="border border-gray-200 bg-white py-12 text-center">
-          <p className="text-sm font-medium text-gray-700">No decisions yet</p>
-          <p className="mt-1 text-sm text-gray-400">Architecture Decision Records will appear here once raised.</p>
-        </div>
       ) : (
         <div className="space-y-3">
           {grouped.map(({ status, decisions: group }) => (
@@ -167,6 +170,12 @@ export default function DecisionsPage() {
           ))}
         </div>
       )}
+
+      {/* JSON preview of decisions.json index — for debugging */}
+      <JsonPreview
+        data={{ decisions: decisions.map(d => ({ 'decision-id': d['decision-id'], title: d.title, status: d.status, scope: d.scope })) }}
+        label="decisions.json"
+      />
     </div>
   )
 }

@@ -610,12 +610,6 @@ export default function DecisionDetailPage() {
     <div>
       {/* Header */}
       <div className="mb-6 pb-5 border-b border-gray-200">
-        <div className="flex items-center gap-2 mb-3">
-          <StatusBadge status={decision.status} />
-          {decision['rejection-reason'] && (
-            <span className="text-xs text-gray-400">— {decision['rejection-reason']}</span>
-          )}
-        </div>
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 bg-gray-100 flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-gray-500" viewBox="0 0 14 14" fill="none">
@@ -625,9 +619,14 @@ export default function DecisionDetailPage() {
           <div className="flex-1 min-w-0">
             <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
           </div>
-          <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1 flex-shrink-0 self-start">
-            {decision['decision-id']}
-          </span>
+          <div className="flex items-center gap-2 flex-shrink-0 self-start">
+            <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1">
+              {decision['decision-id']}
+            </span>
+            {decision['rejection-reason'] && (
+              <span className="text-xs text-gray-400">{decision['rejection-reason']}</span>
+            )}
+          </div>
         </div>
       </div>
 
