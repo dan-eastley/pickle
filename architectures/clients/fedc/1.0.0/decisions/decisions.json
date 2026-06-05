@@ -143,7 +143,7 @@
         {
             "decision-id": "ADR-015",
             "title": "Establish a Programme and Project Management Capability in the Architecture",
-            "status": "proposed",
+            "status": "accepted",
             "scope": {
                 "domain": "business",
                 "abstraction": "conceptual",
