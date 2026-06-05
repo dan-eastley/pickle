@@ -44,5 +44,19 @@
             "recommendation": "Verify that instance data in the scoped artefact is current before acceptance.",
             "rationale": "Analysis quality degrades when scoped artefacts contain outdated instance data."
         }
+    ],
+    "strategy-alignment": [
+        {
+            "finding": "'Another decision to test how quick we add' is consistent with BUS-STR-002 and BUS-STR-005. No conflicts with existing strategic statements.",
+            "impact": "Strategy alignment increases executive sponsorship likelihood and reduces governance-block risk.",
+            "recommendation": "Reference specific BUS-STR entries in the narrative to make alignment explicit and auditable.",
+            "rationale": "Explicit strategy traceability satisfies the Pickle traceability requirement."
+        },
+        {
+            "finding": "The decision supports BUS-STR-003 (decide with data) by introducing a structured architecture artefact.",
+            "impact": "Decisions advancing multiple strategic objectives deliver compound value.",
+            "recommendation": "Add a target-outcome entry to the strategy catalogue reflecting this decision's contribution.",
+            "rationale": "Updated strategy entries close the feedback loop between acceptance and progress tracking."
+        }
     ]
 }
