@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-008",
+    "title": "Define Integration Guardrails for Third-Party Vendor System Connections",
+    "status": "draft",
+    "narrative": "FEDC connects to a growing number of third-party vendor systems \u2014 smart meter manufacturers, energy market platforms, regulatory reporting services, and outsourced billing processors. Each integration has been designed independently by the respective vendor, resulting in inconsistent security controls, no standard data format requirements, and variable SLA commitments. Two vendor integrations have caused production incidents in the last year due to unauthenticated API endpoints and unbounded retry behaviour. We define mandatory integration guardrails that all third-party vendors must satisfy before their integrations are permitted in production. The guardrails cover authentication, data format, error handling, rate limiting, and monitoring. Existing integrations not meeting these standards must be remediated within six months.",
+    "requirements": [
+        {
+            "title": "Mandatory authentication standard",
+            "description": "All third-party vendor integrations must authenticate using OAuth 2.0 with client credentials. Shared secrets and API key authentication are not permitted for new or remediated integrations.",
+            "type": "Functional"
+        },
+        {
+            "title": "Error handling and retry policy",
+            "description": "Vendor integrations must implement exponential backoff with jitter for retry behaviour. Unbounded retry loops are not permitted. Dead letter queues must be implemented for unprocessable messages.",
+            "type": "Functional"
+        },
+        {
+            "title": "SLA and monitoring",
+            "description": "All production vendor integrations must publish health metrics to the FEDC monitoring platform. Vendors must maintain 99.5% availability and respond to API requests within 2 seconds under agreed load conditions.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "integration",
+        "abstraction": "physical",
+        "artefact": "INT-GRD"
+    }
+}
