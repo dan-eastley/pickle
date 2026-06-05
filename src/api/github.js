@@ -222,6 +222,46 @@ async function updateFinding({ clientId, versionId, decisionId, sectionKey, find
   return { ok: true }
 }
 
+// ── Action: edit-decision ─────────────────────────────────────────────────────
+// Updates the editable fields of a DRAFT decision on its branch and
+// re-dispatches narrative review so findings are refreshed.
+
+async function editDecision({ clientId, versionId, decisionId, title, narrative, requirements, scope }, token, owner, repo) {
+  const branch = decisionBranch(clientId, versionId, decisionId)
+  const dPath  = decisionPath(clientId, versionId, decisionId)
+
+  let current, sha
+  try {
+    ;({ content: current, sha } = await readFile(dPath, branch, token, owner, repo))
+  } catch {
+    ;({ content: current, sha } = await readFile(dPath, BASE, token, owner, repo))
+  }
+
+  const updated = {
+    ...current,
+    title:        title        ?? current.title,
+    narrative:    narrative    ?? current.narrative,
+    requirements: requirements ?? current.requirements,
+    ...(scope !== undefined ? (scope ? { scope } : {}) : (current.scope ? { scope: current.scope } : {})),
+  }
+  if (!updated.scope) delete updated.scope
+  if (!updated.requirements?.length) delete updated.requirements
+
+  await writeFile(dPath, updated, `Edit ${decisionId}: ${updated.title}`, sha, branch, token, owner, repo)
+
+  // Keep index in sync if title or scope changed
+  await syncIndex(clientId, versionId, decisionId, {
+    title: updated.title, status: updated.status, scope: updated.scope,
+  }, token, owner, repo)
+
+  // Re-run narrative review on the updated content
+  await dispatch('decisions-narrative-review.yml',
+    { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId },
+    token, owner, repo)
+
+  return { ok: true, decisionId }
+}
+
 // ── Action: commit-decision ───────────────────────────────────────────────────
 
 async function commitDecision({ clientId, versionId, decisionId, prNumber }, token, owner, repo) {
@@ -270,6 +310,7 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       const { action, ...params } = req.body ?? {}
       if (action === 'create-decision') return res.json(await createDecision(params, token, owner, repo))
+      if (action === 'edit-decision')   return res.json(await editDecision(params, token, owner, repo))
       if (action === 'update-decision') return res.json(await updateDecision(params, token, owner, repo))
       if (action === 'update-finding')  return res.json(await updateFinding(params, token, owner, repo))
       if (action === 'commit-decision') return res.json(await commitDecision(params, token, owner, repo))

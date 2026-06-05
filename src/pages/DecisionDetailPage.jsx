@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Navigate, useLocation } from 'react-router-dom'
+import { useParams, Navigate, useLocation, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS, ABSTRACTION_COLORS } from '../lib/artefacts'
@@ -625,6 +625,17 @@ export default function DecisionDetailPage() {
             </span>
             {decision['rejection-reason'] && (
               <span className="text-xs text-gray-400">{decision['rejection-reason']}</span>
+            )}
+            {decision.status === 'draft' && (
+              <Link
+                to={`/clients/${clientId}/${versionId}/decisions/${decisionId}/edit`}
+                className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                  <path d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" strokeLinejoin="miter" />
+                </svg>
+                Edit
+              </Link>
             )}
           </div>
         </div>
