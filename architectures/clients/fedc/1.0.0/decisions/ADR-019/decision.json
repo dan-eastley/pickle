@@ -2,5 +2,13 @@
     "decision-id": "ADR-019",
     "title": "Another decision to test how quick we add",
     "status": "draft",
-    "narrative": "Lorum Ipsum blah blah blah"
+    "narrative": "Lorum Ipsum blah blah blah",
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [],
+        "violations": [],
+        "checked-at": "2026-06-05T15:13:07+00:00"
+    }
 }
