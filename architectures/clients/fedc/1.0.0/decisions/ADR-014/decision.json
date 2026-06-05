@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-014",
+    "title": "Define Application Guardrails for Security and Operational Quality",
+    "status": "draft",
+    "narrative": "FEDC's application portfolio has grown rapidly and includes applications built across different time periods, teams, and technology choices. Security assessments have found inconsistent application of controls \u2014 some applications lack input validation, others use deprecated authentication libraries, and several have not been assessed for OWASP Top 10 vulnerabilities. Operational quality also varies: some applications have no health endpoints, no structured logging, and no defined alerting thresholds. We define a mandatory set of application guardrails that all applications must comply with before production deployment. Guardrails cover security (authentication, input validation, dependency scanning), operational quality (health endpoints, structured logging, alerting), and data handling (encryption, PII handling). Non-compliance must be documented as an accepted risk with a named owner.",
+    "requirements": [
+        {
+            "title": "Security baseline compliance",
+            "description": "All applications must pass automated OWASP Top 10 vulnerability scanning before production deployment. Critical and high-severity findings must be remediated before go-live.",
+            "type": "Functional"
+        },
+        {
+            "title": "Operational observability",
+            "description": "All production applications must expose a health endpoint, emit structured logs to the central logging platform, and have at least one alerting rule configured for service degradation.",
+            "type": "Functional"
+        },
+        {
+            "title": "Dependency currency",
+            "description": "Application dependencies must be reviewed for known vulnerabilities monthly. Critical vulnerabilities in dependencies must be remediated within 14 days of disclosure.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "application",
+        "abstraction": "physical",
+        "artefact": "APP-GRD"
+    }
+}
