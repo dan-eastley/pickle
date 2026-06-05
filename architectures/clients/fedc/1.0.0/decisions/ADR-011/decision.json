@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-011",
+    "title": "Adopt a Capability-Based Funding Model for Technology Investment",
+    "status": "draft",
+    "narrative": "Technology investment at FEDC is currently requested and approved at the project level. Projects are funded to deliver specific outputs, and budget is tied to project timelines rather than ongoing business capabilities. This approach creates incentives to over-specify project scope at the outset (to secure sufficient budget), and it means that capabilities are not sustainably funded after a project closes. Several capabilities have degraded after initial investment because no ongoing operational funding was committed. We propose moving to a capability-based funding model. Investment is allocated to business capabilities identified in the Business Capability Model (BUS-CAP). Each capability has a designated owner accountable for its health and a defined annual operating budget. Projects deliver enhancements to capabilities but do not own them. This aligns technology investment with long-term business outcomes and ensures capabilities are sustainably maintained.",
+    "requirements": [
+        {
+            "title": "Capability ownership",
+            "description": "Every capability in the Business Capability Model must have a designated capability owner who is accountable for its strategic direction, quality, and operational health.",
+            "type": "Functional"
+        },
+        {
+            "title": "Capability budget allocation",
+            "description": "Annual technology budgets must be allocated at the capability level, with a defined split between run (sustain and operate) and change (enhance and evolve) funding.",
+            "type": "Functional"
+        },
+        {
+            "title": "Investment traceability",
+            "description": "All technology investment above \u00a350,000 must be traceable to one or more capabilities in the Business Capability Model, with documented expected outcomes.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "artefact": "BUS-CAP"
+    }
+}
