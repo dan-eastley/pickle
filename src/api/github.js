@@ -159,6 +159,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const { action, ...params } = req.query
       if (action === 'next-id') return res.json(await getNextId(params, token, owner, repo, base))
+      if (action === 'config')  return res.json({ owner, repo })
       return res.status(400).json({ error: `Unknown GET action: ${action}` })
     }
 
