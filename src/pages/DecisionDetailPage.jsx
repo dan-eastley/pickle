@@ -13,7 +13,6 @@ const STATUS_STYLES = {
   proposed:   'bg-blue-50 text-blue-700',
   accepted:   'bg-success-50 text-success-700',
   rejected:   'bg-error-50 text-error-700',
-  superseded: 'bg-gray-100 text-gray-500',
 }
 
 function StatusBadge({ status }) {
@@ -28,7 +27,7 @@ function StatusBadge({ status }) {
 // ── Status progress bar ───────────────────────────────────────────────────────
 
 const STATUS_STEPS = ['draft', 'proposed', 'accepted']
-const STATUS_TERMINAL = { rejected: 'error', superseded: 'gray' }
+const STATUS_TERMINAL = { rejected: 'error' }
 
 function StatusProgress({ status }) {
   const isTerminal = status in STATUS_TERMINAL
@@ -68,12 +67,8 @@ function StatusProgress({ status }) {
         <>
           <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
           <div className="flex flex-col items-center">
-            <div className={`w-7 h-7 flex items-center justify-center text-xs font-semibold ring-2
-              ${status === 'rejected' ? 'bg-error-50 text-error-700 ring-error-200' : 'bg-gray-100 text-gray-500 ring-gray-200'}
-            `}>!</div>
-            <span className={`mt-1 text-xs capitalize font-semibold ${status === 'rejected' ? 'text-error-700' : 'text-gray-500'}`}>
-              {status}
-            </span>
+            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200">!</div>
+            <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
           </div>
         </>
       )}
@@ -84,8 +79,8 @@ function StatusProgress({ status }) {
 // ── Status transition actions ─────────────────────────────────────────────────
 
 const REJECTION_REASONS = [
-  { value: 'duplicate',   label: 'Duplicate — a similar decision already exists or has been accepted' },
-  { value: 'superseded',  label: 'Superseded — replaced by a newer or broader decision' },
+  { value: 'duplicate',  label: 'Duplicate — a similar decision already exists or has been accepted' },
+  { value: 'superseded', label: 'Superseded — replaced by a newer or broader decision' },
 ]
 
 function StatusActions({ status, onTransition, transitioning }) {
@@ -99,11 +94,8 @@ function StatusActions({ status, onTransition, transitioning }) {
           <p className="text-sm font-semibold text-blue-900">Ready to propose this decision?</p>
           <p className="text-xs text-blue-600 mt-0.5">Moving to Proposed submits it for analysis and opens a pull request.</p>
         </div>
-        <button
-          disabled={transitioning}
-          onClick={() => onTransition('proposed')}
-          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
-        >
+        <button disabled={transitioning} onClick={() => onTransition('proposed')}
+          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
           {transitioning ? 'Updating…' : 'Propose'}
           <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
             <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
@@ -122,28 +114,19 @@ function StatusActions({ status, onTransition, transitioning }) {
             <p className="text-xs text-success-600 mt-0.5">Accepting applies the change to the architecture.</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button
-              disabled={transitioning}
-              onClick={() => onTransition('draft')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40"
-            >
+            <button disabled={transitioning} onClick={() => onTransition('draft')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40">
               <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
                 <path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
               </svg>
               Back to Draft
             </button>
-            <button
-              disabled={transitioning}
-              onClick={() => setRejectOpen(r => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-error-300 hover:bg-error-50 text-error-600 text-sm font-medium transition-colors disabled:opacity-40"
-            >
+            <button disabled={transitioning} onClick={() => setRejectOpen(r => !r)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-error-300 hover:bg-error-50 text-error-600 text-sm font-medium transition-colors disabled:opacity-40">
               Reject
             </button>
-            <button
-              disabled={transitioning}
-              onClick={() => onTransition('accepted')}
-              className="flex items-center gap-2 px-4 py-1.5 bg-success-500 hover:bg-success-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
-            >
+            <button disabled={transitioning} onClick={() => onTransition('accepted')}
+              className="flex items-center gap-2 px-4 py-1.5 bg-success-500 hover:bg-success-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
               {transitioning ? 'Updating…' : 'Accept'}
               <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
                 <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
@@ -151,37 +134,26 @@ function StatusActions({ status, onTransition, transitioning }) {
             </button>
           </div>
         </div>
-
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
               <label className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</label>
-              <select
-                value={rejectReason}
-                onChange={e => setRejectReason(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none"
-              >
-                {REJECTION_REASONS.map(r => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
-                ))}
+              <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
+                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
+                {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
               </select>
             </div>
-            <button
-              disabled={transitioning}
+            <button disabled={transitioning}
               onClick={() => { setRejectOpen(false); onTransition('rejected', { 'rejection-reason': rejectReason }) }}
-              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
-            >
+              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
               Confirm Rejection
             </button>
-            <button onClick={() => setRejectOpen(false)} className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">
-              Cancel
-            </button>
+            <button onClick={() => setRejectOpen(false)} className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">Cancel</button>
           </div>
         )}
       </div>
     )
   }
-
   return null
 }
 
@@ -212,13 +184,9 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
                   {!state ? (
                     <div className="flex gap-1">
                       <button onClick={() => onAccept(`${sectionKey}-${i}`, 'accepted')}
-                        className="px-2 py-0.5 text-xs bg-success-50 text-success-700 hover:bg-success-100 transition-colors">
-                        Accept
-                      </button>
+                        className="px-2 py-0.5 text-xs bg-success-50 text-success-700 hover:bg-success-100 transition-colors">Accept</button>
                       <button onClick={() => onAccept(`${sectionKey}-${i}`, 'declined')}
-                        className="px-2 py-0.5 text-xs bg-error-50 text-error-700 hover:bg-error-100 transition-colors">
-                        Decline
-                      </button>
+                        className="px-2 py-0.5 text-xs bg-error-50 text-error-700 hover:bg-error-100 transition-colors">Decline</button>
                     </div>
                   ) : (
                     <div className="flex items-center gap-1">
@@ -226,9 +194,7 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
                         {state === 'accepted' ? 'Accepted' : 'Declined'}
                       </span>
                       <button onClick={() => onAccept(`${sectionKey}-${i}`, null)}
-                        className="text-xs text-gray-400 hover:text-gray-600 transition-colors ml-1">
-                        ×
-                      </button>
+                        className="text-xs text-gray-400 hover:text-gray-600 ml-1">×</button>
                     </div>
                   )}
                 </td>
@@ -237,6 +203,118 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
           })}
         </tbody>
       </table>
+    </div>
+  )
+}
+
+// ── Analysis tabs (Untitled UI underline style) ───────────────────────────────
+
+const ANALYSIS_SECTIONS = [
+  { key: 'narrative-validation',  label: 'Narrative Review' },
+  { key: 'impact-assessment',     label: 'Impact Assessment' },
+  { key: 'referential-integrity', label: 'Referential Integrity' },
+  { key: 'strategy-alignment',    label: 'Strategy Alignment' },
+  { key: 'principles-alignment',  label: 'Principles Alignment' },
+  { key: 'proponent-analysis',    label: 'Proponent Analysis' },
+  { key: 'challenger-analysis',   label: 'Challenger Analysis' },
+]
+
+function AnalysisTabs({ decision, accepted, onAccept }) {
+  const sections = ANALYSIS_SECTIONS.filter(s => decision[s.key]?.length)
+  const [activeTab, setActiveTab] = useState(sections[0]?.key ?? null)
+
+  if (!sections.length) return null
+
+  const activeSections = decision[activeTab] ?? []
+
+  return (
+    <div id="section-analysis">
+      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Analysis</h3>
+
+      {/* Underline tab bar */}
+      <div className="border-b border-gray-200 flex gap-0 overflow-x-auto">
+        {sections.map(section => {
+          const count = decision[section.key]?.length ?? 0
+          const isActive = section.key === activeTab
+          return (
+            <button
+              key={section.key}
+              onClick={() => setActiveTab(section.key)}
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
+                isActive
+                  ? 'border-brand-600 text-brand-700'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {section.label}
+              <span className={`text-xs px-1.5 py-0.5 font-medium tabular-nums ${
+                isActive ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-600'
+              }`}>
+                {count}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Tab content */}
+      <div className="pt-4">
+        <AnalysisTable
+          rows={activeSections}
+          sectionKey={activeTab ?? ''}
+          accepted={accepted}
+          onAccept={onAccept}
+        />
+      </div>
+    </div>
+  )
+}
+
+// ── History section ───────────────────────────────────────────────────────────
+
+const HISTORY_STYLES = {
+  opened:   'bg-gray-100 text-gray-600',
+  proposed: 'bg-blue-50 text-blue-700',
+  accepted: 'bg-success-50 text-success-700',
+  rejected: 'bg-error-50 text-error-700',
+}
+
+function formatTs(ts) {
+  try {
+    const d = new Date(ts)
+    return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  } catch { return ts }
+}
+
+function HistorySection({ history }) {
+  if (!history?.length) return null
+  return (
+    <div id="section-history">
+      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">History</h3>
+      <div className="border border-gray-200 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">Date / Time</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">Event</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {history.map((entry, i) => (
+              <tr key={i} className="align-top">
+                <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">{formatTs(entry.timestamp)}</td>
+                <td className="px-4 py-3">
+                  <span className={`text-xs font-medium px-2 py-0.5 capitalize ${HISTORY_STYLES[entry.event] ?? 'bg-gray-100 text-gray-600'}`}>
+                    {entry.event}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-gray-600 text-xs">{entry.notes || '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
@@ -261,24 +339,16 @@ function ScopeSection({ scope }) {
   )
 }
 
-// ── Section jump navigation ───────────────────────────────────────────────────
-
-const ANALYSIS_SECTIONS = [
-  { key: 'narrative-validation', label: 'Narrative Review' },
-  { key: 'impact-assessment',    label: 'Impact Assessment' },
-  { key: 'referential-integrity',label: 'Referential Integrity' },
-  { key: 'strategy-alignment',   label: 'Strategy Alignment' },
-  { key: 'principles-alignment', label: 'Principles Alignment' },
-  { key: 'proponent-analysis',   label: 'Proponent Analysis' },
-  { key: 'challenger-analysis',  label: 'Challenger Analysis' },
-]
+// ── Section jump nav ──────────────────────────────────────────────────────────
 
 function SectionNav({ decision }) {
+  const hasAnalysis = ANALYSIS_SECTIONS.some(s => decision[s.key]?.length)
   const sections = [
-    { id: 'section-narrative', label: 'Narrative' },
+    { id: 'section-narrative',    label: 'Narrative' },
+    decision.scope               && { id: 'section-scope',        label: 'Scope' },
     decision.requirements?.length && { id: 'section-requirements', label: 'Requirements' },
-    decision.scope && { id: 'section-scope', label: 'Scope' },
-    ...ANALYSIS_SECTIONS.filter(s => decision[s.key]?.length).map(s => ({ id: `section-${s.key}`, label: s.label })),
+    hasAnalysis                  && { id: 'section-analysis',     label: 'Analysis' },
+    decision.history?.length     && { id: 'section-history',      label: 'History' },
   ].filter(Boolean)
 
   if (sections.length < 3) return null
@@ -327,7 +397,6 @@ export default function DecisionDetailPage() {
     setTransitioning(true)
     setTransitionError(null)
     const updates = { status: newStatus, ...extraFields }
-    // Optimistic update
     setDecision(prev => prev ? { ...prev, ...updates } : prev)
     try {
       const res = await fetch('/api/github', {
@@ -351,14 +420,15 @@ export default function DecisionDetailPage() {
     return <Navigate to={`/clients/${clientId}/${versionId}/decisions`} replace />
   }
 
-  const hasAnalysis = ANALYSIS_SECTIONS.some(s => decision[s.key]?.length)
-
   return (
     <div>
       {/* Header */}
       <div className="mb-6 pb-5 border-b border-gray-200">
         <div className="flex items-center gap-2 mb-3">
           <StatusBadge status={decision.status} />
+          {decision['rejection-reason'] && (
+            <span className="text-xs text-gray-400">— {decision['rejection-reason']}</span>
+          )}
         </div>
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -375,13 +445,9 @@ export default function DecisionDetailPage() {
         </div>
       </div>
 
-      {/* Status progress */}
       <StatusProgress status={decision.status} />
-
-      {/* Section jump nav */}
       <SectionNav decision={decision} />
 
-      {/* Status transitions (before analysis) */}
       <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} />
       {transitionError && (
         <div className="mb-4 px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
@@ -389,7 +455,6 @@ export default function DecisionDetailPage() {
         </div>
       )}
 
-      {/* Content */}
       <div className="space-y-8">
         <ScopeSection scope={decision.scope} />
 
@@ -420,26 +485,11 @@ export default function DecisionDetailPage() {
           </div>
         )}
 
-        {hasAnalysis && (
-          <div className="space-y-6">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Analysis</h3>
-            {ANALYSIS_SECTIONS.map(section => {
-              const rows = decision[section.key]
-              if (!rows?.length) return null
-              return (
-                <div key={section.key} id={`section-${section.key}`}>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">{section.label}</h4>
-                  <AnalysisTable
-                    rows={rows}
-                    sectionKey={section.key}
-                    accepted={accepted}
-                    onAccept={handleAccept}
-                  />
-                </div>
-              )
-            })}
-          </div>
-        )}
+        {/* Analysis — tabbed */}
+        <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} />
+
+        {/* History */}
+        <HistorySection history={decision.history} />
       </div>
 
       <JsonPreview data={decision} label={`${decision['decision-id']}.json`} />

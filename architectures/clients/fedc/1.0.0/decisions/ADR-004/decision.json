@@ -117,5 +117,17 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-03-08T14:00:00Z",
+            "event": "opened",
+            "notes": "Decision raised to address fragmented customer data across billing, CRM and field service."
+        },
+        {
+            "timestamp": "2025-03-12T09:45:00Z",
+            "event": "proposed",
+            "notes": "Narrative and requirements reviewed by data architecture team. Submitted for analysis."
+        }
     ]
 }

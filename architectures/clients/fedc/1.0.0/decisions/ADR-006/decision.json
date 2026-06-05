@@ -117,5 +117,22 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-02-14T09:00:00Z",
+            "event": "opened",
+            "notes": "Decision raised to address compliance requirements following data protection audit."
+        },
+        {
+            "timestamp": "2025-02-18T11:30:00Z",
+            "event": "proposed",
+            "notes": "Classification framework reviewed with legal and security. Submitted for analysis."
+        },
+        {
+            "timestamp": "2025-02-24T16:00:00Z",
+            "event": "accepted",
+            "notes": "Accepted by architecture review board. Implementation assigned to data governance team."
+        }
     ]
 }

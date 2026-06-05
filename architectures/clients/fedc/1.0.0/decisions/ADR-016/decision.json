@@ -106,5 +106,22 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-02-20T09:00:00Z",
+            "event": "opened",
+            "notes": "Decision raised to accelerate cloud migration for all applications."
+        },
+        {
+            "timestamp": "2025-02-25T11:30:00Z",
+            "event": "proposed",
+            "notes": "Submitted for analysis."
+        },
+        {
+            "timestamp": "2025-03-05T14:00:00Z",
+            "event": "rejected",
+            "notes": "Rejected as superseded by ADR-005 (Cloud-First Policy), which takes a more measured and risk-managed approach to cloud adoption. Immediate full migration is not feasible for critical operational systems."
+        }
     ]
 }

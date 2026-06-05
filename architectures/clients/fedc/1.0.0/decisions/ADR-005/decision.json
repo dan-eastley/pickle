@@ -117,5 +117,17 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-03-10T10:30:00Z",
+            "event": "opened",
+            "notes": "Decision raised following strategic review of infrastructure modernisation options."
+        },
+        {
+            "timestamp": "2025-03-15T14:20:00Z",
+            "event": "proposed",
+            "notes": "Cloud-first direction aligned with BUS-STR-005. Submitted for analysis."
+        }
     ]
 }

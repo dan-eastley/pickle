@@ -7,5 +7,12 @@
         "domain": "solution",
         "abstraction": "logical",
         "artefact": "SOL-PRN"
-    }
+    },
+    "history": [
+        {
+            "timestamp": "2025-04-08T11:00:00Z",
+            "event": "opened",
+            "notes": "Decision raised to standardise solution architecture review across delivery programmes."
+        }
+    ]
 }

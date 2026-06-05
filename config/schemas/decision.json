@@ -85,6 +85,30 @@
             },
             "additionalProperties": false
         },
+        "history": {
+            "type": "array",
+            "description": "Chronological log of status transitions for this decision record.",
+            "items": {
+                "type": "object",
+                "required": ["timestamp", "event"],
+                "properties": {
+                    "timestamp": {
+                        "type": "string",
+                        "description": "ISO 8601 datetime of the event (e.g. 2025-03-15T09:23:00Z)"
+                    },
+                    "event": {
+                        "type": "string",
+                        "description": "The transition that occurred.",
+                        "enum": ["opened", "proposed", "accepted", "rejected"]
+                    },
+                    "notes": {
+                        "type": "string",
+                        "description": "Optional context or reason for the transition."
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
         "context-validation": {
             "type": "object",
             "description": "Output of the Validate Context workflow. Permissive shape — produces a deterministic outcome + violation list, not the 4-string analysis section shape."

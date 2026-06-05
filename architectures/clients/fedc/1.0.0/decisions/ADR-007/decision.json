@@ -117,5 +117,22 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-01-20T08:45:00Z",
+            "event": "opened",
+            "notes": "Decision raised to address latency issues with SCADA data polling."
+        },
+        {
+            "timestamp": "2025-01-25T10:15:00Z",
+            "event": "proposed",
+            "notes": "Event-driven approach validated with network operations. Submitted for analysis."
+        },
+        {
+            "timestamp": "2025-02-02T14:30:00Z",
+            "event": "accepted",
+            "notes": "Accepted. Streaming platform selected. Implementation begins Q2 2025."
+        }
     ]
 }

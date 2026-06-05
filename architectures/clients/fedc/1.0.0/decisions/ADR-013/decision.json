@@ -117,5 +117,17 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-04-05T10:00:00Z",
+            "event": "opened",
+            "notes": "Decision raised following business continuity review highlighting architectural gaps."
+        },
+        {
+            "timestamp": "2025-04-09T14:30:00Z",
+            "event": "proposed",
+            "notes": "RTO/RPO requirements validated with operations and risk teams. Submitted for analysis."
+        }
     ]
 }

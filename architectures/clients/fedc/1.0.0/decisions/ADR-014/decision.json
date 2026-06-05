@@ -117,5 +117,22 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-01-05T08:30:00Z",
+            "event": "opened",
+            "notes": "Decision raised following security architecture review recommending zero-trust adoption."
+        },
+        {
+            "timestamp": "2025-01-10T10:00:00Z",
+            "event": "proposed",
+            "notes": "Zero-trust framework reviewed with CISO and infrastructure team. Submitted for analysis."
+        },
+        {
+            "timestamp": "2025-01-18T15:30:00Z",
+            "event": "accepted",
+            "notes": "Accepted. Zero-trust programme initiated. Identity platform selection in progress."
+        }
     ]
 }
