@@ -2,7 +2,7 @@
     "decision-id": "ADR-013",
     "title": "Implement Self-Service Analytics for Operational and Commercial Teams",
     "status": "draft",
-    "narrative": "Analytical reporting at FEDC is currently centralised in a data team that builds and maintains reports for operational and commercial stakeholders. Teams submit report requests, which are typically fulfilled within two weeks. This bottleneck means that business questions are answered slowly, and teams use workarounds \u2014 manual spreadsheet analysis, shadow data stores \u2014 that create data quality and governance risks. We propose implementing a self-service analytics capability that enables operational and commercial teams to query and visualise authorised data without dependency on the central data team. The capability will be built on the existing data warehouse, extended with a semantic layer that exposes business-friendly metrics. Role-based access will ensure teams can only access data appropriate to their function. Training and enablement will be provided to 150 analysts in the first year.",
+    "narrative": "Analytical reporting at FEDC is currently centralised in a data team that builds and maintains reports for operational and commercial stakeholders. Teams submit report requests, which are typically fulfilled within two weeks. This bottleneck means that business questions are answered slowly, and teams use workarounds — manual spreadsheet analysis, shadow data stores — that create data quality and governance risks. We propose implementing a self-service analytics capability that enables operational and commercial teams to query and visualise authorised data without dependency on the central data team. The capability will be built on the existing data warehouse, extended with a semantic layer that exposes business-friendly metrics. Role-based access will ensure teams can only access data appropriate to their function. Training and enablement will be provided to 150 analysts in the first year.",
     "requirements": [
         {
             "title": "Self-service query capability",
@@ -24,5 +24,15 @@
         "domain": "data",
         "abstraction": "logical",
         "artefact": "DAT-PRN"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-013/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:57+00:00"
     }
 }
