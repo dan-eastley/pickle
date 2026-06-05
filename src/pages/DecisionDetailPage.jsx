@@ -279,7 +279,19 @@ function AnalysisTabs({ decision, accepted, onAccept }) {
   const sections = ANALYSIS_SECTIONS.filter(s => decision[s.key]?.length)
   const [activeTab, setActiveTab] = useState(sections[0]?.key ?? null)
 
-  if (!sections.length) return null
+  if (!sections.length) {
+    return (
+      <div id="section-analysis">
+        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Analysis</h3>
+        <div className="border border-dashed border-gray-200 bg-gray-50 px-5 py-8 text-center">
+          <p className="text-sm font-medium text-gray-500">No analysis yet</p>
+          <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
+            Analysis sections appear here once this decision is proposed and the review pipeline has run.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   const activeSections = decision[activeTab] ?? []
 
@@ -429,12 +441,11 @@ function ScopeSection({ scope }) {
 // ── Section jump nav ──────────────────────────────────────────────────────────
 
 function SectionNav({ decision }) {
-  const hasAnalysis = ANALYSIS_SECTIONS.some(s => decision[s.key]?.length)
   const sections = [
     { id: 'section-narrative',    label: 'Narrative' },
     decision.scope               && { id: 'section-scope',        label: 'Scope' },
     decision.requirements?.length && { id: 'section-requirements', label: 'Requirements' },
-    hasAnalysis                  && { id: 'section-analysis',     label: 'Analysis' },
+    { id: 'section-analysis', label: 'Analysis' },
     decision.history?.length     && { id: 'section-history',      label: 'History' },
   ].filter(Boolean)
 

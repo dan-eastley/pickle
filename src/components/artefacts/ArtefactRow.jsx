@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefactData } from '../../lib/api'
 import FormatIcon from '../ui/FormatIcon'
@@ -15,29 +15,40 @@ function KeyStar() {
   )
 }
 
-function useArtefactCount(clientId, versionId, artefact) {
+// Fetch only fires when the row scrolls into view — avoids 20+ simultaneous
+// API calls when the domain page first renders.
+function useArtefactCount(clientId, versionId, artefact, rowRef) {
   const [count, setCount] = useState(undefined)
 
   useEffect(() => {
-    // Diagrams have no structured data to count
     if (artefact.format !== 'catalogue') { setCount(null); return }
 
-    getArtefactData(clientId, versionId, artefact.domain, artefact.abstraction, artefact.id)
-      .then(data => {
-        if (!data) { setCount(null); return }
-        const rootKey = Object.keys(data).find(k => Array.isArray(data[k]))
-        if (!rootKey) { setCount(null); return }
-        const items = data[rootKey]
-        if (!items.length) { setCount(null); return }
-        const isHierarchical = items.some(item => item['parent-id'])
-        if (isHierarchical) {
-          const level1 = items.filter(i => !i['parent-id']).length
-          setCount({ hierarchical: true, level1, total: items.length, key: rootKey })
-        } else {
-          setCount({ hierarchical: false, total: items.length, key: rootKey })
-        }
-      })
-      .catch(() => setCount(null))
+    const el = rowRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      observer.disconnect()
+      getArtefactData(clientId, versionId, artefact.domain, artefact.abstraction, artefact.id)
+        .then(data => {
+          if (!data) { setCount(null); return }
+          const rootKey = Object.keys(data).find(k => Array.isArray(data[k]))
+          if (!rootKey) { setCount(null); return }
+          const items = data[rootKey]
+          if (!items.length) { setCount(null); return }
+          const isHierarchical = items.some(item => item['parent-id'])
+          if (isHierarchical) {
+            const level1 = items.filter(i => !i['parent-id']).length
+            setCount({ hierarchical: true, level1, total: items.length })
+          } else {
+            setCount({ hierarchical: false, total: items.length })
+          }
+        })
+        .catch(() => setCount(null))
+    }, { threshold: 0.1 })
+
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [clientId, versionId, artefact.id])
 
   return count
@@ -48,7 +59,7 @@ function EntryCount({ count }) {
   if (count.hierarchical) {
     return (
       <span className="text-xs text-gray-400 flex-shrink-0">
-        {count.level1} top-level · {count.total} total
+        {count.level1} groups · {count.total} total
       </span>
     )
   }
@@ -60,23 +71,23 @@ function EntryCount({ count }) {
 }
 
 export default function ArtefactRow({ artefact, to, clientId, versionId, divider = false }) {
-  const count = useArtefactCount(clientId, versionId, artefact)
+  const rowRef = useRef(null)
+  const count = useArtefactCount(clientId, versionId, artefact, rowRef)
 
   return (
     <Link
+      ref={rowRef}
       to={to}
       className={`group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors border-l-4 ${
         artefact.key ? 'border-amber-400' : 'border-transparent'
       } ${divider ? 'border-t border-gray-100' : ''}`}
     >
-      {/* Format icon box */}
       <div className="w-8 h-8 bg-gray-100 flex items-center justify-center flex-shrink-0 group-hover:bg-gray-200 transition-colors">
         <span className="text-gray-500">
           <FormatIcon format={artefact.format} className="w-4 h-4" />
         </span>
       </div>
 
-      {/* Name + description + count */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 flex-wrap">
           {artefact.key && <KeyStar />}
@@ -96,7 +107,6 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
         </div>
       </div>
 
-      {/* ID + chevron */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <span className="text-xs font-mono text-gray-300">{artefact.id}</span>
         <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors" viewBox="0 0 16 16" fill="none">
