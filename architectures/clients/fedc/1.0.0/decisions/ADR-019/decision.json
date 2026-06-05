@@ -102,5 +102,21 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "architecture-changes": [
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add new entry to Business Capabilities as identified by accepted findings.",
+            "detail": "Stub change \u2014 replace with Claude-generated output when integration is re-enabled."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "update",
+            "description": "Update existing entries in Business Capabilities to reflect the decision outcome.",
+            "detail": "Stub change \u2014 replace with Claude-generated output when integration is re-enabled."
+        }
     ]
 }
