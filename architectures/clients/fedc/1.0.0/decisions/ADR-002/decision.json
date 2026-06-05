@@ -104,5 +104,19 @@
             "recommendation": "Add a Non-Functional requirement: all components must expose health and telemetry endpoints.",
             "rationale": "Observability is codified in Application Guardrails. Addressing it at decision stage is cheaper."
         }
+    ],
+    "proponent-analysis": [
+        {
+            "finding": "'Implement a Master Data Management Platform for Customer Records' addresses a genuine capability gap consistent with the organisation's technology direction.",
+            "impact": "Proceeding reduces risk accumulation in the affected domain and supports near-term commitments.",
+            "recommendation": "Approve with a measurable target outcome and an observability requirement added.",
+            "rationale": "The cost of both additions is negligible compared to the strategic value introduced."
+        },
+        {
+            "finding": "The decision has a clear delivery owner and is aligned to an existing funded programme. Implementation risk is low to medium.",
+            "impact": "Funded, sponsored decisions are significantly more likely to be implemented on schedule.",
+            "recommendation": "Proceed to Accepted. Assign a delivery champion and schedule a post-implementation review in 90 days.",
+            "rationale": "Post-implementation reviews close the feedback loop and update the architecture catalogue."
+        }
     ]
 }
