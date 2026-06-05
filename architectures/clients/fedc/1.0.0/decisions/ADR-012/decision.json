@@ -2,7 +2,7 @@
     "decision-id": "ADR-012",
     "title": "Establish Business Continuity Requirements for All Tier-1 Systems",
     "status": "draft",
-    "narrative": "FEDC operates critical national infrastructure. Unplanned outages to Tier-1 systems \u2014 those supporting active network switching, customer fault reporting, and regulatory compliance \u2014 have direct safety and regulatory consequences. Current recovery time objectives vary by system and in many cases have never been formally defined or tested. A system failure during a major network incident in Q3 2024 demonstrated that some Tier-1 systems have undocumented dependencies that extended recovery time beyond acceptable limits. We define mandatory business continuity requirements for all Tier-1 systems. Systems must declare their RTO and RPO targets as part of the architecture design process. Dependencies must be documented and tested annually. Disaster recovery capabilities must be validated through planned exercises, not just documented.",
+    "narrative": "FEDC operates critical national infrastructure. Unplanned outages to Tier-1 systems — those supporting active network switching, customer fault reporting, and regulatory compliance — have direct safety and regulatory consequences. Current recovery time objectives vary by system and in many cases have never been formally defined or tested. A system failure during a major network incident in Q3 2024 demonstrated that some Tier-1 systems have undocumented dependencies that extended recovery time beyond acceptable limits. We define mandatory business continuity requirements for all Tier-1 systems. Systems must declare their RTO and RPO targets as part of the architecture design process. Dependencies must be documented and tested annually. Disaster recovery capabilities must be validated through planned exercises, not just documented.",
     "requirements": [
         {
             "title": "RTO definition and compliance",
@@ -24,5 +24,15 @@
         "domain": "business",
         "abstraction": "logical",
         "artefact": "BUS-PRN"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-012/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:05:05+00:00"
     }
 }
