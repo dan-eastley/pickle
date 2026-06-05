@@ -2,5 +2,19 @@
     "decision-id": "ADR-019",
     "title": "Another decision to test how quick we add",
     "status": "draft",
-    "narrative": "Lorum Ipsum blah blah blah"
+    "narrative": "Lorum Ipsum blah blah blah",
+    "narrative-validation": [
+        {
+            "finding": "The narrative for 'Another decision to test how quick we add' clearly states the business driver and proposed direction.",
+            "impact": "Well-formed narratives allow analysis to produce higher-quality, intent-aligned findings.",
+            "recommendation": "Add a quantified target outcome to make success measurable.",
+            "rationale": "Measurable outcomes enable Strategy Alignment to assess impact against existing KPIs."
+        },
+        {
+            "finding": "Requirements are expressed as outcomes. Testability could be strengthened.",
+            "impact": "Untestable requirements cannot be formally verified at acceptance.",
+            "recommendation": "Restate each requirement using 'The system shall...' with a measurable acceptance criterion.",
+            "rationale": "ISO 29148 requires verifiable requirements. Acceptance criteria prevent ambiguity at delivery."
+        }
+    ]
 }
