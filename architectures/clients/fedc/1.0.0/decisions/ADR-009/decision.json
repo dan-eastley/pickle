@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-009",
+    "title": "Establish a Real-Time Operational Analytics Platform",
+    "status": "draft",
+    "narrative": "FEDC operational teams currently rely on batch-processed reports from the data warehouse for performance monitoring and decision-making. Reports are available the morning after the operational period they cover. This means that decisions about network switching, crew deployment, and customer communication during network incidents are made without access to current operational data. We propose establishing a real-time operational analytics platform that provides sub-minute visibility of network state, fault progression, and crew activity. The platform will consume the event streams from SCADA and field systems and expose dashboards and alerting to operations, control room, and field management teams. The platform will complement rather than replace the existing data warehouse, which will retain its role for financial and regulatory reporting.",
+    "requirements": [
+        {
+            "title": "Real-time dashboard refresh",
+            "description": "Operations dashboards must reflect the current network state with a maximum data latency of 60 seconds from the point of measurement.",
+            "type": "Non-Functional"
+        },
+        {
+            "title": "Alerting and escalation",
+            "description": "The platform must support configurable alert rules that trigger automated notifications to defined recipients when defined thresholds are breached.",
+            "type": "Functional"
+        },
+        {
+            "title": "Role-based access",
+            "description": "Access to operational data must be governed by role. Field crew must not have access to commercial or customer financial data surfaced through the same platform.",
+            "type": "Functional"
+        }
+    ],
+    "scope": {
+        "domain": "data",
+        "abstraction": "conceptual",
+        "artefact": "DAT-STR"
+    }
+}
