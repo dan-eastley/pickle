@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-012",
+    "title": "Establish Business Continuity Requirements for All Tier-1 Systems",
+    "status": "draft",
+    "narrative": "FEDC operates critical national infrastructure. Unplanned outages to Tier-1 systems \u2014 those supporting active network switching, customer fault reporting, and regulatory compliance \u2014 have direct safety and regulatory consequences. Current recovery time objectives vary by system and in many cases have never been formally defined or tested. A system failure during a major network incident in Q3 2024 demonstrated that some Tier-1 systems have undocumented dependencies that extended recovery time beyond acceptable limits. We define mandatory business continuity requirements for all Tier-1 systems. Systems must declare their RTO and RPO targets as part of the architecture design process. Dependencies must be documented and tested annually. Disaster recovery capabilities must be validated through planned exercises, not just documented.",
+    "requirements": [
+        {
+            "title": "RTO definition and compliance",
+            "description": "All Tier-1 systems must define a Recovery Time Objective not exceeding 4 hours. Architecture must be designed to meet the defined RTO, and compliance must be demonstrated through annual DR testing.",
+            "type": "Functional"
+        },
+        {
+            "title": "Dependency mapping",
+            "description": "All Tier-1 system architectures must include a complete dependency map identifying upstream and downstream systems. Dependencies must be reviewed and updated at every major release.",
+            "type": "Functional"
+        },
+        {
+            "title": "Annual DR exercise",
+            "description": "Each Tier-1 system must participate in an annual disaster recovery exercise. Exercise results, including actual recovery times, must be reported to the risk committee.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "business",
+        "abstraction": "logical",
+        "artefact": "BUS-PRN"
+    }
+}
