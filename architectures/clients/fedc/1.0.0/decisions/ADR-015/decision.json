@@ -2,7 +2,7 @@
     "decision-id": "ADR-015",
     "title": "Establish a Programme and Project Management Capability in the Architecture",
     "status": "draft",
-    "narrative": "FEDC is entering a period of significant capital investment \u2014 the network reinforcement programme, the smart metering rollout, and the operational technology refresh collectively represent over \u00a3180M of committed expenditure over the next five years. Programme and project management at FEDC is currently handled through a combination of spreadsheets, email, and a standalone project tracking tool that is not integrated with financial systems, resource planning, or the asset register. This creates coordination risk at the programme level and prevents effective portfolio-level resource and budget management. We propose adding programme and project management as an explicit capability in the architecture. A dedicated application supporting end-to-end programme governance \u2014 from business case through delivery to benefits realisation \u2014 will be selected and integrated with the ERP, resource management, and asset management systems.",
+    "narrative": "FEDC is entering a period of significant capital investment — the network reinforcement programme, the smart metering rollout, and the operational technology refresh collectively represent over £180M of committed expenditure over the next five years. Programme and project management at FEDC is currently handled through a combination of spreadsheets, email, and a standalone project tracking tool that is not integrated with financial systems, resource planning, or the asset register. This creates coordination risk at the programme level and prevents effective portfolio-level resource and budget management. We propose adding programme and project management as an explicit capability in the architecture. A dedicated application supporting end-to-end programme governance — from business case through delivery to benefits realisation — will be selected and integrated with the ERP, resource management, and asset management systems.",
     "requirements": [
         {
             "title": "End-to-end programme governance",
@@ -24,5 +24,15 @@
         "domain": "business",
         "abstraction": "conceptual",
         "artefact": "BUS-CAP"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-015/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:05:03+00:00"
     }
 }
