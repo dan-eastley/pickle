@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-002",
     "title": "Implement a Master Data Management Platform for Customer Records",
-    "status": "draft",
+    "status": "proposed",
     "narrative": "Customer data at FEDC is fragmented across the billing system, CRM platform, field service management application, and the regulatory reporting system. The same customer may have four different representations with no guaranteed consistency. This causes billing errors, missed service appointments, and regulatory compliance risk when the same customer appears with different meter point reference numbers across systems. We propose implementing a master data management platform to create a single, authoritative customer record. All customer-facing systems will consume the master record rather than maintaining their own. Data stewardship processes will be established to manage exceptions, and a data quality score will be tracked as an operational KPI. Updating - hopefully you run the narrative review!",
     "requirements": [
         {
