@@ -1,1 +1,154 @@
-{"decisions":[]}
+{
+    "decisions": [
+        {
+            "decision-id": "ADR-001",
+            "title": "Adopt API Gateway for External Partner Integration",
+            "status": "draft",
+            "scope": {
+                "domain": "integration",
+                "abstraction": "conceptual",
+                "artefact": "INT-STR"
+            }
+        },
+        {
+            "decision-id": "ADR-002",
+            "title": "Implement a Master Data Management Platform for Customer Records",
+            "status": "draft",
+            "scope": {
+                "domain": "data",
+                "abstraction": "conceptual",
+                "artefact": "DAT-DAC"
+            }
+        },
+        {
+            "decision-id": "ADR-003",
+            "title": "Migrate SCADA Operational Data Feeds to Event-Driven Architecture",
+            "status": "draft",
+            "scope": {
+                "domain": "integration",
+                "abstraction": "logical",
+                "artefact": "INT-PRN"
+            }
+        },
+        {
+            "decision-id": "ADR-004",
+            "title": "Establish a Cloud-First Policy for New Application Development",
+            "status": "draft",
+            "scope": {
+                "domain": "application",
+                "abstraction": "conceptual",
+                "artefact": "APP-STR"
+            }
+        },
+        {
+            "decision-id": "ADR-005",
+            "title": "Define Data Classification and Retention Standards Across All Systems",
+            "status": "draft",
+            "scope": {
+                "domain": "data",
+                "abstraction": "physical",
+                "artefact": "DAT-GRD"
+            }
+        },
+        {
+            "decision-id": "ADR-006",
+            "title": "Consolidate Network Operations Management onto an Integrated Platform",
+            "status": "draft",
+            "scope": {
+                "domain": "application",
+                "abstraction": "logical",
+                "artefact": "APP-DAP"
+            }
+        },
+        {
+            "decision-id": "ADR-007",
+            "title": "Adopt Zero-Trust Security Architecture for Network Access",
+            "status": "draft",
+            "scope": {
+                "domain": "solution",
+                "abstraction": "conceptual",
+                "artefact": "SOL-STR"
+            }
+        },
+        {
+            "decision-id": "ADR-008",
+            "title": "Define Integration Guardrails for Third-Party Vendor System Connections",
+            "status": "draft",
+            "scope": {
+                "domain": "integration",
+                "abstraction": "physical",
+                "artefact": "INT-GRD"
+            }
+        },
+        {
+            "decision-id": "ADR-009",
+            "title": "Establish a Real-Time Operational Analytics Platform",
+            "status": "draft",
+            "scope": {
+                "domain": "data",
+                "abstraction": "conceptual",
+                "artefact": "DAT-STR"
+            }
+        },
+        {
+            "decision-id": "ADR-010",
+            "title": "Implement Predictive Asset Maintenance Using Operational Telemetry",
+            "status": "draft",
+            "scope": {
+                "domain": "application",
+                "abstraction": "logical",
+                "artefact": "APP-DAP"
+            }
+        },
+        {
+            "decision-id": "ADR-011",
+            "title": "Adopt a Capability-Based Funding Model for Technology Investment",
+            "status": "draft",
+            "scope": {
+                "domain": "business",
+                "abstraction": "conceptual",
+                "artefact": "BUS-CAP"
+            }
+        },
+        {
+            "decision-id": "ADR-012",
+            "title": "Establish Business Continuity Requirements for All Tier-1 Systems",
+            "status": "draft",
+            "scope": {
+                "domain": "business",
+                "abstraction": "logical",
+                "artefact": "BUS-PRN"
+            }
+        },
+        {
+            "decision-id": "ADR-013",
+            "title": "Implement Self-Service Analytics for Operational and Commercial Teams",
+            "status": "draft",
+            "scope": {
+                "domain": "data",
+                "abstraction": "logical",
+                "artefact": "DAT-PRN"
+            }
+        },
+        {
+            "decision-id": "ADR-014",
+            "title": "Define Application Guardrails for Security and Operational Quality",
+            "status": "draft",
+            "scope": {
+                "domain": "application",
+                "abstraction": "physical",
+                "artefact": "APP-GRD"
+            }
+        },
+        {
+            "decision-id": "ADR-015",
+            "title": "Establish a Programme and Project Management Capability in the Architecture",
+            "status": "draft",
+            "scope": {
+                "domain": "business",
+                "abstraction": "conceptual",
+                "artefact": "BUS-CAP"
+            }
+        }
+    ]
+}
