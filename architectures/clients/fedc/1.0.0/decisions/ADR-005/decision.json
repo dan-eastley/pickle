@@ -2,7 +2,7 @@
     "decision-id": "ADR-005",
     "title": "Define Data Classification and Retention Standards Across All Systems",
     "status": "draft",
-    "narrative": "FEDC handles a broad range of data \u2014 customer personal data, operational telemetry, financial records, and safety-critical network data \u2014 each subject to different regulatory retention and handling requirements. There is currently no consistent framework for classifying data assets or enforcing retention policies. This creates regulatory risk (data held beyond retention limits) and security risk (sensitive data not being protected to an appropriate standard). We define a four-tier data classification framework (Public, Internal, Confidential, Restricted) and specify minimum retention and disposal requirements for each tier. All data assets must be classified at the point of creation. Classification metadata must be captured in the data catalogue. Automated enforcement of retention policies will be implemented progressively over 18 months.",
+    "narrative": "FEDC handles a broad range of data — customer personal data, operational telemetry, financial records, and safety-critical network data — each subject to different regulatory retention and handling requirements. There is currently no consistent framework for classifying data assets or enforcing retention policies. This creates regulatory risk (data held beyond retention limits) and security risk (sensitive data not being protected to an appropriate standard). We define a four-tier data classification framework (Public, Internal, Confidential, Restricted) and specify minimum retention and disposal requirements for each tier. All data assets must be classified at the point of creation. Classification metadata must be captured in the data catalogue. Automated enforcement of retention policies will be implemented progressively over 18 months.",
     "requirements": [
         {
             "title": "Classification at creation",
@@ -24,5 +24,15 @@
         "domain": "data",
         "abstraction": "physical",
         "artefact": "DAT-GRD"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-005/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:43+00:00"
     }
 }
