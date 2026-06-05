@@ -345,32 +345,19 @@ function ArchitectureChanges({ changes }) {
 }
 
 function AnalysisTabs({ decision, accepted, onAccept, saving }) {
-  const sections = ANALYSIS_SECTIONS.filter(s => decision[s.key]?.length)
-  const [activeTab, setActiveTab] = useState(sections[0]?.key ?? null)
-
-  if (!sections.length) {
-    return (
-      <div id="section-analysis">
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Analysis</h3>
-        <div className="border border-dashed border-gray-200 bg-gray-50 px-5 py-8 text-center">
-          <p className="text-sm font-medium text-gray-500">No analysis yet</p>
-          <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
-            Analysis sections appear here once this decision is proposed and the review pipeline has run.
-          </p>
-        </div>
-      </div>
-    )
-  }
+  // Always show all tabs — never filter by whether data exists
+  const [activeTab, setActiveTab] = useState(ANALYSIS_SECTIONS[0]?.key ?? null)
 
   const activeSections = decision[activeTab] ?? []
+  const hasFindings = activeSections.length > 0
 
   return (
     <div id="section-analysis">
       <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Analysis</h3>
 
-      {/* Underline tab bar */}
+      {/* Underline tab bar — all sections always shown */}
       <div className="border-b border-gray-200 flex gap-0 flex-wrap">
-        {sections.map(section => {
+        {ANALYSIS_SECTIONS.map(section => {
           const count = decision[section.key]?.length ?? 0
           const isActive = section.key === activeTab
           return (
@@ -385,7 +372,7 @@ function AnalysisTabs({ decision, accepted, onAccept, saving }) {
             >
               {section.label}
               <span className={`text-xs px-1.5 py-0.5 font-medium tabular-nums ${
-                isActive ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-600'
+                isActive ? 'bg-brand-100 text-brand-700' : count > 0 ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-300'
               }`}>
                 {count}
               </span>
@@ -396,13 +383,23 @@ function AnalysisTabs({ decision, accepted, onAccept, saving }) {
 
       {/* Tab content */}
       <div className="pt-4">
-        <AnalysisTable
-          rows={activeSections}
-          sectionKey={activeTab ?? ''}
-          accepted={accepted}
-          onAccept={onAccept}
-          saving={saving}
-        />
+        {hasFindings ? (
+          <AnalysisTable
+            rows={activeSections}
+            sectionKey={activeTab ?? ''}
+            accepted={accepted}
+            onAccept={onAccept}
+            saving={saving}
+          />
+        ) : (
+          <div className="border border-dashed border-gray-200 bg-gray-50 px-5 py-8 text-center">
+            <p className="text-sm font-medium text-gray-500">No findings yet</p>
+            <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
+              This section will be populated once the analysis workflow has run.
+              Workflows can take a few minutes — check back shortly.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
