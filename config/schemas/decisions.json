@@ -2,23 +2,38 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:decisions",
     "title": "Decisions Index",
-    "description": "Authoritative list of decision IDs for a client version. Per-decision content lives in architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json (one folder per decision, file always named decision.json).",
+    "description": "Lightweight index of all decisions for a client version. Lives on main and contains enough data to power the decisions list page without fetching individual decision records. Full decision content lives on the decisions branch (or main once committed/rejected).",
     "type": "object",
-    "required": [
-        "decisions"
-    ],
+    "required": ["decisions"],
     "properties": {
         "decisions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": [
-                    "decision-id"
-                ],
+                "required": ["decision-id", "title", "status"],
                 "properties": {
                     "decision-id": {
                         "type": "string",
-                        "description": "Unique identifier in the form adr-NNN. Must match the decision folder name under decisions/ and the trailing segment of the decision branch name."
+                        "description": "Unique identifier (e.g. ADR-001)."
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Short human-readable title — shown in the decisions list."
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["draft", "proposed", "accepted", "staged", "committed", "rejected"],
+                        "description": "Current lifecycle stage — used for grouping in the list view."
+                    },
+                    "scope": {
+                        "type": "object",
+                        "description": "Optional scope constraint — shown as a chip in the list view.",
+                        "properties": {
+                            "domain":      { "type": "string" },
+                            "abstraction": { "type": "string" },
+                            "artefact":    { "type": "string" }
+                        },
+                        "additionalProperties": false
                     }
                 },
                 "additionalProperties": false

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams, Navigate, useLocation } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
+import { getDecision } from '../lib/api'
 import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS, ABSTRACTION_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
@@ -368,7 +369,7 @@ function AnalysisTabs({ decision, accepted, onAccept, saving }) {
       <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Analysis</h3>
 
       {/* Underline tab bar */}
-      <div className="border-b border-gray-200 flex gap-0 overflow-x-auto">
+      <div className="border-b border-gray-200 flex gap-0 flex-wrap">
         {sections.map(section => {
           const count = decision[section.key]?.length ?? 0
           const isActive = section.key === activeTab
@@ -549,9 +550,9 @@ export default function DecisionDetailPage() {
 
   usePageTitle(decision?.title ? `${decision.title} — Decisions` : 'Decision')
 
+  // Use branch-then-main fallback via getDecision helper
   useEffect(() => {
-    fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`)
-      .then(r => r.ok ? r.json() : null)
+    getDecision(clientId, versionId, decisionId)
       .then(setDecision)
       .catch(() => setDecision(null))
   }, [clientId, versionId, decisionId])
@@ -633,13 +634,6 @@ export default function DecisionDetailPage() {
       <StatusProgress status={decision.status} />
       <SectionNav decision={decision} />
 
-      <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} />
-      {transitionError && (
-        <div className="mb-4 px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
-          Failed to update: {transitionError}
-        </div>
-      )}
-
       <div className="space-y-8">
         <ScopeSection scope={decision.scope} />
 
@@ -667,6 +661,14 @@ export default function DecisionDetailPage() {
                 )
               })}
             </div>
+          </div>
+        )}
+
+        {/* Status actions — after narrative/requirements, before analysis */}
+        <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} />
+        {transitionError && (
+          <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
+            Failed to update: {transitionError}
           </div>
         )}
 

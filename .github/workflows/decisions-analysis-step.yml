@@ -53,10 +53,10 @@ jobs:
         run: |
           echo "::notice::Started (stub): ${ANALYSIS_NAME}"
 
-      - name: Checkout main
+      - name: Checkout decisions branch
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -122,9 +122,10 @@ jobs:
           PYEOF
       # ── END STUB ─────────────────────────────────────────────────────────────
 
-      - name: Commit and push to main
+      - name: Commit and push to decisions branch
         run: |
           set -euo pipefail
+          BRANCH="decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
           DECISION_FILE="architectures/clients/${CLIENT_ID}/${VERSION_ID}/decisions/${DECISION_ID}/decision.json"
           git add "$DECISION_FILE"
           if git diff --cached --quiet; then
@@ -132,7 +133,7 @@ jobs:
             exit 0
           fi
           git commit -m "[${ANALYSIS_NAME}] Update ${DECISION_FILE}"
-          git push origin main
+          git push origin "$BRANCH"
 
       - name: Finished
         if: always()

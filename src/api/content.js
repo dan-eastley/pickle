@@ -16,10 +16,9 @@
  */
 
 const GH_API = 'https://api.github.com'
-const REF    = 'main'
 
 export default async function handler(req, res) {
-  const { prefix, path: filePath } = req.query
+  const { prefix, path: filePath, ref: REF = 'main' } = req.query
 
   if (!prefix || !filePath) {
     return res.status(400).json({ error: 'Missing prefix or path' })

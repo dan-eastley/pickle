@@ -6,20 +6,7 @@ import DomainIcon from '../components/ui/DomainIcon'
 import Spinner from '../components/ui/Spinner'
 import usePageTitle from '../hooks/usePageTitle'
 
-async function fetchDecisionIds(clientId, versionId) {
-  const res = await fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/decisions.json`)
-  if (!res.ok) return []
-  const data = await res.json()
-  return (data.decisions ?? []).map(d => d['decision-id'])
-}
-
-async function fetchDecision(clientId, versionId, decisionId) {
-  const res = await fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`)
-  if (!res.ok) return null
-  return res.json()
-}
-
-// Status order — drives grouping and default expand state
+// Status order and display config
 const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'staged', 'committed', 'rejected']
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
 
@@ -47,23 +34,13 @@ function ScopeChip({ scope }) {
   const dc = DOMAIN_COLORS[scope.domain]
   const extra = [
     scope.abstraction ? getAbstraction(scope.abstraction)?.name ?? scope.abstraction : null,
-    scope.artefact    ? getArtefact(scope.artefact)?.id    ?? scope.artefact         : null,
+    scope.artefact    ? getArtefact(scope.artefact)?.id ?? scope.artefact             : null,
   ].filter(Boolean)
-
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
+    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 flex-shrink-0 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
       <DomainIcon domain={scope.domain} className="w-3 h-3 flex-shrink-0" />
       {domainData?.name ?? scope.domain}
       {extra.length > 0 && <span className="opacity-60 ml-0.5">› {extra.join(' › ')}</span>}
-    </span>
-  )
-}
-
-function StatusBadge({ status }) {
-  if (!status) return null
-  return (
-    <span className={`text-xs font-medium px-2 py-0.5 ${STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}>
-      {status}
     </span>
   )
 }
@@ -73,7 +50,6 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
 
   return (
     <div className="border border-gray-200 bg-white">
-      {/* Group header */}
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-200"
@@ -84,43 +60,46 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
           </span>
           <span className="text-xs text-gray-400">{decisions.length} {decisions.length === 1 ? 'record' : 'records'}</span>
         </div>
-        <svg
-          className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
-          viewBox="0 0 16 16" fill="none"
-        >
+        <svg className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} viewBox="0 0 16 16" fill="none">
           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
         </svg>
       </button>
 
-      {/* Rows */}
       {open && (
         <div className="divide-y divide-gray-100">
-          {decisions.map((decision, i) => (
+          {decisions.map((d, i) => (
             <Link
-              key={i}
-              to={`/clients/${clientId}/${versionId}/decisions/${decision['decision-id']}`}
+              key={d['decision-id']}
+              to={`/clients/${clientId}/${versionId}/decisions/${d['decision-id']}`}
               className="group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
+              {/* Decision icon */}
               <div className="w-8 h-8 bg-gray-100 flex items-center justify-center flex-shrink-0 group-hover:bg-gray-200 transition-colors">
                 <svg className="w-4 h-4 text-gray-500" viewBox="0 0 14 14" fill="none">
                   <path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
                 </svg>
               </div>
+
+              {/* Title */}
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-mono text-gray-400">{decision['decision-id']}</span>
-                  {decision.scope && <ScopeChip scope={decision.scope} />}
-                </div>
-                <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
-                  {decision.title}
+                <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">
+                  {d.title}
                 </p>
-                {decision.narrative && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{decision.narrative}</p>
+                {d.narrative && (
+                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{d.narrative}</p>
                 )}
               </div>
-              <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 ml-4 transition-colors" viewBox="0 0 16 16" fill="none">
-                <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-              </svg>
+
+              {/* Scope */}
+              {d.scope && <ScopeChip scope={d.scope} />}
+
+              {/* ID + chevron */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span className="text-xs font-mono text-gray-400">{d['decision-id']}</span>
+                <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                </svg>
+              </div>
             </Link>
           ))}
         </div>
@@ -139,22 +118,17 @@ export default function DecisionsPage() {
   usePageTitle(`${clientName} — Decisions`)
 
   useEffect(() => {
-    async function load() {
-      const ids = await fetchDecisionIds(clientId, versionId)
-      const loaded = await Promise.all(ids.map(id => fetchDecision(clientId, versionId, id)))
-      setDecisions(loaded.filter(Boolean))
-      setLoading(false)
-    }
-    load()
+    fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/decisions.json`)
+      .then(r => r.ok ? r.json() : { decisions: [] })
+      .then(data => { setDecisions(data.decisions ?? []); setLoading(false) })
+      .catch(() => setLoading(false))
   }, [clientId, versionId])
 
-  // Group decisions by status, preserving STATUS_ORDER
   const grouped = STATUS_ORDER.reduce((acc, status) => {
     const group = decisions.filter(d => (d.status ?? 'draft') === status)
     if (group.length > 0) acc.push({ status, decisions: group })
     return acc
   }, [])
-  // Any decisions with an unknown status go at the end
   const knownStatuses = new Set(STATUS_ORDER)
   const unknown = decisions.filter(d => !knownStatuses.has(d.status ?? 'draft'))
   if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
@@ -165,7 +139,7 @@ export default function DecisionsPage() {
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Architecture Decisions</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {clientName} · v{versionId} — Architecture Decision Records for this version.
+            {clientName} · v{versionId}
           </p>
         </div>
         <Link
@@ -189,13 +163,7 @@ export default function DecisionsPage() {
       ) : (
         <div className="space-y-3">
           {grouped.map(({ status, decisions: group }) => (
-            <DecisionGroup
-              key={status}
-              status={status}
-              decisions={group}
-              clientId={clientId}
-              versionId={versionId}
-            />
+            <DecisionGroup key={status} status={status} decisions={group} clientId={clientId} versionId={versionId} />
           ))}
         </div>
       )}
