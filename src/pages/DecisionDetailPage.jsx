@@ -102,7 +102,7 @@ function StatusActions({ status, onTransition, transitioning, decision }) {
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <button disabled={transitioning} onClick={() => setRejectOpen(r => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-error-300 hover:bg-error-50 text-error-600 text-sm font-medium transition-colors disabled:opacity-40">
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40">
               Reject
             </button>
             <button disabled={transitioning} onClick={() => onTransition('proposed')}
@@ -152,7 +152,7 @@ function StatusActions({ status, onTransition, transitioning, decision }) {
               Back to Draft
             </button>
             <button disabled={transitioning} onClick={() => setRejectOpen(r => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-error-300 hover:bg-error-50 text-error-600 text-sm font-medium transition-colors disabled:opacity-40">
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40">
               Reject
             </button>
             <button disabled={transitioning} onClick={() => onTransition('accepted')}
