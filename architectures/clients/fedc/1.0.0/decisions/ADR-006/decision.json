@@ -24,5 +24,15 @@
         "domain": "application",
         "abstraction": "logical",
         "artefact": "APP-DAP"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-006/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:43+00:00"
     }
 }
