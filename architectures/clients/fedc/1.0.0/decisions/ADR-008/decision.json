@@ -1,0 +1,11 @@
+{
+    "decision-id": "ADR-008",
+    "title": "Consolidate Network Operations Applications",
+    "status": "draft",
+    "narrative": "The network operations team currently uses five separate applications for fault management, work order management, asset tracking, crew scheduling, and reporting. These tools do not share data and require manual handoffs. We propose consolidating onto an integrated network operations platform to reduce friction and improve operational efficiency.",
+    "scope": {
+        "domain": "application",
+        "abstraction": "logical",
+        "artefact": "APP-DAP"
+    }
+}

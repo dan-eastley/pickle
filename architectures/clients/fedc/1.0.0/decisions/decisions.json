@@ -1,6 +1,55 @@
 {
     "decisions": [
-        { "decision-id": "ADR-001" },
-        { "decision-id": "ADR-002" }
+        {
+            "decision-id": "ADR-001"
+        },
+        {
+            "decision-id": "ADR-002"
+        },
+        {
+            "decision-id": "ADR-003"
+        },
+        {
+            "decision-id": "ADR-004"
+        },
+        {
+            "decision-id": "ADR-005"
+        },
+        {
+            "decision-id": "ADR-006"
+        },
+        {
+            "decision-id": "ADR-007"
+        },
+        {
+            "decision-id": "ADR-008"
+        },
+        {
+            "decision-id": "ADR-009"
+        },
+        {
+            "decision-id": "ADR-010"
+        },
+        {
+            "decision-id": "ADR-011"
+        },
+        {
+            "decision-id": "ADR-012"
+        },
+        {
+            "decision-id": "ADR-013"
+        },
+        {
+            "decision-id": "ADR-014"
+        },
+        {
+            "decision-id": "ADR-015"
+        },
+        {
+            "decision-id": "ADR-016"
+        },
+        {
+            "decision-id": "ADR-017"
+        }
     ]
 }

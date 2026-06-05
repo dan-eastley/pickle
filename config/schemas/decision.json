@@ -25,7 +25,14 @@
                 "draft",
                 "proposed",
                 "accepted",
-                "rejected",
+                "rejected"
+            ]
+        },
+        "rejection-reason": {
+            "type": "string",
+            "description": "Required when status is 'rejected'. Identifies why the decision was not accepted.",
+            "enum": [
+                "duplicate",
                 "superseded"
             ]
         },

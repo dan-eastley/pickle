@@ -1,0 +1,11 @@
+{
+    "decision-id": "ADR-015",
+    "title": "Define Solution Architecture Review Process",
+    "status": "draft",
+    "narrative": "There is currently no formal process for reviewing solution architectures before they proceed to delivery. Architecture decisions are made at the project level without consistent quality assurance. We define a lightweight solution architecture review process that applies to all major delivery programmes.",
+    "scope": {
+        "domain": "solution",
+        "abstraction": "logical",
+        "artefact": "SOL-PRN"
+    }
+}

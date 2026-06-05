@@ -66,7 +66,8 @@ export default function DecisionEditorPage() {
   const [scopeAbstraction, setScopeAbstraction] = useState(searchParams.get('abstraction') ?? '')
   const [scopeArtefact, setScopeArtefact] = useState(searchParams.get('artefact') ?? '')
   const [showPreview, setShowPreview] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [saveResult, setSaveResult] = useState(null) // null | { ok, prUrl, error }
 
   const filteredAbstractions = scopeDomain ? ABSTRACTIONS : []
   const filteredArtefacts = scopeDomain
@@ -96,9 +97,30 @@ export default function DecisionEditorPage() {
     }),
   }
 
-  function handleSave() {
-    // TODO: push to repo on a new branch — deferred to a later implementation
-    setSaved(true)
+  async function handleSave() {
+    setSaving(true)
+    setSaveResult(null)
+    try {
+      // Get next ADR ID from the API
+      const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
+      const { nextId, error: idError } = await idRes.json()
+      if (idError) throw new Error(idError)
+
+      const fullDecision = { ...decision, 'decision-id': nextId }
+
+      const res = await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create-decision', clientId, versionId, decision: fullDecision }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
+      setSaveResult({ ok: true, prUrl: data.prUrl, prNumber: data.prNumber, decisionId: nextId })
+    } catch (err) {
+      setSaveResult({ ok: false, error: err.message })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -117,17 +139,25 @@ export default function DecisionEditorPage() {
           </button>
           <button
             onClick={handleSave}
-            disabled={!narrative.trim()}
+            disabled={!narrative.trim() || saving}
             className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            Save Decision
+            {saving ? 'Creating…' : 'Create Decision & Open PR'}
           </button>
         </div>
       </div>
 
-      {saved && (
+      {saveResult?.ok && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
-          Decision record saved. Branch creation and PR workflow will be available in a future release.
+          <span className="font-semibold">{saveResult.decisionId}</span> created.{' '}
+          <a href={saveResult.prUrl} target="_blank" rel="noreferrer" className="underline font-medium">
+            View PR #{saveResult.prNumber} on GitHub →
+          </a>
+        </div>
+      )}
+      {saveResult?.ok === false && (
+        <div className="mb-4 px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
+          Failed to create decision: {saveResult.error}
         </div>
       )}
 

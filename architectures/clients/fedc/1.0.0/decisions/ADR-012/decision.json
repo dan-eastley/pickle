@@ -1,0 +1,11 @@
+{
+    "decision-id": "ADR-012",
+    "title": "Create Unified Asset Management Capability",
+    "status": "draft",
+    "narrative": "Physical asset data is currently managed across multiple systems with no authoritative record of asset lifecycle, condition, or location. A unified asset management capability will provide a single source of truth for all physical infrastructure assets, supporting maintenance planning, investment decisions, and regulatory reporting.",
+    "scope": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "artefact": "BUS-CAP"
+    }
+}

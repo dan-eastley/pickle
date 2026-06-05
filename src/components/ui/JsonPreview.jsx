@@ -12,7 +12,6 @@ export default function JsonPreview({ data, label = 'JSON' }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [open])
 
-  if (!import.meta.env.DEV) return null
   if (!data) return null
 
   return (
