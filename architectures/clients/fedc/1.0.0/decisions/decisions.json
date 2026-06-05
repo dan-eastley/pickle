@@ -13,7 +13,7 @@
         {
             "decision-id": "ADR-002",
             "title": "Implement a Master Data Management Platform for Customer Records",
-            "status": "draft",
+            "status": "proposed",
             "scope": {
                 "domain": "data",
                 "abstraction": "conceptual",
