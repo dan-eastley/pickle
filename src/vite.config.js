@@ -78,15 +78,9 @@ export default defineConfig({
   plugins: [
     react(),
     architectureApiPlugin(),
-    // Copies data files into the build output so /api/arch/, /api/schemas/,
-    // and /api/docs/ work as static assets on Vercel (and any other static host).
-    viteStaticCopy({
-      targets: [
-        { src: '../architectures/*', dest: 'api/arch' },
-        { src: '../config/schemas/*', dest: 'api/schemas' },
-        { src: '../docs/*', dest: 'api/docs' },
-      ],
-    }),
+    // Data is now served by the /api/content Vercel function (reads from GitHub).
+    // Static copy removed — no build needed when architecture data changes.
+    // viteStaticCopy kept as dependency in case it's needed for other assets.
   ],
   server: { port: 3000 },
 })
