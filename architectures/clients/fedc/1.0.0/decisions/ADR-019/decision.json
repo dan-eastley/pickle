@@ -7,9 +7,11 @@
         "branch-type": "decision",
         "outcome": "pass",
         "allowed-prefix": "architectures/clients/fedc/",
-        "changed-files": [],
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-019/decision.json"
+        ],
         "violations": [],
-        "checked-at": "2026-06-05T15:13:07+00:00"
+        "checked-at": "2026-06-05T15:49:34+00:00"
     },
     "impact-assessment": [
         {
