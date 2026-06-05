@@ -24,5 +24,15 @@
         "domain": "application",
         "abstraction": "conceptual",
         "artefact": "APP-STR"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-004/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:37+00:00"
     }
 }
