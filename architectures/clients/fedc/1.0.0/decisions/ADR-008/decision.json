@@ -2,7 +2,7 @@
     "decision-id": "ADR-008",
     "title": "Define Integration Guardrails for Third-Party Vendor System Connections",
     "status": "draft",
-    "narrative": "FEDC connects to a growing number of third-party vendor systems \u2014 smart meter manufacturers, energy market platforms, regulatory reporting services, and outsourced billing processors. Each integration has been designed independently by the respective vendor, resulting in inconsistent security controls, no standard data format requirements, and variable SLA commitments. Two vendor integrations have caused production incidents in the last year due to unauthenticated API endpoints and unbounded retry behaviour. We define mandatory integration guardrails that all third-party vendors must satisfy before their integrations are permitted in production. The guardrails cover authentication, data format, error handling, rate limiting, and monitoring. Existing integrations not meeting these standards must be remediated within six months.",
+    "narrative": "FEDC connects to a growing number of third-party vendor systems — smart meter manufacturers, energy market platforms, regulatory reporting services, and outsourced billing processors. Each integration has been designed independently by the respective vendor, resulting in inconsistent security controls, no standard data format requirements, and variable SLA commitments. Two vendor integrations have caused production incidents in the last year due to unauthenticated API endpoints and unbounded retry behaviour. We define mandatory integration guardrails that all third-party vendors must satisfy before their integrations are permitted in production. The guardrails cover authentication, data format, error handling, rate limiting, and monitoring. Existing integrations not meeting these standards must be remediated within six months.",
     "requirements": [
         {
             "title": "Mandatory authentication standard",
@@ -24,5 +24,15 @@
         "domain": "integration",
         "abstraction": "physical",
         "artefact": "INT-GRD"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-008/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:47+00:00"
     }
 }
