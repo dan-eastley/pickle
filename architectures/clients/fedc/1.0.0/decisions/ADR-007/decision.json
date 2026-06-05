@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-007",
+    "title": "Adopt Zero-Trust Security Architecture for Network Access",
+    "status": "draft",
+    "narrative": "FEDC's current security model relies on network perimeter controls \u2014 VPNs, firewalls, and network segmentation \u2014 to protect internal systems. This model is increasingly inadequate given the growth of remote working, cloud-hosted services, and third-party system integrations. A compromise of the network perimeter grants broad access to internal systems. Several recent security assessments have identified lateral movement risk as a key vulnerability. We adopt a zero-trust security architecture. Trust is never granted implicitly based on network location. Every access request \u2014 from users, services, and devices \u2014 must be authenticated and authorised against defined policies. Micro-segmentation will replace broad network trust. Continuous verification will replace point-in-time authentication for sensitive systems.",
+    "requirements": [
+        {
+            "title": "Identity verification for all access",
+            "description": "Every access request to internal systems must be authenticated using a verified identity, regardless of the network origin of the request. Network location must not confer any implicit trust.",
+            "type": "Functional"
+        },
+        {
+            "title": "Least privilege access",
+            "description": "User and service accounts must be provisioned with the minimum access required for their defined function. Access rights must be reviewed and recertified quarterly.",
+            "type": "Non-Functional"
+        },
+        {
+            "title": "Continuous session verification",
+            "description": "Sessions accessing Confidential or Restricted systems must be subject to continuous risk evaluation. Sessions exhibiting anomalous behaviour must be challenged or terminated automatically.",
+            "type": "Functional"
+        }
+    ],
+    "scope": {
+        "domain": "solution",
+        "abstraction": "conceptual",
+        "artefact": "SOL-STR"
+    }
+}
