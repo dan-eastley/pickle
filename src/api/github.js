@@ -159,7 +159,12 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const { action, ...params } = req.query
       if (action === 'next-id') return res.json(await getNextId(params, token, owner, repo, base))
-      if (action === 'config')  return res.json({ owner, repo })
+      if (action === 'config')  return res.json({
+        owner,
+        repo,
+        env:       process.env.VERCEL_ENV ?? null,
+        branchUrl: process.env.VERCEL_BRANCH_URL ?? null,
+      })
       return res.status(400).json({ error: `Unknown GET action: ${action}` })
     }
 
