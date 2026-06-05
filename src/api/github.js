@@ -75,15 +75,19 @@ async function syncIndex(clientId, versionId, decisionId, { title, status, scope
   const iPath = indexPath(clientId, versionId)
   const { content: index, sha } = await readFile(iPath, BASE, token, owner, repo)
 
-  const existing = index.decisions.findIndex(d => d['decision-id'] === decisionId)
+  const existingIdx = index.decisions.findIndex(d => d['decision-id'] === decisionId)
+  const existingEntry = existingIdx >= 0 ? index.decisions[existingIdx] : {}
+
+  // Preserve existing title/scope when the caller only passes a status update
   const entry = {
     'decision-id': decisionId,
-    title,
+    title:  title  ?? existingEntry.title  ?? '',
     status,
-    ...(scope ? { scope } : {}),
+    ...((scope ?? existingEntry.scope) ? { scope: scope ?? existingEntry.scope } : {}),
   }
-  if (existing >= 0) {
-    index.decisions[existing] = entry
+
+  if (existingIdx >= 0) {
+    index.decisions[existingIdx] = entry
   } else {
     index.decisions.push(entry)
   }
