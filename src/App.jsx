@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
+import NavigationProgress from './components/ui/NavigationProgress'
 import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
@@ -39,7 +40,9 @@ function AppRoutes() {
   }
 
   return (
-    <Routes>
+    <>
+      <NavigationProgress />
+      <Routes>
       {/* Public / marketing pages */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
@@ -67,6 +70,7 @@ function AppRoutes() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   )
 }
 
