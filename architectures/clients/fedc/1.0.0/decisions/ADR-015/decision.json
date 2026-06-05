@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-015",
     "title": "Establish a Programme and Project Management Capability in the Architecture",
-    "status": "accepted",
+    "status": "staged",
     "narrative": "FEDC is entering a period of significant capital investment — the network reinforcement programme, the smart metering rollout, and the operational technology refresh collectively represent over £180M of committed expenditure over the next five years. Programme and project management at FEDC is currently handled through a combination of spreadsheets, email, and a standalone project tracking tool that is not integrated with financial systems, resource planning, or the asset register. This creates coordination risk at the programme level and prevents effective portfolio-level resource and budget management. We propose adding programme and project management as an explicit capability in the architecture. A dedicated application supporting end-to-end programme governance — from business case through delivery to benefits realisation — will be selected and integrated with the ERP, resource management, and asset management systems.",
     "requirements": [
         {
