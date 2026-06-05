@@ -50,6 +50,9 @@
         },
         {
             "decision-id": "ADR-017"
+        },
+        {
+            "decision-id": "ADR-018"
         }
     ]
 }
