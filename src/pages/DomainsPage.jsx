@@ -65,9 +65,9 @@ export default function DomainsPage() {
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-gray-900">Architecture Domains</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Architecture state is organised into five domains — Business, Data, Integration, Application, and Solution.
-          Each domain is modelled at three abstraction layers: Conceptual (what and why), Logical (how), and Physical (where and with what).
-          Select a domain to browse its artefact types.
+          The architecture is organised into five domains — Business, Data, Integration, Application, and Solution.
+          Within each domain, content is grouped into three levels of detail: Conceptual (what and why), Logical (how), and Physical (where and with what).
+          Select a domain to get started.
         </p>
       </div>
 

@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import { LayersThree01, Expand01, Minimize01 } from '@untitled-ui/icons-react'
 import Badge from '../ui/Badge'
 
 // ── Schema helpers ───────────────────────────────────────────────────────────
@@ -15,7 +17,6 @@ function getSchemaColumns(schema) {
 
   const itemProps = arrayEntry[1]?.items?.properties ?? {}
 
-  // Priority order for first columns
   const priority = ['id', 'name', 'statement', 'rule', 'title']
   const keys = [
     ...priority.filter(k => k in itemProps),
@@ -24,10 +25,11 @@ function getSchemaColumns(schema) {
 
   return keys.map(key => {
     const prop = itemProps[key]
-    const rawLabel = prop?.description
-      ? prop.description.split('—')[0].split('(')[0].trim()
-      : key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    return { key, label: rawLabel, type: prop?.type, enum: prop?.enum }
+    // title = the field key, formatted for display
+    const title = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    // subtitle = the full description from the schema property
+    const subtitle = prop?.description ?? null
+    return { key, title, subtitle, type: prop?.type, enum: prop?.enum }
   })
 }
 
@@ -60,21 +62,13 @@ function CellValue({ value, colDef }) {
 
   if (colDef.enum) {
     const variantMap = {
-      // maturity
       initial: 'gray', repeatable: 'warning', defined: 'blue', managed: 'success', optimised: 'success',
-      // importance
       strategic: 'violet', differentiating: 'blue', foundational: 'gray',
-      // lifecycle
       adopt: 'success', trial: 'blue', hold: 'warning', retire: 'error',
-      // horizon
       'short-term': 'success', 'medium-term': 'blue', 'long-term': 'violet',
-      // process type
       core: 'violet', supporting: 'blue', management: 'gray',
-      // platform type
       'system-of-record': 'gray', 'system-of-engagement': 'blue', 'system-of-insight': 'violet', 'system-of-innovation': 'amber',
-      // data type
       entity: 'blue', event: 'amber', reference: 'gray',
-      // classification
       public: 'success', internal: 'blue', confidential: 'warning', restricted: 'error',
     }
     return <Badge label={value} variant={variantMap[value] ?? 'gray'} />
@@ -130,7 +124,7 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
       <tr className="hover:bg-gray-50 transition-colors">
         {columns.map((col, ci) => (
           <td key={col.key} className="px-4 py-3 text-sm align-top">
-            {ci === 1 ? ( // indent on name/statement column
+            {ci === 1 ? (
               <div className="flex items-start gap-2" style={{ paddingLeft: depth * 20 }}>
                 {hasChildren ? (
                   <button
@@ -170,6 +164,14 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
 
 export default function CatalogueView({ data, schema }) {
   const [expanded, setExpanded] = useState(new Set())
+  const [fullscreen, setFullscreen] = useState(false)
+
+  useEffect(() => {
+    if (!fullscreen) return
+    function onKey(e) { if (e.key === 'Escape') setFullscreen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [fullscreen])
 
   if (!data || !schema) return null
 
@@ -179,8 +181,12 @@ export default function CatalogueView({ data, schema }) {
   const items = data[rootKey]
   if (!items || items.length === 0) {
     return (
-      <div className="border border-gray-200 bg-white p-8 text-center">
-        <p className="text-sm text-gray-500">No entries in this catalogue yet.</p>
+      <div className="border border-gray-200 bg-white py-16 text-center">
+        <div className="flex items-center justify-center mx-auto mb-5 w-20 h-20 bg-gray-50 border border-gray-200">
+          <LayersThree01 className="w-10 h-10 text-gray-300" />
+        </div>
+        <p className="text-sm font-medium text-gray-700">Nothing here yet</p>
+        <p className="mt-1 text-sm text-gray-400">No entries have been added to this catalogue for this version.</p>
       </div>
     )
   }
@@ -196,43 +202,100 @@ export default function CatalogueView({ data, schema }) {
       return next
     })
   }
+  function expandAll() { setExpanded(new Set(items.map(i => i.id))) }
+  function collapseAll() { setExpanded(new Set()) }
 
-  function expandAll() {
-    setExpanded(new Set(items.map(i => i.id)))
-  }
+  const toolbar = (
+    <div className="px-4 py-2 border-b border-gray-200 flex items-center gap-3 bg-gray-50 flex-shrink-0">
+      <span className="text-xs text-gray-500">{items.length} {items.length === 1 ? 'entry' : 'entries'}</span>
+      {hierarchical && (
+        <div className="flex items-center gap-2">
+          <button onClick={expandAll} className="text-xs text-brand-600 hover:text-brand-700">Expand all</button>
+          <span className="text-gray-300">·</span>
+          <button onClick={collapseAll} className="text-xs text-brand-600 hover:text-brand-700">Collapse all</button>
+        </div>
+      )}
+      <div className="ml-auto flex items-center gap-1">
+        {fullscreen ? (
+          <button
+            onClick={() => setFullscreen(false)}
+            title="Exit full screen (Esc)"
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"
+          >
+            <Minimize01 className="w-3.5 h-3.5" />
+            Exit full screen
+          </button>
+        ) : (
+          <button
+            onClick={() => setFullscreen(true)}
+            title="Full screen"
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"
+          >
+            <Expand01 className="w-3.5 h-3.5" />
+            Full screen
+          </button>
+        )}
+      </div>
+    </div>
+  )
 
-  function collapseAll() {
-    setExpanded(new Set())
+  const table = (
+    <div className="overflow-auto flex-1">
+      <table className="w-full min-w-max">
+        <thead>
+          <tr className="border-b border-gray-200">
+            {columns.map(col => (
+              <th
+                key={col.key}
+                className="px-4 py-3 text-left bg-gray-50 sticky top-0 whitespace-nowrap"
+              >
+                <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
+                {col.subtitle && <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {hierarchical
+            ? treeData.map(node => (
+                <TreeRow key={node.id} node={node} columns={columns} depth={0} expanded={expanded} onToggle={toggleExpanded} />
+              ))
+            : items.map(item => (
+                <FlatRow key={item.id} item={item} columns={columns} />
+              ))}
+        </tbody>
+      </table>
+    </div>
+  )
+
+  const footer = (
+    <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+      {items.length} {items.length === 1 ? 'entry' : 'entries'}
+    </div>
+  )
+
+  if (fullscreen) {
+    return createPortal(
+      <div className="fixed inset-0 z-[200] bg-white flex flex-col">
+        {toolbar}
+        {table}
+        {footer}
+      </div>,
+      document.body
+    )
   }
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden">
-      {/* Table header controls */}
-      {hierarchical && (
-        <div className="px-4 py-2 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
-          <span className="text-xs text-gray-500">{items.length} entries</span>
-          <div className="flex items-center gap-2 ml-auto">
-            <button onClick={expandAll} className="text-xs text-brand-600 hover:text-brand-700">
-              Expand all
-            </button>
-            <span className="text-gray-300">·</span>
-            <button onClick={collapseAll} className="text-xs text-brand-600 hover:text-brand-700">
-              Collapse all
-            </button>
-          </div>
-        </div>
-      )}
-
+    <div className="border border-gray-200 bg-white overflow-hidden flex flex-col">
+      {toolbar}
       <div className="overflow-x-auto">
         <table className="w-full min-w-max">
           <thead>
             <tr className="border-b border-gray-200">
               {columns.map(col => (
-                <th
-                  key={col.key}
-                  className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap bg-gray-50"
-                >
-                  {col.label}
+                <th key={col.key} className="px-4 py-3 text-left bg-gray-50 whitespace-nowrap">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
+                  {col.subtitle && <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>}
                 </th>
               ))}
             </tr>
@@ -240,14 +303,7 @@ export default function CatalogueView({ data, schema }) {
           <tbody className="divide-y divide-gray-100">
             {hierarchical
               ? treeData.map(node => (
-                  <TreeRow
-                    key={node.id}
-                    node={node}
-                    columns={columns}
-                    depth={0}
-                    expanded={expanded}
-                    onToggle={toggleExpanded}
-                  />
+                  <TreeRow key={node.id} node={node} columns={columns} depth={0} expanded={expanded} onToggle={toggleExpanded} />
                 ))
               : items.map(item => (
                   <FlatRow key={item.id} item={item} columns={columns} />
@@ -255,10 +311,7 @@ export default function CatalogueView({ data, schema }) {
           </tbody>
         </table>
       </div>
-
-      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400">
-        {items.length} {items.length === 1 ? 'entry' : 'entries'}
-      </div>
+      {footer}
     </div>
   )
 }

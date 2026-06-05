@@ -6,7 +6,15 @@
     "meta": {
         "domain": "application",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "A catalogue of strategic goals and direction for the Application domain.",
+        "purpose": [
+            "Establishes the organisation's intent for its application landscape",
+            "Provides the strategic context for application investment and rationalisation decisions",
+            "Aligns application portfolio management with business capability needs",
+            "Anchors application principles and guardrails to a traceable set of intentions",
+            "Enables assessment of whether proposed application changes serve the strategy"
+        ]
     },
     "type": "object",
     "required": [

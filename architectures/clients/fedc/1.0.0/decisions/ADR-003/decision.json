@@ -1,0 +1,11 @@
+{
+    "decision-id": "ADR-003",
+    "title": "Adopt API Gateway for External Integration",
+    "status": "draft",
+    "narrative": "We require a centralised API gateway to manage all external integrations. Currently each external interface is implemented point-to-point with inconsistent authentication, rate limiting, and monitoring. An API gateway will provide a single entry point, enforce security policies, and provide observability across all external data flows.",
+    "scope": {
+        "domain": "integration",
+        "abstraction": "conceptual",
+        "artefact": "INT-STR"
+    }
+}

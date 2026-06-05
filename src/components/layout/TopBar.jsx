@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate, NavLink } from 'react-router-dom'
+import { useNavigate, NavLink, Link } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 
 function ChevronDown() {
@@ -62,8 +62,9 @@ export default function TopBar() {
   const { clients, clientsMetadata, selectedClientId, selectedVersionId, clientMeta, versions, setClientId, setVersionId } = useArchitecture()
   const navigate = useNavigate()
 
-  const handleClientChange = (clientId) => {
-    setClientId(clientId)
+  const handleClientChange = (newClientId) => {
+    setClientId(newClientId)
+    navigate(`/clients/${newClientId}/${selectedVersionId ?? '1.0.0'}/domains`)
   }
 
   const handleVersionChange = (versionId) => {
@@ -79,17 +80,17 @@ export default function TopBar() {
 
   return (
     <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-6 gap-6 sticky top-0 z-40">
-      {/* Pickle brand */}
-      <div className="flex items-baseline gap-3 flex-shrink-0">
+      {/* Pickle brand — links to root */}
+      <Link to="/" className="flex items-baseline gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
         <span className="text-lg font-bold tracking-tight text-gray-900 uppercase">Pickle</span>
-        <span className="text-xs text-gray-400 hidden sm:block">Agentic Architecture as a Service</span>
-      </div>
+        <span className="text-lg text-gray-400 hidden sm:block">Agentic Architecture as a Service</span>
+      </Link>
 
       {/* Divider */}
       <div className="h-5 w-px bg-gray-200 flex-shrink-0" />
 
       {/* Client name */}
-      <div className="min-w-0 flex-1 text-sm font-medium text-gray-600 truncate">
+      <div className="min-w-0 flex-1 text-lg font-medium text-gray-600 truncate">
         {clientMeta?.name ?? ''}
       </div>
 

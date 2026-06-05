@@ -1,25 +1,39 @@
 import { Link, useParams, Navigate } from 'react-router-dom'
-import { getDomain, ABSTRACTIONS, getArtefactsForDomain, DOMAIN_COLORS, ABSTRACTION_COLORS } from '../lib/artefacts'
+import {
+  getDomain, ABSTRACTIONS, getArtefactsForDomain,
+  DOMAIN_COLORS, ABSTRACTION_COLORS, FORMAT_ORDER, getFormat,
+} from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
+import ArtefactRow from '../components/artefacts/ArtefactRow'
 import usePageTitle from '../hooks/usePageTitle'
 
-function KeyStar() {
-  return (
-    <svg className="w-3 h-3 text-amber-500 flex-shrink-0" viewBox="0 0 12 12" fill="currentColor">
-      <path d="M6 1l1.29 3.09L10.5 4.5 8.25 6.65l.54 3.1L6 8.25 3.21 9.75l.54-3.1L1.5 4.5l3.21-.41z" />
-    </svg>
-  )
-}
-
-function AbstractionSection({ abstraction, artefacts, base, domain }) {
+function AbstractionSection({ abstraction, artefacts, base, domain, clientId, versionId }) {
   const colors = ABSTRACTION_COLORS[abstraction.id]
-  const keyArtefacts = artefacts.filter(a => a.key)
-  const otherArtefacts = artefacts.filter(a => !a.key)
-  const sorted = [...keyArtefacts, ...otherArtefacts]
+
+  // Build format groups in canonical order, starred at top of each group
+  const groups = FORMAT_ORDER
+    .map(fmtId => {
+      const items = artefacts.filter(a => a.format === fmtId)
+      if (!items.length) return null
+      return {
+        format: fmtId,
+        fmt: getFormat(fmtId),
+        items: [...items.filter(a => a.key), ...items.filter(a => !a.key)],
+      }
+    })
+    .filter(Boolean)
+
+  // Flat list with group-header markers for rendering
+  const rows = []
+  groups.forEach(group => {
+    rows.push({ type: 'header', format: group.format, fmt: group.fmt })
+    group.items.forEach((artefact, i) => rows.push({ type: 'artefact', artefact, firstInGroup: i === 0 }))
+  })
 
   return (
     <div className="border border-gray-200 bg-white">
+      {/* Abstraction header */}
       <Link
         to={`${base}/domains/${domain}/${abstraction.id}`}
         className="group flex items-center justify-between px-5 py-3 border-b border-gray-200 hover:bg-gray-50 transition-colors"
@@ -38,29 +52,26 @@ function AbstractionSection({ abstraction, artefacts, base, domain }) {
         </svg>
       </Link>
 
-      <div>
-        {sorted.map((artefact, i) => (
-          <Link
-            key={artefact.id}
-            to={`${base}/domains/${domain}/${abstraction.id}/${artefact.id}`}
-            className={`group flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors border-l-4 ${artefact.key ? 'border-amber-400' : 'border-transparent'} ${i > 0 ? 'border-t border-gray-100' : ''}`}
-          >
-            <span className="text-gray-400 group-hover:text-gray-600 flex-shrink-0">
-              <FormatIcon format={artefact.format} className="w-4 h-4" />
+      {/* Format-grouped artefacts */}
+      {rows.map((row, i) =>
+        row.type === 'header' ? (
+          <div key={`h-${row.format}`} className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100">
+            <FormatIcon format={row.format} className="w-3 h-3 text-gray-400" />
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              {row.fmt?.label ?? row.format}
             </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                {artefact.key && <KeyStar />}
-                <p className={`text-sm font-medium truncate ${artefact.key ? 'text-gray-900' : 'text-gray-700'} group-hover:text-gray-900 transition-colors`}>
-                  {artefact.name}
-                </p>
-              </div>
-              <p className="text-xs text-gray-400 truncate">{artefact.description}</p>
-            </div>
-            <span className="text-xs font-mono text-gray-300 flex-shrink-0">{artefact.id}</span>
-          </Link>
-        ))}
-      </div>
+          </div>
+        ) : (
+          <ArtefactRow
+            key={row.artefact.id}
+            artefact={row.artefact}
+            to={`${base}/domains/${domain}/${row.artefact.abstraction}/${row.artefact.id}`}
+            clientId={clientId}
+            versionId={versionId}
+            divider={!row.firstInGroup}
+          />
+        )
+      )}
     </div>
   )
 }
@@ -76,7 +87,7 @@ export default function DomainPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-4 pb-5 border-b border-gray-200">
+      <div className="mb-6 flex items-start gap-4 pb-5 border-b border-gray-200">
         <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg}`}>
           <span className={colors?.text}>
             <DomainIcon domain={domain} className="w-5 h-5" />
@@ -88,17 +99,21 @@ export default function DomainPage() {
         </div>
       </div>
 
-      <div className="space-y-4">
-        {ABSTRACTIONS.map(abstraction => {
+      <div>
+        {ABSTRACTIONS.map((abstraction, idx) => {
           const artefacts = getArtefactsForDomain(domain, abstraction.id)
           return (
-            <AbstractionSection
-              key={abstraction.id}
-              abstraction={abstraction}
-              artefacts={artefacts}
-              base={base}
-              domain={domain}
-            />
+            <div key={abstraction.id}>
+              {idx > 0 && <div className="h-px bg-gray-300 my-5" />}
+              <AbstractionSection
+                abstraction={abstraction}
+                artefacts={artefacts}
+                base={base}
+                domain={domain}
+                clientId={clientId}
+                versionId={versionId}
+              />
+            </div>
           )
         })}
       </div>

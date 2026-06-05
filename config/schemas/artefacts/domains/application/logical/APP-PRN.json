@@ -6,7 +6,15 @@
     "meta": {
         "domain": "application",
         "abstraction": "logical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The guiding principles that shape how Application architecture decisions are made.",
+        "purpose": [
+            "Establishes consistent criteria for evaluating build, buy, and extend decisions",
+            "Prevents fragmentation of the application portfolio by establishing preferred patterns",
+            "Provides guidance on architecture qualities such as modularity, coupling, and resilience",
+            "Enables automated analysis of proposed applications against established principles",
+            "Creates shared expectations between application architects, engineers, and product teams"
+        ]
     },
     "type": "object",
     "required": [

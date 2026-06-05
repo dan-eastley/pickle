@@ -1,26 +1,26 @@
 # Documentation
 
-This is the navigable documentation for the Architecture as Code proof of concept. Start here when looking for how the architecture model works, what artefact types exist, or how schemas are structured.
+Start here to understand how Pickle works, how the architecture model is structured, and what each artefact type represents.
 
 ## Architecture Model
 
 | Topic | Description |
 |---|---|
-| [Architecture Domains](domains.md) | The five architecture domains (Business, Data, Integration, Application, Solution) |
-| [Abstraction Layers](abstraction-layers.md) | The three layers each architecture domain is modelled at (Conceptual, Logical, Physical) |
-| [Output Formats](output-formats.md) | The three permitted artefact-type formats (Catalogue, Matrix, Diagram) |
-| [Artefact Types](artefacts.md) | Registry of all defined artefact types and their classification |
+| [Architecture Domains](domains.md) | The five domains the architecture is organised into: Business, Data, Integration, Application, and Solution |
+| [Abstraction Layers](abstraction-layers.md) | The three levels of detail each domain is modelled at: Conceptual, Logical, and Physical |
+| [Output Formats](output-formats.md) | The three types of artefact: Catalogue, Matrix, and Diagram |
+| [Artefact Types](artefacts.md) | The full list of defined artefact types and how each is classified |
 
 ## Schemas
 
-The [schemas/](schemas/) folder contains a markdown page for each JSON Schema, explaining its structure, the standards it draws from, and how to use it.
+The [schemas/](schemas/) section documents the data structure behind each artefact type — what fields it contains, what values are valid, and how they relate to industry standards.
 
 | Schema | Documentation |
 |---|---|
-| Clients index | [schemas/clients.md](schemas/clients.md) |
-| Versions index | [schemas/versions.md](schemas/versions.md) |
-| Artefact-type schema index | [schemas/artefacts.md](schemas/artefacts.md) |
-| Strategy / Principles / Guardrails (one schema doc per architecture domain) | see [schemas/index.md](schemas/index.md) |
+| Clients | [schemas/clients.md](schemas/clients.md) |
+| Versions | [schemas/versions.md](schemas/versions.md) |
+| Decisions | [schemas/decisions.md](schemas/decisions.md) |
+| Strategy / Principles / Guardrails | see [schemas/index.md](schemas/index.md) |
 | BUS-CAP | [schemas/artefacts/domains/business/conceptual/BUS-CAP.md](schemas/artefacts/domains/business/conceptual/BUS-CAP.md) |
 | BUS-PRO | [schemas/artefacts/domains/business/conceptual/BUS-PRO.md](schemas/artefacts/domains/business/conceptual/BUS-PRO.md) |
 | DAT-DAC | [schemas/artefacts/domains/data/conceptual/DAT-DAC.md](schemas/artefacts/domains/data/conceptual/DAT-DAC.md) |
@@ -28,11 +28,4 @@ The [schemas/](schemas/) folder contains a markdown page for each JSON Schema, e
 
 ## Workflows
 
-GitHub Actions workflows live at [`/.github/workflows/`](../.github/workflows/). Each is documented in [`workflows/`](workflows/) — start at the [workflows index](workflows/index.md) for the full list.
-
-## Where else to look
-
-- The repository structure, conventions, and AI working notes live in [`/CLAUDE.md`](../CLAUDE.md) at the repo root.
-- The actual schemas live under [`/config/schemas/`](../config/schemas/).
-- The actual architecture data lives under [`/architectures/`](../architectures/).
-- Claude prompts driving the AI-assisted decision workflows live under [`/config/prompts/`](../config/prompts/).
+The automated workflows that validate, process, and publish architecture changes are documented in the [workflows/](workflows/) section. Start at the [workflows index](workflows/index.md) for the full list.

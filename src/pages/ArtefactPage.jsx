@@ -6,21 +6,32 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
+import NewDecisionModal from '../components/decisions/NewDecisionModal'
 import Badge from '../components/ui/Badge'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
+import JsonPreview from '../components/ui/JsonPreview'
 import usePageTitle from '../hooks/usePageTitle'
 
 const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
 const FORMAT_VARIANTS = { catalogue: 'blue', matrix: 'violet', diagram: 'amber' }
 
-// Solid button colour per domain — matches DOMAIN_COLORS palette
+// Button colours per domain
 const DOMAIN_BUTTON = {
   business:    'bg-violet-600 hover:bg-violet-700 text-white',
   data:        'bg-blue-600 hover:bg-blue-700 text-white',
   integration: 'bg-emerald-600 hover:bg-emerald-700 text-white',
   application: 'bg-amber-500 hover:bg-amber-600 text-white',
   solution:    'bg-rose-600 hover:bg-rose-700 text-white',
+}
+
+// Light background per domain for the action bar
+const DOMAIN_ACTION_BG = {
+  business:    'bg-violet-50',
+  data:        'bg-blue-50',
+  integration: 'bg-emerald-50',
+  application: 'bg-amber-50',
+  solution:    'bg-rose-50',
 }
 
 function KeyStar() {
@@ -31,35 +42,51 @@ function KeyStar() {
   )
 }
 
-function AdrActionBar({ artefact }) {
+function AdrActionBar({ artefact, clientId, versionId }) {
+  const [modalOpen, setModalOpen] = useState(false)
+  const bgClass = DOMAIN_ACTION_BG[artefact.domain] ?? 'bg-gray-50'
   const btnClass = DOMAIN_BUTTON[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700 text-white'
+
   return (
-    <div className="mb-5 flex items-center justify-between gap-4 bg-gray-50 border border-gray-200 px-5 py-3">
-      <div className="flex items-center gap-2 min-w-0">
-        <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
-          <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
-        <span className="text-sm text-gray-600">
-          Changes to this artefact must be made through an Architecture Decision Record.
-        </span>
+    <>
+      <div className={`mb-5 flex items-center justify-between gap-4 px-5 py-3 ${bgClass}`}>
+        <div className="flex items-center gap-2 min-w-0">
+          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+          </svg>
+          <span className="text-sm text-gray-600">
+            To propose changes to this content, raise an Architecture Decision Record.
+          </span>
+        </div>
+        <button
+          className={`flex-shrink-0 flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
+          onClick={() => setModalOpen(true)}
+        >
+          <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+          </svg>
+          New Decision
+        </button>
       </div>
-      <button
-        className={`flex-shrink-0 flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
-        onClick={() => {/* TODO: ADR workflow */}}
-      >
-        <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-          <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
-        Open ADR
-      </button>
-    </div>
+
+      {modalOpen && (
+        <NewDecisionModal
+          artefact={artefact}
+          clientId={clientId}
+          versionId={versionId}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
   )
 }
 
-function ArtefactHeader({ artefact }) {
+function ArtefactHeader({ artefact, schema }) {
   const domain = getDomain(artefact.domain)
   const abstraction = getAbstraction(artefact.abstraction)
   const colors = DOMAIN_COLORS[artefact.domain]
+  const metaDescription = schema?.meta?.description
+  const metaPurpose = schema?.meta?.purpose
 
   return (
     <div className="mb-6 pb-5 border-b border-gray-200">
@@ -68,10 +95,7 @@ function ArtefactHeader({ artefact }) {
         <span className="text-gray-300">·</span>
         <Badge label={abstraction?.name ?? artefact.abstraction} variant="gray" />
         <span className="text-gray-300">·</span>
-        <Badge
-          label={FORMAT_LABELS[artefact.format]}
-          variant={FORMAT_VARIANTS[artefact.format]}
-        />
+        <Badge label={FORMAT_LABELS[artefact.format]} variant={FORMAT_VARIANTS[artefact.format]} />
         {artefact.key && (
           <>
             <span className="text-gray-300">·</span>
@@ -89,7 +113,20 @@ function ArtefactHeader({ artefact }) {
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-xl font-semibold text-gray-900">{artefact.name}</h1>
-          <p className="mt-1 text-sm text-gray-500">{artefact.description}</p>
+          <p className="mt-1 text-sm text-gray-500">{metaDescription ?? artefact.description}</p>
+          {metaPurpose?.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Purpose</p>
+              <ul className="space-y-1">
+                {metaPurpose.map((point, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="mt-1.5 w-1.5 h-1.5 bg-gray-300 flex-shrink-0" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1 flex-shrink-0 self-start">
           {artefact.id}
@@ -137,8 +174,8 @@ export default function ArtefactPage() {
 
   return (
     <div>
-      <ArtefactHeader artefact={artefact} />
-      <AdrActionBar artefact={artefact} />
+      <ArtefactHeader artefact={artefact} schema={schema} />
+      <AdrActionBar artefact={artefact} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
 
       {loading && (
         <div className="flex items-center justify-center py-16">
@@ -154,13 +191,14 @@ export default function ArtefactPage() {
 
       {!loading && !error && data === null && (
         <div className="border border-gray-200 bg-white p-8 text-center">
-          <p className="text-sm font-medium text-gray-700">No data yet</p>
+          <p className="text-sm font-medium text-gray-700">Nothing here yet</p>
           <p className="mt-1 text-sm text-gray-500">
-            This artefact hasn't been populated for this architecture version.
-            Raise an Architecture Decision Record to add entries.
+            No content has been added for this version. Use the button above to raise an Architecture Decision Record and propose changes.
           </p>
         </div>
       )}
+
+      <JsonPreview data={data ?? undefined} label={`${artefact.id}.json`} />
 
       {!loading && !error && data !== null && data !== undefined && (
         <>

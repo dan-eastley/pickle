@@ -1,6 +1,6 @@
 # Architecture Domains
 
-Each client version is modelled across five architecture domains. Every artefact type is aligned to exactly one architecture domain.
+The architecture is organised into five domains. Every artefact type belongs to exactly one domain.
 
 ```mermaid
 flowchart TB
@@ -12,7 +12,7 @@ flowchart TB
         BUS --> APP["<b>Application</b> — APP<br/><sub>apps, platforms, functions</sub>"]
     end
 
-    SOL["<b>Solution</b> — SOL<br/><sub>cross-cutting designs spanning multiple domains</sub>"]
+    SOL["<b>Solution</b> — SOL<br/><sub>joined-up designs spanning multiple domains</sub>"]
 
     SOL -. spans .-> BUS
     SOL -. spans .-> DAT
@@ -28,14 +28,14 @@ flowchart TB
     class SOL cross
 ```
 
-Business sets the context (what the business does); Data, Integration, and Application realise it (how it's delivered); Solution architecture is cross-cutting and pulls from multiple domains for a specific initiative.
+Business sets the context — what the business does and why. Data, Integration, and Application deliver it. Solution architecture cuts across all of them for a specific initiative.
 
-| Architecture Domain | Folder | Acronym | Description |
-|---|---|---|---|
-| **Business Architecture** | `business/` | `BUS` | Captures the organisation's capabilities, processes, and operating model. Defines what the business does and why, providing the context that all other architecture domains serve. |
-| **Data Architecture** | `data/` | `DAT` | Describes the data assets, structures, flows, and governance that support business operations. Ensures data is well-defined, trusted, and available where needed. |
-| **Integration Architecture** | `integration/` | `INT` | Defines how systems, services, and data flows connect and communicate. Covers APIs, event streams, messaging patterns, and the rules governing inter-system exchange. |
-| **Application Architecture** | `application/` | `APP` | Describes the software applications, platforms, and functions that deliver business capabilities. Covers the portfolio of applications and how they relate to each other and to business needs. |
-| **Solution Architecture** | `solution/` | `SOL` | Cross-cutting designs that span multiple architecture domains to address a specific business problem or initiative. Brings together business, data, integration, and application concerns into a coherent delivery blueprint. |
+| Architecture Domain | Acronym | Description |
+|---|---|---|
+| **Business Architecture** | `BUS` | The organisation's capabilities, processes, and operating model — what the business does and why. This domain sets the context that all others serve. |
+| **Data Architecture** | `DAT` | The data assets, structures, and governance that support business operations — ensuring data is well-defined, trusted, and available where it is needed. |
+| **Integration Architecture** | `INT` | How systems and services connect and communicate — covering APIs, events, messaging, and the rules that govern how information flows between them. |
+| **Application Architecture** | `APP` | The software applications and platforms that deliver business capabilities — what exists, how it is organised, and how it relates to business needs. |
+| **Solution Architecture** | `SOL` | Joined-up designs that span multiple domains to address a specific business need or initiative — bringing together business, data, integration, and application concerns. |
 
-Artefact type IDs are prefixed with the architecture domain acronym (e.g. `BUS-CAP`, `DAT-DAC`, `APP-DAP`).
+Artefact IDs are prefixed with the domain acronym (e.g. `BUS-CAP`, `DAT-DAC`, `APP-DAP`).

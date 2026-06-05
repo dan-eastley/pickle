@@ -13,7 +13,7 @@
     "properties": {
         "decision-id": {
             "type": "string",
-            "description": "Unique identifier in the form adr-NNN (three-digit number). Must match the parent folder name and the trailing segment of the decision branch name."
+            "description": "Unique identifier in the form ADR-NNN (three-digit number, uppercase). Must match the parent folder name and the trailing segment of the decision branch name."
         },
         "title": {
             "type": "string",
@@ -25,7 +25,14 @@
                 "draft",
                 "proposed",
                 "accepted",
-                "rejected",
+                "rejected"
+            ]
+        },
+        "rejection-reason": {
+            "type": "string",
+            "description": "Required when status is 'rejected'. Identifies why the decision was not accepted.",
+            "enum": [
+                "duplicate",
                 "superseded"
             ]
         },
@@ -40,6 +47,44 @@
                 "$ref": "#/$defs/requirement"
             }
         },
+        "scope": {
+            "type": "object",
+            "description": "Optional constraint on the architecture scope this decision applies to. Narrows the automated analysis to the relevant domain, abstraction layer, and/or artefact type.",
+            "properties": {
+                "domain": {
+                    "type": "string",
+                    "description": "Architecture domain this decision is scoped to.",
+                    "enum": [
+                        "business",
+                        "data",
+                        "integration",
+                        "application",
+                        "solution"
+                    ]
+                },
+                "abstraction": {
+                    "type": "string",
+                    "description": "Abstraction layer this decision is scoped to. Only valid when domain is also set.",
+                    "enum": [
+                        "conceptual",
+                        "logical",
+                        "physical"
+                    ]
+                },
+                "artefact": {
+                    "type": "string",
+                    "description": "Specific artefact type this decision targets. Only valid when domain and abstraction are also set.",
+                    "enum": [
+                        "BUS-STR", "BUS-CAP", "BUS-BCM", "BUS-PRO", "BUS-BPM", "BUS-PRN", "BUS-GRD",
+                        "DAT-STR", "DAT-DAC", "DAT-CDM", "DAT-PRN", "DAT-GRD",
+                        "INT-STR", "INT-PRN", "INT-GRD",
+                        "APP-STR", "APP-DAP", "APP-DPM", "APP-PRN", "APP-GRD",
+                        "SOL-STR", "SOL-PRN", "SOL-GRD"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
         "context-validation": {
             "type": "object",
             "description": "Output of the Validate Context workflow. Permissive shape — produces a deterministic outcome + violation list, not the 4-string analysis section shape."
@@ -51,12 +96,12 @@
             },
             "description": "Output of the Narrative Validation workflow — recommendations to improve the narrative and requirements for clarity, completeness, and business readability."
         },
-        "architecture-review": {
+        "impact-assessment": {
             "type": "array",
             "items": {
                 "$ref": "#/$defs/section"
             },
-            "description": "Output of the Architecture Review workflow — one or more findings."
+            "description": "Output of the Impact Assessment workflow — one or more findings on the architectural impact of the proposed change."
         },
         "referential-integrity": {
             "type": "array",

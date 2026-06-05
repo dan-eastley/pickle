@@ -6,7 +6,15 @@
     "meta": {
         "domain": "business",
         "abstraction": "physical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "Rules and minimum standards that must be followed in Business Architecture.",
+        "purpose": [
+            "Protects the organisation from decisions that violate non-negotiable constraints",
+            "Makes compliance and regulatory requirements architecturally explicit",
+            "Provides clear go/no-go criteria for architecture review",
+            "Reduces risk by codifying hard limits alongside soft principles",
+            "Enables automated guardrail checking in the decision governance workflow"
+        ]
     },
     "type": "object",
     "required": [

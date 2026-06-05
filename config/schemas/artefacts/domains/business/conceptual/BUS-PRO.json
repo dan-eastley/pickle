@@ -6,7 +6,15 @@
     "meta": {
         "domain": "business",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "A catalogue of the key processes the organisation runs to deliver business value, structured by type and level.",
+        "purpose": [
+            "Makes the operational model explicit and comparable across versions",
+            "Identifies where process automation and digitisation should be prioritised",
+            "Provides the operational context that application architecture must support",
+            "Enables process-to-application traceability across the architecture",
+            "Supports identification of duplication, gaps, and inefficiencies in delivery"
+        ]
     },
     "type": "object",
     "required": [

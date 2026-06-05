@@ -38,18 +38,18 @@ jobs:
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
 
-  architecture-review:
+  impact-assessment:
     needs: narrative-validation
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
-      analysis-name: "Architecture Review"
+      analysis-name: "Impact Assessment"
       prompt-file: config/prompts/decisions/architecture-review.md
-      section-key: architecture-review
+      section-key: impact-assessment
       branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
 
   referential-integrity:
-    needs: architecture-review
+    needs: impact-assessment
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Referential Integrity"

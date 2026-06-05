@@ -6,7 +6,15 @@
     "meta": {
         "domain": "data",
         "abstraction": "conceptual",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "The organisation's key data subject areas and the conceptual data entities within each.",
+        "purpose": [
+            "Provides a shared vocabulary for data across the organisation",
+            "Prevents fragmented, inconsistent definitions of the same data entity in different systems",
+            "Enables data ownership to be assigned at the subject area level",
+            "Serves as the foundation for logical and physical data modelling",
+            "Supports data governance by making subject-area boundaries explicit"
+        ]
     },
     "type": "object",
     "required": [

@@ -6,7 +6,15 @@
     "meta": {
         "domain": "integration",
         "abstraction": "physical",
-        "format": "catalogue"
+        "format": "catalogue",
+        "description": "Rules and minimum standards that must be followed in Integration Architecture.",
+        "purpose": [
+            "Protects the architecture from integration patterns that introduce unacceptable risk",
+            "Codifies security and compliance requirements at the integration layer",
+            "Provides enforceable standards for API design, authentication, and data in transit",
+            "Enables automated guardrail checking during integration decision review",
+            "Prevents accumulation of integration debt caused by rule exceptions"
+        ]
     },
     "type": "object",
     "required": [
