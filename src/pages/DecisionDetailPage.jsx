@@ -537,6 +537,7 @@ function SectionNav({ decision }) {
 
 export default function DecisionDetailPage() {
   const { clientId, versionId, decisionId } = useParams()
+  const location = useLocation()
   const { clientsMetadata } = useArchitecture()
   const [decision, setDecision] = useState(undefined)
   const [accepted, setAccepted] = useState({})    // local overrides for finding review state
@@ -547,9 +548,11 @@ export default function DecisionDetailPage() {
 
   usePageTitle(decision?.title ? `${decision.title} — Decisions` : 'Decision')
 
-  // Use branch-then-main fallback via getDecision helper
+  // Use branch-then-main fallback via getDecision helper.
+  // Bust CDN cache if we just navigated back from the editor after a save.
   useEffect(() => {
-    getDecision(clientId, versionId, decisionId)
+    const bust = !!location.state?.cacheBust
+    getDecision(clientId, versionId, decisionId, undefined, { bust })
       .then(setDecision)
       .catch(() => setDecision(null))
   }, [clientId, versionId, decisionId])
@@ -589,6 +592,8 @@ export default function DecisionDetailPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Update failed')
+      // Re-fetch busting CDN cache so the new status is immediately visible
+      getDecision(clientId, versionId, decisionId, newStatus, { bust: true }).then(setDecision).catch(() => {})
     } catch (err) {
       setTransitionError(err.message)
     } finally {

@@ -18,7 +18,7 @@
 const GH_API = 'https://api.github.com'
 
 export default async function handler(req, res) {
-  const { prefix, path: filePath, ref: REF = 'main' } = req.query
+  const { prefix, path: filePath, ref: REF = 'main', nocache } = req.query
 
   if (!prefix || !filePath) {
     return res.status(400).json({ error: 'Missing prefix or path' })
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
   const isMarkdown = filePath.endsWith('.md')
 
   res.setHeader('Content-Type', isMarkdown ? 'text/markdown; charset=utf-8' : 'application/json')
-  // Cache for 30s — fresh enough for live edits, light on API rate limits
-  res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60')
+  // nocache=1 means the client just wrote this resource — skip CDN caching
+  res.setHeader('Cache-Control', nocache ? 'no-store' : 's-maxage=30, stale-while-revalidate=60')
   return res.send(content)
 }

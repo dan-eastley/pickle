@@ -40,19 +40,20 @@ const BRANCH_STATUSES = new Set(['draft', 'proposed', 'accepted', 'staged'])
  * Fetches a full decision record. Tries the decisions branch first
  * (for in-flight decisions), then falls back to main (for committed/rejected).
  */
-export async function getDecision(clientId, versionId, decisionId, status) {
+export async function getDecision(clientId, versionId, decisionId, status, { bust = false } = {}) {
   const basePath = `/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`
+  const nc = bust ? '&nocache=1' : ''
 
   // If status is known and terminal, go straight to main
   if (status && !BRANCH_STATUSES.has(status)) {
-    return fetchJson(basePath)
+    return fetchJson(`${basePath}${bust ? '?nocache=1' : ''}`)
   }
 
   // Try the decisions branch first
   const branch = encodeURIComponent(`decisions/${clientId}/${versionId}/${decisionId}`)
-  const res = await fetch(`${basePath}?ref=${branch}`)
+  const res = await fetch(`${basePath}?ref=${branch}${nc}`)
   if (res.ok) return res.json()
-  if (res.status === 404) return fetchJson(basePath) // fall back to main
+  if (res.status === 404) return fetchJson(`${basePath}${bust ? '?nocache=1' : ''}`)
   throw new Error(`API error ${res.status} fetching decision`)
 }
 

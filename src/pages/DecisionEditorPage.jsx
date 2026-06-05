@@ -196,7 +196,11 @@ export default function DecisionEditorPage() {
       {saveResult?.ok && isEdit && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
           Changes saved. Narrative Review is running to refresh the analysis.{' '}
-          <Link to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`} className="underline font-medium">
+          <Link
+            to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
+            state={{ cacheBust: true }}
+            className="underline font-medium"
+          >
             Back to {decisionId} →
           </Link>
         </div>
