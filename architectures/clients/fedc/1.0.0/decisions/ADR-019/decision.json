@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-019",
     "title": "Another decision to test how quick we add",
-    "status": "draft",
+    "status": "proposed",
     "narrative": "Lorum Ipsum blah blah blah",
     "context-validation": {
         "branch-type": "decision",
