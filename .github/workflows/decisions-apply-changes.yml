@@ -1,0 +1,101 @@
+name: Decisions — Apply Changes
+
+# Fires when a decision moves from ACCEPTED to STAGED.
+# Reads the architecture-changes list and applies them to the actual artefact
+# files on the decisions branch, then opens a PR to main.
+#
+# STUB MODE: changes are logged but not applied.
+
+on:
+  workflow_dispatch:
+    inputs:
+      client-id:
+        required: true
+        type: string
+      version-id:
+        required: true
+        type: string
+      decision-id:
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    env:
+      CLIENT_ID:   ${{ inputs.client-id }}
+      VERSION_ID:  ${{ inputs.version-id }}
+      DECISION_ID: ${{ inputs.decision-id }}
+      GH_TOKEN:    ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout decisions branch
+        uses: actions/checkout@v4
+        with:
+          ref: decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge latest main into branch
+        run: |
+          git fetch origin main
+          git merge origin/main --no-edit || true
+
+      # ── STUB ─────────────────────────────────────────────────────────────────
+      - name: Apply architecture changes (stub)
+        run: |
+          python3 - "$CLIENT_ID" "$VERSION_ID" "$DECISION_ID" <<'PYEOF'
+          import sys, json, pathlib
+
+          client_id, version_id, decision_id = sys.argv[1:]
+          # Read architecture-changes from main (already merged in)
+          decision_path = pathlib.Path(
+              f"architectures/clients/{client_id}/{version_id}/decisions/{decision_id}/decision.json"
+          )
+          with open(decision_path) as f:
+              decision = json.load(f)
+
+          changes = decision.get("architecture-changes", [])
+          print(f"::notice::STUB — would apply {len(changes)} architecture change(s):")
+          for c in changes:
+              print(f"  {c['change-type'].upper()} {c['artefact-id']}: {c['description']}")
+
+          # STUB: In production, Claude would read each change and edit the artefact files.
+          # For now, create a placeholder stub file to make the commit non-empty.
+          stub = pathlib.Path(f"architectures/clients/{client_id}/{version_id}/decisions/{decision_id}/.staged")
+          stub.write_text(f"Staged for {decision_id}\n")
+          print("::notice::Stub created .staged placeholder file")
+          PYEOF
+
+      - name: Commit changes to branch
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "::notice::No changes to commit."
+          else
+            git commit -m "[Apply] Stage architecture changes for ${DECISION_ID}"
+            git push origin "decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
+          fi
+
+      - name: Open PR to main
+        run: |
+          BRANCH="decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "::notice::PR #$EXISTING already exists for $BRANCH"
+          else
+            gh pr create \
+              --head "$BRANCH" \
+              --base main \
+              --title "[${DECISION_ID}] Architecture changes ready to commit" \
+              --body "Architecture changes generated from ${DECISION_ID} are ready to be merged into main."
+            echo "::notice::PR opened for $BRANCH"
+          fi

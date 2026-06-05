@@ -11,11 +11,12 @@ import usePageTitle from '../hooks/usePageTitle'
 // ── Status badge ─────────────────────────────────────────────────────────────
 
 const STATUS_STYLES = {
-  draft:    'bg-amber-50 text-amber-700',
-  proposed: 'bg-blue-50 text-blue-700',
-  accepted: 'bg-success-50 text-success-700',
-  applied:  'bg-emerald-100 text-emerald-800',
-  rejected: 'bg-error-50 text-error-700',
+  draft:     'bg-amber-50 text-amber-700',
+  proposed:  'bg-blue-50 text-blue-700',
+  accepted:  'bg-success-50 text-success-700',
+  staged:    'bg-emerald-100 text-emerald-800',
+  committed: 'bg-gray-800 text-white',
+  rejected:  'bg-error-50 text-error-700',
 }
 
 function StatusBadge({ status }) {
@@ -29,7 +30,7 @@ function StatusBadge({ status }) {
 
 // ── Status progress bar ───────────────────────────────────────────────────────
 
-const STATUS_STEPS = ['draft', 'proposed', 'accepted', 'applied']
+const STATUS_STEPS = ['draft', 'proposed', 'accepted', 'staged', 'committed']
 const STATUS_TERMINAL = { rejected: 'error' }
 
 function StatusProgress({ status }) {
@@ -86,7 +87,7 @@ const REJECTION_REASONS = [
   { value: 'superseded', label: 'Superseded — replaced by a newer or broader decision' },
 ]
 
-function StatusActions({ status, onTransition, transitioning }) {
+function StatusActions({ status, onTransition, transitioning, decision }) {
   const [rejectOpen, setRejectOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState('duplicate')
 
@@ -187,8 +188,8 @@ function StatusActions({ status, onTransition, transitioning }) {
     return (
       <div className="flex items-center justify-between gap-4 bg-emerald-50 px-5 py-4 mb-6">
         <div>
-          <p className="text-sm font-semibold text-emerald-800">Ready to mark this as applied?</p>
-          <p className="text-xs text-emerald-600 mt-0.5">Mark as Applied once the change has been delivered and the architecture updated.</p>
+          <p className="text-sm font-semibold text-emerald-800">Stage this decision for application?</p>
+          <p className="text-xs text-emerald-600 mt-0.5">Staging kicks off the Apply Changes workflow, which applies artefact edits on the decisions branch and opens a PR.</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <button disabled={transitioning} onClick={() => onTransition('proposed')}
@@ -198,9 +199,9 @@ function StatusActions({ status, onTransition, transitioning }) {
             </svg>
             Back to Proposed
           </button>
-          <button disabled={transitioning} onClick={() => onTransition('applied')}
+          <button disabled={transitioning} onClick={() => onTransition('staged')}
             className="flex items-center gap-2 px-4 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium transition-colors disabled:opacity-40">
-            {transitioning ? 'Updating…' : 'Mark as Applied'}
+            {transitioning ? 'Staging…' : 'Stage'}
             <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
               <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
             </svg>
@@ -210,12 +211,30 @@ function StatusActions({ status, onTransition, transitioning }) {
     )
   }
 
+  if (status === 'staged') {
+    return (
+      <div className="flex items-center justify-between gap-4 bg-gray-800 px-5 py-4 mb-6">
+        <div>
+          <p className="text-sm font-semibold text-white">Ready to commit?</p>
+          <p className="text-xs text-gray-300 mt-0.5">Committing merges the architecture changes PR into main and closes the decisions branch.</p>
+        </div>
+        <button disabled={transitioning} onClick={() => onTransition('committed', { prNumber: decision?.['pr-number'] })}
+          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold hover:bg-gray-100 transition-colors disabled:opacity-40">
+          {transitioning ? 'Committing…' : 'Commit to Main'}
+          <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+          </svg>
+        </button>
+      </div>
+    )
+  }
+
   return null
 }
 
 // ── Analysis table ────────────────────────────────────────────────────────────
 
-function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
+function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving }) {
   if (!rows?.length) return <p className="text-sm text-gray-400">No findings recorded.</p>
   return (
     <div className="border border-gray-200 overflow-x-auto">
@@ -229,7 +248,10 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
         </thead>
         <tbody className="divide-y divide-gray-100">
           {rows.map((row, i) => {
-            const state = accepted[`${sectionKey}-${i}`]
+            const key = `${sectionKey}-${i}`
+            // Accept/decline state: local `accepted` map takes precedence over the JSON field
+            const state = accepted[key] ?? row.review ?? null
+            const isSaving = saving === key
             return (
               <tr key={i} className={`align-top ${state === 'accepted' ? 'bg-success-50' : state === 'declined' ? 'bg-error-50' : ''}`}>
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.finding ?? '—'}</td>
@@ -237,11 +259,13 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.recommendation ?? '—'}</td>
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.rationale ?? '—'}</td>
                 <td className="px-3 py-2.5 w-28">
-                  {!state ? (
+                  {isSaving ? (
+                    <span className="text-xs text-gray-400">Saving…</span>
+                  ) : !state ? (
                     <div className="flex gap-1">
-                      <button onClick={() => onAccept(`${sectionKey}-${i}`, 'accepted')}
+                      <button onClick={() => onAccept(sectionKey, i, 'accepted')}
                         className="px-2 py-0.5 text-xs bg-success-50 text-success-700 hover:bg-success-100 transition-colors">Accept</button>
-                      <button onClick={() => onAccept(`${sectionKey}-${i}`, 'declined')}
+                      <button onClick={() => onAccept(sectionKey, i, 'declined')}
                         className="px-2 py-0.5 text-xs bg-error-50 text-error-700 hover:bg-error-100 transition-colors">Decline</button>
                     </div>
                   ) : (
@@ -249,7 +273,7 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept }) {
                       <span className={`text-xs font-medium ${state === 'accepted' ? 'text-success-700' : 'text-error-700'}`}>
                         {state === 'accepted' ? 'Accepted' : 'Declined'}
                       </span>
-                      <button onClick={() => onAccept(`${sectionKey}-${i}`, null)}
+                      <button onClick={() => onAccept(sectionKey, i, null)}
                         className="text-xs text-gray-400 hover:text-gray-600 ml-1">×</button>
                     </div>
                   )}
@@ -275,7 +299,51 @@ const ANALYSIS_SECTIONS = [
   { key: 'challenger-analysis',   label: 'Challenger Analysis' },
 ]
 
-function AnalysisTabs({ decision, accepted, onAccept }) {
+function ArchitectureChanges({ changes }) {
+  if (!changes?.length) return null
+  const TYPE_STYLES = {
+    create: 'bg-success-50 text-success-700',
+    update: 'bg-blue-50 text-blue-700',
+    delete: 'bg-error-50 text-error-700',
+    rename: 'bg-amber-50 text-amber-700',
+    move:   'bg-violet-50 text-violet-700',
+  }
+  return (
+    <div id="section-architecture-changes">
+      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Architecture Changes</h3>
+      <div className="border border-gray-200 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              {['Artefact', 'Change', 'Description', 'Detail'].map(h => (
+                <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {changes.map((c, i) => (
+              <tr key={i} className="align-top">
+                <td className="px-3 py-2.5">
+                  <span className="font-mono text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5">{c['artefact-id']}</span>
+                  <span className="text-xs text-gray-500 ml-1.5">{c['artefact-name']}</span>
+                </td>
+                <td className="px-3 py-2.5">
+                  <span className={`text-xs font-medium px-2 py-0.5 capitalize ${TYPE_STYLES[c['change-type']] ?? 'bg-gray-100 text-gray-600'}`}>
+                    {c['change-type']}
+                  </span>
+                </td>
+                <td className="px-3 py-2.5 text-gray-700">{c.description}</td>
+                <td className="px-3 py-2.5 text-gray-400 text-xs">{c.detail ?? '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function AnalysisTabs({ decision, accepted, onAccept, saving }) {
   const sections = ANALYSIS_SECTIONS.filter(s => decision[s.key]?.length)
   const [activeTab, setActiveTab] = useState(sections[0]?.key ?? null)
 
@@ -332,6 +400,7 @@ function AnalysisTabs({ decision, accepted, onAccept }) {
           sectionKey={activeTab ?? ''}
           accepted={accepted}
           onAccept={onAccept}
+          saving={saving}
         />
       </div>
     </div>
@@ -341,11 +410,12 @@ function AnalysisTabs({ decision, accepted, onAccept }) {
 // ── History section ───────────────────────────────────────────────────────────
 
 const HISTORY_STYLES = {
-  opened:   'bg-gray-100 text-gray-600',
-  proposed: 'bg-blue-50 text-blue-700',
-  accepted: 'bg-success-50 text-success-700',
-  applied:  'bg-emerald-100 text-emerald-800',
-  rejected: 'bg-error-50 text-error-700',
+  opened:    'bg-gray-100 text-gray-600',
+  proposed:  'bg-blue-50 text-blue-700',
+  accepted:  'bg-success-50 text-success-700',
+  staged:    'bg-emerald-100 text-emerald-800',
+  committed: 'bg-gray-800 text-white',
+  rejected:  'bg-error-50 text-error-700',
 }
 
 function formatTs(ts) {
@@ -443,10 +513,11 @@ function ScopeSection({ scope }) {
 function SectionNav({ decision }) {
   const sections = [
     { id: 'section-narrative',    label: 'Narrative' },
-    decision.scope               && { id: 'section-scope',        label: 'Scope' },
-    decision.requirements?.length && { id: 'section-requirements', label: 'Requirements' },
-    { id: 'section-analysis', label: 'Analysis' },
-    decision.history?.length     && { id: 'section-history',      label: 'History' },
+    decision.scope               && { id: 'section-scope',               label: 'Scope' },
+    decision.requirements?.length && { id: 'section-requirements',       label: 'Requirements' },
+    { id: 'section-analysis',     label: 'Analysis' },
+    decision['architecture-changes']?.length && { id: 'section-architecture-changes', label: 'Architecture Changes' },
+    decision.history?.length     && { id: 'section-history',             label: 'History' },
   ].filter(Boolean)
 
   if (sections.length < 3) return null
@@ -470,7 +541,8 @@ export default function DecisionDetailPage() {
   const { clientId, versionId, decisionId } = useParams()
   const { clientsMetadata } = useArchitecture()
   const [decision, setDecision] = useState(undefined)
-  const [accepted, setAccepted] = useState({})
+  const [accepted, setAccepted] = useState({})    // local overrides for finding review state
+  const [saving, setSaving] = useState(null)       // key of the finding being saved, e.g. 'impact-assessment-0'
   const [transitioning, setTransitioning] = useState(false)
   const [transitionError, setTransitionError] = useState(null)
   const clientName = clientsMetadata[clientId]?.name ?? clientId
@@ -484,11 +556,22 @@ export default function DecisionDetailPage() {
       .catch(() => setDecision(null))
   }, [clientId, versionId, decisionId])
 
-  function handleAccept(key, value) {
+  async function handleAccept(sectionKey, findingIndex, review) {
+    const key = `${sectionKey}-${findingIndex}`
+    // Optimistic update
     setAccepted(prev => {
-      if (value === null) { const n = { ...prev }; delete n[key]; return n }
-      return { ...prev, [key]: value }
+      if (review === null) { const n = { ...prev }; delete n[key]; return n }
+      return { ...prev, [key]: review }
     })
+    setSaving(key)
+    try {
+      await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update-finding', clientId, versionId, decisionId, sectionKey, findingIndex, review }),
+      })
+    } catch { /* optimistic — failure leaves local state changed */ }
+    finally { setSaving(null) }
   }
 
   async function handleTransition(newStatus, extraFields = {}) {
@@ -497,10 +580,14 @@ export default function DecisionDetailPage() {
     const updates = { status: newStatus, ...extraFields }
     setDecision(prev => prev ? { ...prev, ...updates } : prev)
     try {
+      const action = newStatus === 'committed' ? 'commit-decision' : 'update-decision'
+      const body = action === 'commit-decision'
+        ? { action, clientId, versionId, decisionId, prNumber: decision?.['pr-number'] }
+        : { action, clientId, versionId, decisionId, updates }
       const res = await fetch('/api/github', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update-decision', clientId, versionId, decisionId, updates }),
+        body: JSON.stringify(body),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Update failed')
@@ -546,7 +633,7 @@ export default function DecisionDetailPage() {
       <StatusProgress status={decision.status} />
       <SectionNav decision={decision} />
 
-      <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} />
+      <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} />
       {transitionError && (
         <div className="mb-4 px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
           Failed to update: {transitionError}
@@ -584,7 +671,10 @@ export default function DecisionDetailPage() {
         )}
 
         {/* Analysis — tabbed */}
-        <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} />
+        <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
+
+        {/* Architecture Changes */}
+        <ArchitectureChanges changes={decision['architecture-changes']} />
 
         {/* History */}
         <HistorySection history={decision.history} />

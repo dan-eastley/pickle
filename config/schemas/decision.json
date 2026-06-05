@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:decision",
     "title": "Decision Record",
-    "description": "Machine-readable Architecture Decision Record. Authors create this file (with decision-id, title, status, narrative, and requirements) at the start of a decisions/<client>/<version>/<decision-id> branch. The decision lives at architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json — one folder per decision, file always named decision.json. The .github/workflows/decisions-*.yml chain progressively writes each section. Section property names match the kebab-cased workflow names.",
+    "description": "Machine-readable Architecture Decision Record. Created at DRAFT status and committed directly to main. The decision JSON is updated in-place throughout the lifecycle — narrative review, analysis findings, architecture changes, and status transitions all write back to main. A separate decisions/<client>/<version>/<id> branch is created at DRAFT and used only to carry the actual architecture artefact changes when the decision reaches STAGED.",
     "type": "object",
     "required": [
         "decision-id",
@@ -13,68 +13,53 @@
     "properties": {
         "decision-id": {
             "type": "string",
-            "description": "Unique identifier in the form ADR-NNN (three-digit number, uppercase). Must match the parent folder name and the trailing segment of the decision branch name."
+            "description": "Unique identifier in the form ADR-NNN (three-digit number, uppercase). Must match the parent folder name."
         },
         "title": {
             "type": "string",
-            "description": "Short human-readable title of the decision"
+            "description": "Short human-readable title of the decision."
         },
         "status": {
             "type": "string",
-            "enum": [
-                "draft",
-                "proposed",
-                "accepted",
-                "applied",
-                "rejected"
-            ]
+            "enum": ["draft", "proposed", "accepted", "staged", "committed", "rejected"],
+            "description": "Current lifecycle stage. DRAFT → PROPOSED → ACCEPTED → STAGED → COMMITTED. REJECTED is a terminal state reachable from DRAFT or PROPOSED."
         },
         "rejection-reason": {
             "type": "string",
-            "description": "Required when status is 'rejected'. Identifies why the decision was not accepted.",
-            "enum": [
-                "duplicate",
-                "superseded"
-            ]
+            "description": "Required when status is 'rejected'.",
+            "enum": ["duplicate", "superseded"]
+        },
+        "pr-number": {
+            "type": "integer",
+            "description": "GitHub PR number opened when the decision reaches STAGED (carries the artefact changes)."
+        },
+        "pr-url": {
+            "type": "string",
+            "description": "GitHub PR URL opened at STAGED."
         },
         "narrative": {
             "type": "string",
-            "description": "Author's narrative of the proposed change. Should clearly explain the context, the problem being solved, and the proposed approach. Written for a business audience — avoid technical jargon. Requirements arising from the decision should be listed separately in the requirements field. Read by all downstream workflows."
+            "description": "Author's narrative of the proposed change. Explains context, problem, and proposed approach. Written for a business audience. Read by all downstream workflows."
         },
         "requirements": {
             "type": "array",
-            "description": "Structured requirements arising from this decision, expressed per ISO 29148. Each requirement must have a title, description, and type (Functional or Non-Functional). Requirements should be concise, testable, and free of implementation detail.",
-            "items": {
-                "$ref": "#/$defs/requirement"
-            }
+            "description": "Structured requirements per ISO 29148. Each must have a title, description, and type.",
+            "items": { "$ref": "#/$defs/requirement" }
         },
         "scope": {
             "type": "object",
-            "description": "Optional constraint on the architecture scope this decision applies to. Narrows the automated analysis to the relevant domain, abstraction layer, and/or artefact type.",
+            "description": "Optional constraint narrowing automated analysis to a specific domain, abstraction layer, or artefact type.",
             "properties": {
                 "domain": {
                     "type": "string",
-                    "description": "Architecture domain this decision is scoped to.",
-                    "enum": [
-                        "business",
-                        "data",
-                        "integration",
-                        "application",
-                        "solution"
-                    ]
+                    "enum": ["business", "data", "integration", "application", "solution"]
                 },
                 "abstraction": {
                     "type": "string",
-                    "description": "Abstraction layer this decision is scoped to. Only valid when domain is also set.",
-                    "enum": [
-                        "conceptual",
-                        "logical",
-                        "physical"
-                    ]
+                    "enum": ["conceptual", "logical", "physical"]
                 },
                 "artefact": {
                     "type": "string",
-                    "description": "Specific artefact type this decision targets. Only valid when domain and abstraction are also set.",
                     "enum": [
                         "BUS-STR", "BUS-CAP", "BUS-BCM", "BUS-PRO", "BUS-BPM", "BUS-PRN", "BUS-GRD",
                         "DAT-STR", "DAT-DAC", "DAT-CDM", "DAT-PRN", "DAT-GRD",
@@ -88,137 +73,117 @@
         },
         "history": {
             "type": "array",
-            "description": "Chronological log of status transitions for this decision record.",
+            "description": "Chronological log of status transitions.",
             "items": {
                 "type": "object",
                 "required": ["timestamp", "event"],
                 "properties": {
-                    "timestamp": {
-                        "type": "string",
-                        "description": "ISO 8601 datetime of the event (e.g. 2025-03-15T09:23:00Z)"
-                    },
+                    "timestamp": { "type": "string", "description": "ISO 8601 datetime." },
                     "event": {
                         "type": "string",
-                        "description": "The transition that occurred.",
-                        "enum": ["opened", "proposed", "accepted", "applied", "rejected"]
+                        "enum": ["opened", "proposed", "accepted", "staged", "committed", "rejected"]
                     },
-                    "notes": {
-                        "type": "string",
-                        "description": "Optional context or reason for the transition."
-                    }
+                    "notes": { "type": "string" }
                 },
                 "additionalProperties": false
             }
         },
+        "architecture-changes": {
+            "type": "array",
+            "description": "Output of the Architecture Changes workflow (fires on PROPOSED → ACCEPTED). Each entry describes a discrete change to a specific architecture artefact.",
+            "items": { "$ref": "#/$defs/architecture-change" }
+        },
         "context-validation": {
             "type": "object",
-            "description": "Output of the Validate Context workflow. Permissive shape — produces a deterministic outcome + violation list, not the 4-string analysis section shape."
+            "description": "Output of the Validate Context workflow."
         },
         "narrative-validation": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Narrative Validation workflow — recommendations to improve the narrative and requirements for clarity, completeness, and business readability."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Narrative Review workflow — fires on DRAFT creation."
         },
         "impact-assessment": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Impact Assessment workflow — one or more findings on the architectural impact of the proposed change."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Impact Assessment workflow — fires on PROPOSED."
         },
         "referential-integrity": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Referential Integrity workflow — one or more findings."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Referential Integrity workflow — fires on PROPOSED."
         },
         "strategy-alignment": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Strategy Alignment workflow — one or more findings."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Strategy Alignment workflow — fires on PROPOSED."
         },
         "principles-alignment": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Principles Alignment workflow — one or more findings."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Principles Alignment workflow — fires on PROPOSED."
         },
         "proponent-analysis": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Proponent Analysis workflow — one or more findings."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Proponent Analysis workflow — fires on PROPOSED."
         },
         "challenger-analysis": {
             "type": "array",
-            "items": {
-                "$ref": "#/$defs/section"
-            },
-            "description": "Output of the Challenger Analysis workflow — one or more findings."
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Challenger Analysis workflow — fires on PROPOSED."
         }
     },
     "additionalProperties": false,
     "$defs": {
         "requirement": {
             "type": "object",
-            "description": "A single requirement structured per ISO 29148. Requirements capture what the decision must achieve (Functional) or the qualities it must satisfy (Non-Functional). Do not describe implementation detail — focus on the what, not the how.",
-            "required": [
-                "title",
-                "description",
-                "type"
-            ],
+            "required": ["title", "description", "type"],
             "properties": {
-                "title": {
-                    "type": "string",
-                    "description": "Short, unique name for the requirement (e.g. 'Single sign-on support')"
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Clear, concise statement of what is required. Written for a business audience. Should be testable and free of implementation detail."
-                },
+                "title":       { "type": "string" },
+                "description": { "type": "string" },
                 "type": {
                     "type": "string",
-                    "enum": [
-                        "Functional",
-                        "Non-Functional"
-                    ],
-                    "description": "Functional — the system must do something. Non-Functional — a quality the system must possess (performance, security, compliance, scalability, etc.)."
+                    "enum": ["Functional", "Non-Functional"]
                 }
             },
             "additionalProperties": false
         },
         "section": {
             "type": "object",
-            "description": "Shape of a single finding within an analysis section. Each analysis section is an array of these — a workflow may emit multiple findings.",
-            "required": [
-                "finding",
-                "impact",
-                "recommendation",
-                "rationale"
-            ],
+            "description": "A single finding within an analysis section. `review` records whether the author accepted or declined the recommendation.",
+            "required": ["finding", "impact", "recommendation", "rationale"],
             "properties": {
-                "finding": {
+                "finding":        { "type": "string", "description": "What the workflow observed. Max ~500 characters." },
+                "impact":         { "type": "string", "description": "Why the finding matters. Max ~500 characters." },
+                "recommendation": { "type": "string", "description": "What the author should do. Max ~500 characters." },
+                "rationale":      { "type": "string", "description": "Why the recommendation is the right course of action. Max ~500 characters." },
+                "review": {
                     "type": "string",
-                    "description": "What the workflow observed — the analytical output. Plain language, max ~500 characters."
+                    "description": "Author review decision — set via the UI when the author accepts or declines a recommendation.",
+                    "enum": ["accepted", "declined"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "architecture-change": {
+            "type": "object",
+            "description": "A discrete, artefact-level change derived from accepted findings. Generated by the Architecture Changes workflow on ACCEPTED.",
+            "required": ["artefact-id", "artefact-name", "change-type", "description"],
+            "properties": {
+                "artefact-id":   { "type": "string", "description": "e.g. BUS-CAP" },
+                "artefact-name": { "type": "string", "description": "e.g. Business Capabilities" },
+                "change-type": {
+                    "type": "string",
+                    "enum": ["create", "update", "delete", "rename", "move"],
+                    "description": "The type of change to be made."
                 },
-                "impact": {
+                "description": {
                     "type": "string",
-                    "description": "Why the finding matters — consequence for the proposed change. Plain language, max ~500 characters."
+                    "description": "Plain-language description of the change. e.g. 'Add capability: Project and Programme Management at level 1'"
                 },
-                "recommendation": {
+                "detail": {
                     "type": "string",
-                    "description": "What the author should do in response to the finding. Plain language, max ~500 characters."
-                },
-                "rationale": {
-                    "type": "string",
-                    "description": "Why the recommendation is the right course of action. Plain language, max ~500 characters."
+                    "description": "Optional additional detail for the implementor."
                 }
             },
             "additionalProperties": false

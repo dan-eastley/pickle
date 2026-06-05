@@ -1,51 +1,42 @@
 name: Decisions Pipeline
 
-# Orchestrator for the decision analysis pipeline. Runs all Claude
-# analyses sequentially as jobs in a single workflow, then updates the PR
-# description. Triggered by Validate Context completion on a decisions/**
-# branch.
+# Orchestrates the 6 analysis workflows that run when a decision moves from
+# DRAFT to PROPOSED. Narrative Review runs separately (decisions-narrative-review.yml).
 #
-# Why a single workflow with sequential jobs instead of seven separate
-# workflows chained by workflow_run?
-#
-#   GitHub Actions limits workflow_run chaining to three hops — workflows
-#   beyond the third link silently never fire. With seven analysis steps
-#   plus a PR-update step that ceiling is unreachable. Collapsing them into
-#   one workflow with `needs:` dependencies sidesteps the limit entirely
-#   and yields a single, linearly-readable run on the Actions tab.
-#
-# Each analysis job uses the reusable decisions-analysis-step.yml workflow
-# (kept DRY — near-identical step bodies). The final job is inlined
-# because it has a different shape (formats decision JSON, updates PR).
+# Triggered via workflow_dispatch from the Pickle API on DRAFT → PROPOSED transition.
+# Runs sequentially using `needs:` to avoid the 3-hop workflow_run chaining limit.
+# Each job writes its findings directly to main (decisions always live on main).
 
 on:
-  workflow_run:
-    workflows: ["Validate Context"]
-    types: [completed]
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-018)"
+        required: true
+        type: string
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  narrative-validation:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.event.workflow_run.head_branch, 'decisions/') }}
-    uses: ./.github/workflows/decisions-analysis-step.yml
-    with:
-      analysis-name: "Narrative Validation"
-      prompt-file: config/prompts/decisions/narrative-validation.md
-      section-key: narrative-validation
-      branch: ${{ github.event.workflow_run.head_branch }}
-    secrets: inherit
-
   impact-assessment:
-    needs: narrative-validation
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Impact Assessment"
-      prompt-file: config/prompts/decisions/architecture-review.md
-      section-key: impact-assessment
-      branch: ${{ github.event.workflow_run.head_branch }}
+      prompt-file:   config/prompts/decisions/architecture-review.md
+      section-key:   impact-assessment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
     secrets: inherit
 
   referential-integrity:
@@ -53,9 +44,11 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Referential Integrity"
-      prompt-file: config/prompts/decisions/referential-integrity.md
-      section-key: referential-integrity
-      branch: ${{ github.event.workflow_run.head_branch }}
+      prompt-file:   config/prompts/decisions/referential-integrity.md
+      section-key:   referential-integrity
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
     secrets: inherit
 
   strategy-alignment:
@@ -63,9 +56,11 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Strategy Alignment"
-      prompt-file: config/prompts/decisions/strategy-alignment.md
-      section-key: strategy-alignment
-      branch: ${{ github.event.workflow_run.head_branch }}
+      prompt-file:   config/prompts/decisions/strategy-alignment.md
+      section-key:   strategy-alignment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
     secrets: inherit
 
   principles-alignment:
@@ -73,9 +68,11 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Principles Alignment"
-      prompt-file: config/prompts/decisions/principles-alignment.md
-      section-key: principles-alignment
-      branch: ${{ github.event.workflow_run.head_branch }}
+      prompt-file:   config/prompts/decisions/principles-alignment.md
+      section-key:   principles-alignment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
     secrets: inherit
 
   proponent-analysis:
@@ -83,9 +80,11 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Proponent Analysis"
-      prompt-file: config/prompts/decisions/proponent-analysis.md
-      section-key: proponent-analysis
-      branch: ${{ github.event.workflow_run.head_branch }}
+      prompt-file:   config/prompts/decisions/proponent-analysis.md
+      section-key:   proponent-analysis
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
     secrets: inherit
 
   challenger-analysis:
@@ -93,57 +92,9 @@ jobs:
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Challenger Analysis"
-      prompt-file: config/prompts/decisions/challenger-analysis.md
-      section-key: challenger-analysis
-      branch: ${{ github.event.workflow_run.head_branch }}
+      prompt-file:   config/prompts/decisions/challenger-analysis.md
+      section-key:   challenger-analysis
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
     secrets: inherit
-
-  update-pull-request:
-    needs: challenger-analysis
-    runs-on: ubuntu-latest
-    env:
-      BRANCH: ${{ github.event.workflow_run.head_branch }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Started
-        run: |
-          echo "::notice::Started: Update Pull Request"
-
-      - name: Checkout decision branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.BRANCH }}
-          fetch-depth: 1
-
-      - name: Format decision and update PR
-        run: |
-          set -euo pipefail
-
-          DECISION_FILE=$(python3 - "$BRANCH" <<'PYEOF'
-          import sys
-          parts = sys.argv[1].split('/')
-          print(f"architectures/clients/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json")
-          PYEOF
-          )
-
-          if [ ! -f "$DECISION_FILE" ]; then
-            echo "::error::Decision file not found at $DECISION_FILE"
-            exit 1
-          fi
-
-          python3 .github/scripts/format-decision-for-pr.py "$DECISION_FILE" > /tmp/pr-body.md
-
-          PR_NUMBER=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
-
-          if [ -z "$PR_NUMBER" ]; then
-            echo "::notice::No open PR for $BRANCH — skipping description update."
-            exit 0
-          fi
-
-          echo "::notice::Updating PR #$PR_NUMBER description with formatted decision content."
-          gh pr edit "$PR_NUMBER" --body-file /tmp/pr-body.md
-
-      - name: Finished
-        if: always()
-        run: |
-          echo "::notice::Finished: Update Pull Request"

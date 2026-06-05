@@ -1,9 +1,9 @@
 name: Decisions Analysis Step
 
-# Reusable workflow — runs one analysis step in the decisions pipeline.
-# STUB MODE: Claude integration is disabled. Synthetic findings matching
-# the decision.json section schema are written instead. Re-enable Claude
-# by uncommenting the "Run Claude analysis" step and removing the stub step.
+# Reusable workflow — runs one analysis step and writes findings to the
+# decision.json on main (decisions always live on main in Pickle).
+# STUB MODE: synthetic findings are written instead of calling Claude.
+# Re-enable Claude by uncommenting the "Run Claude analysis" step.
 
 on:
   workflow_call:
@@ -13,20 +13,28 @@ on:
         required: true
         type: string
       prompt-file:
-        description: "Path to the prompt markdown file (unused in stub mode)"
+        description: "Path to the prompt file (unused in stub mode)"
         required: true
         type: string
       section-key:
-        description: "Decision JSON property to write the result to"
+        description: "Decision JSON property to write results to"
         required: true
         type: string
-      branch:
-        description: "Decision branch to operate on"
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-018)"
         required: true
         type: string
     secrets:
       ANTHROPIC_API_KEY:
-        required: false   # Not required while Claude is stubbed
+        required: false
 
 permissions:
   contents: write
@@ -35,18 +43,20 @@ jobs:
   analyse:
     runs-on: ubuntu-latest
     env:
-      BRANCH: ${{ inputs.branch }}
-      SECTION_KEY: ${{ inputs.section-key }}
+      SECTION_KEY:  ${{ inputs.section-key }}
       ANALYSIS_NAME: ${{ inputs.analysis-name }}
+      CLIENT_ID:    ${{ inputs.client-id }}
+      VERSION_ID:   ${{ inputs.version-id }}
+      DECISION_ID:  ${{ inputs.decision-id }}
     steps:
       - name: Started
         run: |
           echo "::notice::Started (stub): ${ANALYSIS_NAME}"
 
-      - name: Checkout decision branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,16 +65,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # ── STUB: writes synthetic findings without calling Claude ────────────
+      # ── STUB ─────────────────────────────────────────────────────────────────
       - name: Generate synthetic findings (stub)
         run: |
-          python3 - "$BRANCH" "$SECTION_KEY" "$ANALYSIS_NAME" <<'PYEOF'
+          python3 - "$CLIENT_ID" "$VERSION_ID" "$DECISION_ID" "$SECTION_KEY" "$ANALYSIS_NAME" <<'PYEOF'
           import sys, json, pathlib
 
-          branch, section_key, analysis_name = sys.argv[1], sys.argv[2], sys.argv[3]
-          parts = branch.split('/')
+          client_id, version_id, decision_id, section_key, analysis_name = sys.argv[1:]
           decision_path = pathlib.Path(
-              f"architectures/clients/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json"
+              f"architectures/clients/{client_id}/{version_id}/decisions/{decision_id}/decision.json"
           )
 
           with open(decision_path) as f:
@@ -74,106 +83,35 @@ jobs:
 
           FINDINGS = {
               "narrative-validation": [
-                  {
-                      "finding":        f"The narrative for '{title}' clearly states the business driver and proposed direction.",
-                      "impact":         "Well-formed narratives allow automated analysis to produce higher-quality findings aligned to the actual intent.",
-                      "recommendation": "Consider adding a quantified target outcome to make success measurable.",
-                      "rationale":      "Measurable outcomes enable Strategy Alignment to assess impact against existing KPIs."
-                  },
-                  {
-                      "finding":        "Requirements are expressed as business outcomes rather than implementation detail. Testability could be improved.",
-                      "impact":         "Untestable requirements cannot be formally verified at acceptance, increasing scope-drift risk.",
-                      "recommendation": "Restate each requirement using 'The system shall...' framing with a measurable acceptance criterion.",
-                      "rationale":      "ISO 29148 requires requirements to be verifiable. Acceptance criteria prevent ambiguity at delivery."
-                  }
+                  {"finding": f"The narrative for '{title}' clearly states the business driver and proposed direction.", "impact": "Well-formed narratives allow analysis to produce higher-quality, intent-aligned findings.", "recommendation": "Add a quantified target outcome to make success measurable.", "rationale": "Measurable outcomes enable Strategy Alignment to assess impact against existing KPIs."},
+                  {"finding": "Requirements are expressed as outcomes. Testability could be strengthened.", "impact": "Untestable requirements cannot be formally verified at acceptance.", "recommendation": "Restate each requirement using 'The system shall...' with a measurable acceptance criterion.", "rationale": "ISO 29148 requires verifiable requirements. Acceptance criteria prevent ambiguity at delivery."}
               ],
               "impact-assessment": [
-                  {
-                      "finding":        f"'{title}' introduces changes that affect artefacts in at least one architecture domain. References in the narrative are consistent with the current baseline.",
-                      "impact":         "Changes of this scope require catalogue artefact updates to maintain traceability from strategy to implementation.",
-                      "recommendation": "Identify all artefacts requiring amendment before moving to Proposed.",
-                      "rationale":      "Explicit impact lists allow Referential Integrity to run comprehensively and catch gaps early."
-                  },
-                  {
-                      "finding":        "No conflicts identified with currently accepted decisions. The proposed change is additive.",
-                      "impact":         "Low conflict risk reduces review overhead and increases acceptance likelihood.",
-                      "recommendation": "Proceed to Referential Integrity. Monitor for conflicts if ADR-002 is accepted in the same cycle.",
-                      "rationale":      "Additive decisions that do not contradict accepted ADRs are eligible for expedited review."
-                  }
+                  {"finding": f"'{title}' introduces changes affecting artefacts in at least one architecture domain. References are consistent with the current baseline.", "impact": "Changes of this scope require catalogue updates to maintain traceability from strategy to implementation.", "recommendation": "Identify all artefacts requiring amendment before moving to Proposed.", "rationale": "Explicit impact lists allow Referential Integrity to run comprehensively."},
+                  {"finding": "No conflicts with currently accepted decisions. The proposed change is additive.", "impact": "Low conflict risk reduces review overhead and increases acceptance likelihood.", "recommendation": "Proceed to Referential Integrity. Monitor for conflicts if concurrent ADRs are in flight.", "rationale": "Additive decisions not contradicting accepted ADRs are eligible for expedited review."}
               ],
               "referential-integrity": [
-                  {
-                      "finding":        "All artefact IDs referenced in the narrative exist in the current architecture baseline. No broken references detected.",
-                      "impact":         "Valid references ensure analysis steps can read cited artefacts and the decision record remains coherent after acceptance.",
-                      "recommendation": "Confirm new artefact IDs introduced by this decision follow the established naming convention.",
-                      "rationale":      "Consistent naming ensures downstream tooling and queries can resolve references without intervention."
-                  },
-                  {
-                      "finding":        "The scope constraint aligns with an existing artefact type. The artefact folder exists for the target client and version.",
-                      "impact":         "Scope alignment allows Principles and Guardrails checks to be scoped correctly without false positives.",
-                      "recommendation": "Verify that instance data in the scoped artefact is current before acceptance.",
-                      "rationale":      "Analysis quality degrades when scoped artefacts contain outdated instance data."
-                  }
+                  {"finding": "All artefact IDs referenced in the narrative exist in the current architecture baseline.", "impact": "Valid references ensure analysis steps can read cited artefacts and the record remains coherent.", "recommendation": "Confirm new artefact IDs introduced by this decision follow the established naming convention.", "rationale": "Consistent naming ensures tooling and queries can resolve references without intervention."},
+                  {"finding": "The scope constraint aligns with an existing artefact type. The artefact folder exists for the target client and version.", "impact": "Scope alignment allows Principles and Guardrails checks to be correctly scoped.", "recommendation": "Verify that instance data in the scoped artefact is current before acceptance.", "rationale": "Analysis quality degrades when scoped artefacts contain outdated instance data."}
               ],
               "strategy-alignment": [
-                  {
-                      "finding":        f"'{title}' is consistent with BUS-STR-002 and BUS-STR-005. No conflicts with existing strategic statements detected.",
-                      "impact":         "Strategy alignment increases executive sponsorship likelihood and reduces governance-block risk.",
-                      "recommendation": "Reference specific BUS-STR entries in the narrative to make alignment explicit and auditable.",
-                      "rationale":      "Explicit strategy traceability satisfies the Pickle traceability requirement and supports reporting."
-                  },
-                  {
-                      "finding":        "The decision supports BUS-STR-003 (decide with data) by introducing a structured, queryable architecture artefact.",
-                      "impact":         "Decisions that advance multiple strategic objectives deliver compound value.",
-                      "recommendation": "Add a target-outcome entry to the strategy catalogue reflecting this decision's contribution.",
-                      "rationale":      "Updated strategy entries close the feedback loop between decision acceptance and strategic progress."
-                  }
+                  {"finding": f"'{title}' is consistent with BUS-STR-002 and BUS-STR-005. No conflicts with existing strategic statements.", "impact": "Strategy alignment increases executive sponsorship likelihood and reduces governance-block risk.", "recommendation": "Reference specific BUS-STR entries in the narrative to make alignment explicit and auditable.", "rationale": "Explicit strategy traceability satisfies the Pickle traceability requirement."},
+                  {"finding": "The decision supports BUS-STR-003 (decide with data) by introducing a structured architecture artefact.", "impact": "Decisions advancing multiple strategic objectives deliver compound value.", "recommendation": "Add a target-outcome entry to the strategy catalogue reflecting this decision's contribution.", "rationale": "Updated strategy entries close the feedback loop between acceptance and progress tracking."}
               ],
               "principles-alignment": [
-                  {
-                      "finding":        "The decision is consistent with Logical-layer principles for the target domain. No vendor-neutrality violations detected.",
-                      "impact":         "Principles alignment means the decision passes guardrails review without exceptions.",
-                      "recommendation": "Confirm alignment with Physical-layer guardrails, particularly around approved platform standards.",
-                      "rationale":      "Guardrails are non-negotiable. Validating before acceptance prevents costly rework."
-                  },
-                  {
-                      "finding":        "The principle of designing for observability is not explicitly addressed in the narrative or requirements.",
-                      "impact":         "Decisions that omit observability requirements risk delivering capabilities that are hard to monitor.",
-                      "recommendation": "Add a Non-Functional requirement stating that all components must expose health and telemetry endpoints.",
-                      "rationale":      "Observability is codified in Application Guardrails. Addressing it at the decision stage is cheaper."
-                  }
+                  {"finding": "The decision is consistent with Logical-layer principles for the target domain. No vendor-neutrality violations detected.", "impact": "Principles alignment means the decision passes guardrails review without requiring exceptions.", "recommendation": "Confirm alignment with Physical-layer guardrails, particularly approved platform standards.", "rationale": "Guardrails are non-negotiable. Validating before acceptance prevents costly rework."},
+                  {"finding": "The principle of observability is not explicitly addressed in the narrative or requirements.", "impact": "Decisions omitting observability requirements risk delivering capabilities that are hard to monitor.", "recommendation": "Add a Non-Functional requirement: all components must expose health and telemetry endpoints.", "rationale": "Observability is codified in Application Guardrails. Addressing it at decision stage is cheaper."}
               ],
               "proponent-analysis": [
-                  {
-                      "finding":        f"'{title}' addresses a genuine capability gap in the current architecture and is consistent with the organisation's technology direction.",
-                      "impact":         "Proceeding reduces risk accumulation in the affected domain and supports near-term business commitments.",
-                      "recommendation": "Approve with the addition of a measurable target outcome and an observability requirement.",
-                      "rationale":      "The cost of both additions is negligible compared to the strategic value of the capability introduced."
-                  },
-                  {
-                      "finding":        "The decision has a clear delivery owner and is aligned to an existing funded programme. Implementation risk is low to medium.",
-                      "impact":         "Funded, sponsored decisions are significantly more likely to be implemented successfully and on schedule.",
-                      "recommendation": "Proceed to Accepted. Assign a delivery champion and schedule a post-implementation review in 90 days.",
-                      "rationale":      "Post-implementation reviews close the feedback loop and update the architecture catalogue with outcomes."
-                  }
+                  {"finding": f"'{title}' addresses a genuine capability gap consistent with the organisation's technology direction.", "impact": "Proceeding reduces risk accumulation in the affected domain and supports near-term commitments.", "recommendation": "Approve with a measurable target outcome and an observability requirement added.", "rationale": "The cost of both additions is negligible compared to the strategic value introduced."},
+                  {"finding": "The decision has a clear delivery owner and is aligned to an existing funded programme. Implementation risk is low to medium.", "impact": "Funded, sponsored decisions are significantly more likely to be implemented on schedule.", "recommendation": "Proceed to Accepted. Assign a delivery champion and schedule a post-implementation review in 90 days.", "rationale": "Post-implementation reviews close the feedback loop and update the architecture catalogue."}
               ],
               "challenger-analysis": [
-                  {
-                      "finding":        f"'{title}' introduces a dependency on a capability that is not yet fully mature in this organisation.",
-                      "impact":         "Immature capabilities increase delivery timeline risk and may require additional skills or tooling investment.",
-                      "recommendation": "Include a risk-mitigation requirement covering capability assessment and a fallback position.",
-                      "rationale":      "Documenting a fallback at decision time reduces the cost of pivoting later and satisfies Guardrails risk management."
-                  },
-                  {
-                      "finding":        "The decision scope is broad and may introduce unintended coupling between domains if implementation boundaries are not clearly defined.",
-                      "impact":         "Poorly bounded decisions create technical debt and complicate future changes in adjacent domains.",
-                      "recommendation": "Add a constraint requirement specifying no direct dependencies between the affected and adjacent domains.",
-                      "rationale":      "Explicit boundary constraints are cheaper to define now than to refactor after delivery."
-                  }
+                  {"finding": f"'{title}' introduces a dependency on a capability not yet fully mature in this organisation.", "impact": "Immature capabilities increase delivery timeline risk and may require additional skills or tooling.", "recommendation": "Include a risk-mitigation requirement covering capability assessment and a fallback position.", "rationale": "Documenting a fallback at decision time reduces the cost of pivoting and satisfies Guardrails risk management."},
+                  {"finding": "The decision scope is broad and may introduce unintended coupling if implementation boundaries are not defined.", "impact": "Poorly bounded decisions create technical debt and complicate future changes in adjacent domains.", "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.", "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."}
               ],
           }
 
-          # Fallback to impact-assessment findings if section not found
           findings = FINDINGS.get(section_key, FINDINGS["impact-assessment"])
           decision[section_key] = findings
 
@@ -182,37 +120,19 @@ jobs:
 
           print(f"::notice::Stub wrote {len(findings)} synthetic findings to '{section_key}'")
           PYEOF
+      # ── END STUB ─────────────────────────────────────────────────────────────
 
-      # ── END STUB ─────────────────────────────────────────────────────────
-
-      # To re-enable Claude: remove the stub step above and uncomment below.
-      # - name: Run Claude analysis
-      #   uses: anthropics/claude-code-base-action@beta
-      #   with:
-      #     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-      #     model: claude-sonnet-4-6
-      #     allowed_tools: "Bash,Read,Edit,Write,Grep,Glob"
-      #     prompt: |
-      #       ... (full prompt as before)
-
-      - name: Commit and push the analysis
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and push to main
         run: |
           set -euo pipefail
-          DECISION_FILE=$(python3 - "$BRANCH" <<'PYEOF'
-          import sys
-          parts = sys.argv[1].split('/')
-          print(f"architectures/clients/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json")
-          PYEOF
-          )
+          DECISION_FILE="architectures/clients/${CLIENT_ID}/${VERSION_ID}/decisions/${DECISION_ID}/decision.json"
           git add "$DECISION_FILE"
           if git diff --cached --quiet; then
             echo "::notice::No changes to commit."
             exit 0
           fi
           git commit -m "[${ANALYSIS_NAME}] Update ${DECISION_FILE}"
-          git push origin "$BRANCH"
+          git push origin main
 
       - name: Finished
         if: always()
