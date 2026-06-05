@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-015",
+    "title": "Establish a Programme and Project Management Capability in the Architecture",
+    "status": "draft",
+    "narrative": "FEDC is entering a period of significant capital investment \u2014 the network reinforcement programme, the smart metering rollout, and the operational technology refresh collectively represent over \u00a3180M of committed expenditure over the next five years. Programme and project management at FEDC is currently handled through a combination of spreadsheets, email, and a standalone project tracking tool that is not integrated with financial systems, resource planning, or the asset register. This creates coordination risk at the programme level and prevents effective portfolio-level resource and budget management. We propose adding programme and project management as an explicit capability in the architecture. A dedicated application supporting end-to-end programme governance \u2014 from business case through delivery to benefits realisation \u2014 will be selected and integrated with the ERP, resource management, and asset management systems.",
+    "requirements": [
+        {
+            "title": "End-to-end programme governance",
+            "description": "The solution must support the full programme lifecycle: business case approval, project initiation, delivery tracking, stage gate governance, and benefits realisation tracking.",
+            "type": "Functional"
+        },
+        {
+            "title": "ERP integration",
+            "description": "The solution must integrate bidirectionally with the existing ERP system for financial commitment tracking, actual cost reporting, and purchase order management.",
+            "type": "Functional"
+        },
+        {
+            "title": "Portfolio-level reporting",
+            "description": "The solution must provide portfolio-level dashboards showing cross-programme resource utilisation, budget vs actual, and milestone status without manual data consolidation.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "artefact": "BUS-CAP"
+    }
+}
