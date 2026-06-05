@@ -2,7 +2,7 @@
     "decision-id": "ADR-003",
     "title": "Migrate SCADA Operational Data Feeds to Event-Driven Architecture",
     "status": "draft",
-    "narrative": "FEDC's SCADA systems generate continuous telemetry from substations, distribution network sensors, and smart meters. This data is currently polled from SCADA systems on fixed 15-minute intervals by the operational data warehouse. The polling approach introduces significant latency for fault detection and means that anomaly data is only visible to operations teams after a delay. Network outages and equipment failures are therefore often detected by field teams or customers before they appear in monitoring dashboards. We propose migrating SCADA operational data feeds to an event-driven architecture using a streaming platform. SCADA systems will publish events at the point of measurement. Subscribing systems \u2014 fault management, operations dashboards, predictive maintenance \u2014 will consume events in near real time. This reduces fault detection latency from 15 minutes to under 60 seconds and enables proactive rather than reactive operations.",
+    "narrative": "FEDC's SCADA systems generate continuous telemetry from substations, distribution network sensors, and smart meters. This data is currently polled from SCADA systems on fixed 15-minute intervals by the operational data warehouse. The polling approach introduces significant latency for fault detection and means that anomaly data is only visible to operations teams after a delay. Network outages and equipment failures are therefore often detected by field teams or customers before they appear in monitoring dashboards. We propose migrating SCADA operational data feeds to an event-driven architecture using a streaming platform. SCADA systems will publish events at the point of measurement. Subscribing systems — fault management, operations dashboards, predictive maintenance — will consume events in near real time. This reduces fault detection latency from 15 minutes to under 60 seconds and enables proactive rather than reactive operations.",
     "requirements": [
         {
             "title": "Near real-time delivery",
@@ -24,5 +24,15 @@
         "domain": "integration",
         "abstraction": "logical",
         "artefact": "INT-PRN"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-003/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:37+00:00"
     }
 }
