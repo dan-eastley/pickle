@@ -88,7 +88,7 @@ const REJECTION_REASONS = [
   { value: 'superseded', label: 'Superseded — replaced by a newer or broader decision' },
 ]
 
-function StatusActions({ status, onTransition, transitioning, decision }) {
+function StatusActions({ status, onTransition, transitioning, decision, versionId }) {
   const [rejectOpen, setRejectOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState('duplicate')
 
@@ -221,7 +221,7 @@ function StatusActions({ status, onTransition, transitioning, decision }) {
         </div>
         <button disabled={transitioning} onClick={() => onTransition('committed', { prNumber: decision?.['pr-number'] })}
           className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold hover:bg-gray-100 transition-colors disabled:opacity-40">
-          {transitioning ? 'Committing…' : 'Commit to Main'}
+          {transitioning ? 'Committing…' : `Commit to v${versionId}`}
           <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
             <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
           </svg>
@@ -672,7 +672,7 @@ export default function DecisionDetailPage() {
         )}
 
         {/* Status actions — after narrative/requirements, before analysis */}
-        <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} />
+        <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
         {transitionError && (
           <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
             Failed to update: {transitionError}
