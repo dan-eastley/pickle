@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-013",
+    "title": "Implement Self-Service Analytics for Operational and Commercial Teams",
+    "status": "draft",
+    "narrative": "Analytical reporting at FEDC is currently centralised in a data team that builds and maintains reports for operational and commercial stakeholders. Teams submit report requests, which are typically fulfilled within two weeks. This bottleneck means that business questions are answered slowly, and teams use workarounds \u2014 manual spreadsheet analysis, shadow data stores \u2014 that create data quality and governance risks. We propose implementing a self-service analytics capability that enables operational and commercial teams to query and visualise authorised data without dependency on the central data team. The capability will be built on the existing data warehouse, extended with a semantic layer that exposes business-friendly metrics. Role-based access will ensure teams can only access data appropriate to their function. Training and enablement will be provided to 150 analysts in the first year.",
+    "requirements": [
+        {
+            "title": "Self-service query capability",
+            "description": "Business analysts must be able to build and run reports against authorised data domains without writing SQL or requiring data team assistance for standard query patterns.",
+            "type": "Functional"
+        },
+        {
+            "title": "Semantic layer",
+            "description": "All self-service metrics must be defined in a semantic layer that translates business terminology to underlying data structures, ensuring consistent metric definitions across teams.",
+            "type": "Functional"
+        },
+        {
+            "title": "Query performance",
+            "description": "Self-service queries against datasets of up to 100 million rows must complete within 30 seconds for 95% of executed queries.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "data",
+        "abstraction": "logical",
+        "artefact": "DAT-PRN"
+    }
+}
