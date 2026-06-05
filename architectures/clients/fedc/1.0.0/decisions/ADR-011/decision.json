@@ -16,7 +16,7 @@
         },
         {
             "title": "Investment traceability",
-            "description": "All technology investment above \u00a350,000 must be traceable to one or more capabilities in the Business Capability Model, with documented expected outcomes.",
+            "description": "All technology investment above £50,000 must be traceable to one or more capabilities in the Business Capability Model, with documented expected outcomes.",
             "type": "Non-Functional"
         }
     ],
@@ -24,5 +24,15 @@
         "domain": "business",
         "abstraction": "conceptual",
         "artefact": "BUS-CAP"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-011/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:52+00:00"
     }
 }
