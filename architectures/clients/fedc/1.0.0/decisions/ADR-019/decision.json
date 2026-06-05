@@ -50,7 +50,8 @@
             "finding": "'Another decision to test how quick we add' is consistent with BUS-STR-002 and BUS-STR-005. No conflicts with existing strategic statements.",
             "impact": "Strategy alignment increases executive sponsorship likelihood and reduces governance-block risk.",
             "recommendation": "Reference specific BUS-STR entries in the narrative to make alignment explicit and auditable.",
-            "rationale": "Explicit strategy traceability satisfies the Pickle traceability requirement."
+            "rationale": "Explicit strategy traceability satisfies the Pickle traceability requirement.",
+            "review": "accepted"
         },
         {
             "finding": "The decision supports BUS-STR-003 (decide with data) by introducing a structured architecture artefact.",
