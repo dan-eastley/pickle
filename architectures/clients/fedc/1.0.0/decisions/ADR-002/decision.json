@@ -24,5 +24,15 @@
         "domain": "data",
         "abstraction": "conceptual",
         "artefact": "DAT-DAC"
+    },
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "pass",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-002/decision.json"
+        ],
+        "violations": [],
+        "checked-at": "2026-06-05T16:04:34+00:00"
     }
 }
