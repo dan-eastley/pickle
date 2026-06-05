@@ -4,6 +4,7 @@ import { useArchitecture } from '../../context/ArchitectureContext'
 import TopBar from './TopBar'
 import DomainNav from './DomainNav'
 import Breadcrumb from './Breadcrumb'
+import Footer from './Footer'
 import Spinner from '../ui/Spinner'
 
 export default function Layout() {
@@ -38,6 +39,7 @@ export default function Layout() {
           <Outlet />
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

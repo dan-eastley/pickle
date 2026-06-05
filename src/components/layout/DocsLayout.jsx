@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useParams } from 'react-router-dom'
 import TopBar from './TopBar'
+import Footer from './Footer'
 import { DOCS_NAV } from '../../lib/docs'
 
 function groupItems(items) {
@@ -69,6 +70,7 @@ export default function DocsLayout() {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   )
 }

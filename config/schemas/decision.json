@@ -25,6 +25,7 @@
                 "draft",
                 "proposed",
                 "accepted",
+                "applied",
                 "rejected"
             ]
         },
@@ -99,7 +100,7 @@
                     "event": {
                         "type": "string",
                         "description": "The transition that occurred.",
-                        "enum": ["opened", "proposed", "accepted", "rejected"]
+                        "enum": ["opened", "proposed", "accepted", "applied", "rejected"]
                     },
                     "notes": {
                         "type": "string",

@@ -20,23 +20,23 @@ async function fetchDecision(clientId, versionId, decisionId) {
 }
 
 // Status order — drives grouping and default expand state
-const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'rejected', 'superseded']
+const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'applied', 'rejected']
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
 
 const STATUS_STYLES = {
-  draft:      'bg-amber-50 text-amber-700',
-  proposed:   'bg-blue-50 text-blue-700',
-  accepted:   'bg-success-50 text-success-700',
-  rejected:   'bg-error-50 text-error-700',
-  superseded: 'bg-gray-100 text-gray-500',
+  draft:    'bg-amber-50 text-amber-700',
+  proposed: 'bg-blue-50 text-blue-700',
+  accepted: 'bg-success-50 text-success-700',
+  applied:  'bg-emerald-100 text-emerald-800',
+  rejected: 'bg-error-50 text-error-700',
 }
 
 const STATUS_LABELS = {
-  draft:      'Draft',
-  proposed:   'Proposed',
-  accepted:   'Accepted',
-  rejected:   'Rejected',
-  superseded: 'Superseded',
+  draft:    'Draft',
+  proposed: 'Proposed',
+  accepted: 'Accepted',
+  applied:  'Applied',
+  rejected: 'Rejected',
 }
 
 function ScopeChip({ scope }) {

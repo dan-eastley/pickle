@@ -11,10 +11,11 @@ import usePageTitle from '../hooks/usePageTitle'
 // ── Status badge ─────────────────────────────────────────────────────────────
 
 const STATUS_STYLES = {
-  draft:      'bg-amber-50 text-amber-700',
-  proposed:   'bg-blue-50 text-blue-700',
-  accepted:   'bg-success-50 text-success-700',
-  rejected:   'bg-error-50 text-error-700',
+  draft:    'bg-amber-50 text-amber-700',
+  proposed: 'bg-blue-50 text-blue-700',
+  accepted: 'bg-success-50 text-success-700',
+  applied:  'bg-emerald-100 text-emerald-800',
+  rejected: 'bg-error-50 text-error-700',
 }
 
 function StatusBadge({ status }) {
@@ -28,7 +29,7 @@ function StatusBadge({ status }) {
 
 // ── Status progress bar ───────────────────────────────────────────────────────
 
-const STATUS_STEPS = ['draft', 'proposed', 'accepted']
+const STATUS_STEPS = ['draft', 'proposed', 'accepted', 'applied']
 const STATUS_TERMINAL = { rejected: 'error' }
 
 function StatusProgress({ status }) {
@@ -91,18 +92,43 @@ function StatusActions({ status, onTransition, transitioning }) {
 
   if (status === 'draft') {
     return (
-      <div className="flex items-center justify-between gap-4 bg-blue-50 px-5 py-4 mb-6">
-        <div>
-          <p className="text-sm font-semibold text-blue-900">Ready to propose this decision?</p>
-          <p className="text-xs text-blue-600 mt-0.5">Moving to Proposed submits it for analysis and opens a pull request.</p>
+      <div className="mb-6">
+        <div className="flex items-center justify-between gap-4 bg-blue-50 px-5 py-4">
+          <div>
+            <p className="text-sm font-semibold text-blue-900">Ready to propose this decision?</p>
+            <p className="text-xs text-blue-600 mt-0.5">Moving to Proposed submits it for analysis and opens a pull request.</p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button disabled={transitioning} onClick={() => setRejectOpen(r => !r)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-error-300 hover:bg-error-50 text-error-600 text-sm font-medium transition-colors disabled:opacity-40">
+              Reject
+            </button>
+            <button disabled={transitioning} onClick={() => onTransition('proposed')}
+              className="flex items-center gap-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
+              {transitioning ? 'Updating…' : 'Propose'}
+              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+              </svg>
+            </button>
+          </div>
         </div>
-        <button disabled={transitioning} onClick={() => onTransition('proposed')}
-          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
-          {transitioning ? 'Updating…' : 'Propose'}
-          <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-            <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
-        </button>
+        {rejectOpen && (
+          <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</label>
+              <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
+                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
+                {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+              </select>
+            </div>
+            <button disabled={transitioning}
+              onClick={() => { setRejectOpen(false); onTransition('rejected', { 'rejection-reason': rejectReason }) }}
+              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
+              Confirm Rejection
+            </button>
+            <button onClick={() => setRejectOpen(false)} className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+          </div>
+        )}
       </div>
     )
   }
@@ -113,7 +139,7 @@ function StatusActions({ status, onTransition, transitioning }) {
         <div className="flex items-center justify-between gap-4 bg-success-50 px-5 py-4">
           <div>
             <p className="text-sm font-semibold text-success-700">Accept, reject, or return this decision?</p>
-            <p className="text-xs text-success-600 mt-0.5">Accepting applies the change to the architecture.</p>
+            <p className="text-xs text-success-600 mt-0.5">Accepting approves the change; it must then be Applied once delivered.</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <button disabled={transitioning} onClick={() => onTransition('draft')}
@@ -156,6 +182,34 @@ function StatusActions({ status, onTransition, transitioning }) {
       </div>
     )
   }
+
+  if (status === 'accepted') {
+    return (
+      <div className="flex items-center justify-between gap-4 bg-emerald-50 px-5 py-4 mb-6">
+        <div>
+          <p className="text-sm font-semibold text-emerald-800">Ready to mark this as applied?</p>
+          <p className="text-xs text-emerald-600 mt-0.5">Mark as Applied once the change has been delivered and the architecture updated.</p>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button disabled={transitioning} onClick={() => onTransition('proposed')}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40">
+            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+              <path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+            </svg>
+            Back to Proposed
+          </button>
+          <button disabled={transitioning} onClick={() => onTransition('applied')}
+            className="flex items-center gap-2 px-4 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium transition-colors disabled:opacity-40">
+            {transitioning ? 'Updating…' : 'Mark as Applied'}
+            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return null
 }
 
@@ -278,6 +332,7 @@ const HISTORY_STYLES = {
   opened:   'bg-gray-100 text-gray-600',
   proposed: 'bg-blue-50 text-blue-700',
   accepted: 'bg-success-50 text-success-700',
+  applied:  'bg-emerald-100 text-emerald-800',
   rejected: 'bg-error-50 text-error-700',
 }
 
