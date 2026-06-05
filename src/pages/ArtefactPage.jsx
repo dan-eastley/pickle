@@ -55,7 +55,7 @@ function AdrActionBar({ artefact, clientId, versionId }) {
             <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
           </svg>
           <span className="text-sm text-gray-600">
-            To propose changes to this content, raise an Architecture Decision Record.
+            Changes to this artefact must go through a Decision Record.
           </span>
         </div>
         <button

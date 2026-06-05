@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useSearchParams, Link } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { DOMAINS, ABSTRACTIONS, ARTEFACTS } from '../lib/artefacts'
 import usePageTitle from '../hooks/usePageTitle'
@@ -44,14 +44,6 @@ function RequirementsList({ requirements, onChange }) {
   )
 }
 
-function PreviewPanel({ decision }) {
-  return (
-    <div className="bg-gray-900 text-gray-100 p-4 overflow-auto text-xs font-mono leading-relaxed h-full">
-      <pre>{JSON.stringify(decision, null, 2)}</pre>
-    </div>
-  )
-}
-
 export default function DecisionEditorPage() {
   const { clientId, versionId } = useParams()
   const [searchParams] = useSearchParams()
@@ -65,9 +57,8 @@ export default function DecisionEditorPage() {
   const [scopeDomain, setScopeDomain] = useState(searchParams.get('domain') ?? '')
   const [scopeAbstraction, setScopeAbstraction] = useState(searchParams.get('abstraction') ?? '')
   const [scopeArtefact, setScopeArtefact] = useState(searchParams.get('artefact') ?? '')
-  const [showPreview, setShowPreview] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [saveResult, setSaveResult] = useState(null) // null | { ok, prUrl, error }
+  const [saveResult, setSaveResult] = useState(null)
 
   const filteredAbstractions = scopeDomain ? ABSTRACTIONS : []
   const filteredArtefacts = scopeDomain
@@ -101,7 +92,6 @@ export default function DecisionEditorPage() {
     setSaving(true)
     setSaveResult(null)
     try {
-      // Get next ADR ID from the API
       const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
       const { nextId, error: idError } = await idRes.json()
       if (idError) throw new Error(idError)
@@ -127,24 +117,16 @@ export default function DecisionEditorPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">New Architecture Decision Record</h1>
-          <p className="mt-1 text-sm text-gray-500">{clientName}</p>
+          <h1 className="text-xl font-semibold text-gray-900">New Decision</h1>
+          <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowPreview(p => !p)}
-            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
-          >
-            {showPreview ? 'Hide Preview' : 'Preview JSON'}
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={!narrative.trim() || saving}
-            className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            {saving ? 'Creating…' : 'Create Decision & Open PR'}
-          </button>
-        </div>
+        <button
+          onClick={handleSave}
+          disabled={!narrative.trim() || saving}
+          className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          {saving ? 'Creating…' : 'Create Decision & Open PR'}
+        </button>
       </div>
 
       {saveResult?.ok && (
@@ -161,102 +143,89 @@ export default function DecisionEditorPage() {
         </div>
       )}
 
-      <div className={`grid gap-6 ${showPreview ? 'grid-cols-2' : 'grid-cols-1 max-w-3xl'}`}>
-        {/* Form */}
-        <div className="space-y-5">
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="e.g. Adopt event-driven integration for real-time data flows"
-              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-            />
-          </div>
+      <div className="max-w-3xl space-y-5">
+        {/* Title */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+          <input
+            type="text"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="e.g. Adopt event-driven integration for real-time data flows"
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+          />
+        </div>
 
-          {/* Narrative */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Narrative <span className="text-error-500">*</span>
-            </label>
-            <p className="text-xs text-gray-400 mb-1.5">
-              Describe the context, the problem being solved, and the proposed direction. This is the core of the decision record.
-            </p>
-            <textarea
-              value={narrative}
-              onChange={e => setNarrative(e.target.value)}
-              rows={6}
-              placeholder="We require... This is based on... The proposed approach is..."
-              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
-            />
-          </div>
+        {/* Narrative */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Narrative <span className="text-error-500">*</span>
+          </label>
+          <p className="text-xs text-gray-400 mb-1.5">
+            State the business context, the problem being solved, and the proposed direction. Be specific — name the artefacts, capabilities, or systems affected, and explain why the change is needed now.
+          </p>
+          <textarea
+            value={narrative}
+            onChange={e => setNarrative(e.target.value)}
+            rows={6}
+            placeholder="We require... This is based on... The proposed approach is..."
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+          />
+        </div>
 
-          {/* Requirements */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
-            <p className="text-xs text-gray-400 mb-2">
-              Optional. List the specific requirements this decision must address.
-            </p>
-            <RequirementsList requirements={requirements} onChange={setRequirements} />
-          </div>
+        {/* Requirements */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
+          <p className="text-xs text-gray-400 mb-2">
+            Optional. List the specific things this decision must achieve. Each requirement should be testable and state the <em>what</em>, not the <em>how</em>.
+          </p>
+          <RequirementsList requirements={requirements} onChange={setRequirements} />
+        </div>
 
-          {/* Scope */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
-            <p className="text-xs text-gray-400 mb-2">
-              Optional. Constrain the decision to a specific domain, abstraction layer, or artefact type.
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Domain</label>
-                <select
-                  value={scopeDomain}
-                  onChange={e => { setScopeDomain(e.target.value); setScopeAbstraction(''); setScopeArtefact('') }}
-                  className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-                >
-                  <option value="">Any</option>
-                  {DOMAINS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Abstraction</label>
-                <select
-                  value={scopeAbstraction}
-                  onChange={e => { setScopeAbstraction(e.target.value); setScopeArtefact('') }}
-                  disabled={!scopeDomain}
-                  className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
-                >
-                  <option value="">Any</option>
-                  {filteredAbstractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Artefact type</label>
-                <select
-                  value={scopeArtefact}
-                  onChange={e => setScopeArtefact(e.target.value)}
-                  disabled={!scopeDomain}
-                  className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
-                >
-                  <option value="">Any</option>
-                  {filteredArtefacts.map(a => <option key={a.id} value={a.id}>{a.id} — {a.name}</option>)}
-                </select>
-              </div>
+        {/* Scope */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+          <p className="text-xs text-gray-400 mb-2">
+            Optional. Constrain the decision to a specific domain, abstraction layer, or artefact type.
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Domain</label>
+              <select
+                value={scopeDomain}
+                onChange={e => { setScopeDomain(e.target.value); setScopeAbstraction(''); setScopeArtefact('') }}
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+              >
+                <option value="">Any</option>
+                {DOMAINS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Abstraction</label>
+              <select
+                value={scopeAbstraction}
+                onChange={e => { setScopeAbstraction(e.target.value); setScopeArtefact('') }}
+                disabled={!scopeDomain}
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
+              >
+                <option value="">Any</option>
+                {filteredAbstractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Artefact type</label>
+              <select
+                value={scopeArtefact}
+                onChange={e => setScopeArtefact(e.target.value)}
+                disabled={!scopeDomain}
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
+              >
+                <option value="">Any</option>
+                {filteredArtefacts.map(a => <option key={a.id} value={a.id}>{a.id} — {a.name}</option>)}
+              </select>
             </div>
           </div>
         </div>
-
-        {/* JSON preview */}
-        {showPreview && (
-          <div className="border border-gray-200 overflow-hidden">
-            <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 text-xs font-medium text-gray-500">
-              decision.json preview
-            </div>
-            <PreviewPanel decision={decision} />
-          </div>
-        )}
       </div>
     </div>
   )

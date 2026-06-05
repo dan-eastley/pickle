@@ -34,7 +34,7 @@ function DomainCard({ domain, base }) {
         <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
           {domain.name} Architecture
         </h3>
-        <p className="mt-1 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
+        <p className="mt-1 text-sm text-gray-500 leading-relaxed line-clamp-2">{domain.description}</p>
         <div className="mt-3 flex items-center gap-3 text-xs text-gray-400">
           <span className="flex items-center gap-1">
             <FormatIcon format="catalogue" className="w-3.5 h-3.5" />

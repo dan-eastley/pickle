@@ -41,10 +41,10 @@ export default function VersionsPage() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10">
-      <div className="mb-2">
+    <div className="max-w-[1400px] mx-auto px-6 pb-10">
+      <div className="mb-4">
         <Link to="/clients" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
-          ← Clients
+          ← All clients
         </Link>
       </div>
       <div className="mb-6">
