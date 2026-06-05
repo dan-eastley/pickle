@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-019",
     "title": "Another decision to test how quick we add",
-    "status": "accepted",
+    "status": "committed",
     "narrative": "Lorum Ipsum blah blah blah",
     "narrative-validation": [
         {
@@ -109,14 +109,14 @@
             "artefact-name": "Business Capabilities",
             "change-type": "create",
             "description": "Add new entry to Business Capabilities as identified by accepted findings.",
-            "detail": "Stub change \u2014 replace with Claude-generated output when integration is re-enabled."
+            "detail": "Stub change — replace with Claude-generated output when integration is re-enabled."
         },
         {
             "artefact-id": "BUS-CAP",
             "artefact-name": "Business Capabilities",
             "change-type": "update",
             "description": "Update existing entries in Business Capabilities to reflect the decision outcome.",
-            "detail": "Stub change \u2014 replace with Claude-generated output when integration is re-enabled."
+            "detail": "Stub change — replace with Claude-generated output when integration is re-enabled."
         }
     ]
 }
