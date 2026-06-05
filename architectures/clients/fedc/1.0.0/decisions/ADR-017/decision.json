@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-017",
     "title": "Establish Data Mesh for Analytics Platform",
-    "status": "proposed",
+    "status": "rejected",
     "narrative": "The centralised data warehouse approach creates bottlenecks for analytics delivery and couples data ownership to a central team. We adopt a data mesh pattern where each business domain owns and publishes its data products, with a common infrastructure layer for discoverability and governance. This supports BUS-STR-003 and enables self-serve analytics at scale.",
     "requirements": [
         {
@@ -129,5 +129,6 @@
             "event": "proposed",
             "notes": "Data mesh approach reviewed with domain data leads. Submitted for analysis."
         }
-    ]
+    ],
+    "rejection-reason": "duplicate"
 }
