@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import release from '../../version.json'
 
 export default function Footer() {
   const [config, setConfig] = useState(null)
@@ -12,6 +13,8 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-gray-200 mt-auto px-6 py-3 flex items-center gap-4 flex-wrap">
+      <span className="text-xs text-gray-400 font-mono font-semibold">{release.version}</span>
+      <span className="text-xs text-gray-300">·</span>
       <span className="text-xs text-gray-400 font-mono">
         {config?.owner && config?.repo
           ? `${config.owner} / ${config.repo}`
