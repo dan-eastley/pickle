@@ -3,7 +3,7 @@
         {
             "decision-id": "ADR-001",
             "title": "Adopt API Gateway for External Partner Integration",
-            "status": "draft",
+            "status": "rejected",
             "scope": {
                 "domain": "integration",
                 "abstraction": "conceptual",
