@@ -7,5 +7,12 @@
         "domain": "integration",
         "abstraction": "conceptual",
         "artefact": "INT-STR"
-    }
+    },
+    "history": [
+        {
+            "timestamp": "2025-03-05T11:00:00Z",
+            "event": "opened",
+            "notes": "Decision raised to address inconsistent external integration patterns."
+        }
+    ]
 }

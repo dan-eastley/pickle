@@ -117,5 +117,22 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-02-28T09:15:00Z",
+            "event": "opened",
+            "notes": "Decision raised after third-party integration incident identified inconsistent security posture."
+        },
+        {
+            "timestamp": "2025-03-05T11:00:00Z",
+            "event": "proposed",
+            "notes": "Guardrails reviewed with security and vendor management teams. Submitted for analysis."
+        },
+        {
+            "timestamp": "2025-03-12T16:45:00Z",
+            "event": "accepted",
+            "notes": "Accepted. Guardrails added to integration catalogue. Existing vendor contracts reviewed."
+        }
     ]
 }

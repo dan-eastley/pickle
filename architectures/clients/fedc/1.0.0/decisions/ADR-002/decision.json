@@ -163,5 +163,12 @@
             "recommendation": "Proceed by updating instance files only: architectures/clients/client-a/1.0.0/artefacts/domains/business/conceptual/BUS-CAP/BUS-CAP.json, architectures/clients/client-a/1.0.0/artefacts/domains/business/conceptual/BUS-PRO/BUS-PRO.json, and architectures/clients/client-a/1.0.0/artefacts/domains/application/logical/APP-DAP/APP-DAP.json.",
             "rationale": "Reusing existing artefact types is the correct approach when the required content fits within already-defined schemas. New artefact types are only warranted when an entirely new output format or domain-layer combination is needed, which is not the case here."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-02-03T09:30:00Z",
+            "event": "opened",
+            "notes": "Decision raised to support large capital delivery requirements."
+        }
     ]
 }

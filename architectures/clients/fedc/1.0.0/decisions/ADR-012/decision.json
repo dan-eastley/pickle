@@ -7,5 +7,12 @@
         "domain": "business",
         "abstraction": "conceptual",
         "artefact": "BUS-CAP"
-    }
+    },
+    "history": [
+        {
+            "timestamp": "2025-04-03T09:30:00Z",
+            "event": "opened",
+            "notes": "Decision raised to address fragmented asset data across maintenance, finance and field operations."
+        }
+    ]
 }

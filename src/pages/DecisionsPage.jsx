@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getDomain, getAbstraction, getArtefact } from '../lib/artefacts'
+import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
+import DomainIcon from '../components/ui/DomainIcon'
 import Spinner from '../components/ui/Spinner'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -19,35 +20,39 @@ async function fetchDecision(clientId, versionId, decisionId) {
 }
 
 // Status order — drives grouping and default expand state
-const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'rejected', 'superseded']
+const STATUS_ORDER = ['draft', 'proposed', 'accepted', 'applied', 'rejected']
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
 
 const STATUS_STYLES = {
-  draft:      'bg-amber-50 text-amber-700',
-  proposed:   'bg-blue-50 text-blue-700',
-  accepted:   'bg-success-50 text-success-700',
-  rejected:   'bg-error-50 text-error-700',
-  superseded: 'bg-gray-100 text-gray-500',
+  draft:    'bg-amber-50 text-amber-700',
+  proposed: 'bg-blue-50 text-blue-700',
+  accepted: 'bg-success-50 text-success-700',
+  applied:  'bg-emerald-100 text-emerald-800',
+  rejected: 'bg-error-50 text-error-700',
 }
 
 const STATUS_LABELS = {
-  draft:      'Draft',
-  proposed:   'Proposed',
-  accepted:   'Accepted',
-  rejected:   'Rejected',
-  superseded: 'Superseded',
+  draft:    'Draft',
+  proposed: 'Proposed',
+  accepted: 'Accepted',
+  applied:  'Applied',
+  rejected: 'Rejected',
 }
 
 function ScopeChip({ scope }) {
-  const parts = [
-    scope.domain ? getDomain(scope.domain)?.name ?? scope.domain : null,
+  if (!scope?.domain) return null
+  const domainData = getDomain(scope.domain)
+  const dc = DOMAIN_COLORS[scope.domain]
+  const extra = [
     scope.abstraction ? getAbstraction(scope.abstraction)?.name ?? scope.abstraction : null,
-    scope.artefact ? getArtefact(scope.artefact)?.id ?? scope.artefact : null,
+    scope.artefact    ? getArtefact(scope.artefact)?.id    ?? scope.artefact         : null,
   ].filter(Boolean)
-  if (!parts.length) return null
+
   return (
-    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
-      {parts.join(' › ')}
+    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
+      <DomainIcon domain={scope.domain} className="w-3 h-3 flex-shrink-0" />
+      {domainData?.name ?? scope.domain}
+      {extra.length > 0 && <span className="opacity-60 ml-0.5">› {extra.join(' › ')}</span>}
     </span>
   )
 }

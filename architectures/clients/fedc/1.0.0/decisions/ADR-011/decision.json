@@ -106,5 +106,22 @@
             "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
             "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
         }
+    ],
+    "history": [
+        {
+            "timestamp": "2025-01-15T10:30:00Z",
+            "event": "opened",
+            "notes": "Decision raised to establish microservices as the default application pattern."
+        },
+        {
+            "timestamp": "2025-01-20T14:00:00Z",
+            "event": "proposed",
+            "notes": "Submitted for analysis."
+        },
+        {
+            "timestamp": "2025-01-28T11:00:00Z",
+            "event": "rejected",
+            "notes": "Rejected as duplicate. ADR-005 (Cloud-First Policy) covers the architectural direction for new applications more broadly. Microservices guidance will be addressed as a principles statement within APP-PRN."
+        }
     ]
 }

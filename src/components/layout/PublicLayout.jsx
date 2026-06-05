@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import Footer from './Footer'
 
 export default function PublicLayout() {
   return (
@@ -29,6 +30,7 @@ export default function PublicLayout() {
       <main className="flex-1">
         <Outlet />
       </main>
+      <Footer />
     </div>
   )
 }
