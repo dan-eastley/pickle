@@ -1,0 +1,28 @@
+{
+    "decision-id": "ADR-006",
+    "title": "Consolidate Network Operations Management onto an Integrated Platform",
+    "status": "draft",
+    "narrative": "Network operations at FEDC currently relies on five separate applications for fault management, work order management, asset tracking, crew scheduling, and reporting. These tools do not share data, require manual handoffs between teams, and produce inconsistent operational metrics because each system maintains its own records. Field crews frequently work from outdated information because updates in one system are not reflected in another. We propose consolidating onto a single integrated network operations management platform. The platform must cover the full operational workflow from fault detection through crew dispatch to resolution. Integration with SCADA telemetry and the asset register is mandatory. A phased migration over 24 months will allow parallel running during transition.",
+    "requirements": [
+        {
+            "title": "End-to-end workflow support",
+            "description": "The platform must support the complete network operations workflow: fault detection, work order creation, crew assignment, field execution, and resolution recording within a single system.",
+            "type": "Functional"
+        },
+        {
+            "title": "SCADA integration",
+            "description": "The platform must consume real-time SCADA telemetry to automatically raise fault notifications for qualifying network events without manual intervention.",
+            "type": "Functional"
+        },
+        {
+            "title": "Offline capability",
+            "description": "Field crew mobile interfaces must function offline for up to 8 hours, synchronising automatically when connectivity is restored.",
+            "type": "Non-Functional"
+        }
+    ],
+    "scope": {
+        "domain": "application",
+        "abstraction": "logical",
+        "artefact": "APP-DAP"
+    }
+}
