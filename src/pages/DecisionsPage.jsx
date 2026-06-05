@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getDomain, getAbstraction, getArtefact } from '../lib/artefacts'
+import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
+import DomainIcon from '../components/ui/DomainIcon'
 import Spinner from '../components/ui/Spinner'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -39,15 +40,19 @@ const STATUS_LABELS = {
 }
 
 function ScopeChip({ scope }) {
-  const parts = [
-    scope.domain ? getDomain(scope.domain)?.name ?? scope.domain : null,
+  if (!scope?.domain) return null
+  const domainData = getDomain(scope.domain)
+  const dc = DOMAIN_COLORS[scope.domain]
+  const extra = [
     scope.abstraction ? getAbstraction(scope.abstraction)?.name ?? scope.abstraction : null,
-    scope.artefact ? getArtefact(scope.artefact)?.id ?? scope.artefact : null,
+    scope.artefact    ? getArtefact(scope.artefact)?.id    ?? scope.artefact         : null,
   ].filter(Boolean)
-  if (!parts.length) return null
+
   return (
-    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
-      {parts.join(' › ')}
+    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
+      <DomainIcon domain={scope.domain} className="w-3 h-3 flex-shrink-0" />
+      {domainData?.name ?? scope.domain}
+      {extra.length > 0 && <span className="opacity-60 ml-0.5">› {extra.join(' › ')}</span>}
     </span>
   )
 }

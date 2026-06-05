@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getDomain, getAbstraction, getArtefact } from '../lib/artefacts'
+import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS, ABSTRACTION_COLORS } from '../lib/artefacts'
+import DomainIcon from '../components/ui/DomainIcon'
+import FormatIcon from '../components/ui/FormatIcon'
 import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
 import usePageTitle from '../hooks/usePageTitle'
@@ -323,17 +325,47 @@ function HistorySection({ history }) {
 
 function ScopeSection({ scope }) {
   if (!scope) return null
-  const domainData = scope.domain ? getDomain(scope.domain) : null
+  const domainData    = scope.domain      ? getDomain(scope.domain)           : null
   const abstractionData = scope.abstraction ? getAbstraction(scope.abstraction) : null
-  const artefactData = scope.artefact ? getArtefact(scope.artefact) : null
+  const artefactData  = scope.artefact    ? getArtefact(scope.artefact)       : null
+  const dc = DOMAIN_COLORS[scope.domain]
+  const ac = ABSTRACTION_COLORS[scope.abstraction]
 
   return (
     <div id="section-scope">
       <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Scope</h3>
       <div className="flex items-center gap-2 flex-wrap">
-        {domainData && <span className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-700">{domainData.name}</span>}
-        {abstractionData && (<><span className="text-gray-300">›</span><span className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-700">{abstractionData.name}</span></>)}
-        {artefactData && (<><span className="text-gray-300">›</span><span className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-700"><span className="font-mono mr-1">{artefactData.id}</span>{artefactData.name}</span></>)}
+
+        {/* Domain — coloured icon + name */}
+        {domainData && (
+          <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
+            <DomainIcon domain={scope.domain} className="w-3.5 h-3.5 flex-shrink-0" />
+            {domainData.name}
+          </span>
+        )}
+
+        {/* Abstraction — layer badge */}
+        {abstractionData && (
+          <>
+            <span className="text-gray-300">›</span>
+            <span className={`text-xs font-semibold px-2 py-0.5 ${ac?.badge ?? 'bg-gray-100 text-gray-600'}`}>
+              {abstractionData.label} · {abstractionData.name}
+            </span>
+          </>
+        )}
+
+        {/* Artefact — format icon + ID + name */}
+        {artefactData && (
+          <>
+            <span className="text-gray-300">›</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 bg-gray-100 text-gray-700">
+              <FormatIcon format={artefactData.format} className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+              <span className="font-mono">{artefactData.id}</span>
+              <span className="text-gray-500">{artefactData.name}</span>
+            </span>
+          </>
+        )}
+
       </div>
     </div>
   )
