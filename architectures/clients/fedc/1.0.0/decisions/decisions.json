@@ -168,7 +168,7 @@
         {
             "decision-id": "ADR-019",
             "title": "Another decision to test how quick we add",
-            "status": "accepted"
+            "status": "staged"
         }
     ]
 }
