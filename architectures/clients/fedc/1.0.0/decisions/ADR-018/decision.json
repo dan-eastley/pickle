@@ -2,5 +2,39 @@
     "decision-id": "ADR-018",
     "title": "(untitled)",
     "status": "draft",
-    "narrative": "We need more architectures"
+    "narrative": "We need more architectures",
+    "context-validation": {
+        "branch-type": "decision",
+        "outcome": "fail",
+        "allowed-prefix": "architectures/clients/fedc/",
+        "changed-files": [
+            "architectures/clients/fedc/1.0.0/decisions/ADR-018/decision.json",
+            "architectures/clients/fedc/1.0.0/decisions/decisions.json",
+            "src/App.jsx",
+            "src/components/artefacts/ArtefactRow.jsx",
+            "src/components/layout/Footer.jsx",
+            "src/components/ui/NavigationProgress.jsx",
+            "src/pages/ArtefactPage.jsx",
+            "src/pages/ClientsPage.jsx",
+            "src/pages/DecisionDetailPage.jsx",
+            "src/pages/DecisionEditorPage.jsx",
+            "src/pages/DomainsPage.jsx",
+            "src/pages/VersionsPage.jsx",
+            "src/version.json"
+        ],
+        "violations": [
+            "src/App.jsx",
+            "src/components/artefacts/ArtefactRow.jsx",
+            "src/components/layout/Footer.jsx",
+            "src/components/ui/NavigationProgress.jsx",
+            "src/pages/ArtefactPage.jsx",
+            "src/pages/ClientsPage.jsx",
+            "src/pages/DecisionDetailPage.jsx",
+            "src/pages/DecisionEditorPage.jsx",
+            "src/pages/DomainsPage.jsx",
+            "src/pages/VersionsPage.jsx",
+            "src/version.json"
+        ],
+        "checked-at": "2026-06-05T13:30:41+00:00"
+    }
 }
