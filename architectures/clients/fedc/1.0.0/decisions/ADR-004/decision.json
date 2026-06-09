@@ -34,5 +34,19 @@
         ],
         "violations": [],
         "checked-at": "2026-06-09T08:33:38+00:00"
-    }
+    },
+    "impact-assessment": [
+        {
+            "finding": "'Establish a Cloud-First Policy for New Application Development' introduces changes affecting artefacts in at least one architecture domain. References are consistent with the current baseline.",
+            "impact": "Changes of this scope require catalogue updates to maintain traceability from strategy to implementation.",
+            "recommendation": "Identify all artefacts requiring amendment before moving to Proposed.",
+            "rationale": "Explicit impact lists allow Referential Integrity to run comprehensively."
+        },
+        {
+            "finding": "No conflicts with currently accepted decisions. The proposed change is additive.",
+            "impact": "Low conflict risk reduces review overhead and increases acceptance likelihood.",
+            "recommendation": "Proceed to Referential Integrity. Monitor for conflicts if concurrent ADRs are in flight.",
+            "rationale": "Additive decisions not contradicting accepted ADRs are eligible for expedited review."
+        }
+    ]
 }
