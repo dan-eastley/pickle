@@ -133,7 +133,7 @@
         {
             "decision-id": "ADR-014",
             "title": "Define Application Guardrails for Security and Operational Quality",
-            "status": "draft",
+            "status": "proposed",
             "scope": {
                 "domain": "application",
                 "abstraction": "physical",
