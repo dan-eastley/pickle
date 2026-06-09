@@ -104,5 +104,19 @@
             "recommendation": "Proceed to Accepted. Assign a delivery champion and schedule a post-implementation review in 90 days.",
             "rationale": "Post-implementation reviews close the feedback loop and update the architecture catalogue."
         }
+    ],
+    "challenger-analysis": [
+        {
+            "finding": "'Establish a Cloud-First Policy for New Application Development' introduces a dependency on a capability not yet fully mature in this organisation.",
+            "impact": "Immature capabilities increase delivery timeline risk and may require additional skills or tooling.",
+            "recommendation": "Include a risk-mitigation requirement covering capability assessment and a fallback position.",
+            "rationale": "Documenting a fallback at decision time reduces the cost of pivoting and satisfies Guardrails risk management."
+        },
+        {
+            "finding": "The decision scope is broad and may introduce unintended coupling if implementation boundaries are not defined.",
+            "impact": "Poorly bounded decisions create technical debt and complicate future changes in adjacent domains.",
+            "recommendation": "Add a constraint: implementation must not create direct dependencies between affected and adjacent domains.",
+            "rationale": "Explicit boundary constraints are cheaper now than to refactor post-delivery."
+        }
     ]
 }
