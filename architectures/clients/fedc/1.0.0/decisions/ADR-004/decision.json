@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-004",
     "title": "Establish a Cloud-First Policy for New Application Development",
-    "status": "draft",
+    "status": "proposed",
     "narrative": "FEDC's application portfolio is split between on-premise infrastructure and cloud-hosted services, with no consistent policy governing where new applications are deployed. This has resulted in a fragmented operational model, with separate teams managing on-premise and cloud infrastructure, inconsistent security postures, and missed opportunities for elasticity and managed services. We establish a cloud-first policy: all new application capabilities must be designed and deployed on cloud infrastructure by default. On-premise deployment requires a formal architectural exception approved by the architecture review board, with documented justification covering data sovereignty, latency, or regulatory constraints. Existing on-premise applications will be assessed for migration as part of the annual portfolio review.",
     "requirements": [
         {
