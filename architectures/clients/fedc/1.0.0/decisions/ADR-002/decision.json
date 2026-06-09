@@ -89,7 +89,8 @@
             "finding": "The decision supports BUS-STR-003 (decide with data) by introducing a structured architecture artefact.",
             "impact": "Decisions advancing multiple strategic objectives deliver compound value.",
             "recommendation": "Add a target-outcome entry to the strategy catalogue reflecting this decision's contribution.",
-            "rationale": "Updated strategy entries close the feedback loop between acceptance and progress tracking."
+            "rationale": "Updated strategy entries close the feedback loop between acceptance and progress tracking.",
+            "review": "declined"
         }
     ],
     "principles-alignment": [
