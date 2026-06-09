@@ -14,7 +14,11 @@
             "Provides enforceable criteria for application design review",
             "Enables automated guardrail checking during application decision governance",
             "Reduces maintenance burden caused by non-standard technology choices"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Guardrail",
+            "plural": "Guardrails"
+        }
     },
     "type": "object",
     "required": [

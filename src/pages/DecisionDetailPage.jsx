@@ -34,6 +34,15 @@ function StatusBadge({ status }) {
 const STATUS_STEPS = ['draft', 'proposed', 'accepted', 'staged', 'committed']
 const STATUS_TERMINAL = { rejected: 'error' }
 
+const STATUS_TOOLTIPS = {
+  draft:     'The decision is being drafted. Not yet submitted for analysis.',
+  proposed:  'Submitted for AI analysis. Findings are generated at this stage.',
+  accepted:  'Reviewed and accepted. Ready to be staged for application.',
+  staged:    'Architecture changes are being applied via a pull request.',
+  committed: 'Merged to main. Architecture changes are live.',
+  rejected:  'This decision has been rejected and will not proceed.',
+}
+
 function StatusProgress({ status }) {
   const isTerminal = status in STATUS_TERMINAL
   const activeStep = STATUS_STEPS.indexOf(status)
@@ -46,8 +55,8 @@ function StatusProgress({ status }) {
 
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center">
-              <div className={`w-7 h-7 flex items-center justify-center text-xs font-semibold
+            <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
+              <div className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default
                 ${isPast ? 'bg-brand-600 text-white' : ''}
                 ${isCurrent ? 'bg-brand-600 text-white ring-2 ring-brand-200' : ''}
                 ${!isPast && !isCurrent ? 'bg-gray-100 text-gray-400' : ''}
@@ -71,8 +80,8 @@ function StatusProgress({ status }) {
       {isTerminal && (
         <>
           <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
-          <div className="flex flex-col items-center">
-            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200">!</div>
+          <div className="flex flex-col items-center" title={STATUS_TOOLTIPS.rejected}>
+            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">!</div>
             <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
           </div>
         </>
@@ -288,10 +297,22 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving }) {
   )
 }
 
+// ── Review section (narrative-validation findings, separate from Analysis) ────
+
+function ReviewSection({ decision, accepted, onAccept, saving }) {
+  const rows = decision['narrative-validation']
+  if (!rows?.length) return null
+  return (
+    <div id="section-review">
+      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Review</h3>
+      <AnalysisTable rows={rows} sectionKey="narrative-validation" accepted={accepted} onAccept={onAccept} saving={saving} />
+    </div>
+  )
+}
+
 // ── Analysis tabs (Untitled UI underline style) ───────────────────────────────
 
 const ANALYSIS_SECTIONS = [
-  { key: 'narrative-validation',  label: 'Narrative Review' },
   { key: 'impact-assessment',     label: 'Impact Assessment' },
   { key: 'referential-integrity', label: 'Referential Integrity' },
   { key: 'strategy-alignment',    label: 'Strategy Alignment' },
@@ -456,53 +477,21 @@ function HistorySection({ history }) {
   )
 }
 
-// ── Scope display ─────────────────────────────────────────────────────────────
+// ── Scope chip (consistent format across detail + index pages) ───────────────
 
-function ScopeSection({ scope }) {
-  if (!scope) return null
-  const domainData    = scope.domain      ? getDomain(scope.domain)           : null
-  const abstractionData = scope.abstraction ? getAbstraction(scope.abstraction) : null
-  const artefactData  = scope.artefact    ? getArtefact(scope.artefact)       : null
+function ScopeChipDetail({ scope }) {
+  if (!scope?.domain) return null
+  const domainData = getDomain(scope.domain)
   const dc = DOMAIN_COLORS[scope.domain]
-  const ac = ABSTRACTION_COLORS[scope.abstraction]
-
+  const abstractionName = scope.abstraction ? getAbstraction(scope.abstraction)?.name ?? scope.abstraction : null
+  const artefactName    = scope.artefact    ? getArtefact(scope.artefact)?.name    ?? scope.artefact    : null
+  const extra = [abstractionName, artefactName].filter(Boolean)
   return (
-    <div id="section-scope">
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Scope</h3>
-      <div className="flex items-center gap-2 flex-wrap">
-
-        {/* Domain — coloured icon + name */}
-        {domainData && (
-          <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
-            <DomainIcon domain={scope.domain} className="w-3.5 h-3.5 flex-shrink-0" />
-            {domainData.name}
-          </span>
-        )}
-
-        {/* Abstraction — layer badge */}
-        {abstractionData && (
-          <>
-            <span className="text-gray-300">›</span>
-            <span className={`text-xs font-semibold px-2 py-0.5 ${ac?.badge ?? 'bg-gray-100 text-gray-600'}`}>
-              {abstractionData.label} · {abstractionData.name}
-            </span>
-          </>
-        )}
-
-        {/* Artefact — format icon + ID + name */}
-        {artefactData && (
-          <>
-            <span className="text-gray-300">›</span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 bg-gray-100 text-gray-700">
-              <FormatIcon format={artefactData.format} className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
-              <span className="font-mono">{artefactData.id}</span>
-              <span className="text-gray-500">{artefactData.name}</span>
-            </span>
-          </>
-        )}
-
-      </div>
-    </div>
+    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 flex-shrink-0 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
+      <DomainIcon domain={scope.domain} className="w-3 h-3 flex-shrink-0" />
+      {domainData?.name ?? scope.domain}
+      {extra.length > 0 && <span className="opacity-60 ml-0.5">› {extra.join(' › ')}</span>}
+    </span>
   )
 }
 
@@ -511,8 +500,8 @@ function ScopeSection({ scope }) {
 function SectionNav({ decision }) {
   const sections = [
     { id: 'section-narrative',    label: 'Narrative' },
-    decision.scope               && { id: 'section-scope',               label: 'Scope' },
     decision.requirements?.length && { id: 'section-requirements',       label: 'Requirements' },
+    decision['narrative-validation']?.length && { id: 'section-review',  label: 'Review' },
     { id: 'section-analysis',     label: 'Analysis' },
     decision['architecture-changes']?.length && { id: 'section-architecture-changes', label: 'Architecture Changes' },
     decision.history?.length     && { id: 'section-history',             label: 'History' },
@@ -620,6 +609,11 @@ export default function DecisionDetailPage() {
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
+            {decision.scope && (
+              <div className="mt-2">
+                <ScopeChipDetail scope={decision.scope} />
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2 flex-shrink-0 self-start">
             <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1">
@@ -647,8 +641,6 @@ export default function DecisionDetailPage() {
       <SectionNav decision={decision} />
 
       <div className="space-y-8">
-        <ScopeSection scope={decision.scope} />
-
         <div id="section-narrative">
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Narrative</h3>
           <p className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</p>
@@ -676,7 +668,10 @@ export default function DecisionDetailPage() {
           </div>
         )}
 
-        {/* Status actions — after narrative/requirements, before analysis */}
+        {/* Review — narrative-validation findings, separate from analysis tabs */}
+        <ReviewSection decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
+
+        {/* Status actions — above analysis */}
         <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
         {transitionError && (
           <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
@@ -684,8 +679,14 @@ export default function DecisionDetailPage() {
           </div>
         )}
 
-        {/* Analysis — tabbed */}
+        {/* Divider before analysis */}
+        <hr className="border-gray-200" />
+
+        {/* Analysis — tabbed (excludes Narrative Review) */}
         <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
+
+        {/* Status actions — duplicated below analysis for convenience */}
+        <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
 
         {/* Architecture Changes */}
         <ArchitectureChanges changes={decision['architecture-changes']} />

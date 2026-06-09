@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { useParams, Navigate } from 'react-router-dom'
-import { getArtefact, getDomain, getAbstraction, DOMAIN_COLORS } from '../lib/artefacts'
+import { useEffect, useState, useCallback } from 'react'
+import { useParams, Navigate, Link } from 'react-router-dom'
+import { getArtefact, getDomain, getAbstraction, DOMAIN_COLORS, getDiagramType } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
@@ -46,6 +46,7 @@ function AdrActionBar({ artefact, clientId, versionId }) {
   const [modalOpen, setModalOpen] = useState(false)
   const bgClass = DOMAIN_ACTION_BG[artefact.domain] ?? 'bg-gray-50'
   const btnClass = DOMAIN_BUTTON[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700 text-white'
+  const viewDecisionsUrl = `/clients/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
 
   return (
     <>
@@ -55,7 +56,8 @@ function AdrActionBar({ artefact, clientId, versionId }) {
             <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
           </svg>
           <span className="text-sm text-gray-600">
-            Changes to this artefact must go through a Decision Record.
+            Changes to this artefact must go through a Decision Record.{' '}
+            <a href={viewDecisionsUrl} className="underline hover:opacity-80 transition-opacity">View decisions</a>
           </span>
         </div>
         <button
@@ -81,12 +83,29 @@ function AdrActionBar({ artefact, clientId, versionId }) {
   )
 }
 
-function ArtefactHeader({ artefact, schema }) {
+const PURPOSE_STORAGE_KEY = 'artefact-purpose-collapsed'
+
+function usePurposeCollapsed() {
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem(PURPOSE_STORAGE_KEY) === 'true' } catch { return false }
+  })
+  const toggle = useCallback(() => {
+    setCollapsed(prev => {
+      const next = !prev
+      try { localStorage.setItem(PURPOSE_STORAGE_KEY, String(next)) } catch {}
+      return next
+    })
+  }, [])
+  return [collapsed, toggle]
+}
+
+function ArtefactHeader({ artefact, schema, clientId, versionId }) {
   const domain = getDomain(artefact.domain)
   const abstraction = getAbstraction(artefact.abstraction)
   const colors = DOMAIN_COLORS[artefact.domain]
   const metaDescription = schema?.meta?.description
   const metaPurpose = schema?.meta?.purpose
+  const [purposeCollapsed, togglePurpose] = usePurposeCollapsed()
 
   return (
     <div className="mb-6 pb-5 border-b border-gray-200">
@@ -116,15 +135,26 @@ function ArtefactHeader({ artefact, schema }) {
           <p className="mt-1 text-sm text-gray-500">{metaDescription ?? artefact.description}</p>
           {metaPurpose?.length > 0 && (
             <div className="mt-4">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Purpose</p>
-              <ul className="space-y-1">
-                {metaPurpose.map((point, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                    <span className="mt-1.5 w-1.5 h-1.5 bg-gray-300 flex-shrink-0" />
-                    {point}
-                  </li>
-                ))}
-              </ul>
+              <button
+                onClick={togglePurpose}
+                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
+              >
+                <svg viewBox="0 0 16 16" fill="none"
+                  className={`w-3 h-3 transition-transform ${purposeCollapsed ? '' : 'rotate-90'}`}>
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Purpose
+              </button>
+              {!purposeCollapsed && (
+                <ul className="space-y-1">
+                  {metaPurpose.map((point, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                      <span className="mt-1.5 w-1.5 h-1.5 bg-gray-300 flex-shrink-0" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
         </div>
@@ -132,6 +162,43 @@ function ArtefactHeader({ artefact, schema }) {
           {artefact.id}
         </span>
       </div>
+
+      {/* Related artefacts */}
+      {artefact.relatedTo?.length > 0 && (
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Related Artefacts</p>
+          <div className="flex flex-wrap gap-2">
+            {artefact.relatedTo.map(({ artefactId, relationship }) => {
+              const related = getArtefact(artefactId)
+              if (!related) return null
+              return (
+                <Link
+                  key={artefactId}
+                  to={`/clients/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
+                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
+                >
+                  <span className="text-gray-400">{relationship}</span>
+                  <span className="font-mono text-gray-400">{related.id}</span>
+                  <span className="font-medium">{related.name}</span>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Diagram type badge */}
+      {artefact.diagramType && (
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Diagram Type</p>
+          <span className="inline-block text-xs px-2 py-0.5 bg-amber-50 text-amber-700">
+            {getDiagramType(artefact.diagramType)?.label ?? artefact.diagramType}
+          </span>
+          {getDiagramType(artefact.diagramType)?.description && (
+            <p className="mt-1 text-xs text-gray-400">{getDiagramType(artefact.diagramType).description}</p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -174,7 +241,7 @@ export default function ArtefactPage() {
 
   return (
     <div>
-      <ArtefactHeader artefact={artefact} schema={schema} />
+      <ArtefactHeader artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
       <AdrActionBar artefact={artefact} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
 
       {loading && (

@@ -14,7 +14,11 @@
             "Provides clear go/no-go criteria for architecture review",
             "Reduces risk by codifying hard limits alongside soft principles",
             "Enables automated guardrail checking in the decision governance workflow"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Guardrail",
+            "plural": "Guardrails"
+        }
     },
     "type": "object",
     "required": [

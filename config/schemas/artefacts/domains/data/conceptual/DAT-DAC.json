@@ -14,7 +14,17 @@
             "Enables data ownership to be assigned at the subject area level",
             "Serves as the foundation for logical and physical data modelling",
             "Supports data governance by making subject-area boundaries explicit"
-        ]
+        ],
+        "renderAs": "grouped",
+        "grouping": {
+            "parentArray": "domains",
+            "childArray": "concepts",
+            "foreignKey": "domain-id"
+        },
+        "countLabels": {
+            "parent": "Domain",
+            "child": "Concept"
+        }
     },
     "type": "object",
     "required": [

@@ -14,7 +14,11 @@
             "Provides guidance on architecture qualities such as modularity, coupling, and resilience",
             "Enables automated analysis of proposed applications against established principles",
             "Creates shared expectations between application architects, engineers, and product teams"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Principle",
+            "plural": "Principles"
+        }
     },
     "type": "object",
     "required": [

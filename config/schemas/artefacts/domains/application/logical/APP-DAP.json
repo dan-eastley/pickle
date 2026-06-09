@@ -14,7 +14,17 @@
             "Provides the mapping between business capabilities and the applications that support them",
             "Enables rationalisation by making duplication and fragmentation visible",
             "Supports investment decisions by showing where applications cluster and where coverage is thin"
-        ]
+        ],
+        "renderAs": "grouped",
+        "grouping": {
+            "parentArray": "domains",
+            "childArray": "platforms",
+            "foreignKey": "domain-id"
+        },
+        "countLabels": {
+            "parent": "Domain",
+            "child": "Platform"
+        }
     },
     "type": "object",
     "required": [

@@ -14,7 +14,11 @@
             "Serves as the mapping anchor between business intent and application and data architecture",
             "Supports maturity assessment to identify where to invest and where to improve",
             "Reduces duplication by making overlapping capabilities visible"
-        ]
+        ],
+        "countLabels": {
+            "level1": "Level 1",
+            "level2": "Level 2"
+        }
     },
     "type": "object",
     "required": [

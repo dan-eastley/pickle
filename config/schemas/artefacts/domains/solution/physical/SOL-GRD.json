@@ -14,7 +14,11 @@
             "Codifies the minimum quality bar for cross-domain solution review",
             "Enables automated guardrail checking for solutions before they are committed to delivery",
             "Reduces delivery risk by catching architectural violations before implementation begins"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Guardrail",
+            "plural": "Guardrails"
+        }
     },
     "type": "object",
     "required": [

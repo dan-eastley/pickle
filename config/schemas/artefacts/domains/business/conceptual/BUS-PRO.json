@@ -14,7 +14,11 @@
             "Provides the operational context that application architecture must support",
             "Enables process-to-application traceability across the architecture",
             "Supports identification of duplication, gaps, and inefficiencies in delivery"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Process",
+            "plural": "Processes"
+        }
     },
     "type": "object",
     "required": [

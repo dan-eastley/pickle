@@ -14,7 +14,11 @@
             "Aligns API and event design with broader technology and business strategy",
             "Provides the anchor for integration principles and guardrail decisions",
             "Enables assessment of whether proposed integration patterns serve the strategy"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Statement",
+            "plural": "Statements"
+        }
     },
     "type": "object",
     "required": [

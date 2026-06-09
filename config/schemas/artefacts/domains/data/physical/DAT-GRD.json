@@ -14,7 +14,11 @@
             "Provides clear enforcement criteria for data architecture review",
             "Makes data quality standards enforceable rather than aspirational",
             "Supports automated guardrail checking during decision governance"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Guardrail",
+            "plural": "Guardrails"
+        }
     },
     "type": "object",
     "required": [

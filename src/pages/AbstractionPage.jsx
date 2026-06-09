@@ -1,4 +1,4 @@
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams, Navigate, Link } from 'react-router-dom'
 import {
   getDomain, getAbstraction, getArtefactsForDomain,
   ABSTRACTION_COLORS, FORMAT_ORDER, getFormat,
@@ -51,6 +51,12 @@ export default function AbstractionPage() {
         </div>
         <h1 className="text-xl font-semibold text-gray-900">{abstractionData.name}</h1>
         <p className="mt-1 text-sm text-gray-500 max-w-3xl">{abstractionData.description}</p>
+        <Link
+          to={`${base}/decisions?domain=${domain}&abstraction=${abstraction}`}
+          className="inline-flex items-center gap-1 mt-2 text-xs text-brand-600 hover:text-brand-700 transition-colors"
+        >
+          View decisions for this domain and abstraction →
+        </Link>
       </div>
 
       <div className="border border-gray-200 bg-white">

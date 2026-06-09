@@ -1,4 +1,5 @@
 {
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)architectures'",
   "rewrites": [
     { "source": "/api/arch/(.*)",    "destination": "/api/content?prefix=architectures&path=$1" },
     { "source": "/api/schemas/(.*)", "destination": "/api/content?prefix=config/schemas&path=$1" },

@@ -14,7 +14,11 @@
             "Provides the 'why' behind data governance, quality, and architecture decisions",
             "Creates accountability for data outcomes at the executive level",
             "Anchors all Data architecture decisions to a traceable set of intentions"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Statement",
+            "plural": "Statements"
+        }
     },
     "type": "object",
     "required": [

@@ -14,7 +14,11 @@
             "Provides decision criteria for API, event, and messaging design choices",
             "Enables automated analysis of proposed integrations against established patterns",
             "Supports technology-independent reasoning about system connectivity"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Principle",
+            "plural": "Principles"
+        }
     },
     "type": "object",
     "required": [

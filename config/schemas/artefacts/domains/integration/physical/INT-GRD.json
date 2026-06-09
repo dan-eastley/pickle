@@ -14,7 +14,11 @@
             "Provides enforceable standards for API design, authentication, and data in transit",
             "Enables automated guardrail checking during integration decision review",
             "Prevents accumulation of integration debt caused by rule exceptions"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Guardrail",
+            "plural": "Guardrails"
+        }
     },
     "type": "object",
     "required": [

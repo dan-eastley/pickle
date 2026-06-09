@@ -33,21 +33,21 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
 
   return (
     <div className="border border-gray-200 bg-white">
-      {/* Abstraction header */}
+      {/* Abstraction header — inverted (dark background for distinction) */}
       <Link
         to={`${base}/domains/${domain}/${abstraction.id}`}
-        className="group flex items-center justify-between px-5 py-3 border-b border-gray-200 hover:bg-gray-50 transition-colors"
+        className={`group flex items-center justify-between px-5 py-3 border-b border-gray-200 transition-colors ${colors.header} hover:opacity-90`}
       >
         <div className="flex items-center gap-3">
-          <span className={`text-xs font-semibold px-2 py-0.5 ${colors.badge}`}>
-            {abstraction.label}
-          </span>
-          <span className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+          <span className="text-sm font-semibold group-hover:opacity-90 transition-opacity">
             {abstraction.name}
           </span>
-          <span className="text-xs text-gray-400">{abstraction.description}</span>
+          <span className={`text-xs font-semibold px-2 py-0.5 bg-white bg-opacity-30`}>
+            {abstraction.label}
+          </span>
+          <span className="text-xs opacity-70">{abstraction.description}</span>
         </div>
-        <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" viewBox="0 0 16 16" fill="none">
+        <svg className="w-4 h-4 opacity-60 group-hover:opacity-90 flex-shrink-0 transition-opacity" viewBox="0 0 16 16" fill="none">
           <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
         </svg>
       </Link>
@@ -96,16 +96,22 @@ export default function DomainPage() {
         <div>
           <h1 className="text-xl font-semibold text-gray-900">{domainData.name} Architecture</h1>
           <p className="mt-1 text-sm text-gray-500 max-w-3xl">{domainData.description}</p>
+          <Link
+            to={`${base}/decisions?domain=${domain}`}
+            className="inline-flex items-center gap-1 mt-2 text-xs text-brand-600 hover:text-brand-700 transition-colors"
+          >
+            View decisions for this domain →
+          </Link>
         </div>
       </div>
 
       <div>
-        {ABSTRACTIONS.map((abstraction, idx) => {
-          const artefacts = getArtefactsForDomain(domain, abstraction.id)
-          return (
-            <div key={abstraction.id}>
-              {idx > 0 && <div className="h-px bg-gray-300 my-5" />}
+        <div className="space-y-6">
+          {ABSTRACTIONS.map(abstraction => {
+            const artefacts = getArtefactsForDomain(domain, abstraction.id)
+            return (
               <AbstractionSection
+                key={abstraction.id}
                 abstraction={abstraction}
                 artefacts={artefacts}
                 base={base}
@@ -113,9 +119,9 @@ export default function DomainPage() {
                 clientId={clientId}
                 versionId={versionId}
               />
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </div>
   )

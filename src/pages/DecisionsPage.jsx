@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getDomain, getAbstraction, getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
+import { getDomain, getAbstraction, getArtefact, DOMAINS, ABSTRACTIONS, ARTEFACTS, DOMAIN_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
@@ -38,7 +38,7 @@ function ScopeChip({ scope }) {
   const dc = DOMAIN_COLORS[scope.domain]
   const extra = [
     scope.abstraction ? getAbstraction(scope.abstraction)?.name ?? scope.abstraction : null,
-    scope.artefact    ? getArtefact(scope.artefact)?.id ?? scope.artefact             : null,
+    scope.artefact    ? getArtefact(scope.artefact)?.name ?? scope.artefact           : null,
   ].filter(Boolean)
   return (
     <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 flex-shrink-0 ${dc?.bg ?? 'bg-gray-100'} ${dc?.text ?? 'text-gray-700'}`}>
@@ -117,11 +117,67 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
   )
 }
 
+function ScopeFilter({ searchParams, setSearchParams }) {
+  const domain      = searchParams.get('domain')      ?? ''
+  const abstraction = searchParams.get('abstraction') ?? ''
+  const artefact    = searchParams.get('artefact')    ?? ''
+
+  function set(key, value) {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (value) next.set(key, value)
+      else next.delete(key)
+      // Clear child filters when parent changes
+      if (key === 'domain')      { next.delete('abstraction'); next.delete('artefact') }
+      if (key === 'abstraction') { next.delete('artefact') }
+      return next
+    })
+  }
+
+  const availableAbstractions = domain ? ABSTRACTIONS : []
+  const availableArtefacts = ARTEFACTS.filter(a =>
+    (!domain || a.domain === domain) && (!abstraction || a.abstraction === abstraction)
+  )
+
+  const selectClass = "px-3 py-1.5 text-xs border border-gray-300 bg-white focus:outline-none focus:border-brand-500 text-gray-700"
+
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="text-xs text-gray-400 mr-1">Filter by scope:</span>
+      <select value={domain} onChange={e => set('domain', e.target.value)} className={selectClass}>
+        <option value="">All Domains</option>
+        {DOMAINS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+      </select>
+      <select value={abstraction} onChange={e => set('abstraction', e.target.value)}
+        disabled={!domain} className={`${selectClass} disabled:opacity-40`}>
+        <option value="">All Abstractions</option>
+        {availableAbstractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+      </select>
+      <select value={artefact} onChange={e => set('artefact', e.target.value)}
+        disabled={!domain} className={`${selectClass} disabled:opacity-40`}>
+        <option value="">All Artefacts</option>
+        {availableArtefacts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+      </select>
+      {(domain || abstraction || artefact) && (
+        <button onClick={() => setSearchParams({})}
+          className="text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1">
+          Clear
+        </button>
+      )}
+    </div>
+  )
+}
+
 export default function DecisionsPage() {
   const { clientId, versionId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
   const [decisions, setDecisions] = useState([])
+
+  const filterDomain      = searchParams.get('domain')      ?? ''
+  const filterAbstraction = searchParams.get('abstraction') ?? ''
+  const filterArtefact    = searchParams.get('artefact')    ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Decisions`)
@@ -133,17 +189,24 @@ export default function DecisionsPage() {
       .catch(() => setLoading(false))
   }, [clientId, versionId])
 
+  const filtered = decisions.filter(d => {
+    if (filterDomain && d.scope?.domain !== filterDomain) return false
+    if (filterAbstraction && d.scope?.abstraction !== filterAbstraction) return false
+    if (filterArtefact && d.scope?.artefact !== filterArtefact) return false
+    return true
+  })
+
   const grouped = STATUS_ORDER.map(status => ({
     status,
-    decisions: decisions.filter(d => (d.status ?? 'draft') === status),
+    decisions: filtered.filter(d => (d.status ?? 'draft') === status),
   }))
   const knownStatuses = new Set(STATUS_ORDER)
-  const unknown = decisions.filter(d => !knownStatuses.has(d.status ?? 'draft'))
+  const unknown = filtered.filter(d => !knownStatuses.has(d.status ?? 'draft'))
   if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Architecture Decisions</h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -159,6 +222,10 @@ export default function DecisionsPage() {
           </svg>
           New Decision
         </Link>
+      </div>
+
+      <div className="mb-5 p-4 bg-gray-50 border border-gray-200">
+        <ScopeFilter searchParams={searchParams} setSearchParams={setSearchParams} />
       </div>
 
       {loading ? (

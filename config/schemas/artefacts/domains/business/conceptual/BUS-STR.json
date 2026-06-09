@@ -14,7 +14,11 @@
             "Creates a traceable link between business intent and architecture change",
             "Enables strategy-to-design traceability across the full architecture",
             "Serves as the anchor for assessing whether proposed changes serve the business"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Statement",
+            "plural": "Statements"
+        }
     },
     "type": "object",
     "required": [

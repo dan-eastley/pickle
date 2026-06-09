@@ -14,7 +14,11 @@
             "Reduces the risk of solutions that optimise one domain at the expense of another",
             "Enables automated analysis of proposed solutions against established design criteria",
             "Creates a shared language for assessing solution quality across architecture disciplines"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Principle",
+            "plural": "Principles"
+        }
     },
     "type": "object",
     "required": [

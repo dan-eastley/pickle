@@ -9,33 +9,34 @@ function getRootArrayKey(data) {
   return Object.keys(data).find(k => Array.isArray(data[k]))
 }
 
-function getSchemaColumns(schema) {
-  if (!schema?.properties) return []
-
-  const arrayEntry = Object.entries(schema.properties).find(([, v]) => v.type === 'array')
-  if (!arrayEntry) return []
-
-  const itemProps = arrayEntry[1]?.items?.properties ?? {}
-
+function getColumnsFromProps(itemProps) {
   const priority = ['id', 'name', 'statement', 'rule', 'title']
   const keys = [
     ...priority.filter(k => k in itemProps),
     ...Object.keys(itemProps).filter(k => !priority.includes(k) && k !== 'parent-id'),
   ]
-
   return keys.map(key => {
     const prop = itemProps[key]
-    // title = the field key, formatted for display
     const title = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    // subtitle = the full description from the schema property
-    const subtitle = prop?.description ?? null
-    return { key, title, subtitle, type: prop?.type, enum: prop?.enum }
+    return { key, title, subtitle: prop?.description ?? null, type: prop?.type, enum: prop?.enum }
   })
+}
+
+function getSchemaColumns(schema) {
+  if (!schema?.properties) return []
+  const arrayEntry = Object.entries(schema.properties).find(([, v]) => v.type === 'array')
+  if (!arrayEntry) return []
+  const itemProps = arrayEntry[1]?.items?.properties ?? {}
+  return getColumnsFromProps(itemProps)
 }
 
 function isHierarchical(schema) {
   const arrayProp = Object.values(schema?.properties ?? {}).find(v => v.type === 'array')
   return !!arrayProp?.items?.properties?.['parent-id']
+}
+
+function isGrouped(schema) {
+  return schema?.meta?.renderAs === 'grouped'
 }
 
 // ── Tree builder ─────────────────────────────────────────────────────────────
@@ -46,13 +47,48 @@ function buildTree(items) {
   const roots = []
   items.forEach(item => {
     const parent = item['parent-id']
-    if (parent && byId[parent]) {
-      byId[parent]._children.push(byId[item.id])
-    } else {
-      roots.push(byId[item.id])
-    }
+    if (parent && byId[parent]) byId[parent]._children.push(byId[item.id])
+    else roots.push(byId[item.id])
   })
   return roots
+}
+
+function buildGroupedTree(data, grouping) {
+  const { parentArray, childArray, foreignKey } = grouping
+  const parents = (data[parentArray] ?? []).map(p => ({ ...p, _children: [] }))
+  const byId = Object.fromEntries(parents.map(p => [p.id, p]))
+  ;(data[childArray] ?? []).forEach(child => {
+    const parent = byId[child[foreignKey]]
+    if (parent) parent._children.push(child)
+  })
+  return parents
+}
+
+// ── Count label helpers ───────────────────────────────────────────────────────
+
+function countSummary(items, schema, data) {
+  const meta = schema?.meta
+  const labels = meta?.countLabels
+
+  if (meta?.renderAs === 'grouped' && meta?.grouping) {
+    const { parentArray, childArray } = meta.grouping
+    const pCount = data?.[parentArray]?.length ?? 0
+    const cCount = data?.[childArray]?.length ?? 0
+    const pLabel = (pCount === 1 ? labels?.parent : (labels?.parent ? labels.parent + 's' : 'groups')) ?? 'groups'
+    const cLabel = (cCount === 1 ? labels?.child : (labels?.child ? labels.child + 's' : 'items')) ?? 'items'
+    return `${pCount} ${pLabel} · ${cCount} ${cLabel}`
+  }
+
+  const total = items?.length ?? 0
+  const isHier = items?.some(i => i['parent-id'])
+  if (isHier && labels?.level1) {
+    const l1 = items.filter(i => !i['parent-id']).length
+    return `${l1} ${labels.level1} · ${total - l1} ${labels.level2 ?? 'Level 2'}`
+  }
+
+  const plural = labels?.plural ?? 'entries'
+  const sing = labels?.singular ?? 'entry'
+  return `${total} ${total === 1 ? sing : plural}`
 }
 
 // ── Cell rendering ───────────────────────────────────────────────────────────
@@ -79,13 +115,9 @@ function CellValue({ value, colDef }) {
     return (
       <ul className="space-y-0.5">
         {value.slice(0, 3).map((v, i) => (
-          <li key={i} className="text-xs text-gray-600 before:content-['•'] before:mr-1.5 before:text-gray-300">
-            {String(v)}
-          </li>
+          <li key={i} className="text-xs text-gray-600 before:content-['•'] before:mr-1.5 before:text-gray-300">{String(v)}</li>
         ))}
-        {value.length > 3 && (
-          <li className="text-xs text-gray-400">+{value.length - 3} more</li>
-        )}
+        {value.length > 3 && <li className="text-xs text-gray-400">+{value.length - 3} more</li>}
       </ul>
     )
   }
@@ -94,14 +126,11 @@ function CellValue({ value, colDef }) {
     return <span className="font-mono text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5">{value}</span>
   }
 
-  if (typeof value === 'number') {
-    return <span className="tabular-nums">{value}</span>
-  }
-
+  if (typeof value === 'number') return <span className="tabular-nums">{value}</span>
   return <span className="text-gray-700">{String(value)}</span>
 }
 
-// ── Table rows (flat or tree) ─────────────────────────────────────────────────
+// ── Table rows (flat or hierarchical tree) ────────────────────────────────────
 
 function FlatRow({ item, columns }) {
   return (
@@ -127,10 +156,8 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
             {ci === 1 ? (
               <div className="flex items-start gap-2" style={{ paddingLeft: depth * 20 }}>
                 {hasChildren ? (
-                  <button
-                    onClick={() => onToggle(node.id)}
-                    className="mt-0.5 w-4 h-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
+                  <button onClick={() => onToggle(node.id)}
+                    className="mt-0.5 w-4 h-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors">
                     <svg viewBox="0 0 16 16" fill="none" className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
                       <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -147,16 +174,73 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
         ))}
       </tr>
       {hasChildren && isExpanded && node._children.map(child => (
-        <TreeRow
-          key={child.id}
-          node={child}
-          columns={columns}
-          depth={depth + 1}
-          expanded={expanded}
-          onToggle={onToggle}
-        />
+        <TreeRow key={child.id} node={child} columns={columns} depth={depth + 1} expanded={expanded} onToggle={onToggle} />
       ))}
     </>
+  )
+}
+
+// ── Grouped rows (two-tier: parent array + child array) ───────────────────────
+
+function GroupedSection({ parent, childColumns, expanded, onToggle, foreignKey }) {
+  const isExpanded = expanded.has(parent.id)
+  const childCount = parent._children.length
+
+  return (
+    <>
+      {/* Parent header row */}
+      <tr className="bg-gray-50 border-y border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
+          onClick={() => onToggle(parent.id)}>
+        <td colSpan={childColumns.length} className="px-4 py-2.5">
+          <div className="flex items-center gap-2">
+            <svg viewBox="0 0 16 16" fill="none"
+              className={`w-3.5 h-3.5 flex-shrink-0 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
+              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className="font-mono text-xs bg-white border border-gray-200 text-gray-600 px-1.5 py-0.5">{parent.id}</span>
+            <span className="text-sm font-semibold text-gray-800">{parent.name}</span>
+            {parent.description && (
+              <span className="text-xs text-gray-400 truncate max-w-xs">{parent.description}</span>
+            )}
+            <span className="ml-auto text-xs text-gray-400 flex-shrink-0">{childCount} {childCount === 1 ? 'item' : 'items'}</span>
+          </div>
+        </td>
+      </tr>
+      {/* Child rows */}
+      {isExpanded && parent._children.map(child => (
+        <tr key={child.id} className="hover:bg-gray-50 transition-colors">
+          {childColumns.map((col, ci) => (
+            <td key={col.key} className={`px-4 py-3 text-sm align-top ${ci === 0 ? 'pl-10' : ''}`}>
+              <CellValue value={child[col.key]} colDef={col} />
+            </td>
+          ))}
+        </tr>
+      ))}
+      {isExpanded && childCount === 0 && (
+        <tr>
+          <td colSpan={childColumns.length} className="px-10 py-3 text-xs text-gray-400 italic">
+            No items in this group.
+          </td>
+        </tr>
+      )}
+    </>
+  )
+}
+
+// ── Column header row ─────────────────────────────────────────────────────────
+
+function ColHeaders({ columns }) {
+  return (
+    <tr className="border-b border-gray-200">
+      {columns.map(col => (
+        <th key={col.key} className="px-4 py-3 text-left bg-gray-50 whitespace-nowrap">
+          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
+          {col.key !== 'id' && col.subtitle && (
+            <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>
+          )}
+        </th>
+      ))}
+    </tr>
   )
 }
 
@@ -175,6 +259,86 @@ export default function CatalogueView({ data, schema }) {
 
   if (!data || !schema) return null
 
+  const meta = schema.meta ?? {}
+  const grouped = isGrouped(schema)
+  const hierarchical = !grouped && isHierarchical(schema)
+
+  // ── Grouped mode (two-array schemas like DAT-DAC, APP-DAP) ──
+  if (grouped && meta.grouping) {
+    const { parentArray, childArray, foreignKey } = meta.grouping
+    const childItemProps = schema.properties?.[childArray]?.items?.properties ?? {}
+    // Exclude the foreign key column from the child table display
+    const filteredProps = Object.fromEntries(
+      Object.entries(childItemProps).filter(([k]) => k !== foreignKey)
+    )
+    const childColumns = getColumnsFromProps(filteredProps)
+    const groupedData = buildGroupedTree(data, meta.grouping)
+
+    function toggleGrouped(id) {
+      setExpanded(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+    }
+    function expandAllGrouped() { setExpanded(new Set(groupedData.map(p => p.id))) }
+    function collapseAllGrouped() { setExpanded(new Set()) }
+
+    const summary = countSummary(null, schema, data)
+
+    const toolbar = (
+      <div className="px-4 py-2 border-b border-gray-200 flex items-center gap-3 bg-gray-50 flex-shrink-0">
+        <span className="text-xs text-gray-500">{summary}</span>
+        <div className="flex items-center gap-2">
+          <button onClick={expandAllGrouped} className="text-xs text-brand-600 hover:text-brand-700">Expand all</button>
+          <span className="text-gray-300">·</span>
+          <button onClick={collapseAllGrouped} className="text-xs text-brand-600 hover:text-brand-700">Collapse all</button>
+        </div>
+        <div className="ml-auto flex items-center gap-1">
+          {fullscreen ? (
+            <button onClick={() => setFullscreen(false)} title="Exit full screen (Esc)"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
+              <Minimize01 className="w-3.5 h-3.5" />Exit full screen
+            </button>
+          ) : (
+            <button onClick={() => setFullscreen(true)} title="Full screen"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
+              <Expand01 className="w-3.5 h-3.5" />Full screen
+            </button>
+          )}
+        </div>
+      </div>
+    )
+
+    const groupedTable = (
+      <table className="w-full min-w-max">
+        <thead><ColHeaders columns={childColumns} /></thead>
+        <tbody className="divide-y divide-gray-100">
+          {groupedData.map(parent => (
+            <GroupedSection key={parent.id} parent={parent} childColumns={childColumns}
+              expanded={expanded} onToggle={toggleGrouped} foreignKey={foreignKey} />
+          ))}
+        </tbody>
+      </table>
+    )
+
+    if (fullscreen) {
+      return createPortal(
+        <div className="fixed inset-0 z-[200] bg-white flex flex-col">
+          {toolbar}
+          <div className="overflow-auto flex-1">{groupedTable}</div>
+          <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
+        </div>,
+        document.body
+      )
+    }
+
+    return (
+      <div className="border border-gray-200 bg-white overflow-hidden flex flex-col">
+        {toolbar}
+        <div className="overflow-x-auto">{groupedTable}</div>
+        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
+      </div>
+    )
+  }
+
+  // ── Flat / hierarchical mode ──────────────────────────────────────────────
   const rootKey = getRootArrayKey(data)
   if (!rootKey) return <p className="text-sm text-gray-500">No data found.</p>
 
@@ -192,22 +356,18 @@ export default function CatalogueView({ data, schema }) {
   }
 
   const columns = getSchemaColumns(schema)
-  const hierarchical = isHierarchical(schema)
   const treeData = hierarchical ? buildTree(items) : null
+  const summary = countSummary(items, schema, data)
 
   function toggleExpanded(id) {
-    setExpanded(prev => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
+    setExpanded(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
   }
   function expandAll() { setExpanded(new Set(items.map(i => i.id))) }
   function collapseAll() { setExpanded(new Set()) }
 
   const toolbar = (
     <div className="px-4 py-2 border-b border-gray-200 flex items-center gap-3 bg-gray-50 flex-shrink-0">
-      <span className="text-xs text-gray-500">{items.length} {items.length === 1 ? 'entry' : 'entries'}</span>
+      <span className="text-xs text-gray-500">{summary}</span>
       {hierarchical && (
         <div className="flex items-center gap-2">
           <button onClick={expandAll} className="text-xs text-brand-600 hover:text-brand-700">Expand all</button>
@@ -217,22 +377,14 @@ export default function CatalogueView({ data, schema }) {
       )}
       <div className="ml-auto flex items-center gap-1">
         {fullscreen ? (
-          <button
-            onClick={() => setFullscreen(false)}
-            title="Exit full screen (Esc)"
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"
-          >
-            <Minimize01 className="w-3.5 h-3.5" />
-            Exit full screen
+          <button onClick={() => setFullscreen(false)} title="Exit full screen (Esc)"
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
+            <Minimize01 className="w-3.5 h-3.5" />Exit full screen
           </button>
         ) : (
-          <button
-            onClick={() => setFullscreen(true)}
-            title="Full screen"
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"
-          >
-            <Expand01 className="w-3.5 h-3.5" />
-            Full screen
+          <button onClick={() => setFullscreen(true)} title="Full screen"
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
+            <Expand01 className="w-3.5 h-3.5" />Full screen
           </button>
         )}
       </div>
@@ -243,43 +395,24 @@ export default function CatalogueView({ data, schema }) {
     <div className="overflow-auto flex-1">
       <table className="w-full min-w-max">
         <thead>
-          <tr className="border-b border-gray-200">
-            {columns.map(col => (
-              <th
-                key={col.key}
-                className="px-4 py-3 text-left bg-gray-50 sticky top-0 whitespace-nowrap"
-              >
-                <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
-                {col.subtitle && <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>}
-              </th>
-            ))}
-          </tr>
+          <ColHeaders columns={columns} />
         </thead>
         <tbody className="divide-y divide-gray-100">
           {hierarchical
             ? treeData.map(node => (
                 <TreeRow key={node.id} node={node} columns={columns} depth={0} expanded={expanded} onToggle={toggleExpanded} />
               ))
-            : items.map(item => (
-                <FlatRow key={item.id} item={item} columns={columns} />
-              ))}
+            : items.map(item => <FlatRow key={item.id} item={item} columns={columns} />)}
         </tbody>
       </table>
-    </div>
-  )
-
-  const footer = (
-    <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
-      {items.length} {items.length === 1 ? 'entry' : 'entries'}
     </div>
   )
 
   if (fullscreen) {
     return createPortal(
       <div className="fixed inset-0 z-[200] bg-white flex flex-col">
-        {toolbar}
-        {table}
-        {footer}
+        {toolbar}{table}
+        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
       </div>,
       document.body
     )
@@ -290,28 +423,17 @@ export default function CatalogueView({ data, schema }) {
       {toolbar}
       <div className="overflow-x-auto">
         <table className="w-full min-w-max">
-          <thead>
-            <tr className="border-b border-gray-200">
-              {columns.map(col => (
-                <th key={col.key} className="px-4 py-3 text-left bg-gray-50 whitespace-nowrap">
-                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
-                  {col.subtitle && <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>}
-                </th>
-              ))}
-            </tr>
-          </thead>
+          <thead><ColHeaders columns={columns} /></thead>
           <tbody className="divide-y divide-gray-100">
             {hierarchical
               ? treeData.map(node => (
                   <TreeRow key={node.id} node={node} columns={columns} depth={0} expanded={expanded} onToggle={toggleExpanded} />
                 ))
-              : items.map(item => (
-                  <FlatRow key={item.id} item={item} columns={columns} />
-                ))}
+              : items.map(item => <FlatRow key={item.id} item={item} columns={columns} />)}
           </tbody>
         </table>
       </div>
-      {footer}
+      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
     </div>
   )
 }
