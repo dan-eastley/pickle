@@ -143,7 +143,9 @@ function ScopeFilter({ searchParams, setSearchParams }) {
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <span className="text-xs text-gray-400 mr-1">Filter by scope:</span>
+      <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+        <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+      </svg>
       <select value={domain} onChange={e => set('domain', e.target.value)} className={selectClass}>
         <option value="">All Domains</option>
         {DOMAINS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}

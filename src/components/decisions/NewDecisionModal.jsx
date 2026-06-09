@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
+import ScopeSelector from './ScopeSelector'
 
 function RequirementsList({ requirements, onChange }) {
   const add = () => onChange([...requirements, ''])
@@ -42,6 +43,9 @@ function RequirementsList({ requirements, onChange }) {
 export default function NewDecisionModal({ artefact, clientId, versionId, onClose }) {
   const [narrative, setNarrative] = useState('')
   const [requirements, setRequirements] = useState([])
+  const [scopeDomain, setScopeDomain] = useState(artefact.domain)
+  const [scopeAbstraction, setScopeAbstraction] = useState(artefact.abstraction)
+  const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
   const [saved, setSaved] = useState(false)
 
   const colors = DOMAIN_COLORS[artefact.domain]
@@ -57,7 +61,12 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
     setSaved(true)
   }
 
-  const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
+  const scopeParams = [
+    scopeDomain      && `domain=${scopeDomain}`,
+    scopeAbstraction && `abstraction=${scopeAbstraction}`,
+    scopeArtefact    && `artefact=${scopeArtefact}`,
+  ].filter(Boolean).join('&')
+  const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
     <>
@@ -71,9 +80,6 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
           <div className={`flex items-center justify-between px-5 py-4 ${colors.bg} flex-shrink-0`}>
             <div>
               <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Scope: {artefact.name} <span className="font-mono">({artefact.id})</span>
-              </p>
             </div>
             <button
               onClick={onClose}
@@ -97,6 +103,21 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
               </div>
             ) : (
               <>
+                {/* Scope */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                  <ScopeSelector
+                    domain={scopeDomain}
+                    abstraction={scopeAbstraction}
+                    artefact={scopeArtefact}
+                    onChange={({ domain, abstraction, artefact: a }) => {
+                      setScopeDomain(domain)
+                      setScopeAbstraction(abstraction)
+                      setScopeArtefact(a)
+                    }}
+                  />
+                </div>
+
                 {/* Narrative */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

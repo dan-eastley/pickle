@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
-import { DOMAINS, ABSTRACTIONS, ARTEFACTS } from '../lib/artefacts'
+import ScopeSelector from '../components/decisions/ScopeSelector'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
@@ -95,11 +95,6 @@ export default function DecisionEditorPage() {
       .finally(() => setLoadingExisting(false))
   }, [isEdit, clientId, versionId, decisionId])
 
-  const filteredAbstractions = scopeDomain ? ABSTRACTIONS : []
-  const filteredArtefacts = scopeDomain
-    ? ARTEFACTS.filter(a => a.domain === scopeDomain && (!scopeAbstraction || a.abstraction === scopeAbstraction))
-    : []
-
   const scope = scopeDomain ? {
     domain: scopeDomain,
     ...(scopeAbstraction && { abstraction: scopeAbstraction }),
@@ -188,7 +183,7 @@ export default function DecisionEditorPage() {
           >
             {saving
               ? (isEdit ? 'Saving…' : 'Creating…')
-              : (isEdit ? 'Save Changes' : 'Create Decision & Open PR')}
+              : (isEdit ? 'Save Changes' : 'Create Decision')}
           </button>
         </div>
       </div>
@@ -266,43 +261,16 @@ export default function DecisionEditorPage() {
           <p className="text-xs text-gray-400 mb-2">
             Optional. Constrain the decision to a specific domain, abstraction layer, or artefact type.
           </p>
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Domain</label>
-              <select
-                value={scopeDomain}
-                onChange={e => { setScopeDomain(e.target.value); setScopeAbstraction(''); setScopeArtefact('') }}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-              >
-                <option value="">Any</option>
-                {DOMAINS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Abstraction</label>
-              <select
-                value={scopeAbstraction}
-                onChange={e => { setScopeAbstraction(e.target.value); setScopeArtefact('') }}
-                disabled={!scopeDomain}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
-              >
-                <option value="">Any</option>
-                {filteredAbstractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Artefact type</label>
-              <select
-                value={scopeArtefact}
-                onChange={e => setScopeArtefact(e.target.value)}
-                disabled={!scopeDomain}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
-              >
-                <option value="">Any</option>
-                {filteredArtefacts.map(a => <option key={a.id} value={a.id}>{a.id} — {a.name}</option>)}
-              </select>
-            </div>
-          </div>
+          <ScopeSelector
+            domain={scopeDomain}
+            abstraction={scopeAbstraction}
+            artefact={scopeArtefact}
+            onChange={({ domain, abstraction, artefact }) => {
+              setScopeDomain(domain)
+              setScopeAbstraction(abstraction)
+              setScopeArtefact(artefact)
+            }}
+          />
         </div>
       </div>
     </div>

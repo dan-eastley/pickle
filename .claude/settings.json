@@ -43,7 +43,11 @@
       "Bash(git -C /Users/daneastley/Repositories/pickle pull --rebase origin main)",
       "Bash(git -C /Users/daneastley/Repositories/pickle stash)",
       "Bash(git -C /Users/daneastley/Repositories/pickle stash pop)",
-      "Bash(git -C /Users/daneastley/Repositories/pickle add .claude/settings.json src/ config/schemas/ IMPROVEMENTS.md)"
+      "Bash(git -C /Users/daneastley/Repositories/pickle add .claude/settings.json src/ config/schemas/ IMPROVEMENTS.md)",
+      "Bash(git -C /Users/daneastley/Repositories/pickle commit -m ' *)",
+      "Bash(git -C /Users/daneastley/Repositories/pickle push origin main)",
+      "Bash(git -C /Users/daneastley/Repositories/pickle log --oneline -3)",
+      "Bash(git -C /Users/daneastley/Repositories/pickle add .claude/settings.json src/components/decisions/NewDecisionModal.jsx src/components/decisions/ScopeSelector.jsx src/components/layout/DomainNav.jsx src/lib/artefacts.js src/pages/DecisionEditorPage.jsx src/pages/DecisionsPage.jsx src/pages/DomainsPage.jsx)"
     ]
   }
 }

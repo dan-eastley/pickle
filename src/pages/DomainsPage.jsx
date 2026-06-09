@@ -44,7 +44,7 @@ function DomainCard({ domain, base }) {
           {domain.name} Architecture
         </h3>
         <p className="mt-1 text-sm text-gray-500 leading-relaxed line-clamp-2">{domain.description}</p>
-        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
+        <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
           {counts.map(({ format, n, label, plural }) => (
             <span key={format} className="flex items-center gap-1 text-xs text-gray-400">
               <FormatIcon format={format} className="w-3.5 h-3.5" />

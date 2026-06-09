@@ -107,7 +107,7 @@ function DomainDropdown({ domain, base, onClose }) {
                   onClick={onClose}
                   className="group flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 hover:opacity-80 transition-opacity"
                 >
-                  <span className={`text-xs font-semibold px-1.5 py-0.5 ${abColors.badge}`}>
+                  <span className={`text-xs font-semibold px-1.5 py-0.5 ${abColors.header}`}>
                     {abstraction.label}
                   </span>
                   <span className="text-xs font-semibold text-gray-600 group-hover:text-brand-700 transition-colors">

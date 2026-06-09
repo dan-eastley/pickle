@@ -171,7 +171,7 @@ export const DOMAIN_COLORS = {
 }
 
 export const ABSTRACTION_COLORS = {
-  conceptual: { bg: 'bg-blue-50',   text: 'text-blue-700',   badge: 'bg-blue-100 text-blue-700',   header: 'bg-blue-600 text-white' },
-  logical:    { bg: 'bg-amber-50',  text: 'text-amber-700',  badge: 'bg-amber-100 text-amber-700', header: 'bg-amber-500 text-white' },
-  physical:   { bg: 'bg-rose-50',   text: 'text-rose-700',   badge: 'bg-rose-100 text-rose-700',   header: 'bg-rose-600 text-white' },
+  conceptual: { bg: 'bg-blue-50',   text: 'text-blue-700',   badge: 'bg-blue-100 text-blue-700',   header: 'bg-gray-700 text-white' },
+  logical:    { bg: 'bg-amber-50',  text: 'text-amber-700',  badge: 'bg-amber-100 text-amber-700', header: 'bg-gray-700 text-white' },
+  physical:   { bg: 'bg-rose-50',   text: 'text-rose-700',   badge: 'bg-rose-100 text-rose-700',   header: 'bg-gray-700 text-white' },
 }
