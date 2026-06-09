@@ -15,6 +15,13 @@ Tracked improvements, known gaps, and ideas for future development. Items are ad
 
 ---
 
+## Decisions data model — title/status duplication (resolved, do not change)
+**Context:** `decision.json` (on the decisions branch) and `decisions.json` (index on main) both carry `title` and `status`.
+
+**Decision:** Keep the duplication. `decisions.json` is a denormalised summary index that powers the list page with a single fetch. Removing `title`/`status` from `decision.json` would force the detail page to do two fetches (index + full file) just to render the header, and force the list page to check N branch existences to derive status. The `syncIndex` function keeps both files in step on every write, so drift risk is low.
+
+---
+
 ## Multi-repository support
 **Context:** `GITHUB_OWNER` and `GITHUB_REPO` are single Vercel environment variables. All clients in the app read from the same repository.
 

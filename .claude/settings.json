@@ -1,0 +1,39 @@
+{
+  "env": {
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree *)",
+      "Bash(git pull *)",
+      "Bash(git merge *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git tag -a v0.1.0 -m ' *)",
+      "Bash(git branch *)",
+      "Bash(git commit -m 'Add @babel/runtime peer dep required by @untitled-ui/icons-react *)",
+      "Bash(git commit -m 'Downgrade vite-plugin-static-copy to ^1.0.6 \\(Vite 5 compatible\\) *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(list\\(d.get\\('properties',{}\\).keys\\(\\)\\), indent=2\\)\\)\")",
+      "Bash(git commit -m 'Show scope chip on decision list rows when scope is captured *)",
+      "Bash(git commit -m 'Fix breadcrumb for decision routes *)",
+      "Bash(git commit -m 'Add decision icon to each row in decisions list *)",
+      "Bash(git commit -m 'Fix DecisionDetailPage: add missing StatusBadge definition *)",
+      "Bash(git commit -m 'Remove py-8 top gap on decision list and detail pages *)",
+      "Bash(git commit -m 'Homepage: slim content ~20%, bolder USP statements *)",
+      "Bash(git commit -m 'Scope section: domain colour + icon on decision detail and list views *)",
+      "Bash(git commit -m 'Footer: read GITHUB_OWNER/REPO from API instead of VITE_ env vars *)",
+      "Bash(git commit -m 'Footer: add VERCEL_ENV and VERCEL_BRANCH_URL from config API *)",
+      "Bash(git commit -m 'Fix NavigationProgress: replace useNavigation with useLocation *)",
+      "Bash(git commit -m 'Add version.json and stamp release in footer *)",
+      "Bash(git tag -a v0.3.0 -m ' *)",
+      "Bash(git tag *)",
+      "Bash(git commit -m 'Add IMPROVEMENTS.md to track product gaps and future enhancements *)",
+      "Bash(git commit -m 'Fix syncIndex: preserve title/scope when only status is provided *)",
+      "Bash(git commit -m 'Remove all synthetic ADRs; reset decisions.json *)",
+      "Bash(git commit -m 'Fix Reject button: solid error-50 background instead of transparent white *)",
+      "Bash(git commit -m 'Analysis tabs: always show all sections; pending message when empty *)",
+      "Bash(git commit -m 'Invalidate CDN cache after decision writes *)"
+    ]
+  }
+}
