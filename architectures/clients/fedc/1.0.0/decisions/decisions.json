@@ -113,7 +113,7 @@
         {
             "decision-id": "ADR-012",
             "title": "Establish Business Continuity Requirements for All Tier-1 Systems",
-            "status": "draft",
+            "status": "proposed",
             "scope": {
                 "domain": "business",
                 "abstraction": "logical",
