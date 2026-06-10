@@ -5,6 +5,7 @@ import {
 } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
+import TextLink from '../components/ui/TextLink'
 import ArtefactRow from '../components/artefacts/ArtefactRow'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -39,11 +40,11 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
         className={`group flex items-center justify-between px-5 py-3 border-b border-gray-200 transition-colors ${colors.header} hover:opacity-90`}
       >
         <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold px-2 py-0.5 bg-white bg-opacity-30">
+            {abstraction.label}
+          </span>
           <span className="text-sm font-semibold group-hover:opacity-90 transition-opacity">
             {abstraction.name}
-          </span>
-          <span className={`text-xs font-semibold px-2 py-0.5 bg-white bg-opacity-30`}>
-            {abstraction.label}
           </span>
           <span className="text-xs opacity-70">{abstraction.description}</span>
         </div>
@@ -96,12 +97,9 @@ export default function DomainPage() {
         <div>
           <h1 className="text-xl font-semibold text-gray-900">{domainData.name} Architecture</h1>
           <p className="mt-1 text-sm text-gray-500 max-w-3xl">{domainData.description}</p>
-          <Link
-            to={`${base}/decisions?domain=${domain}`}
-            className="inline-flex items-center gap-1 mt-2 text-xs text-brand-600 hover:text-brand-700 transition-colors"
-          >
+          <TextLink to={`${base}/decisions?domain=${domain}`} className="inline-flex items-center gap-1 mt-2 text-xs">
             View decisions for this domain →
-          </Link>
+          </TextLink>
         </div>
       </div>
 

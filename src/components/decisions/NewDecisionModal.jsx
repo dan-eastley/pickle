@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Link } from 'react-router-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import ScopeSelector from './ScopeSelector'
+import TextLink from '../ui/TextLink'
 
 function RequirementsList({ requirements, onChange }) {
   const add = () => onChange([...requirements, ''])
@@ -151,13 +151,9 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
           {/* Footer */}
           {!saved && (
             <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-gray-200 bg-gray-50 flex-shrink-0">
-              <Link
-                to={fullEditorUrl}
-                onClick={onClose}
-                className="text-sm text-brand-600 hover:text-brand-700 transition-colors"
-              >
+              <TextLink to={fullEditorUrl} onClick={onClose} className="text-sm">
                 Open full editor →
-              </Link>
+              </TextLink>
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}

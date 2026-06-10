@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
-import { getArtefact, getDomain, getAbstraction, DOMAIN_COLORS, getDiagramType } from '../lib/artefacts'
+import { getArtefact, getDomain, getAbstraction, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
@@ -11,6 +11,7 @@ import Badge from '../components/ui/Badge'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
+import TextLink from '../components/ui/TextLink'
 import usePageTitle from '../hooks/usePageTitle'
 
 const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
@@ -57,7 +58,7 @@ function AdrActionBar({ artefact, clientId, versionId }) {
           </svg>
           <span className="text-sm text-gray-600">
             Changes to this artefact must go through a Decision Record.{' '}
-            <a href={viewDecisionsUrl} className="underline hover:opacity-80 transition-opacity">View decisions</a>
+            <TextLink to={viewDecisionsUrl}>View decisions</TextLink>
           </span>
         </div>
         <button
@@ -84,18 +85,22 @@ function AdrActionBar({ artefact, clientId, versionId }) {
 }
 
 const PURPOSE_STORAGE_KEY = 'artefact-purpose-collapsed'
+const RELATED_STORAGE_KEY = 'artefact-related-collapsed'
 
-function usePurposeCollapsed() {
+function useCollapsed(storageKey, defaultCollapsed = false) {
   const [collapsed, setCollapsed] = useState(() => {
-    try { return localStorage.getItem(PURPOSE_STORAGE_KEY) === 'true' } catch { return false }
+    try {
+      const stored = localStorage.getItem(storageKey)
+      return stored === null ? defaultCollapsed : stored === 'true'
+    } catch { return defaultCollapsed }
   })
   const toggle = useCallback(() => {
     setCollapsed(prev => {
       const next = !prev
-      try { localStorage.setItem(PURPOSE_STORAGE_KEY, String(next)) } catch {}
+      try { localStorage.setItem(storageKey, String(next)) } catch {}
       return next
     })
-  }, [])
+  }, [storageKey])
   return [collapsed, toggle]
 }
 
@@ -105,7 +110,9 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
   const colors = DOMAIN_COLORS[artefact.domain]
   const metaDescription = schema?.meta?.description
   const metaPurpose = schema?.meta?.purpose
-  const [purposeCollapsed, togglePurpose] = usePurposeCollapsed()
+  const relatedArtefacts = artefact.relatedTo ?? []
+  const [purposeCollapsed, togglePurpose] = useCollapsed(PURPOSE_STORAGE_KEY)
+  const [relatedCollapsed, toggleRelated] = useCollapsed(RELATED_STORAGE_KEY)
 
   return (
     <div className="mb-6 pb-5 border-b border-gray-200">
@@ -157,48 +164,44 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
               )}
             </div>
           )}
+          {relatedArtefacts.length > 0 && (
+            <div className="mt-4">
+              <button
+                onClick={toggleRelated}
+                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
+              >
+                <svg viewBox="0 0 16 16" fill="none"
+                  className={`w-3 h-3 transition-transform ${relatedCollapsed ? '' : 'rotate-90'}`}>
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Related Artefacts
+              </button>
+              {!relatedCollapsed && (
+                <div className="flex flex-wrap gap-2">
+                  {relatedArtefacts.map(({ artefactId, relationship }) => {
+                    const related = getArtefact(artefactId)
+                    if (!related) return null
+                    return (
+                      <Link
+                        key={artefactId}
+                        to={`/clients/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
+                      >
+                        <span className="text-gray-400">{relationship}</span>
+                        <span className="font-mono text-gray-400">{related.id}</span>
+                        <span className="font-medium">{related.name}</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1 flex-shrink-0 self-start">
           {artefact.id}
         </span>
       </div>
-
-      {/* Related artefacts */}
-      {artefact.relatedTo?.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Related Artefacts</p>
-          <div className="flex flex-wrap gap-2">
-            {artefact.relatedTo.map(({ artefactId, relationship }) => {
-              const related = getArtefact(artefactId)
-              if (!related) return null
-              return (
-                <Link
-                  key={artefactId}
-                  to={`/clients/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
-                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
-                >
-                  <span className="text-gray-400">{relationship}</span>
-                  <span className="font-mono text-gray-400">{related.id}</span>
-                  <span className="font-medium">{related.name}</span>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Diagram type badge */}
-      {artefact.diagramType && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Diagram Type</p>
-          <span className="inline-block text-xs px-2 py-0.5 bg-amber-50 text-amber-700">
-            {getDiagramType(artefact.diagramType)?.label ?? artefact.diagramType}
-          </span>
-          {getDiagramType(artefact.diagramType)?.description && (
-            <p className="mt-1 text-xs text-gray-400">{getDiagramType(artefact.diagramType).description}</p>
-          )}
-        </div>
-      )}
     </div>
   )
 }

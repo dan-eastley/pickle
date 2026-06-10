@@ -18,7 +18,7 @@ function getColumnsFromProps(itemProps) {
   return keys.map(key => {
     const prop = itemProps[key]
     const title = key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    return { key, title, subtitle: prop?.description ?? null, type: prop?.type, enum: prop?.enum }
+    return { key, title, type: prop?.type, enum: prop?.enum }
   })
 }
 
@@ -235,9 +235,6 @@ function ColHeaders({ columns }) {
       {columns.map(col => (
         <th key={col.key} className="px-4 py-3 text-left bg-gray-50 whitespace-nowrap">
           <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">{col.title}</div>
-          {col.key !== 'id' && col.subtitle && (
-            <div className="text-xs font-normal text-gray-400 mt-0.5 normal-case tracking-normal max-w-[200px] whitespace-normal">{col.subtitle}</div>
-          )}
         </th>
       ))}
     </tr>

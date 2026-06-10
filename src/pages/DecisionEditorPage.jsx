@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useParams, useSearchParams, Link } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
+import TextLink from '../components/ui/TextLink'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
@@ -191,21 +192,21 @@ export default function DecisionEditorPage() {
       {saveResult?.ok && isEdit && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
           Changes saved. Narrative Review is running to refresh the analysis.{' '}
-          <Link
+          <TextLink
             to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
             state={{ cacheBust: true }}
-            className="underline font-medium"
+            className="font-medium"
           >
             Back to {decisionId} →
-          </Link>
+          </TextLink>
         </div>
       )}
       {saveResult?.ok && !isEdit && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
           <span className="font-semibold">{saveResult.decisionId}</span> created.{' '}
-          <a href={saveResult.prUrl} target="_blank" rel="noreferrer" className="underline font-medium">
+          <TextLink href={saveResult.prUrl} target="_blank" rel="noreferrer" className="font-medium">
             View PR #{saveResult.prNumber} on GitHub →
-          </a>
+          </TextLink>
         </div>
       )}
       {saveResult?.ok === false && (

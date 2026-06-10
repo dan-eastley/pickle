@@ -40,7 +40,7 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
 
   return (
     <div className="mb-3 last:mb-0">
-      <div className="flex items-center gap-1 mb-1">
+      <div className="flex items-center gap-1.5 px-2 py-1 mb-1 bg-gray-50">
         <FormatIcon format={format} className="w-3 h-3 text-gray-400" />
         <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{fmt.label}</span>
       </div>
@@ -50,8 +50,10 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
             key={artefact.id}
             to={`${base}/domains/${domainId}/${abstractionId}/${artefact.id}`}
             onClick={onClose}
-            className={`flex items-center gap-2 px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors ${
-              artefact.key ? 'border-l-2 border-amber-400' : 'border-l-2 border-transparent'
+            className={`flex items-center gap-2 px-2 py-1.5 text-sm transition-colors border-l-2 ${
+              artefact.key
+                ? 'border-amber-400 bg-amber-50 hover:bg-amber-100 text-gray-700'
+                : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
             }`}
           >
             {artefact.key && <KeyStar />}
@@ -105,12 +107,12 @@ function DomainDropdown({ domain, base, onClose }) {
                 <Link
                   to={`${base}/domains/${domain.id}/${abstraction.id}`}
                   onClick={onClose}
-                  className="group flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 hover:opacity-80 transition-opacity"
+                  className={`group flex items-center gap-2 mb-3 px-2 py-1.5 transition-colors ${abColors.header} hover:opacity-90`}
                 >
-                  <span className={`text-xs font-semibold px-1.5 py-0.5 ${abColors.header}`}>
+                  <span className="text-xs font-semibold px-1.5 py-0.5 bg-white bg-opacity-30">
                     {abstraction.label}
                   </span>
-                  <span className="text-xs font-semibold text-gray-600 group-hover:text-brand-700 transition-colors">
+                  <span className="text-xs font-semibold group-hover:opacity-90 transition-opacity">
                     {abstraction.name}
                   </span>
                 </Link>

@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefactData, getSchema } from '../../lib/api'
 import FormatIcon from '../ui/FormatIcon'
-import Badge from '../ui/Badge'
-
-const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
-const FORMAT_VARIANTS = { catalogue: 'blue', matrix: 'violet', diagram: 'amber' }
 
 function KeyStar() {
   return (
@@ -115,7 +111,6 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
           <p className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
             {artefact.name}
           </p>
-          <Badge label={FORMAT_LABELS[artefact.format]} variant={FORMAT_VARIANTS[artefact.format]} size="xs" />
         </div>
         <div className="flex items-center gap-2 mt-0.5 min-w-0">
           <p className="text-xs text-gray-500 truncate">{artefact.description}</p>
