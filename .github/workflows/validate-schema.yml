@@ -122,16 +122,15 @@ jobs:
               ):
                   return pathlib.Path('config/schemas/decision.json')
 
-              # architectures/clients/<client>/<version>/artefacts/domains/<dom>/<layer>/<ID>/<ID>.json
+              # architectures/clients/<client>/<version>/domains/<dom>/<layer>/<ID>.json
               #   -> config/schemas/artefacts/domains/<dom>/<layer>/<ID>.json
               if (
-                  len(parts) >= 10
+                  len(parts) == 8
                   and parts[0] == 'architectures'
                   and parts[1] == 'clients'
-                  and parts[4] == 'artefacts'
-                  and parts[5] == 'domains'
+                  and parts[4] == 'domains'
               ):
-                  dom, layer, artefact_id = parts[6], parts[7], parts[8]
+                  dom, layer, artefact_id = parts[5], parts[6], pathlib.Path(parts[7]).stem
                   return pathlib.Path(f'config/schemas/artefacts/domains/{dom}/{layer}/{artefact_id}.json')
 
               # Schema files themselves have no cross-reference target — JSON-parse only.

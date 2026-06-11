@@ -1,11 +1,11 @@
 # Decision Record Schema
 
-**File:** [`/schemas/decision.json`](../../schemas/decision.json)
+**File:** [`/config/schemas/decision.json`](../../config/schemas/decision.json)
 **Validates:** `/architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`
 
 ## Purpose
 
-Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the seven decision-pipeline steps (Validate Context gate + six analysis jobs in the Decisions Pipeline). Each step fills in its own section progressively as the pipeline runs.
+Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the seven decision-analysis steps (Validate Context gate + the six Decisions Analysis jobs). Each step fills in its own section progressively as the decision moves through its lifecycle.
 
 ## Structure at a glance
 
@@ -19,7 +19,7 @@ flowchart TB
     DJ --> Det["<b>Deterministic gate</b><br/>filled by Validate Context<br/><sub>context-validation</sub>"]
     DJ --> AI["<b>Six analysis sections</b><br/>filled by Claude — each an array of<br/>{finding, impact, recommendation, rationale}"]
 
-    AI --> AR[architecture-review]
+    AI --> AR[impact-assessment]
     AI --> RI[referential-integrity]
     AI --> SA[strategy-alignment]
     AI --> PA[principles-alignment]
@@ -38,16 +38,15 @@ flowchart TB
 ## Lifecycle
 
 1. **Author** creates `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
-2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires:
-   - `Validate Context` (gate; deterministic — writes `context-validation`)
-   - `Decisions Pipeline` (orchestrator workflow with six sequential analysis jobs plus a final PR-update job)
-     1. Architecture Review
-     2. Referential Integrity
-     3. Strategy Alignment
-     4. Principles Alignment
-     5. Proponent Analysis
-     6. Challenger Analysis
-3. Each analysis job checks out the branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next job in the pipeline runs via `needs:` ordering — one workflow, sequential jobs, no `workflow_run` chaining beyond the single hop from Validate Context. See [decisions-pipeline.md](../workflows/decisions-pipeline.md).
+2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires `Validate Context` (gate; deterministic — writes `context-validation`).
+3. When the author moves the decision from **DRAFT to PROPOSED**, the Pickle API dispatches `Decisions Analysis` — one workflow with six sequential jobs:
+   1. Impact Assessment
+   2. Referential Integrity
+   3. Strategy Alignment
+   4. Principles Alignment
+   5. Proponent Analysis
+   6. Challenger Analysis
+4. Each analysis job checks out the decisions branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next job runs via `needs:` ordering — one workflow, sequential jobs, no `workflow_run` chaining. See [decisions-analysis.md](../workflows/decisions-analysis.md).
 
 ## Section property names match step names
 
@@ -56,7 +55,7 @@ Each step writes to a property whose name is the kebab-cased step name:
 | Step | Schema property |
 |---|---|
 | Validate Context | `context-validation` |
-| Architecture Review | `architecture-review` |
+| Impact Assessment | `impact-assessment` |
 | Referential Integrity | `referential-integrity` |
 | Strategy Alignment | `strategy-alignment` |
 | Principles Alignment | `principles-alignment` |
@@ -65,7 +64,7 @@ Each step writes to a property whose name is the kebab-cased step name:
 
 ## Section shape (six analyses)
 
-The six analysis sections — Architecture Review, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
+The six analysis sections — Impact Assessment, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -91,7 +90,7 @@ Validate Context is structurally different (deterministic outcome + violation li
         "outcome": "pass",
         "violations": []
     },
-    "architecture-review": [
+    "impact-assessment": [
         {
             "finding": "The proposal will require new artefacts in INT (conceptual and logical) and updates to APP-DAP to capture the API gateway as a platform.",
             "impact": "Without the new INT artefacts, downstream alignment checks cannot reason about the integration shift.",
@@ -126,10 +125,10 @@ Validate Context is structurally different (deterministic outcome + violation li
 |---|---|---|---|
 | `decision-id` | string | yes | Unique identifier in the form `adr-NNN`; must match the parent folder name and the trailing branch segment |
 | `title` | string | yes | Short human-readable title |
-| `status` | enum | yes | `draft` \| `proposed` \| `accepted` \| `rejected` \| `superseded` |
+| `status` | enum | yes | `draft` \| `proposed` \| `accepted` \| `staged` \| `committed` \| `rejected` |
 | `narrative` | string | yes | Author's narrative of the proposed change |
 | `context-validation` | object | no | Output of Validate Context (permissive object) |
-| `architecture-review` | array of section | no | Output of Architecture Review |
+| `impact-assessment` | array of section | no | Output of Impact Assessment |
 | `referential-integrity` | array of section | no | Output of Referential Integrity |
 | `strategy-alignment` | array of section | no | Output of Strategy Alignment |
 | `principles-alignment` | array of section | no | Output of Principles Alignment |

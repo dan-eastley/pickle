@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DPM",
+    "title": "Domains & Platforms Model",
+    "description": "Visual map of the Application Domains & Platforms Catalogue (APP-DAP). Storage format is provisional — diagram artefacts are derived from their source catalogue rather than authored directly.",
+    "meta": {
+        "domain": "application",
+        "abstraction": "logical",
+        "format": "diagram",
+        "description": "A visual map of the organisation's application landscape.",
+        "diagramType": "card-based"
+    },
+    "type": "object",
+    "additionalProperties": true
+}

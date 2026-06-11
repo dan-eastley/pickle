@@ -51,7 +51,28 @@
       "Bash(git -C /Users/daneastley/Repositories/pickle branch --show-current)",
       "Bash(mount)",
       "Bash(CLAUDE_CODE_TMPDIR=/tmp mount)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(xxd)",
+      "Bash(python3 /tmp/flatten_artefacts.py)",
+      "Bash(grep -rn \"artefactId}/\\\\${artefactId}\\\\|<ARTEFACT-ID>/<ARTEFACT-ID>\" --include=\"*.js\" --include=\"*.jsx\" --include=\"*.md\" --include=\"*.yml\" --include=\"*.py\" .)",
+      "Bash(python3 /tmp/add_schema_prop.py)",
+      "Bash(python3 -)",
+      "Bash(pip3 install *)",
+      "Bash(node _diagram-smoke-test.mjs)",
+      "Bash(ls node_modules | grep -iE \"playwright|puppeteer|chrome\" ; which chromium chromium-browser google-chrome 2>/dev/null; ls /Applications | grep -i chrome)",
+      "Read(//Applications/**)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --screenshot=/tmp/diagram-smoke-test.png --window-size=1280,1600 file:///tmp/diagram-smoke-test.html)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --screenshot=/tmp/bcm.png --window-size=1280,700 file:///tmp/bcm.html)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --screenshot=/tmp/cdm.png --window-size=1280,820 file:///tmp/cdm.html)",
+      "Bash(gh auth *)",
+      "Bash(jobs)",
+      "Bash(kill %1)",
+      "Bash(ls ../../schemas/decision.json)",
+      "Bash(ls ../../config/schemas/decision.json)",
+      "Bash(export CLAUDE_CODE_TMPDIR=/tmp)",
+      "Bash(grep -rln \"decisions-pipeline\\\\|Decisions Pipeline\\\\|decisions pipeline\" --include=\"*.md\" --include=\"*.yml\" --include=\"*.js\" --include=\"*.jsx\" --include=\"*.json\" .)",
+      "Bash(grep -n \"decisions-pipeline\\\\|Decisions Pipeline\\\\|decisions pipeline\" .claude/settings.json)",
+      "Bash(git status *)"
     ]
   }
 }

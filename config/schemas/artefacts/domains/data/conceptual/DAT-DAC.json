@@ -32,6 +32,10 @@
         "concepts"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "domains": {
             "type": "array",
             "items": {
@@ -90,7 +94,7 @@
                             "event",
                             "reference"
                         ],
-                        "description": "Conceptual type — entity (master / transactional thing), event (something that happens), reference (controlled list)"
+                        "description": "Conceptual type \u2014 entity (master / transactional thing), event (something that happens), reference (controlled list)"
                     },
                     "aliases": {
                         "type": "array",

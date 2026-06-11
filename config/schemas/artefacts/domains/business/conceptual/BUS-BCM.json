@@ -1,0 +1,92 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BCM",
+    "title": "Business Capability Model",
+    "description": "Visual map of the Business Capabilities Catalogue (BUS-CAP), arranged as a nested card diagram: Level 1 capabilities as groups, Level 2 capabilities as items within each group. Level 3 capabilities are out of scope for this single-slide view. Derived from BUS-CAP rather than authored directly.",
+    "meta": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "format": "diagram",
+        "description": "A visual map of the organisation's capabilities, arranged as a nested hierarchy.",
+        "purpose": [
+            "Give a single-page view of the capability landscape for workshops and roadmap discussions.",
+            "Highlight which capabilities are strategic, differentiating, or foundational at a glance.",
+            "Provide an embeddable diagram for presentations, kept in sync with BUS-CAP."
+        ],
+        "diagramType": "card-based",
+        "countLabels": {
+            "groups": "capabilities",
+            "items": "sub-capabilities"
+        }
+    },
+    "type": "object",
+    "required": ["groups"],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "groups": {
+            "type": "array",
+            "description": "Level 1 capabilities, each containing its Level 2 sub-capabilities.",
+            "items": { "$ref": "#/$defs/group" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "group": {
+            "type": "object",
+            "description": "A Level 1 capability and its Level 2 sub-capabilities, matching the corresponding entries in BUS-CAP.",
+            "required": ["id", "name", "items"],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Level 1 capability ID, matching BUS-CAP."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Level 1 capability name, matching BUS-CAP."
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "Additional display attributes for this capability card. Open-ended — only 'importance' is currently rendered.",
+                    "properties": {
+                        "importance": {
+                            "type": "string",
+                            "enum": ["strategic", "differentiating", "foundational"],
+                            "description": "Strategic importance, matching BUS-CAP. Rendered as a badge on the card."
+                        }
+                    },
+                    "additionalProperties": true
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Level 2 sub-capabilities belonging to this capability.",
+                    "items": { "$ref": "#/$defs/item" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "item": {
+            "type": "object",
+            "description": "A Level 2 sub-capability, matching the corresponding entry in BUS-CAP.",
+            "required": ["id", "name"],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Level 2 capability ID, matching BUS-CAP."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Level 2 capability name, matching BUS-CAP."
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "Additional display attributes for this card. Open-ended; none are currently rendered.",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

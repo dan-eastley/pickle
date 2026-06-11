@@ -25,7 +25,7 @@ export async function getVersion(clientId, versionId) {
 
 export async function getArtefactData(clientId, versionId, domain, abstraction, artefactId) {
   return fetchJson(
-    `/api/arch/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}/${artefactId}/${artefactId}.json`
+    `/api/arch/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}/${artefactId}.json`
   )
 }
 

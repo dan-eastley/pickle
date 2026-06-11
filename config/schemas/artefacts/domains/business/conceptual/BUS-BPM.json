@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BPM",
+    "title": "Business Process Model",
+    "description": "Visual flow of the Business Processes Catalogue (BUS-PRO). Storage format is provisional — diagram artefacts are derived from their source catalogue rather than authored directly.",
+    "meta": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "format": "diagram",
+        "description": "A visual flow diagram of the organisation's key processes.",
+        "diagramType": "flow-based"
+    },
+    "type": "object",
+    "additionalProperties": true
+}

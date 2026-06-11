@@ -39,7 +39,7 @@ The shapes are shared across all five architecture domains (so all five `<DOM>-S
 
 ## Registry
 
-This table is the authoritative registry of every defined artefact type. The schema-only index at [`/config/schemas/artefacts.json`](../config/schemas/artefacts.json) covers just the catalogues.
+This table is the authoritative registry of every defined artefact type. Every row has a corresponding schema entry in [`/config/schemas/artefacts.json`](../config/schemas/artefacts.json), regardless of format.
 
 | ID | Architecture Domain | Abstraction | Format | Name | Description |
 |---|---|---|---|---|---|
@@ -70,8 +70,9 @@ This table is the authoritative registry of every defined artefact type. The sch
 ## Adding a new artefact type
 
 1. Add a row to the registry table above.
-2. If it is a catalogue:
-   - Define a JSON Schema at `/config/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`. Include a `meta` object with `domain`, `abstraction`, and `format` fields, and a top-level `description` that describes the artefact type.
-   - Add an entry for the new artefact-type ID to `/config/schemas/artefacts.json` (the schema index).
-   - Document the schema with a markdown page in `/docs/schemas/artefacts/domains/<domain>/<layer>/<ID>.md`.
-3. Create an empty instance folder in each affected client version: `/architectures/clients/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/`.
+2. Define a JSON Schema at `/config/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`. Include a `meta` object with `domain`, `abstraction`, and `format` fields, and a top-level `description` that describes the artefact type.
+   - For catalogues, define the full `properties` shape for the instance data.
+   - For diagrams and matrices whose storage format isn't finalised yet, a minimal schema is enough — `meta` plus `"type": "object", "additionalProperties": true`. Flesh it out once the format is decided.
+3. Add an entry for the new artefact-type ID to `/config/schemas/artefacts.json` (the schema index).
+4. Document the schema with a markdown page in `/docs/schemas/artefacts/domains/<domain>/<layer>/<ID>.md`.
+5. Create the instance file in each affected client version: `/architectures/clients/<client>/<version>/domains/<domain>/<layer>/<ID>.json`.

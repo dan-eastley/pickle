@@ -2,19 +2,31 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts",
     "title": "Artefact-Type Schemas Index",
-    "description": "Index of catalogue schemas defined in this repository, keyed by artefact-type ID. Diagrams and matrices are not listed here — they have no schema yet. The full artefact-type registry (including non-catalogue entries) is documented in /docs/artefacts.md.",
+    "description": "Index of every defined artefact-type schema in this repository, keyed by artefact-type ID. The full artefact-type registry (with architecture domain / abstraction / format classifications) is documented in /docs/artefacts.md.",
     "schemas": {
         "BUS-CAP": {
             "$ref": "./artefacts/domains/business/conceptual/BUS-CAP.json"
         },
+        "BUS-BCM": {
+            "$ref": "./artefacts/domains/business/conceptual/BUS-BCM.json"
+        },
         "BUS-PRO": {
             "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json"
+        },
+        "BUS-BPM": {
+            "$ref": "./artefacts/domains/business/conceptual/BUS-BPM.json"
         },
         "DAT-DAC": {
             "$ref": "./artefacts/domains/data/conceptual/DAT-DAC.json"
         },
+        "DAT-CDM": {
+            "$ref": "./artefacts/domains/data/conceptual/DAT-CDM.json"
+        },
         "APP-DAP": {
             "$ref": "./artefacts/domains/application/logical/APP-DAP.json"
+        },
+        "APP-DPM": {
+            "$ref": "./artefacts/domains/application/logical/APP-DPM.json"
         },
         "BUS-STR": {
             "$ref": "./artefacts/domains/business/conceptual/BUS-STR.json"

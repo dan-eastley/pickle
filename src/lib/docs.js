@@ -59,7 +59,7 @@ export const DOCS_NAV = [
       { title: 'Validate Structure', path: 'workflows/validate-structure' },
       { title: 'Validate Context', path: 'workflows/validate-context' },
       { title: 'Validate Merge', path: 'workflows/validate-merge' },
-      { title: 'Decisions Pipeline', path: 'workflows/decisions-pipeline' },
+      { title: 'Decisions Analysis', path: 'workflows/decisions-analysis' },
       { title: 'Create Pull Request', path: 'workflows/create-pull-request' },
       { title: 'Create Release', path: 'workflows/create-release' },
     ],

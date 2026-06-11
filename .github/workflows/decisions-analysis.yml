@@ -1,0 +1,116 @@
+name: Decisions Analysis
+
+# Orchestrates the 6 analysis workflows that run when a decision moves from
+# DRAFT to PROPOSED. Narrative Review runs separately (decisions-narrative-review.yml).
+#
+# Triggered via workflow_dispatch from the Pickle API on DRAFT → PROPOSED transition.
+# Runs sequentially using `needs:` to avoid the 3-hop workflow_run chaining limit.
+# Each job writes its findings to the decision.json on the decisions branch
+# (in-flight decisions live on their branch, not main).
+#
+# `model` controls which Claude model all six steps run with — defaults to
+# Haiku 4.5 to keep dev-time cost down. Override per-dispatch for higher-quality
+# runs (e.g. claude-sonnet-4-6).
+
+on:
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-018)"
+        required: true
+        type: string
+      model:
+        description: "Claude model to run all analysis steps with"
+        required: false
+        type: string
+        default: claude-haiku-4-5-20251001
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  impact-assessment:
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Impact Assessment"
+      prompt-file:   config/prompts/decisions/architecture-review.md
+      section-key:   impact-assessment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit
+
+  referential-integrity:
+    needs: impact-assessment
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Referential Integrity"
+      prompt-file:   config/prompts/decisions/referential-integrity.md
+      section-key:   referential-integrity
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit
+
+  strategy-alignment:
+    needs: referential-integrity
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Strategy Alignment"
+      prompt-file:   config/prompts/decisions/strategy-alignment.md
+      section-key:   strategy-alignment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit
+
+  principles-alignment:
+    needs: strategy-alignment
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Principles Alignment"
+      prompt-file:   config/prompts/decisions/principles-alignment.md
+      section-key:   principles-alignment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit
+
+  proponent-analysis:
+    needs: principles-alignment
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Proponent Analysis"
+      prompt-file:   config/prompts/decisions/proponent-analysis.md
+      section-key:   proponent-analysis
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit
+
+  challenger-analysis:
+    needs: proponent-analysis
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Challenger Analysis"
+      prompt-file:   config/prompts/decisions/challenger-analysis.md
+      section-key:   challenger-analysis
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit

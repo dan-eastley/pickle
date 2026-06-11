@@ -192,7 +192,7 @@ async function updateDecision({ clientId, versionId, decisionId, updates }, toke
   }
 
   // Dispatch workflow on status transition
-  if (newStatus === 'proposed') await dispatch('decisions-pipeline.yml', ids, token, owner, repo)
+  if (newStatus === 'proposed') await dispatch('decisions-analysis.yml', ids, token, owner, repo)
   else if (newStatus === 'accepted') await dispatch('decisions-architecture-changes.yml', ids, token, owner, repo)
   else if (newStatus === 'staged')   await dispatch('decisions-apply-changes.yml', ids, token, owner, repo)
 
@@ -242,9 +242,11 @@ async function editDecision({ clientId, versionId, decisionId, title, narrative,
     title:        title        ?? current.title,
     narrative:    narrative    ?? current.narrative,
     requirements: requirements ?? current.requirements,
-    ...(scope !== undefined ? (scope ? { scope } : {}) : (current.scope ? { scope: current.scope } : {})),
   }
-  if (!updated.scope) delete updated.scope
+  if (scope !== undefined) {
+    if (scope) updated.scope = scope
+    else delete updated.scope
+  }
   if (!updated.requirements?.length) delete updated.requirements
 
   await writeFile(dPath, updated, `Edit ${decisionId}: ${updated.title}`, sha, branch, token, owner, repo)

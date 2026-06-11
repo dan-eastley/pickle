@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-STR",
     "title": "Business Strategy Catalogue",
-    "description": "Catalogue of strategic statements for the Business architecture domain — the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
+    "description": "Catalogue of strategic statements for the Business architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "business",
         "abstraction": "conceptual",
         "format": "catalogue",
-        "description": "A catalogue of strategic goals and direction for the Business domain — the outcomes the organisation is trying to achieve and why.",
+        "description": "A catalogue of strategic goals and direction for the Business domain \u2014 the outcomes the organisation is trying to achieve and why.",
         "purpose": [
             "Aligns leadership on organisational direction before any architecture decisions are made",
             "Provides the 'why' that justifies investment in all other architecture domains",
@@ -25,6 +25,10 @@
         "strategies"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "strategies": {
             "type": "array",
             "items": {
@@ -40,7 +44,7 @@
                     },
                     "statement": {
                         "type": "string",
-                        "description": "Strategic statement — outcome-oriented, time-bound where appropriate"
+                        "description": "Strategic statement \u2014 outcome-oriented, time-bound where appropriate"
                     },
                     "driver": {
                         "type": "string",

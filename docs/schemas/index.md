@@ -27,7 +27,7 @@ flowchart LR
         I4["&lt;client&gt;/&lt;version&gt;/<br/>version.json"]
         I5["&lt;client&gt;/&lt;version&gt;/decisions/<br/>decisions.json"]
         I6["&lt;client&gt;/&lt;version&gt;/decisions/<br/>&lt;decision-id&gt;.json"]
-        I7["&lt;client&gt;/&lt;version&gt;/artefacts/domains/<br/>&lt;dom&gt;/&lt;layer&gt;/&lt;ID&gt;/&lt;ID&gt;.json"]
+        I7["&lt;client&gt;/&lt;version&gt;/domains/<br/>&lt;dom&gt;/&lt;layer&gt;/&lt;ID&gt;.json"]
     end
 
     S1 -. validates .-> I1
@@ -84,3 +84,18 @@ Each architecture domain carries a Strategy (Conceptual), Principles (Logical), 
 | [BUS-PRO.md](artefacts/domains/business/conceptual/BUS-PRO.md) | Business Processes | Business / Conceptual | APQC PCF, Porter value chain |
 | [DAT-DAC.md](artefacts/domains/data/conceptual/DAT-DAC.md) | Data Domains & Concepts | Data / Conceptual | DAMA-DMBOK, ISO 27001 |
 | [APP-DAP.md](artefacts/domains/application/logical/APP-DAP.md) | Application Domains & Platforms | Application / Logical | TOGAF Application Architecture, Gartner Pace Layers |
+
+## Diagram schemas
+
+Diagram artefacts are derived from a source catalogue rather than authored directly. BUS-BCM and DAT-CDM define a `groups[].items[]` shape rendered by [`NestedGroupDiagram`](../../src/components/artefacts/diagrams/NestedGroupDiagram.jsx) (see [Diagram rendering](#diagram-rendering) below). BUS-BPM and APP-DPM are not yet implemented — their schemas currently define only a `meta` block (including `diagramType`) plus an open `additionalProperties: true` body.
+
+| Schema | Artefact Type | Architecture Domain / Layer | Derived from | Status |
+|---|---|---|---|---|
+| [BUS-BCM.md](artefacts/domains/business/conceptual/BUS-BCM.md) | Business Capability Model | Business / Conceptual | BUS-CAP | Defined (`card-based`) |
+| [BUS-BPM.md](artefacts/domains/business/conceptual/BUS-BPM.md) | Business Process Model | Business / Conceptual | BUS-PRO | Placeholder (`flow-based`) |
+| [DAT-CDM.md](artefacts/domains/data/conceptual/DAT-CDM.md) | Conceptual Data Model | Data / Conceptual | DAT-DAC | Defined (`entity-based`) |
+| [APP-DPM.md](artefacts/domains/application/logical/APP-DPM.md) | Domains & Platforms Model | Application / Logical | APP-DAP | Placeholder (`card-based`) |
+
+### Diagram rendering
+
+`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group (e.g. a Level 1 capability or a data domain) is rendered as a card containing its items (e.g. Level 2 sub-capabilities or conceptual data entities). Both groups and items carry an open `meta` object for additional display attributes — e.g. BUS-BCM uses `meta.importance` to badge each capability card. The two diagram types share the same layout component and theme ([`src/lib/diagramTheme.js`](../../src/lib/diagramTheme.js)) and differ only in corner styling.

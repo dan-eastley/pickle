@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:data:logical:DAT-PRN",
     "title": "Data Principles Catalogue",
-    "description": "Catalogue of architecture principles for the Data architecture domain — vendor-neutral guidelines that shape design decisions. Aligned to TOGAF Architecture Principles (Name, Statement, Rationale, Implications).",
+    "description": "Catalogue of architecture principles for the Data architecture domain \u2014 vendor-neutral guidelines that shape design decisions. Aligned to TOGAF Architecture Principles (Name, Statement, Rationale, Implications).",
     "meta": {
         "domain": "data",
         "abstraction": "logical",
@@ -25,6 +25,10 @@
         "principles"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "principles": {
             "type": "array",
             "items": {
@@ -50,7 +54,7 @@
                     },
                     "rationale": {
                         "type": "string",
-                        "description": "Why this principle exists — the underlying motivation"
+                        "description": "Why this principle exists \u2014 the underlying motivation"
                     },
                     "implications": {
                         "type": "array",

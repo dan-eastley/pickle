@@ -19,25 +19,26 @@ GitHub Actions workflows live at [`/.github/workflows/`](../../.github/workflows
 | [Create Pull Request](create-pull-request.md) | `create-pull-request.yml` | push to features/** or decisions/** | Auto-open a PR to the right target branch |
 | [Create Release](create-release.md) | `create-release.yml` | tag push (`v*`) | Create a GitHub release from the tag and merge main back into develop |
 
-## Decision analysis pipeline (chained after Validate Context)
+## Decisions analysis (dispatched on DRAFT → PROPOSED)
 
-A single orchestrator workflow runs six Claude-driven analyses as sequential jobs, then updates the PR description. Each analysis writes to a section in the decision JSON whose property name equals the kebab-cased step name.
+A single orchestrator workflow runs six Claude-driven analyses as sequential jobs. Each analysis writes to a section in the decision JSON whose property name equals the kebab-cased job name.
 
 | Workflow | File | Trigger | Purpose |
 |---|---|---|---|
-| [Decisions Pipeline](decisions-pipeline.md) | `decisions-pipeline.yml` | `workflow_run` after Validate Context | Orchestrates the six analyses + PR update as sequential jobs |
-| (reusable analysis step) | `decisions-analysis-step.yml` | `workflow_call` from orchestrator | One Claude analysis pass — parameterised by section key, prompt file, and branch |
+| [Decisions Analysis](decisions-analysis.md) | `decisions-analysis.yml` | `workflow_dispatch` from the Pickle API on DRAFT → PROPOSED | Orchestrates the six analyses as sequential jobs |
+| (reusable analysis step) | `decisions-analysis-step.yml` | `workflow_call` from the orchestrator or Narrative Review | One Claude analysis pass — parameterised by section key, prompt file, client/version/decision IDs, and model |
 
 Within the orchestrator, jobs run in this order — each writes its result to the matching decision-JSON section:
 
 | # | Job | Decision-JSON section |
 |---|---|---|
-| 1 | `architecture-review` | `architecture-review` |
+| 1 | `impact-assessment` | `impact-assessment` |
 | 2 | `referential-integrity` | `referential-integrity` |
 | 3 | `strategy-alignment` | `strategy-alignment` |
 | 4 | `principles-alignment` | `principles-alignment` |
 | 5 | `proponent-analysis` | `proponent-analysis` |
 | 6 | `challenger-analysis` | `challenger-analysis` |
-| 7 | `update-pull-request` | _(updates PR body, no JSON section)_ |
 
-All six analysis jobs are currently **prompt stubs** — see [decisions-pipeline.md](decisions-pipeline.md) for the orchestration mechanism and what each step will eventually do. Validate Context and Update Pull Request are the fully-implemented deterministic links bookending the chain.
+All six jobs run a real Claude analysis pass via `anthropics/claude-code-base-action`, defaulting to Haiku 4.5 to keep dev-time cost down (overridable via the `model` input) — see [decisions-analysis.md](decisions-analysis.md) for the orchestration mechanism and prompt files.
+
+Separately, [Decisions — Narrative Review](../../.github/workflows/decisions-narrative-review.yml) runs once on DRAFT creation, writing to the `recommendations` section via the same reusable analysis step.

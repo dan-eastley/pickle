@@ -72,7 +72,7 @@ jobs:
     with:
       analysis-name: "Narrative Review"
       prompt-file:   config/prompts/decisions/narrative-validation.md
-      section-key:   narrative-validation
+      section-key:   recommendations
       client-id:     ${{ needs.parse.outputs.client-id }}
       version-id:    ${{ needs.parse.outputs.version-id }}
       decision-id:   ${{ needs.parse.outputs.decision-id }}

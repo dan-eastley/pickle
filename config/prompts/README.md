@@ -36,7 +36,7 @@ That file's contents are passed to `anthropics/claude-code-base-action` as the p
 
 ## Output contract
 
-Each prompt must instruct Claude to produce the four-string section shape defined at `$defs/section` in [`/config/schemas/decision.json`](../schemas/decision.json):
+Each of the six analysis prompts must instruct Claude to produce the four-string section shape defined at `$defs/section` in [`/config/schemas/decision.json`](../schemas/decision.json):
 
 | Field | Description |
 |---|---|
@@ -46,6 +46,8 @@ Each prompt must instruct Claude to produce the four-string section shape define
 | `rationale` | Why the recommendation is the right action (max ~500 characters) |
 
 Fields should use plain markdown for readability in PR descriptions. The `Validate Context` workflow does **not** use a prompt — it's deterministic.
+
+`narrative-validation.md` is the exception: it writes to the `recommendations` property using `$defs/recommendation` — a single `recommendation` string per entry, with no accept/decline tracking. It is down to the author whether to act on each suggestion.
 
 ## Current status
 

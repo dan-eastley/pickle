@@ -297,15 +297,24 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving }) {
   )
 }
 
-// ── Review section (narrative-validation findings, separate from Analysis) ────
+// ── Recommendations section (narrative-validation output, separate from Analysis) ─
 
-function ReviewSection({ decision, accepted, onAccept, saving }) {
-  const rows = decision['narrative-validation']
-  if (!rows?.length) return null
+function ReviewSection({ decision }) {
+  const items = decision['recommendations']
+  if (!items?.length) return null
   return (
-    <div id="section-review">
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Review</h3>
-      <AnalysisTable rows={rows} sectionKey="narrative-validation" accepted={accepted} onAccept={onAccept} saving={saving} />
+    <div id="section-recommendations">
+      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Recommendations</h3>
+      <ul className="space-y-2">
+        {items.map((item, i) => (
+          <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+            <svg className="w-4 h-4 mt-0.5 text-success-600 flex-shrink-0" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+            </svg>
+            <span>{item.recommendation}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -501,7 +510,7 @@ function SectionNav({ decision }) {
   const sections = [
     { id: 'section-narrative',    label: 'Narrative' },
     decision.requirements?.length && { id: 'section-requirements',       label: 'Requirements' },
-    decision['narrative-validation']?.length && { id: 'section-review',  label: 'Review' },
+    decision['recommendations']?.length && { id: 'section-recommendations', label: 'Recommendations' },
     { id: 'section-analysis',     label: 'Analysis' },
     decision['architecture-changes']?.length && { id: 'section-architecture-changes', label: 'Architecture Changes' },
     decision.history?.length     && { id: 'section-history',             label: 'History' },
@@ -668,8 +677,8 @@ export default function DecisionDetailPage() {
           </div>
         )}
 
-        {/* Review — narrative-validation findings, separate from analysis tabs */}
-        <ReviewSection decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
+        {/* Recommendations — narrative-validation output, separate from analysis tabs */}
+        <ReviewSection decision={decision} />
 
         {/* Status actions — above analysis */}
         <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />

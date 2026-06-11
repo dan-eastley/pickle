@@ -25,6 +25,10 @@
         "guardrails"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "guardrails": {
             "type": "array",
             "items": {
@@ -50,7 +54,7 @@
                     },
                     "rationale": {
                         "type": "string",
-                        "description": "Why this is mandatory — often references a principle or compliance requirement"
+                        "description": "Why this is mandatory \u2014 often references a principle or compliance requirement"
                     },
                     "enforcement": {
                         "type": "string",
