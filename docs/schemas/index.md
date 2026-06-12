@@ -76,6 +76,18 @@ Each architecture domain carries a Strategy (Conceptual), Principles (Logical), 
 | Application | [APP-STR.md](artefacts/domains/application/conceptual/APP-STR.md) | [APP-PRN.md](artefacts/domains/application/logical/APP-PRN.md) | [APP-GRD.md](artefacts/domains/application/physical/APP-GRD.md) |
 | Solution | [SOL-STR.md](artefacts/domains/solution/conceptual/SOL-STR.md) | [SOL-PRN.md](artefacts/domains/solution/logical/SOL-PRN.md) | [SOL-GRD.md](artefacts/domains/solution/physical/SOL-GRD.md) |
 
+## Strategy ↔ Principles / Principles ↔ Guardrails matrices (one pair per architecture domain)
+
+Each architecture domain also carries two many-to-many matrices linking adjacent layers of the Strategy / Principles / Guardrails baseline above: `<DOM>-STR-PRN` (Logical) maps Strategy statements to the Principles that operationalise them, and `<DOM>-PRN-GRD` (Physical) maps Principles to the Guardrails that make them concrete. Both share the `meta.matrix` + sparse `relationships[]` shape described in [artefacts.md](artefacts.md).
+
+| Architecture Domain | Strategy ↔ Principles | Principles ↔ Guardrails |
+|---|---|---|
+| Business | [BUS-STR-PRN.md](artefacts/domains/business/logical/BUS-STR-PRN.md) | [BUS-PRN-GRD.md](artefacts/domains/business/physical/BUS-PRN-GRD.md) |
+| Data | [DAT-STR-PRN.md](artefacts/domains/data/logical/DAT-STR-PRN.md) | [DAT-PRN-GRD.md](artefacts/domains/data/physical/DAT-PRN-GRD.md) |
+| Integration | [INT-STR-PRN.md](artefacts/domains/integration/logical/INT-STR-PRN.md) | [INT-PRN-GRD.md](artefacts/domains/integration/physical/INT-PRN-GRD.md) |
+| Application | [APP-STR-PRN.md](artefacts/domains/application/logical/APP-STR-PRN.md) | [APP-PRN-GRD.md](artefacts/domains/application/physical/APP-PRN-GRD.md) |
+| Solution | [SOL-STR-PRN.md](artefacts/domains/solution/logical/SOL-STR-PRN.md) | [SOL-PRN-GRD.md](artefacts/domains/solution/physical/SOL-PRN-GRD.md) |
+
 ## Domain-specific catalogue schemas
 
 | Schema | Artefact Type | Architecture Domain / Layer | Aligned to |

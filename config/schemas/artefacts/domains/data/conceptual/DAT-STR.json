@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:data:conceptual:DAT-STR",
-    "title": "Data Strategy Catalogue",
+    "title": "Data Architecture Strategy Catalogue",
     "description": "Catalogue of strategic statements for the Data architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "data",

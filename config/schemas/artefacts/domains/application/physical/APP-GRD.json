@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:application:physical:APP-GRD",
-    "title": "Application Guardrails Catalogue",
+    "title": "Application Architecture Guardrails Catalogue",
     "description": "Catalogue of non-negotiable constraints, mandatory standards, and concrete patterns for the Application architecture domain. Aligned to Policy-as-Code conventions (AWS Service Control Policies, Azure Policy).",
     "meta": {
         "domain": "application",

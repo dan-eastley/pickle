@@ -1,4 +1,4 @@
-# DAT-STR — Data Strategy Catalogue
+# DAT-STR — Data Architecture Strategy Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/data/conceptual/DAT-STR.json`](../../../../../../config/schemas/artefacts/domains/data/conceptual/DAT-STR.json)
 **Architecture Domain / Layer:** Data / Conceptual

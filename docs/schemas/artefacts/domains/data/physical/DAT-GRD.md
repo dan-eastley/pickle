@@ -1,4 +1,4 @@
-# DAT-GRD — Data Guardrails Catalogue
+# DAT-GRD — Data Architecture Guardrails Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/data/physical/DAT-GRD.json`](../../../../../../config/schemas/artefacts/domains/data/physical/DAT-GRD.json)
 **Architecture Domain / Layer:** Data / Physical

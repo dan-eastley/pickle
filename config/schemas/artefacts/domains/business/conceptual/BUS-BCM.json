@@ -15,8 +15,8 @@
         ],
         "diagramType": "card-based",
         "countLabels": {
-            "groups": "capabilities",
-            "items": "sub-capabilities"
+            "groups": "Level 1",
+            "items": "Level 2"
         }
     },
     "type": "object",

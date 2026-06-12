@@ -1,0 +1,55 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-STR-PRN",
+    "relationships": [
+        {
+            "column-id": "INT-STR-001",
+            "row-id": "INT-PRN-003",
+            "rationale": "Every new exchange being a managed API depends on those APIs carrying semantic versions with a documented deprecation lifecycle."
+        },
+        {
+            "column-id": "INT-STR-001",
+            "row-id": "INT-PRN-004",
+            "rationale": "Managed APIs are managed precisely because they are exposed and governed through the API gateway."
+        },
+        {
+            "column-id": "INT-STR-001",
+            "row-id": "INT-PRN-006",
+            "rationale": "A managed API contract must express domain concepts in shared language, not the producer's internal data structures."
+        },
+        {
+            "column-id": "INT-STR-002",
+            "row-id": "INT-PRN-001",
+            "rationale": "This strategy is the direct mandate for defaulting to asynchronous, event-driven messaging over synchronous calls."
+        },
+        {
+            "column-id": "INT-STR-002",
+            "row-id": "INT-PRN-005",
+            "rationale": "Publishing all material state changes as events requires consumers to handle duplicate delivery gracefully, since producers do not guarantee exactly-once."
+        },
+        {
+            "column-id": "INT-STR-003",
+            "row-id": "INT-PRN-002",
+            "rationale": "This strategy is the direct mandate for authoring and reviewing API and event schemas before implementation begins."
+        },
+        {
+            "column-id": "INT-STR-003",
+            "row-id": "INT-PRN-006",
+            "rationale": "Reviewing contracts before implementation is what prevents producer-internal models from leaking into the shared integration model."
+        },
+        {
+            "column-id": "INT-STR-004",
+            "row-id": "INT-PRN-004",
+            "rationale": "This strategy is the direct mandate for all inter-zone traffic to be mediated through the managed gateway or broker."
+        },
+        {
+            "column-id": "INT-STR-005",
+            "row-id": "INT-PRN-003",
+            "rationale": "Integrations designed for reuse with stable contracts depend on versioned interfaces with an explicit, managed deprecation path."
+        },
+        {
+            "column-id": "INT-STR-005",
+            "row-id": "INT-PRN-006",
+            "rationale": "Reusable integration capabilities must expose shared-language contracts independent of any single producer's internal implementation."
+        }
+    ]
+}

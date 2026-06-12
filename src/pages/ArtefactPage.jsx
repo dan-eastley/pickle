@@ -1,21 +1,16 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
-import { getArtefact, getDomain, getAbstraction, DOMAIN_COLORS } from '../lib/artefacts'
+import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
 import NewDecisionModal from '../components/decisions/NewDecisionModal'
-import Badge from '../components/ui/Badge'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
-import TextLink from '../components/ui/TextLink'
 import usePageTitle from '../hooks/usePageTitle'
-
-const FORMAT_LABELS = { catalogue: 'Catalogue', matrix: 'Matrix', diagram: 'Diagram' }
-const FORMAT_VARIANTS = { catalogue: 'blue', matrix: 'violet', diagram: 'amber' }
 
 // Button colours per domain
 const DOMAIN_BUTTON = {
@@ -57,19 +52,26 @@ function AdrActionBar({ artefact, clientId, versionId }) {
             <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
           </svg>
           <span className="text-sm text-gray-600">
-            Changes to this artefact must go through a Decision Record.{' '}
-            <TextLink to={viewDecisionsUrl}>View decisions</TextLink>
+            Changes to this artefact must go through a Decision Record.
           </span>
         </div>
-        <button
-          className={`flex-shrink-0 flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
-          onClick={() => setModalOpen(true)}
-        >
-          <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-            <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
-          New Decision
-        </button>
+        <div className="flex-shrink-0 flex items-center gap-2">
+          <Link
+            to={viewDecisionsUrl}
+            className="px-4 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors"
+          >
+            View Decisions
+          </Link>
+          <button
+            className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
+            onClick={() => setModalOpen(true)}
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+            </svg>
+            New Decision
+          </button>
+        </div>
       </div>
 
       {modalOpen && (
@@ -105,8 +107,6 @@ function useCollapsed(storageKey, defaultCollapsed = false) {
 }
 
 function ArtefactHeader({ artefact, schema, clientId, versionId }) {
-  const domain = getDomain(artefact.domain)
-  const abstraction = getAbstraction(artefact.abstraction)
   const colors = DOMAIN_COLORS[artefact.domain]
   const metaDescription = schema?.meta?.description
   const metaPurpose = schema?.meta?.purpose
@@ -115,22 +115,12 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
   const [relatedCollapsed, toggleRelated] = useCollapsed(RELATED_STORAGE_KEY)
 
   return (
-    <div className="mb-6 pb-5 border-b border-gray-200">
-      <div className="flex items-center gap-2 mb-3">
-        <Badge label={domain?.name ?? artefact.domain} variant="gray" />
-        <span className="text-gray-300">·</span>
-        <Badge label={abstraction?.name ?? artefact.abstraction} variant="gray" />
-        <span className="text-gray-300">·</span>
-        <Badge label={FORMAT_LABELS[artefact.format]} variant={FORMAT_VARIANTS[artefact.format]} />
-        {artefact.key && (
-          <>
-            <span className="text-gray-300">·</span>
-            <span className="flex items-center gap-1 text-xs text-amber-600 font-medium">
-              <KeyStar /> Key artefact
-            </span>
-          </>
-        )}
-      </div>
+    <div className="mb-6">
+      {artefact.key && (
+        <div className="flex items-center gap-1 mb-3 text-xs text-amber-600 font-medium">
+          <KeyStar /> Key artefact
+        </div>
+      )}
       <div className="flex items-start gap-4">
         <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}>
           <span className={colors?.text ?? 'text-gray-500'}>
@@ -276,7 +266,7 @@ export default function ArtefactPage() {
             <CatalogueView data={data} schema={schema} />
           )}
           {artefact.format === 'matrix' && (
-            <MatrixView data={data} />
+            <MatrixView data={data} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
           {artefact.format === 'diagram' && (
             <DiagramView data={data} artefact={artefact} schema={schema} />

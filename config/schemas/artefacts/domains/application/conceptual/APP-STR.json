@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:application:conceptual:APP-STR",
-    "title": "Application Strategy Catalogue",
+    "title": "Application Architecture Strategy Catalogue",
     "description": "Catalogue of strategic statements for the Application architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "application",

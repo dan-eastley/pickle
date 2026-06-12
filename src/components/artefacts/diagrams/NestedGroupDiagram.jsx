@@ -11,6 +11,7 @@ const GROUP_HEADER_HEIGHT = 52
 const ITEM_GAP = 8
 const ITEM_HEIGHT = 48
 const ITEM_MIN_WIDTH = 110
+const ITEM_PADDING = 8
 
 // Greedy word-wrap for SVG <text>, which doesn't wrap on its own. Truncates
 // with an ellipsis if the text still doesn't fit in maxLines.
@@ -62,7 +63,7 @@ function ImportanceBadge({ importance, right, top }) {
   return (
     <g>
       <title>{`Importance: ${label}`}</title>
-      <rect x={right - width} y={top} width={width} height={16} rx={8} className={colors.fill} />
+      <rect x={right - width} y={top} width={width} height={16} className={colors.fill} />
       <text x={right - width / 2} y={top + 11} textAnchor="middle" className={`text-[9px] font-medium ${colors.text}`}>
         {label}
       </text>
@@ -88,7 +89,7 @@ export default function NestedGroupDiagram({ groups, domain, diagramType }) {
 
   const itemCols = Math.max(1, Math.floor((groupWidth - GROUP_PADDING * 2 + ITEM_GAP) / (ITEM_MIN_WIDTH + ITEM_GAP)))
   const itemWidth = (groupWidth - GROUP_PADDING * 2 - ITEM_GAP * (itemCols - 1)) / itemCols
-  const itemMaxChars = Math.floor(itemWidth / 5.5)
+  const itemMaxChars = Math.floor((itemWidth - ITEM_PADDING * 2) / 5.5)
   const groupMaxChars = Math.floor((groupWidth - GROUP_PADDING * 2) / 6.5)
 
   const groupHeight = (group) => {
@@ -141,12 +142,12 @@ export default function NestedGroupDiagram({ groups, domain, diagramType }) {
                 <title>{`${item.id}: ${item.name}`}</title>
                 <rect x={ix} y={iy} width={itemWidth} height={ITEM_HEIGHT} rx={variant.itemRadius}
                   strokeWidth={1} className={`${variant.itemFill} ${colors.itemStroke}`} />
-                <text x={ix + 8} y={iy + 13} className="text-[8px] font-mono uppercase tracking-wide fill-gray-400">
+                <text x={ix + ITEM_PADDING} y={iy + 13} className="text-[8px] font-mono uppercase tracking-wide fill-gray-400">
                   {item.id}
                 </text>
                 <WrappedText
                   text={item.name}
-                  x={ix + 8}
+                  x={ix + ITEM_PADDING}
                   y={iy + 27}
                   maxChars={itemMaxChars}
                   maxLines={2}

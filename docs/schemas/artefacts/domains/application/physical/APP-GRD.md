@@ -1,4 +1,4 @@
-# APP-GRD — Application Guardrails Catalogue
+# APP-GRD — Application Architecture Guardrails Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/application/physical/APP-GRD.json`](../../../../../../config/schemas/artefacts/domains/application/physical/APP-GRD.json)
 **Architecture Domain / Layer:** Application / Physical

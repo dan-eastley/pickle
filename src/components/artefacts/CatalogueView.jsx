@@ -82,8 +82,10 @@ function countSummary(items, schema, data) {
   const total = items?.length ?? 0
   const isHier = items?.some(i => i['parent-id'])
   if (isHier && labels?.level1) {
-    const l1 = items.filter(i => !i['parent-id']).length
-    return `${l1} ${labels.level1} · ${total - l1} ${labels.level2 ?? 'Level 2'}`
+    const l1Items = items.filter(i => !i['parent-id'])
+    const l1Ids = new Set(l1Items.map(i => i.id))
+    const l2 = items.filter(i => l1Ids.has(i['parent-id'])).length
+    return `${l1Items.length} ${labels.level1} · ${l2} ${labels.level2 ?? 'Level 2'}`
   }
 
   const plural = labels?.plural ?? 'entries'

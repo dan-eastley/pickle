@@ -1,4 +1,4 @@
-# APP-PRN — Application Principles Catalogue
+# APP-PRN — Application Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/application/logical/APP-PRN.json`](../../../../../../config/schemas/artefacts/domains/application/logical/APP-PRN.json)
 **Architecture Domain / Layer:** Application / Logical

@@ -1,4 +1,4 @@
-# INT-PRN — Integration Principles Catalogue
+# INT-PRN — Integration Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/integration/logical/INT-PRN.json`](../../../../../../config/schemas/artefacts/domains/integration/logical/INT-PRN.json)
 **Architecture Domain / Layer:** Integration / Logical

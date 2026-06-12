@@ -23,9 +23,9 @@ export const IMPORTANCE_COLORS = {
 }
 
 // Per-diagramType visual variants for NestedGroupDiagram. Both card-based and
-// entity-based diagrams share the same grouped-card layout algorithm; this is
-// the only place their appearance diverges.
+// entity-based diagrams share the same grouped-card layout algorithm and use
+// square corners throughout; this is the only place their appearance diverges.
 export const DIAGRAM_VARIANTS = {
-  'card-based':   { groupRadius: 10, itemRadius: 6, itemFill: 'fill-white' },
-  'entity-based': { groupRadius: 2,  itemRadius: 0, itemFill: 'fill-white' },
+  'card-based':   { groupRadius: 0, itemRadius: 0, itemFill: 'fill-white' },
+  'entity-based': { groupRadius: 0, itemRadius: 0, itemFill: 'fill-white' },
 }
