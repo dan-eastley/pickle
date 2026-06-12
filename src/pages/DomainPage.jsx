@@ -7,6 +7,7 @@ import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
 import TextLink from '../components/ui/TextLink'
 import ArtefactRow from '../components/artefacts/ArtefactRow'
+import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function AbstractionSection({ abstraction, artefacts, base, domain, clientId, versionId }) {
@@ -48,9 +49,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
           </span>
           <span className="text-xs opacity-70">{abstraction.description}</span>
         </div>
-        <svg className="w-4 h-4 opacity-60 group-hover:opacity-90 flex-shrink-0 transition-opacity" viewBox="0 0 16 16" fill="none">
-          <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <ChevronRight className="w-4 h-4 opacity-60 group-hover:opacity-90 flex-shrink-0 transition-opacity" />
       </Link>
 
       {/* Format-grouped artefacts */}

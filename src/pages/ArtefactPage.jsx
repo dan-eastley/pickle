@@ -7,41 +7,18 @@ import CatalogueView from '../components/artefacts/CatalogueView'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
 import NewDecisionModal from '../components/decisions/NewDecisionModal'
+import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
+import { KeyStar, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-// Button colours per domain
-const DOMAIN_BUTTON = {
-  business:    'bg-violet-600 hover:bg-violet-700 text-white',
-  data:        'bg-blue-600 hover:bg-blue-700 text-white',
-  integration: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-  application: 'bg-amber-500 hover:bg-amber-600 text-white',
-  solution:    'bg-rose-600 hover:bg-rose-700 text-white',
-}
-
-// Light background per domain for the action bar
-const DOMAIN_ACTION_BG = {
-  business:    'bg-violet-50',
-  data:        'bg-blue-50',
-  integration: 'bg-emerald-50',
-  application: 'bg-amber-50',
-  solution:    'bg-rose-50',
-}
-
-function KeyStar() {
-  return (
-    <svg className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" viewBox="0 0 12 12" fill="currentColor">
-      <path d="M6 1l1.29 3.09L10.5 4.5 8.25 6.65l.54 3.1L6 8.25 3.21 9.75l.54-3.1L1.5 4.5l3.21-.41z" />
-    </svg>
-  )
-}
 
 function AdrActionBar({ artefact, clientId, versionId }) {
   const [modalOpen, setModalOpen] = useState(false)
-  const bgClass = DOMAIN_ACTION_BG[artefact.domain] ?? 'bg-gray-50'
-  const btnClass = DOMAIN_BUTTON[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700 text-white'
+  const colors = DOMAIN_COLORS[artefact.domain]
+  const bgClass = colors?.bg ?? 'bg-gray-50'
+  const btnClass = colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
   const viewDecisionsUrl = `/clients/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
 
   return (
@@ -66,9 +43,7 @@ function AdrActionBar({ artefact, clientId, versionId }) {
             className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
             onClick={() => setModalOpen(true)}
           >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
+            <PlusIcon className="w-3.5 h-3.5" />
             New Decision
           </button>
         </div>
@@ -118,7 +93,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
     <div className="mb-6">
       {artefact.key && (
         <div className="flex items-center gap-1 mb-3 text-xs text-amber-600 font-medium">
-          <KeyStar /> Key artefact
+          <KeyStar className="w-3.5 h-3.5" /> Key artefact
         </div>
       )}
       <div className="flex items-start gap-4">
@@ -250,11 +225,12 @@ export default function ArtefactPage() {
       )}
 
       {!loading && !error && data === null && (
-        <div className="border border-gray-200 bg-white p-8 text-center">
-          <p className="text-sm font-medium text-gray-700">Nothing here yet</p>
-          <p className="mt-1 text-sm text-gray-500">
-            No content has been added for this version. Use the button above to raise an Architecture Decision Record and propose changes.
-          </p>
+        <div className="border border-gray-200 bg-white">
+          <EmptyState
+            illustration={artefact.format === 'matrix' ? 'matrix' : artefact.format === 'diagram' ? 'diagram' : 'catalogue'}
+            title="Nothing here yet"
+            description="No content has been added for this version. Use the button above to raise an Architecture Decision Record and propose changes."
+          />
         </div>
       )}
 

@@ -196,12 +196,43 @@ export const getArtefactsForDomain = (domainId, abstractionId = null) =>
     a => a.domain === domainId && (!abstractionId || a.abstraction === abstractionId)
   )
 
+// Per-domain colour kit. One entry per domain — every component that needs a
+// domain-coloured element reads from here rather than defining its own map.
+//   bg/text/border/dot — tints for chips, icon tiles and indicators
+//   accent — solid left-border accent on cards and rows
+//   button — solid call-to-action button colours
+//   nav    — active state for the domain navigation tabs
 export const DOMAIN_COLORS = {
-  business:    { bg: 'bg-violet-50',  text: 'text-violet-700',  border: 'border-violet-200',  dot: 'bg-violet-500' },
-  data:        { bg: 'bg-blue-50',    text: 'text-blue-700',    border: 'border-blue-200',    dot: 'bg-blue-500' },
-  integration: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', dot: 'bg-emerald-500' },
-  application: { bg: 'bg-amber-50',   text: 'text-amber-700',   border: 'border-amber-200',   dot: 'bg-amber-500' },
-  solution:    { bg: 'bg-rose-50',    text: 'text-rose-700',    border: 'border-rose-200',    dot: 'bg-rose-500' },
+  business: {
+    bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', dot: 'bg-violet-500',
+    accent: 'border-violet-400',
+    button: 'bg-violet-600 hover:bg-violet-700 text-white',
+    nav: { border: 'border-violet-500', text: 'text-violet-700', bg: 'bg-violet-50', icon: 'text-violet-600' },
+  },
+  data: {
+    bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', dot: 'bg-blue-500',
+    accent: 'border-blue-400',
+    button: 'bg-blue-600 hover:bg-blue-700 text-white',
+    nav: { border: 'border-blue-500', text: 'text-blue-700', bg: 'bg-blue-50', icon: 'text-blue-600' },
+  },
+  integration: {
+    bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', dot: 'bg-emerald-500',
+    accent: 'border-emerald-400',
+    button: 'bg-emerald-600 hover:bg-emerald-700 text-white',
+    nav: { border: 'border-emerald-500', text: 'text-emerald-700', bg: 'bg-emerald-50', icon: 'text-emerald-600' },
+  },
+  application: {
+    bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', dot: 'bg-amber-500',
+    accent: 'border-amber-400',
+    button: 'bg-amber-500 hover:bg-amber-600 text-white',
+    nav: { border: 'border-amber-500', text: 'text-amber-700', bg: 'bg-amber-50', icon: 'text-amber-600' },
+  },
+  solution: {
+    bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', dot: 'bg-rose-500',
+    accent: 'border-rose-400',
+    button: 'bg-rose-600 hover:bg-rose-700 text-white',
+    nav: { border: 'border-rose-500', text: 'text-rose-700', bg: 'bg-rose-50', icon: 'text-rose-600' },
+  },
 }
 
 export const ABSTRACTION_COLORS = {

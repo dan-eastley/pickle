@@ -1,14 +1,6 @@
 import EmptyState from '../ui/EmptyState'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 
-function DiagramIcon({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none">
-      <path d="M3 20L8 12l4 5 3-7 4 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
 // Diagram types rendered by NestedGroupDiagram — a grid of group cards, each
 // containing a wrapped grid of item cards. Other diagram types fall back to
 // the "not yet available" state below until a renderer exists for them.
@@ -42,11 +34,11 @@ export default function DiagramView({ data, artefact, schema }) {
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-xs">
+    <div className="border border-gray-200 bg-white overflow-hidden shadow-xs">
       <EmptyState
+        illustration="diagram"
         title={`${artefact?.name ?? 'Diagram'} not yet available`}
         description="Diagram rendering is not yet implemented for this diagram type."
-        icon={DiagramIcon}
       />
     </div>
   )

@@ -4,6 +4,8 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
+import Spinner from '../components/ui/Spinner'
+import { PlusIcon, CloseIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
@@ -34,9 +36,7 @@ function RequirementsList({ requirements, onChange }) {
               <option>Non-Functional</option>
             </select>
             <button onClick={() => remove(i)} className="p-1.5 text-gray-400 hover:text-error-600 transition-colors flex-shrink-0" title="Remove">
-              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-              </svg>
+              <CloseIcon className="w-4 h-4" />
             </button>
           </div>
           <textarea
@@ -52,9 +52,7 @@ function RequirementsList({ requirements, onChange }) {
         onClick={add}
         className="flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 transition-colors"
       >
-        <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-          <path d="M8 2v12M2 8h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <PlusIcon className="w-4 h-4" />
         Add requirement
       </button>
     </div>
@@ -156,7 +154,7 @@ export default function DecisionEditorPage() {
   }
 
   if (loadingExisting) {
-    return <div className="flex items-center justify-center py-20 text-sm text-gray-400">Loading decision…</div>
+    return <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
   }
 
   return (
