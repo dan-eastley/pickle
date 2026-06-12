@@ -2,7 +2,7 @@
     "decision-id": "ADR-014",
     "title": "Define Application Guardrails for Security and Operational Quality",
     "status": "proposed",
-    "narrative": "FEDC's application portfolio has grown rapidly and includes applications built across different time periods, teams, and technology choices. Security assessments have found inconsistent application of controls \u2014 some applications lack input validation, others use deprecated authentication libraries, and several have not been assessed for OWASP Top 10 vulnerabilities. Operational quality also varies: some applications have no health endpoints, no structured logging, and no defined alerting thresholds. We define a mandatory set of application guardrails that all applications must comply with before production deployment. Guardrails cover security (authentication, input validation, dependency scanning), operational quality (health endpoints, structured logging, alerting), and data handling (encryption, PII handling). Non-compliance must be documented as an accepted risk with a named owner.",
+    "narrative": "FEDC's application portfolio has grown rapidly and includes applications built across different time periods, teams, and technology choices. Security assessments have found inconsistent application of controls — some applications lack input validation, others use deprecated authentication libraries, and several have not been assessed for OWASP Top 10 vulnerabilities. Operational quality also varies: some applications have no health endpoints, no structured logging, and no defined alerting thresholds. We define a mandatory set of application guardrails that all applications must comply with before production deployment. Guardrails cover security (authentication, input validation, dependency scanning), operational quality (health endpoints, structured logging, alerting), and data handling (encryption, PII handling). Non-compliance must be documented as an accepted risk with a named owner.",
     "requirements": [
         {
             "title": "Security baseline compliance",
@@ -82,7 +82,8 @@
             "finding": "The decision is consistent with Logical-layer principles for the target domain. No vendor-neutrality violations detected.",
             "impact": "Principles alignment means the decision passes guardrails review without requiring exceptions.",
             "recommendation": "Confirm alignment with Physical-layer guardrails, particularly approved platform standards.",
-            "rationale": "Guardrails are non-negotiable. Validating before acceptance prevents costly rework."
+            "rationale": "Guardrails are non-negotiable. Validating before acceptance prevents costly rework.",
+            "review": "accepted"
         },
         {
             "finding": "The principle of observability is not explicitly addressed in the narrative or requirements.",
