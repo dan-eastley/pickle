@@ -28,6 +28,21 @@
         "APP-DPM": {
             "$ref": "./artefacts/domains/application/logical/APP-DPM.json"
         },
+        "APP-CAT": {
+            "$ref": "./artefacts/domains/application/physical/APP-CAT.json"
+        },
+        "APP-DAP-CAT": {
+            "$ref": "./artefacts/domains/application/physical/APP-DAP-CAT.json"
+        },
+        "APP-CAP-DAP": {
+            "$ref": "./artefacts/domains/application/logical/APP-CAP-DAP.json"
+        },
+        "INT-IFC": {
+            "$ref": "./artefacts/domains/integration/logical/INT-IFC.json"
+        },
+        "INT-DAC-IFC": {
+            "$ref": "./artefacts/domains/integration/logical/INT-DAC-IFC.json"
+        },
         "BUS-STR": {
             "$ref": "./artefacts/domains/business/conceptual/BUS-STR.json"
         },

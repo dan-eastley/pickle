@@ -45,7 +45,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
 
   if (!matrixMeta || !colArtefact || !rowArtefact) {
     return (
-      <div className="border border-gray-200 bg-white overflow-hidden">
+      <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
         <EmptyState
           illustration="matrix"
           title="Matrix view"
@@ -57,20 +57,22 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
 
   if (columnData === undefined || rowData === undefined) {
     return (
-      <div className="border border-gray-200 bg-white flex items-center justify-center py-16">
+      <div className="border border-gray-200 bg-white flex items-center justify-center py-16 shadow-xl">
         <Spinner />
       </div>
     )
   }
 
   const { columns, rows } = matrixMeta
-  const columnItems = columnData?.[columns.array] ?? []
-  const rowItems = rowData?.[rows.array] ?? []
+  const applyFilter = (items, filter) =>
+    filter ? items.filter(item => item[filter.field] === filter.equals) : items
+  const columnItems = applyFilter(columnData?.[columns.array] ?? [], columns.filter)
+  const rowItems = applyFilter(rowData?.[rows.array] ?? [], rows.filter)
 
   if (columnItems.length === 0 || rowItems.length === 0) {
     const emptySide = columnItems.length === 0 ? columns.artefact : rows.artefact
     return (
-      <div className="border border-gray-200 bg-white overflow-hidden">
+      <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
         <EmptyState
           illustration="matrix"
           title="Nothing to map yet"
@@ -186,7 +188,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
   }
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden flex flex-col">
+    <div className="border border-gray-200 bg-white overflow-hidden flex flex-col shadow-xl">
       {toolbar}
       {table}
       <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>

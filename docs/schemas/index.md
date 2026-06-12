@@ -96,17 +96,29 @@ Each architecture domain also carries two many-to-many matrices linking adjacent
 | [BUS-PRO.md](artefacts/domains/business/conceptual/BUS-PRO.md) | Business Processes | Business / Conceptual | APQC PCF, Porter value chain |
 | [DAT-DAC.md](artefacts/domains/data/conceptual/DAT-DAC.md) | Data Domains & Concepts | Data / Conceptual | DAMA-DMBOK, ISO 27001 |
 | [APP-DAP.md](artefacts/domains/application/logical/APP-DAP.md) | Application Domains & Platforms | Application / Logical | TOGAF Application Architecture, Gartner Pace Layers |
+| [APP-CAT.md](artefacts/domains/application/physical/APP-CAT.md) | Application Catalogue | Application / Physical | Application Portfolio Management (TIME model), ITAM |
+| [INT-IFC.md](artefacts/domains/integration/logical/INT-IFC.md) | Interface Catalogue | Integration / Logical | TOGAF Integration/Application Communication Diagrams, C4 System Context |
+
+## Cross-domain / cross-layer matrices
+
+Beyond the per-domain Strategy ↔ Principles / Principles ↔ Guardrails pairs above, matrices can also join two artefacts from different domains and/or abstraction layers. The domain/layer the matrix lives in, and which source becomes `columns` vs `rows`, follow the [Matrix placement](../output-formats.md#matrix-placement) convention.
+
+| Schema | Artefact Type | Architecture Domain / Layer | Joins |
+|---|---|---|---|
+| [APP-DAP-CAT.md](artefacts/domains/application/physical/APP-DAP-CAT.md) | Application Domains & Platforms ↔ Application Catalogue | Application / Physical | APP-DAP ↔ APP-CAT |
+| [APP-CAP-DAP.md](artefacts/domains/application/logical/APP-CAP-DAP.md) | Business Capabilities ↔ Application Domains & Platforms | Application / Logical | BUS-CAP (Level 2) ↔ APP-DAP |
+| [INT-DAC-IFC.md](artefacts/domains/integration/logical/INT-DAC-IFC.md) | Data Domains & Concepts ↔ Interface Catalogue | Integration / Logical | DAT-DAC ↔ INT-IFC |
 
 ## Diagram schemas
 
-Diagram artefacts are derived from a source catalogue rather than authored directly. BUS-BCM and DAT-CDM define a `groups[].items[]` shape rendered by [`NestedGroupDiagram`](../../src/components/artefacts/diagrams/NestedGroupDiagram.jsx) (see [Diagram rendering](#diagram-rendering) below). BUS-BPM and APP-DPM are not yet implemented — their schemas currently define only a `meta` block (including `diagramType`) plus an open `additionalProperties: true` body.
+Diagram artefacts are derived from a source catalogue rather than authored directly. BUS-BCM, DAT-CDM, and APP-DPM define a `groups[].items[]` shape rendered by [`NestedGroupDiagram`](../../src/components/artefacts/diagrams/NestedGroupDiagram.jsx) (see [Diagram rendering](#diagram-rendering) below). BUS-BPM is not yet implemented — its schema currently defines only a `meta` block (including `diagramType`) plus an open `additionalProperties: true` body.
 
 | Schema | Artefact Type | Architecture Domain / Layer | Derived from | Status |
 |---|---|---|---|---|
 | [BUS-BCM.md](artefacts/domains/business/conceptual/BUS-BCM.md) | Business Capability Model | Business / Conceptual | BUS-CAP | Defined (`card-based`) |
 | [BUS-BPM.md](artefacts/domains/business/conceptual/BUS-BPM.md) | Business Process Model | Business / Conceptual | BUS-PRO | Placeholder (`flow-based`) |
 | [DAT-CDM.md](artefacts/domains/data/conceptual/DAT-CDM.md) | Conceptual Data Model | Data / Conceptual | DAT-DAC | Defined (`entity-based`) |
-| [APP-DPM.md](artefacts/domains/application/logical/APP-DPM.md) | Domains & Platforms Model | Application / Logical | APP-DAP | Placeholder (`card-based`) |
+| [APP-DPM.md](artefacts/domains/application/logical/APP-DPM.md) | Domains & Platforms Model | Application / Logical | APP-DAP | Defined (`card-based`) |
 
 ### Diagram rendering
 

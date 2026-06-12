@@ -2,14 +2,97 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DPM",
     "title": "Domains & Platforms Model",
-    "description": "Visual map of the Application Domains & Platforms Catalogue (APP-DAP). Storage format is provisional — diagram artefacts are derived from their source catalogue rather than authored directly.",
+    "description": "Visual map of the Application Domains & Platforms Catalogue (APP-DAP), arranged as a nested card diagram: application domains as groups, platforms as items within each group. Derived from APP-DAP rather than authored directly.",
     "meta": {
         "domain": "application",
         "abstraction": "logical",
         "format": "diagram",
         "description": "A visual map of the organisation's application landscape.",
-        "diagramType": "card-based"
+        "purpose": [
+            "Give a single-page view of the application landscape, grouped by application domain.",
+            "Provide a shared reference point for application rationalisation and investment discussions.",
+            "Provide an embeddable diagram for presentations, kept in sync with APP-DAP."
+        ],
+        "diagramType": "card-based",
+        "countLabels": {
+            "groups": "Domains",
+            "items": "Platforms"
+        }
     },
     "type": "object",
-    "additionalProperties": true
+    "required": [
+        "groups"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "groups": {
+            "type": "array",
+            "description": "Application domains, each containing its platforms.",
+            "items": {
+                "$ref": "#/$defs/group"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "group": {
+            "type": "object",
+            "description": "An application domain and its platforms, matching the corresponding entries in APP-DAP.",
+            "required": [
+                "id",
+                "name",
+                "items"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Application domain ID, matching APP-DAP."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Application domain name, matching APP-DAP."
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "Additional display attributes for this domain group. Open-ended; none are currently rendered.",
+                    "additionalProperties": true
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Platforms belonging to this domain.",
+                    "items": {
+                        "$ref": "#/$defs/item"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "item": {
+            "type": "object",
+            "description": "A platform, matching the corresponding entry in APP-DAP.",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Platform ID, matching APP-DAP."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Platform name, matching APP-DAP."
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "Additional display attributes for this platform card. Open-ended; none are currently rendered.",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": false
+        }
+    }
 }

@@ -30,7 +30,7 @@ export default function DiagramView({ data, artefact, schema }) {
 
   if (NESTED_GROUP_TYPES.has(diagramType) && Array.isArray(groups)) {
     return (
-      <div className="border border-gray-200 bg-white overflow-hidden shadow-xs">
+      <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
         <div className="p-4 overflow-x-auto">
           <NestedGroupDiagram groups={groups} domain={artefact.domain} diagramType={diagramType} />
         </div>
@@ -42,7 +42,7 @@ export default function DiagramView({ data, artefact, schema }) {
   }
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden shadow-xs">
+    <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
       <EmptyState
         illustration="diagram"
         title={`${artefact?.name ?? 'Diagram'} not yet available`}

@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-IFC",
+    "title": "Interface Catalogue",
+    "description": "Catalogue of logical point-to-point interfaces between platforms in the Application Domains & Platforms Catalogue (APP-DAP), describing how applications across the estate exchange data.",
+    "meta": {
+        "domain": "integration",
+        "abstraction": "logical",
+        "format": "catalogue",
+        "description": "The logical interfaces that connect platforms across the application landscape, and the direction of data flow between them.",
+        "purpose": [
+            "Makes the integration landscape visible — which platforms talk to which, and how",
+            "Captures the direction of data flow between platforms, independent of the underlying integration technology",
+            "Provides the logical-layer counterpart to APP-DAP, helping identify integration hotspots and single points of failure",
+            "Supports impact analysis — if a platform changes, which interfaces are affected?"
+        ],
+        "countLabels": {
+            "singular": "Interface",
+            "plural": "Interfaces"
+        }
+    },
+    "type": "object",
+    "required": [
+        "interfaces"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "interfaces": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "source",
+                    "target",
+                    "direction"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier (e.g. INT-IFC-001)"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Short label for this interface"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "ID of the source platform (APP-DAP platforms[].id)"
+                    },
+                    "target": {
+                        "type": "string",
+                        "description": "ID of the target platform (APP-DAP platforms[].id)"
+                    },
+                    "direction": {
+                        "type": "string",
+                        "enum": [
+                            "source-to-target",
+                            "target-to-source",
+                            "bi-directional"
+                        ],
+                        "description": "Direction of data flow between source and target"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}
