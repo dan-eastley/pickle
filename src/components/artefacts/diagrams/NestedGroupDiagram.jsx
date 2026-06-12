@@ -71,19 +71,10 @@ function ImportanceBadge({ importance, right, top }) {
   )
 }
 
-/**
- * Generic "groups containing items" diagram — a grid of group cards, each
- * containing a wrapped grid of item cards. Used for both card-based diagrams
- * (e.g. BUS-BCM, capabilities -> sub-capabilities) and entity-based diagrams
- * (e.g. DAT-CDM, data domains -> concepts). The two diagram types share this
- * layout algorithm and theme, and differ only via DIAGRAM_VARIANTS.
- *
- * `groups` is `[{ id, name, meta?, items: [{ id, name, meta? }] }]`.
- */
-export default function NestedGroupDiagram({ groups, domain, diagramType }) {
-  const colors = getDiagramColors(domain)
-  const variant = DIAGRAM_VARIANTS[diagramType] ?? DIAGRAM_VARIANTS['card-based']
-
+// One grid of group cards, each containing a wrapped grid of item cards.
+// Rendered as a standalone SVG; NestedGroupDiagram composes one or more of
+// these (overview plus optional per-group drill-downs).
+function GroupGrid({ groups, colors, variant }) {
   const groupCols = Math.min(4, Math.max(2, Math.ceil(Math.sqrt(groups.length || 1))))
   const groupWidth = (VIEW_WIDTH - OUTER_PADDING * 2 - GROUP_GAP * (groupCols - 1)) / groupCols
 
@@ -160,5 +151,56 @@ export default function NestedGroupDiagram({ groups, domain, diagramType }) {
         </g>
       ))}
     </svg>
+  )
+}
+
+/**
+ * Generic "groups containing items" diagram — a grid of group cards, each
+ * containing a wrapped grid of item cards. Used for both card-based diagrams
+ * (e.g. BUS-BCM, capabilities -> sub-capabilities) and entity-based diagrams
+ * (e.g. DAT-CDM, data domains -> concepts). The two diagram types share this
+ * layout algorithm and theme, and differ only via DIAGRAM_VARIANTS.
+ *
+ * `groups` is `[{ id, name, meta?, items: [{ id, name, meta?, items? }] }]`.
+ *
+ * When any item carries a third level of nested `items`, the overview grid
+ * (levels 1-2) is followed by one drill-down grid per group: its items become
+ * the group cards, with their nested items as the cards inside.
+ */
+export default function NestedGroupDiagram({ groups, domain, diagramType }) {
+  const colors = getDiagramColors(domain)
+  const variant = DIAGRAM_VARIANTS[diagramType] ?? DIAGRAM_VARIANTS['card-based']
+
+  const hasThirdLevel = groups.some(g => g.items?.some(item => item.items?.length))
+
+  if (!hasThirdLevel) {
+    return <GroupGrid groups={groups} colors={colors} variant={variant} />
+  }
+
+  return (
+    <div>
+      {/* Overview — levels 1 and 2 on a single grid */}
+      <div className="flex items-baseline gap-2 mb-3">
+        <h4 className="text-sm font-semibold text-gray-800">Overview</h4>
+        <span className="text-xs text-gray-400">Level 1 and 2</span>
+      </div>
+      <GroupGrid groups={groups} colors={colors} variant={variant} />
+
+      {/* Drill-down — one grid per group, its items as cards containing the third level */}
+      {groups.map(group => (
+        <div key={group.id} className="mt-6 pt-5 border-t border-gray-200">
+          <div className="flex items-baseline gap-2 mb-3">
+            <span className="font-mono text-xs text-gray-400">{group.id}</span>
+            <h4 className="text-sm font-semibold text-gray-800">{group.name}</h4>
+            <span className="text-xs text-gray-400">Level 2 and 3</span>
+          </div>
+          <GroupGrid
+            groups={(group.items ?? []).map(item => ({ ...item, items: item.items ?? [] }))}
+            colors={colors}
+            variant={variant}
+          />
+        </div>
+      ))}
+    </div>
   )
 }

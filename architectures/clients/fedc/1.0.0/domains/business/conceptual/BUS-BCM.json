@@ -10,7 +10,25 @@
             "items": [
                 {
                     "id": "CAP-001-01",
-                    "name": "Acquire Customer"
+                    "name": "Acquire Customer",
+                    "items": [
+                        {
+                            "id": "CAP-001-01-01",
+                            "name": "Generate Leads"
+                        },
+                        {
+                            "id": "CAP-001-01-02",
+                            "name": "Qualify Prospects"
+                        },
+                        {
+                            "id": "CAP-001-01-03",
+                            "name": "Convert Sales"
+                        },
+                        {
+                            "id": "CAP-001-01-04",
+                            "name": "Onboard Customer"
+                        }
+                    ]
                 },
                 {
                     "id": "CAP-001-02",
@@ -39,7 +57,21 @@
                 },
                 {
                     "id": "CAP-002-02",
-                    "name": "Operate Generation Assets"
+                    "name": "Operate Generation Assets",
+                    "items": [
+                        {
+                            "id": "CAP-002-02-01",
+                            "name": "Dispatch Units"
+                        },
+                        {
+                            "id": "CAP-002-02-02",
+                            "name": "Manage Real-Time Performance"
+                        },
+                        {
+                            "id": "CAP-002-02-03",
+                            "name": "Quality Control"
+                        }
+                    ]
                 },
                 {
                     "id": "CAP-002-03",
@@ -64,7 +96,21 @@
                 },
                 {
                     "id": "CAP-003-02",
-                    "name": "Trade Energy & Products"
+                    "name": "Trade Energy & Products",
+                    "items": [
+                        {
+                            "id": "CAP-003-02-01",
+                            "name": "Trade Day-Ahead"
+                        },
+                        {
+                            "id": "CAP-003-02-02",
+                            "name": "Trade Intraday"
+                        },
+                        {
+                            "id": "CAP-003-02-03",
+                            "name": "Negotiate Bilateral Contracts"
+                        }
+                    ]
                 },
                 {
                     "id": "CAP-003-03",
@@ -97,7 +143,21 @@
                 },
                 {
                     "id": "CAP-004-04",
-                    "name": "Manage Outages"
+                    "name": "Manage Outages",
+                    "items": [
+                        {
+                            "id": "CAP-004-04-01",
+                            "name": "Plan Planned Outages"
+                        },
+                        {
+                            "id": "CAP-004-04-02",
+                            "name": "Respond to Unplanned Outages"
+                        },
+                        {
+                            "id": "CAP-004-04-03",
+                            "name": "Communicate to Affected Customers"
+                        }
+                    ]
                 },
                 {
                     "id": "CAP-004-05",
@@ -151,7 +211,21 @@
                 },
                 {
                     "id": "CAP-006-03",
-                    "name": "Generate Bills"
+                    "name": "Generate Bills",
+                    "items": [
+                        {
+                            "id": "CAP-006-03-01",
+                            "name": "Calculate Charges"
+                        },
+                        {
+                            "id": "CAP-006-03-02",
+                            "name": "Validate Bills"
+                        },
+                        {
+                            "id": "CAP-006-03-03",
+                            "name": "Dispatch Bills"
+                        }
+                    ]
                 },
                 {
                     "id": "CAP-006-04",

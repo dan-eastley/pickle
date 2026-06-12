@@ -8,7 +8,12 @@
 
 A visual map of the organisation's capabilities, arranged as a nested card diagram — the diagram counterpart of the [Business Capabilities Catalogue (BUS-CAP)](BUS-CAP.md), from which it is derived.
 
-Each Level 1 capability is rendered as a group card; its Level 2 sub-capabilities are rendered as item cards within it. Level 3 capabilities are out of scope for this single-slide view.
+The diagram renders in two parts:
+
+1. **Overview** — each Level 1 capability as a group card, its Level 2 sub-capabilities as item cards within it. A single-slide view of the whole landscape.
+2. **Drill-downs** — when Level 3 data is present, one diagram per Level 1 capability follows: its Level 2 sub-capabilities become the group cards, each containing its Level 3 capabilities.
+
+The same two-part rendering applies to any nested-card diagram whose data carries three levels of hierarchy; with two levels, only the overview is shown.
 
 ## Example
 
@@ -20,7 +25,13 @@ Each Level 1 capability is rendered as a group card; its Level 2 sub-capabilitie
             "name": "Customer Management",
             "meta": { "importance": "differentiating" },
             "items": [
-                { "id": "CAP-001-01", "name": "Acquire Customer" },
+                {
+                    "id": "CAP-001-01",
+                    "name": "Acquire Customer",
+                    "items": [
+                        { "id": "CAP-001-01-01", "name": "Generate Leads" }
+                    ]
+                },
                 { "id": "CAP-001-02", "name": "Manage Customer Profile" }
             ]
         }
@@ -45,8 +56,16 @@ Each Level 1 capability is rendered as a group card; its Level 2 sub-capabilitie
 |---|---|---|---|
 | `id` | string | yes | Level 2 capability ID, matching BUS-CAP |
 | `name` | string | yes | Level 2 capability name, matching BUS-CAP |
+| `items[]` | array | no | Level 3 capabilities (see below). Omit when there are none |
 
-`meta` objects on both groups and items accept any additional properties — only `importance` is currently rendered, but the field is open-ended for future display attributes.
+### `groups[].items[].items[]` — Level 3 capabilities
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | string | yes | Level 3 capability ID, matching BUS-CAP |
+| `name` | string | yes | Level 3 capability name, matching BUS-CAP |
+
+`meta` objects at every level accept any additional properties — only `importance` is currently rendered, but the field is open-ended for future display attributes.
 
 ## Status
 

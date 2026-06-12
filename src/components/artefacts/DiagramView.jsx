@@ -9,11 +9,19 @@ const NESTED_GROUP_TYPES = new Set(['card-based', 'entity-based'])
 function countSummary(groups, labels) {
   const groupCount = groups.length
   const itemCount = groups.reduce((sum, g) => sum + (g.items?.length ?? 0), 0)
+  const subitemCount = groups.reduce(
+    (sum, g) => sum + (g.items?.reduce((s, item) => s + (item.items?.length ?? 0), 0) ?? 0), 0)
   const groupWord = labels?.groups ?? 'groups'
   const itemWord = labels?.items ?? 'items'
   const groupLabel = groupCount === 1 ? groupWord.replace(/s$/, '') : groupWord
   const itemLabel = itemCount === 1 ? itemWord.replace(/s$/, '') : itemWord
-  return `${groupCount} ${groupLabel} · ${itemCount} ${itemLabel}`
+  let summary = `${groupCount} ${groupLabel} · ${itemCount} ${itemLabel}`
+  if (subitemCount > 0) {
+    const subitemWord = labels?.subitems ?? 'sub-items'
+    const subitemLabel = subitemCount === 1 ? subitemWord.replace(/s$/, '') : subitemWord
+    summary += ` · ${subitemCount} ${subitemLabel}`
+  }
+  return summary
 }
 
 export default function DiagramView({ data, artefact, schema }) {
