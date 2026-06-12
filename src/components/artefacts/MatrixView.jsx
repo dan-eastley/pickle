@@ -131,10 +131,13 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
             </th>
             {columnItems.map(col => (
               <th key={col[columns.idField]}
-                className="sticky top-0 z-20 bg-gray-50 border-b border-gray-200 px-2 py-3 text-center font-mono text-xs font-semibold text-gray-600 whitespace-nowrap min-w-[64px]"
+                className="sticky top-0 z-20 bg-gray-50 border-b border-gray-200 px-2 py-2 text-center align-bottom min-w-[120px] max-w-[160px]"
                 title={col[columns.tooltipField]}
               >
-                {col[columns.idField]}
+                <div className="font-mono text-xs font-semibold text-gray-600">{col[columns.idField]}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5 line-clamp-2 leading-tight">
+                  {col[columns.labelField ?? columns.tooltipField]}
+                </div>
               </th>
             ))}
           </tr>

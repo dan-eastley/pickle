@@ -59,7 +59,7 @@ jobs:
           # Collect accepted findings from all analysis sections
           analysis_keys = [
               "impact-assessment", "referential-integrity", "strategy-alignment",
-              "principles-alignment", "proponent-analysis", "challenger-analysis"
+              "principles-alignment", "guardrails-alignment", "proponent-analysis", "challenger-analysis"
           ]
           accepted_findings = []
           for key in analysis_keys:

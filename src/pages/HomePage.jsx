@@ -19,7 +19,7 @@ const FEATURE_CARDS = [
     title: 'Agentic AI Architecture',
     what: 'AI agents that actively participate in the process — analysing and validating changes alongside your architects.',
     points: [
-      'Every decision is analysed across six dimensions: strategy, principles, integrity, review, proponent and challenger',
+      'Every decision is analysed across seven dimensions: strategy, principles, guardrails, integrity, review, proponent and challenger',
       'Agents surface conflicts and gaps before a change reaches the review board',
       'Analysis is structured and traceable — not free-form commentary',
       'The human stays in the loop — AI informs, architects decide',
@@ -34,7 +34,7 @@ const FEATURE_CARDS = [
       'Every change must be justified in an Architecture Decision Record',
       'ADRs capture intent, rationale, and analysis — not just the change',
       'Git history provides an immutable audit trail of every decision',
-      'Guardrails and principles are codified, not just documented',
+      'Strategy, principles and guardrails are codified, not just documented',
     ],
     usp: 'Pickle combines the rigour of decision records with the practicality of pull requests — governance that developers and architects can both live with.',
   },

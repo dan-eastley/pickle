@@ -5,11 +5,11 @@
 
 ## Purpose
 
-Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the seven decision-analysis steps (Validate Context gate + the six Decisions Analysis jobs). Each step fills in its own section progressively as the decision moves through its lifecycle.
+Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.md` convention with a structured JSON file that captures both the author's narrative and the outputs of the eight decision-analysis steps (Validate Context gate + the seven Decisions Analysis jobs). Each step fills in its own section progressively as the decision moves through its lifecycle.
 
 ## Structure at a glance
 
-A decision JSON has three zones — author-written metadata, a deterministic gate filled by Validate Context, and six analysis sections filled by Claude through the decision pipeline.
+A decision JSON has three zones — author-written metadata, a deterministic gate filled by Validate Context, and seven analysis sections filled by Claude through the decision pipeline.
 
 ```mermaid
 flowchart TB
@@ -17,12 +17,13 @@ flowchart TB
 
     DJ --> Author["<b>Author-written</b><br/>required, hand-edited<br/><sub>decision-id, title, status, narrative</sub>"]
     DJ --> Det["<b>Deterministic gate</b><br/>filled by Validate Context<br/><sub>context-validation</sub>"]
-    DJ --> AI["<b>Six analysis sections</b><br/>filled by Claude — each an array of<br/>{finding, impact, recommendation, rationale}"]
+    DJ --> AI["<b>Seven analysis sections</b><br/>filled by Claude — each an array of<br/>{finding, impact, recommendation, rationale}"]
 
     AI --> AR[impact-assessment]
     AI --> RI[referential-integrity]
     AI --> SA[strategy-alignment]
     AI --> PA[principles-alignment]
+    AI --> GA[guardrails-alignment]
     AI --> PR[proponent-analysis]
     AI --> CH[challenger-analysis]
 
@@ -32,20 +33,21 @@ flowchart TB
 
     class Author auth
     class Det det
-    class AI,AR,RI,SA,PA,PR,CH ai
+    class AI,AR,RI,SA,PA,GA,PR,CH ai
 ```
 
 ## Lifecycle
 
 1. **Author** creates `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
 2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires `Validate Context` (gate; deterministic — writes `context-validation`).
-3. When the author moves the decision from **DRAFT to PROPOSED**, the Pickle API dispatches `Decisions Analysis` — one workflow with six sequential jobs:
+3. When the author moves the decision from **DRAFT to PROPOSED**, the Pickle API dispatches `Decisions Analysis` — one workflow with seven sequential jobs:
    1. Impact Assessment
    2. Referential Integrity
    3. Strategy Alignment
    4. Principles Alignment
-   5. Proponent Analysis
-   6. Challenger Analysis
+   5. Guardrails Alignment
+   6. Proponent Analysis
+   7. Challenger Analysis
 4. Each analysis job checks out the decisions branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next job runs via `needs:` ordering — one workflow, sequential jobs, no `workflow_run` chaining. See [decisions-analysis.md](../workflows/decisions-analysis.md).
 
 ## Section property names match step names
@@ -59,12 +61,13 @@ Each step writes to a property whose name is the kebab-cased step name:
 | Referential Integrity | `referential-integrity` |
 | Strategy Alignment | `strategy-alignment` |
 | Principles Alignment | `principles-alignment` |
+| Guardrails Alignment | `guardrails-alignment` |
 | Proponent Analysis | `proponent-analysis` |
 | Challenger Analysis | `challenger-analysis` |
 
-## Section shape (six analyses)
+## Section shape (seven analyses)
 
-The six analysis sections — Impact Assessment, Referential Integrity, Strategy Alignment, Principles Alignment, Proponent Analysis, and Challenger Analysis — are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
+The seven analysis sections — Impact Assessment, Referential Integrity, Strategy Alignment, Principles Alignment, Guardrails Alignment, Proponent Analysis, and Challenger Analysis — are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -112,10 +115,11 @@ Validate Context is structurally different (deterministic outcome + violation li
             "rationale": "Catalogue references must resolve for the data model to be self-consistent."
         }
     ],
-    "strategy-alignment":   [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
-    "principles-alignment": [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
-    "proponent-analysis":   [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
-    "challenger-analysis":  [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ]
+    "strategy-alignment":    [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "principles-alignment":  [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "guardrails-alignment":  [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "proponent-analysis":    [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ],
+    "challenger-analysis":   [ { "finding": "...", "impact": "...", "recommendation": "...", "rationale": "..." } ]
 }
 ```
 
@@ -132,5 +136,6 @@ Validate Context is structurally different (deterministic outcome + violation li
 | `referential-integrity` | array of section | no | Output of Referential Integrity |
 | `strategy-alignment` | array of section | no | Output of Strategy Alignment |
 | `principles-alignment` | array of section | no | Output of Principles Alignment |
+| `guardrails-alignment` | array of section | no | Output of Guardrails Alignment |
 | `proponent-analysis` | array of section | no | Output of Proponent Analysis |
 | `challenger-analysis` | array of section | no | Output of Challenger Analysis |

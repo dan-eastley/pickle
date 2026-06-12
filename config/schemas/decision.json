@@ -122,6 +122,11 @@
             "items": { "$ref": "#/$defs/section" },
             "description": "Output of the Principles Alignment workflow — fires on PROPOSED."
         },
+        "guardrails-alignment": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Guardrails Alignment workflow — fires on PROPOSED."
+        },
         "proponent-analysis": {
             "type": "array",
             "items": { "$ref": "#/$defs/section" },

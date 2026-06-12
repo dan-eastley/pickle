@@ -1,6 +1,6 @@
 name: Decisions Analysis
 
-# Orchestrates the 6 analysis workflows that run when a decision moves from
+# Orchestrates the 7 analysis workflows that run when a decision moves from
 # DRAFT to PROPOSED. Narrative Review runs separately (decisions-narrative-review.yml).
 #
 # Triggered via workflow_dispatch from the Pickle API on DRAFT → PROPOSED transition.
@@ -8,7 +8,7 @@ name: Decisions Analysis
 # Each job writes its findings to the decision.json on the decisions branch
 # (in-flight decisions live on their branch, not main).
 #
-# `model` controls which Claude model all six steps run with — defaults to
+# `model` controls which Claude model all seven steps run with — defaults to
 # Haiku 4.5 to keep dev-time cost down. Override per-dispatch for higher-quality
 # runs (e.g. claude-sonnet-4-6).
 
@@ -89,8 +89,21 @@ jobs:
       model:         ${{ inputs.model }}
     secrets: inherit
 
-  proponent-analysis:
+  guardrails-alignment:
     needs: principles-alignment
+    uses: ./.github/workflows/decisions-analysis-step.yml
+    with:
+      analysis-name: "Guardrails Alignment"
+      prompt-file:   config/prompts/decisions/guardrails-alignment.md
+      section-key:   guardrails-alignment
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit
+
+  proponent-analysis:
+    needs: guardrails-alignment
     uses: ./.github/workflows/decisions-analysis-step.yml
     with:
       analysis-name: "Proponent Analysis"

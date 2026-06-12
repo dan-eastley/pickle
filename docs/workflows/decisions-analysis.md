@@ -6,7 +6,7 @@
 
 **Trigger:** `workflow_dispatch`, called by the Pickle API ([`/api/github`](../../src/api/github.js)) when a decision's status moves DRAFT → PROPOSED.
 
-A single workflow runs six Claude-driven analyses sequentially as `needs:`-chained jobs. Each analysis writes to the matching kebab-cased section of the [decision JSON](../schemas/decision.md) at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, on the decision's own branch (`decisions/<client>/<version>/<decision-id>`) — in-flight decisions live on their branch, not `main`.
+A single workflow runs seven Claude-driven analyses sequentially as `needs:`-chained jobs. Each analysis writes to the matching kebab-cased section of the [decision JSON](../schemas/decision.md) at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, on the decision's own branch (`decisions/<client>/<version>/<decision-id>`) — in-flight decisions live on their branch, not `main`.
 
 Narrative Review ([`decisions-narrative-review.yml`](../../.github/workflows/decisions-narrative-review.yml)) is a separate workflow that runs once, on DRAFT creation, writing to the `recommendations` section. It is not part of this chain.
 
@@ -17,7 +17,7 @@ Narrative Review ([`decisions-narrative-review.yml`](../../.github/workflows/dec
 
 ## Why a single workflow with sequential jobs?
 
-`workflow_run` chaining is **capped at three hops** by GitHub Actions — any workflow more than three links downstream of the initiating event silently never fires. Collapsing the six analyses into one workflow with `needs:` dependencies sidesteps the limit entirely, since the orchestrator is invoked directly via `workflow_dispatch`. The whole run shows up as one entry on the Actions tab with each analysis as a job, which is also easier to read than chasing six separate runs across the UI.
+`workflow_run` chaining is **capped at three hops** by GitHub Actions — any workflow more than three links downstream of the initiating event silently never fires. Collapsing the seven analyses into one workflow with `needs:` dependencies sidesteps the limit entirely, since the orchestrator is invoked directly via `workflow_dispatch`. The whole run shows up as one entry on the Actions tab with each analysis as a job, which is also easier to read than chasing seven separate runs across the UI.
 
 ## Chain mechanism
 
@@ -27,7 +27,7 @@ Narrative Review ([`decisions-narrative-review.yml`](../../.github/workflows/dec
 
 ## Model selection
 
-Every step accepts a `model` input, defaulting to **Haiku 4.5** (`claude-haiku-4-5-20251001`) to keep dev-time cost down. The orchestrator's `workflow_dispatch` exposes a single `model` input that's threaded through to all six jobs — pass a different model (e.g. `claude-sonnet-4-6`) for a higher-quality run.
+Every step accepts a `model` input, defaulting to **Haiku 4.5** (`claude-haiku-4-5-20251001`) to keep dev-time cost down. The orchestrator's `workflow_dispatch` exposes a single `model` input that's threaded through to all seven jobs — pass a different model (e.g. `claude-sonnet-4-6`) for a higher-quality run.
 
 > **Future:** model (and API key) selection is currently global to the repo. A planned improvement is to store the model/key per client alongside their other configuration, so different clients' architectures can be analysed with different Claude models — see `IMPROVEMENTS.md`.
 
@@ -44,9 +44,10 @@ flowchart TD
       RI["Referential Integrity<br/><i>writes referential-integrity</i>"]:::ai
       SA["Strategy Alignment<br/><i>writes strategy-alignment</i>"]:::ai
       PA["Principles Alignment<br/><i>writes principles-alignment</i>"]:::ai
+      GA["Guardrails Alignment<br/><i>writes guardrails-alignment</i>"]:::ai
       PR["Proponent Analysis<br/><i>writes proponent-analysis</i>"]:::ai
       CH["Challenger Analysis<br/><i>writes challenger-analysis</i>"]:::ai
-      IA --> RI --> SA --> PA --> PR --> CH
+      IA --> RI --> SA --> PA --> GA --> PR --> CH
     end
 
     CH --> Done(((decision JSON sections complete))):::term
@@ -60,7 +61,7 @@ flowchart TD
 | 🟪 Purple | Claude-driven — loads its prompt from `/config/prompts/decisions/<step>.md` |
 | ⬜ Grey | Terminal — pipeline exit |
 
-## The six analysis jobs
+## The seven analysis jobs
 
 Each job calls `decisions-analysis-step.yml` with three inputs that vary (plus the shared `client-id`/`version-id`/`decision-id`/`model`):
 
@@ -70,11 +71,12 @@ Each job calls `decisions-analysis-step.yml` with three inputs that vary (plus t
 | 2 | `referential-integrity` | `config/prompts/decisions/referential-integrity.md` | `referential-integrity` | Verify that all catalogue IDs referenced resolve and no entities are orphaned. |
 | 3 | `strategy-alignment` | `config/prompts/decisions/strategy-alignment.md` | `strategy-alignment` | Assess whether the decision advances or contradicts the documented Strategy for each affected domain. |
 | 4 | `principles-alignment` | `config/prompts/decisions/principles-alignment.md` | `principles-alignment` | Assess whether the decision adheres to or violates the Principles for each affected domain. |
-| 5 | `proponent-analysis` | `config/prompts/decisions/proponent-analysis.md` | `proponent-analysis` | Synthesise the strongest business case FOR the change from the upstream findings. |
-| 6 | `challenger-analysis` | `config/prompts/decisions/challenger-analysis.md` | `challenger-analysis` | Synthesise the strongest business case AGAINST the change from the upstream findings. |
+| 5 | `guardrails-alignment` | `config/prompts/decisions/guardrails-alignment.md` | `guardrails-alignment` | Assess whether the decision complies with or breaches the non-negotiable Guardrails for each affected domain. |
+| 6 | `proponent-analysis` | `config/prompts/decisions/proponent-analysis.md` | `proponent-analysis` | Synthesise the strongest business case FOR the change from the upstream findings. |
+| 7 | `challenger-analysis` | `config/prompts/decisions/challenger-analysis.md` | `challenger-analysis` | Synthesise the strongest business case AGAINST the change from the upstream findings. |
 
 Iterate prompt content in `/config/prompts/decisions/` without touching the workflow YAML; each file is loaded at runtime. Each section is an array of `{finding, impact, recommendation, rationale}` objects — see [decision.md](../schemas/decision.md#section-shape).
 
 ## Re-running a single step
 
-Because each step is a job (not a separate workflow), the Actions UI re-run-failed-jobs option will pick up from the first failed/skipped job. Re-running the whole workflow re-runs all six analyses.
+Because each step is a job (not a separate workflow), the Actions UI re-run-failed-jobs option will pick up from the first failed/skipped job. Re-running the whole workflow re-runs all seven analyses.

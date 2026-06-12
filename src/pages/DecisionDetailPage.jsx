@@ -326,6 +326,7 @@ const ANALYSIS_SECTIONS = [
   { key: 'referential-integrity', label: 'Referential Integrity' },
   { key: 'strategy-alignment',    label: 'Strategy Alignment' },
   { key: 'principles-alignment',  label: 'Principles Alignment' },
+  { key: 'guardrails-alignment',  label: 'Guardrails Alignment' },
   { key: 'proponent-analysis',    label: 'Proponent Analysis' },
   { key: 'challenger-analysis',   label: 'Challenger Analysis' },
 ]
@@ -394,13 +395,17 @@ function AnalysisTabs({ decision, accepted, onAccept, saving }) {
             <button
               key={section.key}
               onClick={() => setActiveTab(section.key)}
-              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
+              className={`flex items-center gap-1.5 px-2.5 py-2 text-xs font-medium border-b-2 -mb-px transition-colors ${
                 isActive
                   ? 'border-brand-600 text-brand-700'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
-              {section.label}
+              <span className="leading-tight text-center">
+                {section.label.split(' ').map((word, i) => (
+                  <span key={i} className="block">{word}</span>
+                ))}
+              </span>
               <span className={`text-xs px-1.5 py-0.5 font-medium tabular-nums ${
                 isActive ? 'bg-brand-100 text-brand-700' : count > 0 ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-300'
               }`}>

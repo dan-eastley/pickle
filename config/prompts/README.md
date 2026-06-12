@@ -19,6 +19,7 @@ config/prompts/
     ├── referential-integrity.md
     ├── strategy-alignment.md
     ├── principles-alignment.md
+    ├── guardrails-alignment.md
     ├── proponent-analysis.md
     └── challenger-analysis.md
 ```
@@ -36,7 +37,7 @@ That file's contents are passed to `anthropics/claude-code-base-action` as the p
 
 ## Output contract
 
-Each of the six analysis prompts must instruct Claude to produce the four-string section shape defined at `$defs/section` in [`/config/schemas/decision.json`](../schemas/decision.json):
+Each of the seven analysis prompts must instruct Claude to produce the four-string section shape defined at `$defs/section` in [`/config/schemas/decision.json`](../schemas/decision.json):
 
 | Field | Description |
 |---|---|

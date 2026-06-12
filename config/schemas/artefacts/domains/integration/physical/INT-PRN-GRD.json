@@ -18,6 +18,7 @@
                 "artefact": "INT-PRN",
                 "array": "principles",
                 "idField": "id",
+                "labelField": "name",
                 "tooltipField": "statement"
             },
             "rows": {
