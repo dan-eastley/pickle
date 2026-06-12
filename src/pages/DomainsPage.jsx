@@ -2,20 +2,12 @@ import { Link, useParams } from 'react-router-dom'
 import { DOMAINS, DOMAIN_COLORS, getArtefactsForDomain } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
+import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-// Per-domain accent border colours (solid, not the -50 tint)
-const DOMAIN_ACCENT = {
-  business:    'border-violet-400',
-  data:        'border-blue-400',
-  integration: 'border-emerald-400',
-  application: 'border-amber-400',
-  solution:    'border-rose-400',
-}
 
 function DomainCard({ domain, base }) {
   const colors = DOMAIN_COLORS[domain.id]
-  const accent = DOMAIN_ACCENT[domain.id]
+  const accent = colors.accent
   const artefacts = getArtefactsForDomain(domain.id)
   const catalogues = artefacts.filter(a => a.format === 'catalogue').length
   const diagrams   = artefacts.filter(a => a.format === 'diagram').length
@@ -53,9 +45,7 @@ function DomainCard({ domain, base }) {
           ))}
         </div>
       </div>
-      <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" viewBox="0 0 16 16" fill="none">
-        <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-      </svg>
+      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" />
     </Link>
   )
 }

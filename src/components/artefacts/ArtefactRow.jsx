@@ -2,14 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefactData, getSchema } from '../../lib/api'
 import FormatIcon from '../ui/FormatIcon'
-
-function KeyStar() {
-  return (
-    <svg className="w-3 h-3 text-amber-500 flex-shrink-0" viewBox="0 0 12 12" fill="currentColor">
-      <path d="M6 1l1.29 3.09L10.5 4.5 8.25 6.65l.54 3.1L6 8.25 3.21 9.75l.54-3.1L1.5 4.5l3.21-.41z" />
-    </svg>
-  )
-}
+import { KeyStar, ChevronRight } from '../ui/icons'
 
 // Fetch fires when the row scrolls into view — avoids simultaneous API calls.
 // Loads both artefact data and schema to get schema-driven count labels.
@@ -125,9 +118,7 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
 
       <div className="flex items-center gap-3 flex-shrink-0">
         <span className="text-xs font-mono text-gray-300" title={artefact.name}>{artefact.id}</span>
-        <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors" viewBox="0 0 16 16" fill="none">
-          <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors" />
       </div>
     </Link>
   )

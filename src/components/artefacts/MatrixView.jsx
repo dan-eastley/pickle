@@ -47,6 +47,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     return (
       <div className="border border-gray-200 bg-white overflow-hidden">
         <EmptyState
+          illustration="matrix"
           title="Matrix view"
           description="Matrix format not yet defined. This artefact type will be available once the matrix schema and instance format are specified."
         />
@@ -71,6 +72,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     return (
       <div className="border border-gray-200 bg-white overflow-hidden">
         <EmptyState
+          illustration="matrix"
           title="Nothing to map yet"
           description={`${emptySide} has no entries yet for this version. This matrix will populate automatically once that catalogue is filled in.`}
         />

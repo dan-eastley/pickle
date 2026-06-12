@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
+import { PlusIcon, CloseIcon } from '../ui/icons'
 
 function RequirementsList({ requirements, onChange }) {
   const add = () => onChange([...requirements, ''])
@@ -21,9 +22,7 @@ function RequirementsList({ requirements, onChange }) {
             className="flex-1 px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
           <button onClick={() => remove(i)} className="p-1 text-gray-400 hover:text-error-600 transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
+            <CloseIcon className="w-4 h-4" />
           </button>
         </div>
       ))}
@@ -31,9 +30,7 @@ function RequirementsList({ requirements, onChange }) {
         onClick={add}
         className="flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 transition-colors"
       >
-        <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-          <path d="M8 2v12M2 8h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <PlusIcon className="w-4 h-4" />
         Add requirement
       </button>
     </div>
@@ -164,14 +161,8 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
                 <button
                   onClick={handleSave}
                   disabled={!narrative.trim()}
-                  className={`px-4 py-1.5 text-sm font-medium text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                    {
-                      business: 'bg-violet-600 hover:bg-violet-700',
-                      data: 'bg-blue-600 hover:bg-blue-700',
-                      integration: 'bg-emerald-600 hover:bg-emerald-700',
-                      application: 'bg-amber-500 hover:bg-amber-600',
-                      solution: 'bg-rose-600 hover:bg-rose-700',
-                    }[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700'
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                    colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
                   }`}
                 >
                   Save
