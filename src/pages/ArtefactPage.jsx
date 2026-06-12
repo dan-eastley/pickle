@@ -115,7 +115,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                   className={`w-3 h-3 transition-transform ${purposeCollapsed ? '' : 'rotate-90'}`}>
                   <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Purpose
+                Artefact Purpose
               </button>
               {!purposeCollapsed && (
                 <ul className="space-y-1">
