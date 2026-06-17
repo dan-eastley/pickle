@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import EmptyState from '../ui/EmptyState'
 import SlidePanel from '../ui/SlidePanel'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
+import ProcessFlowDiagram from './diagrams/ProcessFlowDiagram'
 import WiringDiagram from './diagrams/WiringDiagram'
 import { getArtefact } from '../../lib/artefacts'
 import { getArtefactData } from '../../lib/api'
 
 const NESTED_GROUP_TYPES = new Set(['card-based', 'entity-based'])
+const PROCESS_FLOW_TYPES = new Set(['process-flow'])
 
 function countSummary(groups, labels) {
   const groupCount = groups.length
@@ -89,7 +91,7 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
   const [selectedId, setSelectedId] = useState(null)
   const [itemMap, setItemMap] = useState({})
 
-  const sourceArtefactId = NESTED_GROUP_TYPES.has(diagramType)
+  const sourceArtefactId = (NESTED_GROUP_TYPES.has(diagramType) || PROCESS_FLOW_TYPES.has(diagramType))
     ? artefact?.relatedTo?.find(r => r.relationship === 'derived-from')?.artefactId
     : null
   const sourceArtefactDef = sourceArtefactId ? getArtefact(sourceArtefactId) : null
@@ -112,6 +114,34 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
 
   if (diagramType === 'wiring') {
     return <WiringDiagram clientId={clientId} versionId={versionId} />
+  }
+
+  if (PROCESS_FLOW_TYPES.has(diagramType) && Array.isArray(groups)) {
+    return (
+      <>
+        <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+          <div className="p-4 overflow-x-auto">
+            <ProcessFlowDiagram
+              groups={groups}
+              domain={artefact.domain}
+              onItemClick={(id) => setSelectedId(id === selectedId ? null : id)}
+              selectedId={selectedId}
+            />
+          </div>
+          <div className="bg-gray-50 border-t border-gray-200 px-4 py-2 text-xs text-gray-500">
+            {countSummary(groups, schema?.meta?.countLabels)}
+          </div>
+        </div>
+        <SlidePanel
+          open={!!selectedId}
+          onClose={() => setSelectedId(null)}
+          title={selectedItem?.name ?? selectedId ?? ''}
+          subtitle={selectedItem ? selectedId : undefined}
+        >
+          <ItemDetail item={selectedItem} />
+        </SlidePanel>
+      </>
+    )
   }
 
   if (NESTED_GROUP_TYPES.has(diagramType) && Array.isArray(groups)) {

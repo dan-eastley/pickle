@@ -27,12 +27,12 @@ export const FORMATS = [
 // Diagram sub-types — stored in meta.diagramType on diagram artefacts and schemas.
 // Card-based and flow-based are the primary current types; the others are recommended additions.
 export const DIAGRAM_TYPES = [
-  { id: 'card-based',   label: 'Card Based',   description: 'Hierarchical nested cards (e.g. Business Capability Model).' },
-  { id: 'flow-based',   label: 'Flow Based',   description: 'Hierarchical linear flow (e.g. Business Process Model).' },
-  { id: 'entity-based', label: 'Entity Based', description: 'Entity-relationship style (e.g. Conceptual Data Model).' },
-  { id: 'sequence',     label: 'Sequence',     description: 'Ordered message / event flow between actors or systems.' },
-  { id: 'network',      label: 'Network',      description: 'Node-and-edge topology (e.g. infrastructure, integration landscape).' },
-  { id: 'timeline',     label: 'Timeline',     description: 'Roadmap or change over time (e.g. capability evolution plan).' },
+  { id: 'card-based',    label: 'Card Based',    description: 'Hierarchical nested cards (e.g. Business Capability Model).' },
+  { id: 'process-flow', label: 'Process Flow',  description: 'Sequential chevron flow by level (e.g. Business Process Model).' },
+  { id: 'entity-based', label: 'Entity Based',  description: 'Entity-relationship style (e.g. Conceptual Data Model).' },
+  { id: 'sequence',     label: 'Sequence',      description: 'Ordered message / event flow between actors or systems.' },
+  { id: 'network',      label: 'Network',       description: 'Node-and-edge topology (e.g. infrastructure, integration landscape).' },
+  { id: 'timeline',     label: 'Timeline',      description: 'Roadmap or change over time (e.g. capability evolution plan).' },
 ]
 
 export const getDiagramType = (id) => DIAGRAM_TYPES.find(t => t.id === id)
@@ -120,8 +120,8 @@ export const ARTEFACTS = [
     relatedTo: [{ artefactId: 'BUS-CAP', relationship: 'derived-from' }] },
   { id: 'BUS-PRO', domain: 'business', abstraction: 'conceptual', format: 'catalogue', key: false, name: 'Business Processes',              description: 'A catalogue of the key processes the organisation runs to deliver business value, structured by type and level.',
     relatedTo: [{ artefactId: 'BUS-BPM', relationship: 'feeds' }, { artefactId: 'BUS-CAP-PRO', relationship: 'feeds' }] },
-  { id: 'BUS-BPM', domain: 'business', abstraction: 'conceptual', format: 'diagram',   key: false, name: 'Business Process Model',          description: 'A visual map of the organisation\'s key processes, arranged as a nested hierarchy.',
-    diagramType: 'card-based',
+  { id: 'BUS-BPM', domain: 'business', abstraction: 'conceptual', format: 'diagram',   key: false, name: 'Business Process Model',          description: 'A sequential chevron flow of the organisation\'s processes at Level 1 and 2, with per-L1 drill-downs to Level 3.',
+    diagramType: 'process-flow',
     relatedTo: [{ artefactId: 'BUS-PRO', relationship: 'derived-from' }] },
   { id: 'BUS-CAP-PRO', domain: 'business', abstraction: 'conceptual', format: 'matrix', key: false, name: 'Business Capabilities ↔ Business Processes', description: 'Maps business capabilities to the processes that realise them at Level 1 and Level 2.',
     relatedTo: [{ artefactId: 'BUS-CAP', relationship: 'derived-from' }, { artefactId: 'BUS-PRO', relationship: 'derived-from' }] },

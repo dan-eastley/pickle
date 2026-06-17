@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BPM",
     "title": "Business Process Model",
-    "description": "Visual model of the Business Processes Catalogue (BUS-PRO), arranged as a nested card diagram: Level 1 processes as groups, Level 2 processes as items within each group, and Level 3 processes nested within each Level 2 item. The overview renders Levels 1-2 on one diagram; a drill-down diagram per Level 1 process follows, showing its Level 2 cards with their Level 3 processes inside. Derived from BUS-PRO rather than authored directly.",
+    "description": "Visual model of the Business Processes Catalogue (BUS-PRO), rendered as a sequential chevron flow: Level 1 processes as row labels, Level 2 processes as chevrons (left-to-right execution sequence) within each row. Drill-down views show Level 2 labels with Level 3 chevrons. Derived from BUS-PRO rather than authored directly.",
     "meta": {
         "domain": "business",
         "abstraction": "conceptual",
@@ -14,7 +14,7 @@
             "Drill into each Level 1 process to see its Level 2 and Level 3 breakdown.",
             "Provide an embeddable diagram for presentations, kept in sync with BUS-PRO."
         ],
-        "diagramType": "card-based",
+        "diagramType": "process-flow",
         "countLabels": {
             "groups": "Level 1",
             "items": "Level 2",
