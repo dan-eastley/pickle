@@ -37,16 +37,28 @@
     },
     "impact-assessment": [
         {
-            "finding": "'Define Application Guardrails for Security and Operational Quality' introduces changes affecting artefacts in at least one architecture domain. References are consistent with the current baseline.",
-            "impact": "Changes of this scope require catalogue updates to maintain traceability from strategy to implementation.",
-            "recommendation": "Identify all artefacts requiring amendment before moving to Proposed.",
-            "rationale": "Explicit impact lists allow Referential Integrity to run comprehensively."
+            "finding": "The decision directly modifies **Application Guardrails** (`APP-GRD`). The instance catalogue at `architectures/clients/fedc/1.0.0/domains/application/physical/APP-GRD/` is currently empty (`guardrails: []`).",
+            "impact": "Without populated guardrails, the decision cannot be operationalized. Compliance requirements will lack authoritative specification.",
+            "recommendation": "Update `APP-GRD.json` to include guardrail entries for: (1) Security baseline (OWASP scanning, authentication, input validation); (2) Operational observability (health endpoints, structured logging, alerting); (3) Dependency currency (monthly reviews, 14-day critical remediation SLA).",
+            "rationale": "Guardrails are physical-layer controls. Populating the catalogue makes compliance requirements machine-readable and auditable."
         },
         {
-            "finding": "No conflicts with currently accepted decisions. The proposed change is additive.",
-            "impact": "Low conflict risk reduces review overhead and increases acceptance likelihood.",
-            "recommendation": "Proceed to Referential Integrity. Monitor for conflicts if concurrent ADRs are in flight.",
-            "rationale": "Additive decisions not contradicting accepted ADRs are eligible for expedited review."
+            "finding": "The narrative references data handling and PII encryption as guardrail categories. This creates a cross-domain dependency on **Data Guardrails** (`DAT-GRD`).",
+            "impact": "Application teams must coordinate with data governance teams to ensure data-handling guardrails are defined before applications can be certified compliant.",
+            "recommendation": "Review `DAT-GRD.json` to confirm it includes guardrails covering encryption, PII handling, and data residency. If gaps exist, flag them as a prerequisite for ADR-014 acceptance.",
+            "rationale": "Cross-domain consistency prevents applications from implementing incompatible controls and reduces downstream rework."
+        },
+        {
+            "finding": "The decision requires observability (health endpoints, structured logging, alerting) — a capability spanning Application and Integration domains. **Integration Guardrails** (`INT-GRD`) may need review for consistency with logging and alerting standards.",
+            "impact": "Lack of aligned integration standards may result in applications implementing incompatible observability pipelines.",
+            "recommendation": "Verify that `INT-GRD.json` includes entries for logging, telemetry, and alerting infrastructure standards. If absent, document as a dependency for implementation planning.",
+            "rationale": "Observability is a cross-cutting concern. Guardrails should specify infrastructure expectations, not just application responsibilities."
+        },
+        {
+            "finding": "**Application Principles** (`APP-PRN`) should reinforce the design philosophy behind guardrails. A review of existing principles against the proposed guardrails would confirm alignment.",
+            "impact": "Misalignment between principles and guardrails creates ambiguity in design guidance, increasing the likelihood of non-compliance.",
+            "recommendation": "Confirm that `APP-PRN.json` includes principles supporting security-by-default, observability-by-default, and dependency governance. No changes required if principles already cover these areas.",
+            "rationale": "Principles guide design; guardrails enforce it. Clear traceability between the two improves developer adoption and compliance rates."
         }
     ],
     "referential-integrity": [
