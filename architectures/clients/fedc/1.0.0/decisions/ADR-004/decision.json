@@ -46,7 +46,8 @@
             "finding": "No conflicts with currently accepted decisions. The proposed change is additive.",
             "impact": "Low conflict risk reduces review overhead and increases acceptance likelihood.",
             "recommendation": "Proceed to Referential Integrity. Monitor for conflicts if concurrent ADRs are in flight.",
-            "rationale": "Additive decisions not contradicting accepted ADRs are eligible for expedited review."
+            "rationale": "Additive decisions not contradicting accepted ADRs are eligible for expedited review.",
+            "review": "declined"
         }
     ],
     "referential-integrity": [
