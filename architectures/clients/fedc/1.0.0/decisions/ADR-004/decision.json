@@ -37,17 +37,28 @@
     },
     "impact-assessment": [
         {
-            "finding": "'Establish a Cloud-First Policy for New Application Development' introduces changes affecting artefacts in at least one architecture domain. References are consistent with the current baseline.",
-            "impact": "Changes of this scope require catalogue updates to maintain traceability from strategy to implementation.",
-            "recommendation": "Identify all artefacts requiring amendment before moving to Proposed.",
-            "rationale": "Explicit impact lists allow Referential Integrity to run comprehensively."
+            "finding": "The decision establishes a mandatory deployment policy aligned with **Application Strategy** (`APP-STR`). APP-STR-001 already captures 'Cloud-native first' intent; the decision operationalises this intent.",
+            "impact": "APP-STR is the correct scoped artefact and requires no change — the baseline already encodes the strategic direction. The decision's value is operationalising what strategy already commits to.",
+            "recommendation": "Confirm APP-STR-001 remains current. Proceed to update downstream artefacts (principles and guardrails) once this ADR is accepted.",
+            "rationale": "Tight alignment between decision and existing strategy reduces rework risk and demonstrates traceability from commitment to execution."
         },
         {
-            "finding": "No conflicts with currently accepted decisions. The proposed change is additive.",
-            "impact": "Low conflict risk reduces review overhead and increases acceptance likelihood.",
-            "recommendation": "Proceed to Referential Integrity. Monitor for conflicts if concurrent ADRs are in flight.",
-            "rationale": "Additive decisions not contradicting accepted ADRs are eligible for expedited review.",
-            "review": "declined"
+            "finding": "**Application Principles** (`APP-PRN`) and **Application Guardrails** (`APP-GRD`) will require updates to operationalise the cloud-first policy. The baseline APP-GRD is empty and APP-PRN lacks cloud-specific design principles.",
+            "impact": "Without principle and guardrail updates, the policy is a statement of intent without operational teeth. Implementation teams will lack concrete guidance on what 'cloud-native' and 'exception process' mean in practice.",
+            "recommendation": "Add this decision to APP-PRN and APP-GRD scope: **update** `APP-PRN` to add cloud-native design principles; **update** `APP-GRD` to codify cloud deployment standards, approved platform list, security baseline, and exception approval process.",
+            "rationale": "Guardrails are non-negotiable constraints; principles guide design trade-offs. Both are necessary to translate strategy into enforceable operational standards."
+        },
+        {
+            "finding": "**Integration Guardrails** (`INT-GRD`) and **Data Guardrails** (`DAT-GRD`) are not in scope but may need consistency review once this decision is accepted, particularly around cloud service-to-service communication patterns and cloud data store constraints.",
+            "impact": "Cross-domain consistency gaps create ambiguity: if integration runs on-premise by default but applications run cloud-first, teams will need clarity on whether cloud-native integration is mandatory or optional.",
+            "recommendation": "Flag INT-GRD and DAT-GRD for review post-acceptance to confirm they are consistent with cloud-first direction. No immediate update required.",
+            "rationale": "Proactive cross-domain review prevents downstream conflicts and ensures guardrails form a coherent, enforceable whole."
+        },
+        {
+            "finding": "No new artefact types are required to represent this decision's impact. The five Application artefacts (APP-STR, APP-PRN, APP-GRD, APP-DAP, APP-DPM) and supporting cross-domain catalogues are sufficient.",
+            "impact": "Low schema and tooling risk — no schema design or new catalogue types needed. Implementation scope is bounded to four existing artefact types.",
+            "recommendation": "Proceed with updates to APP-STR, APP-PRN, and APP-GRD. No schema or registry changes required.",
+            "rationale": "Reusing existing artefact types accelerates decision lifecycle and keeps governance consistent."
         }
     ],
     "referential-integrity": [
