@@ -8,11 +8,6 @@ export const FORMATS = [
     description: 'Structured lists of architecture entities, validated by JSON Schema.',
   },
   {
-    id: 'matrix',
-    label: 'Matrices',
-    description: 'Grids mapping relationships between entity sets, spanning abstraction layers or domains.',
-  },
-  {
     id: 'diagram',
     label: 'Diagrams',
     description: 'Visual representations of architecture entities and their relationships.',
@@ -21,6 +16,11 @@ export const FORMATS = [
     id: 'document',
     label: 'Documents',
     description: 'Free-form narrative content authored in Markdown, used for contextual or explanatory artefacts.',
+  },
+  {
+    id: 'matrix',
+    label: 'Matrices',
+    description: 'Grids mapping relationships between entity sets, spanning abstraction layers or domains.',
   },
 ]
 
@@ -44,7 +44,7 @@ export const getDiagramType = (id) => DIAGRAM_TYPES.find(t => t.id === id)
 export const RELATIONSHIP_TYPES = ['feeds', 'informs', 'derived-from']
 
 // Canonical display order for format groups in menus and list views.
-export const FORMAT_ORDER = ['catalogue', 'matrix', 'diagram', 'document']
+export const FORMAT_ORDER = ['catalogue', 'diagram', 'document', 'matrix']
 
 export const getFormat = (id) => FORMATS.find(f => f.id === id)
 

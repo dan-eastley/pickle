@@ -37,7 +37,7 @@ export default function AbstractionPage() {
 
   const rows = []
   groups.forEach(group => {
-    rows.push({ type: 'header', format: group.format, fmt: group.fmt })
+    rows.push({ type: 'header', format: group.format, fmt: group.fmt, count: group.items.length })
     group.items.forEach((artefact, i) => rows.push({ type: 'artefact', artefact, firstInGroup: i === 0 }))
   })
 
@@ -63,7 +63,7 @@ export default function AbstractionPage() {
             <div key={`h-${row.format}`} className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100">
               <FormatIcon format={row.format} className="w-3 h-3 text-gray-400" />
               <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                {row.fmt?.label ?? row.format}
+                {row.fmt?.label ?? row.format} ({row.count})
               </span>
             </div>
           ) : (
