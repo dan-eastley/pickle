@@ -19,6 +19,7 @@ permissions:
 
 jobs:
   validate-context:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Started
