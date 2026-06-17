@@ -93,10 +93,14 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
             </button>
             <button disabled={transitioning} onClick={() => onTransition('proposed')}
               className="flex items-center gap-2 px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
-              {transitioning ? 'Updating…' : 'Propose'}
-              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-              </svg>
+              {transitioning ? <Spinner size="sm" className="text-white" /> : (
+                <>
+                  Propose
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                    <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                  </svg>
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -141,10 +145,14 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
             </button>
             <button disabled={transitioning} onClick={() => onTransition('accepted')}
               className="flex items-center gap-2 px-4 py-1.5 bg-success-500 hover:bg-success-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
-              {transitioning ? 'Updating…' : 'Accept'}
-              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-              </svg>
+              {transitioning ? <Spinner size="sm" className="text-white" /> : (
+                <>
+                  Accept
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                  </svg>
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -184,10 +192,14 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
           </button>
           <button disabled={transitioning} onClick={() => onTransition('staged')}
             className="flex items-center gap-2 px-4 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium transition-colors disabled:opacity-40">
-            {transitioning ? 'Staging…' : 'Stage'}
-            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
+            {transitioning ? <Spinner size="sm" className="text-white" /> : (
+              <>
+                Stage
+                <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                </svg>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -203,10 +215,14 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         </div>
         <button disabled={transitioning} onClick={() => onTransition('committed', { prNumber: decision?.['pr-number'] })}
           className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold hover:bg-gray-100 transition-colors disabled:opacity-40">
-          {transitioning ? 'Committing…' : `Commit to v${versionId}`}
-          <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-            <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
+          {transitioning ? <Spinner size="sm" className="text-gray-700" /> : (
+            <>
+              {`Commit to v${versionId}`}
+              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+              </svg>
+            </>
+          )}
         </button>
       </div>
     )
@@ -232,34 +248,29 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving }) {
         <tbody className="divide-y divide-gray-100">
           {rows.map((row, i) => {
             const key = `${sectionKey}-${i}`
-            // Accept/decline state: local `accepted` map takes precedence over the JSON field
-            const state = accepted[key] ?? row.review ?? null
+            // Accept/decline state: local overrides first, then JSON field, default to accepted
+            const state = accepted[key] ?? row.review ?? 'accepted'
             const isSaving = saving === key
+            const isAccepted = state === 'accepted'
             return (
-              <tr key={i} className={`align-top ${state === 'accepted' ? 'bg-success-50' : state === 'declined' ? 'bg-error-50' : ''}`}>
+              <tr key={i} className={`align-top ${isAccepted ? 'bg-success-50' : 'bg-error-50'}`}>
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.finding ?? '—'}</td>
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.impact ?? '—'}</td>
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.recommendation ?? '—'}</td>
                 <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.rationale ?? '—'}</td>
-                <td className="px-3 py-2.5 w-28">
-                  {isSaving ? (
-                    <span className="text-xs text-gray-400">Saving…</span>
-                  ) : !state ? (
-                    <div className="flex gap-1">
-                      <button onClick={() => onAccept(sectionKey, i, 'accepted')}
-                        className="px-2 py-0.5 text-xs bg-success-50 text-success-700 hover:bg-success-100 transition-colors">Accept</button>
-                      <button onClick={() => onAccept(sectionKey, i, 'declined')}
-                        className="px-2 py-0.5 text-xs bg-error-50 text-error-700 hover:bg-error-100 transition-colors">Decline</button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1">
-                      <span className={`text-xs font-medium ${state === 'accepted' ? 'text-success-700' : 'text-error-700'}`}>
-                        {state === 'accepted' ? 'Accepted' : 'Declined'}
-                      </span>
-                      <button onClick={() => onAccept(sectionKey, i, null)}
-                        className="text-xs text-gray-400 hover:text-gray-600 ml-1">×</button>
-                    </div>
-                  )}
+                <td className="px-3 py-2.5 w-32">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted')}
+                      disabled={isSaving}
+                      className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center transition-colors disabled:opacity-50 focus:outline-none ${isAccepted ? 'bg-success-500' : 'bg-gray-300'}`}
+                    >
+                      <span className={`inline-block h-4 w-4 bg-white transition-transform ${isAccepted ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
+                    </button>
+                    <span className={`text-xs font-medium whitespace-nowrap ${isAccepted ? 'text-success-700' : 'text-error-700'}`}>
+                      {isSaving ? <Spinner size="sm" /> : isAccepted ? 'Accepted' : 'Declined'}
+                    </span>
+                  </div>
                 </td>
               </tr>
             )

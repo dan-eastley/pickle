@@ -61,7 +61,7 @@ jobs:
           echo "::notice::Started: ${ANALYSIS_NAME} (model: ${{ inputs.model }})"
 
       - name: Checkout decisions branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
           fetch-depth: 0

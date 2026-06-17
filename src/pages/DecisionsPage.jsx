@@ -9,17 +9,19 @@ import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import { ChevronRight, ChevronDown, DecisionIcon, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
+import useCollapsed from '../hooks/useCollapsed'
 
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
 
 function DecisionGroup({ status, decisions, clientId, versionId }) {
-  // Empty groups always start collapsed; non-empty follow the default open set
-  const [open, setOpen] = useState(decisions.length > 0 && STATUS_DEFAULT_OPEN.has(status))
+  const defaultCollapsed = decisions.length === 0 || !STATUS_DEFAULT_OPEN.has(status)
+  const [collapsed, toggleCollapsed] = useCollapsed(`decision-group-${status}-collapsed`, defaultCollapsed)
+  const open = !collapsed
 
   return (
     <div className="border border-gray-200 bg-white">
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={toggleCollapsed}
         className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-200"
       >
         <div className="flex items-center gap-3">

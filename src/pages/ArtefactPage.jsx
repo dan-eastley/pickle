@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
@@ -13,6 +13,7 @@ import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import { KeyStar, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
+import useCollapsed from '../hooks/useCollapsed'
 
 function AdrActionBar({ artefact, clientId, versionId }) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -63,23 +64,6 @@ function AdrActionBar({ artefact, clientId, versionId }) {
 
 const PURPOSE_STORAGE_KEY = 'artefact-purpose-collapsed'
 const RELATED_STORAGE_KEY = 'artefact-related-collapsed'
-
-function useCollapsed(storageKey, defaultCollapsed = false) {
-  const [collapsed, setCollapsed] = useState(() => {
-    try {
-      const stored = localStorage.getItem(storageKey)
-      return stored === null ? defaultCollapsed : stored === 'true'
-    } catch { return defaultCollapsed }
-  })
-  const toggle = useCallback(() => {
-    setCollapsed(prev => {
-      const next = !prev
-      try { localStorage.setItem(storageKey, String(next)) } catch {}
-      return next
-    })
-  }, [storageKey])
-  return [collapsed, toggle]
-}
 
 function ArtefactHeader({ artefact, schema, clientId, versionId }) {
   const colors = DOMAIN_COLORS[artefact.domain]
