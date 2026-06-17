@@ -6,9 +6,11 @@
 
 ## Industry alignment
 
-- **APQC Process Classification Framework (PCF)** — `level` (1 = Category, 4 = Activity)
+- **APQC Process Classification Framework (PCF)** — `level` (1 = Process Group, 2 = Process Category, 3 = Process)
 - **Porter's Value Chain** — `type` (`core`, `supporting`, `management`)
-- **BPMN** — Concepts of `trigger`, `inputs`, `outputs` (catalogue captures the metadata; the visual flow lives in the BUS-BPM diagram)
+- **BPMN** — Concepts of `trigger`, `inputs`, `outputs` (catalogue captures the metadata; the visual hierarchy lives in BUS-BPM)
+
+The catalogue stops at **Level 3** — the finest decomposition modelled here. Sub-process steps (PCF Level 4) are out of scope for the architecture catalogue.
 
 ## Example
 
@@ -17,15 +19,27 @@
     "processes": [
         {
             "id": "PROC-001",
-            "name": "Order to Cash",
+            "name": "Customer Lifecycle Management",
             "type": "core",
             "level": 1,
-            "owner": "Head of Commercial Operations",
-            "trigger": "Customer order received",
-            "outcome": "Cash collected, revenue recognised",
-            "inputs": ["Customer order", "Product catalogue"],
-            "outputs": ["Invoice", "Shipment"],
-            "kpis": ["Order cycle time", "Days sales outstanding"]
+            "owner": "Chief Customer Officer",
+            "trigger": "Customer enquiry or application received",
+            "outcome": "Customer acquired, served, and retained"
+        },
+        {
+            "id": "PROC-001-01",
+            "name": "Acquire New Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "owner": "Sales & Marketing"
+        },
+        {
+            "id": "PROC-001-01-01",
+            "name": "Generate Sales Leads",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-01"
         }
     ]
 }
@@ -35,11 +49,11 @@
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `id` | string | yes | Unique identifier (e.g. `PROC-001`) |
+| `id` | string | yes | Unique identifier — `PROC-NNN` (L1), `PROC-NNN-NN` (L2), `PROC-NNN-NN-NN` (L3) |
 | `name` | string | yes | Process name |
 | `description` | string | no | Free-text description |
 | `type` | enum | yes | `core` \| `supporting` \| `management` |
-| `level` | integer (1–4) | yes | APQC PCF level |
+| `level` | integer (1–3) | yes | APQC PCF level |
 | `parent-id` | string | conditional | ID of the parent process; omit for level 1 |
 | `trigger` | string | no | Event or condition that initiates the process |
 | `outcome` | string | no | Business outcome produced |

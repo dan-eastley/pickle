@@ -46,8 +46,9 @@ This table is the authoritative registry of every defined artefact type. Every r
 | BUS-STR | Business | Conceptual | Catalogue | Business Architecture Strategy | Outcome-oriented strategic statements for the Business domain — the what and why at the highest level |
 | BUS-CAP | Business | Conceptual | Catalogue | Business Capabilities | Hierarchical catalogue of what the business does, independent of how it does it |
 | BUS-BCM | Business | Conceptual | Diagram | Business Capability Model | Visual map of the Business Capabilities Catalogue (BUS-CAP) |
-| BUS-PRO | Business | Conceptual | Catalogue | Business Processes | Hierarchical catalogue of sequences of activities that deliver business value |
-| BUS-BPM | Business | Conceptual | Diagram | Business Process Model | Visual flow of the Business Processes Catalogue (BUS-PRO) |
+| BUS-PRO | Business | Conceptual | Catalogue | Business Processes | Hierarchical catalogue of sequences of activities that deliver business value (Levels 1–3) |
+| BUS-BPM | Business | Conceptual | Diagram | Business Process Model | Nested card diagram of the Business Processes Catalogue (BUS-PRO) — Level 1 overview with per-Level-1 drill-downs |
+| BUS-CAP-PRO | Business | Conceptual | Matrix | Business Capabilities ↔ Business Processes | Many-to-many mapping between BUS-CAP capabilities and BUS-PRO processes at L1 and L2 |
 | BUS-PRN | Business | Logical | Catalogue | Business Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Business domain |
 | BUS-STR-PRN | Business | Logical | Matrix | Business Architecture Strategy ↔ Principles | Many-to-many mapping between BUS-STR strategies and BUS-PRN principles |
 | BUS-GRD | Business | Physical | Catalogue | Business Architecture Guardrails | Non-negotiable constraints and mandatory standards for the Business domain |
@@ -61,7 +62,7 @@ This table is the authoritative registry of every defined artefact type. Every r
 | DAT-PRN-GRD | Data | Physical | Matrix | Data Architecture Principles ↔ Guardrails | Many-to-many mapping between DAT-PRN principles and DAT-GRD guardrails |
 | INT-STR | Integration | Conceptual | Catalogue | Integration Architecture Strategy | Outcome-oriented strategic statements for the Integration domain |
 | INT-IFC | Integration | Logical | Catalogue | Interface Catalogue | The logical interfaces that connect platforms across the application landscape, and the direction of data flow between them |
-| INT-WRD | Integration | Logical | Diagram | Integration Wiring Diagram | Visual map of the integration landscape — platform-to-platform connections derived from the Interface Catalogue (INT-IFC), with per-pair interface drill-down |
+| INT-WRD | Integration | Logical | Diagram | Interface Wiring Diagram | Visual map of the integration landscape — platform-to-platform connections derived from the Interface Catalogue (INT-IFC), with per-pair interface drill-down |
 | INT-DAC-IFC | Integration | Logical | Matrix | Data Domains & Concepts ↔ Interface Catalogue | Maps each interface in the Interface Catalogue to the conceptual data entities that flow across it |
 | INT-PRN | Integration | Logical | Catalogue | Integration Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Integration domain |
 | INT-STR-PRN | Integration | Logical | Matrix | Integration Architecture Strategy ↔ Principles | Many-to-many mapping between INT-STR strategies and INT-PRN principles |

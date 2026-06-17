@@ -1,4 +1,4 @@
-# INT-WRD — Integration Wiring Diagram
+# INT-WRD — Interface Wiring Diagram
 
 **File:** [`/config/schemas/artefacts/domains/integration/logical/INT-WRD.json`](../../../../../../config/schemas/artefacts/domains/integration/logical/INT-WRD.json)
 **Architecture Domain / Layer:** Integration / Logical

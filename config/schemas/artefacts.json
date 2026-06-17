@@ -10,6 +10,9 @@
         "BUS-BCM": {
             "$ref": "./artefacts/domains/business/conceptual/BUS-BCM.json"
         },
+        "BUS-CAP-PRO": {
+            "$ref": "./artefacts/domains/business/conceptual/BUS-CAP-PRO.json"
+        },
         "BUS-PRO": {
             "$ref": "./artefacts/domains/business/conceptual/BUS-PRO.json"
         },

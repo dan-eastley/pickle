@@ -62,8 +62,8 @@
                     "level": {
                         "type": "integer",
                         "minimum": 1,
-                        "maximum": 4,
-                        "description": "APQC PCF level \u2014 1 (Category) to 4 (Activity)"
+                        "maximum": 3,
+                        "description": "APQC PCF level \u2014 1 (Process Group) to 3 (Process)"
                     },
                     "parent-id": {
                         "type": "string",

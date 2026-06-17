@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-WRD",
-    "title": "Integration Wiring Diagram",
+    "title": "Interface Wiring Diagram",
     "description": "Visual map of the integration landscape. Derived from the Interface Catalogue (INT-IFC) and Application Domains & Platforms (APP-DAP) — no authored data. Shows platform-to-platform connections with flow counts on a landscape view, and interface-level detail on a per-pair drill-down.",
     "meta": {
         "domain": "integration",

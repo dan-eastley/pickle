@@ -64,8 +64,11 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
   }
 
   const { columns, rows } = matrixMeta
-  const applyFilter = (items, filter) =>
-    filter ? items.filter(item => item[filter.field] === filter.equals) : items
+  const applyFilter = (items, filter) => {
+    if (!filter) return items
+    if (filter.in) return items.filter(item => filter.in.includes(item[filter.field]))
+    return items.filter(item => item[filter.field] === filter.equals)
+  }
   const columnItems = applyFilter(columnData?.[columns.array] ?? [], columns.filter)
   const rowItems = applyFilter(rowData?.[rows.array] ?? [], rows.filter)
 

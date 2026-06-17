@@ -2,14 +2,77 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BPM",
     "title": "Business Process Model",
-    "description": "Visual flow of the Business Processes Catalogue (BUS-PRO). Storage format is provisional — diagram artefacts are derived from their source catalogue rather than authored directly.",
+    "description": "Visual model of the Business Processes Catalogue (BUS-PRO), arranged as a nested card diagram: Level 1 processes as groups, Level 2 processes as items within each group, and Level 3 processes nested within each Level 2 item. The overview renders Levels 1-2 on one diagram; a drill-down diagram per Level 1 process follows, showing its Level 2 cards with their Level 3 processes inside. Derived from BUS-PRO rather than authored directly.",
     "meta": {
         "domain": "business",
         "abstraction": "conceptual",
         "format": "diagram",
-        "description": "A visual flow diagram of the organisation's key processes.",
-        "diagramType": "flow-based"
+        "description": "A visual map of the organisation's key processes, arranged as a nested hierarchy.",
+        "purpose": [
+            "Give a single-page view of the process landscape for workshops and roadmap discussions.",
+            "Reveal the decomposition from process groups down to individual process steps.",
+            "Drill into each Level 1 process to see its Level 2 and Level 3 breakdown.",
+            "Provide an embeddable diagram for presentations, kept in sync with BUS-PRO."
+        ],
+        "diagramType": "card-based",
+        "countLabels": {
+            "groups": "Level 1",
+            "items": "Level 2",
+            "subitems": "Level 3"
+        }
     },
     "type": "object",
-    "additionalProperties": true
+    "required": ["groups"],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "groups": {
+            "type": "array",
+            "description": "Level 1 processes, each containing its Level 2 sub-processes.",
+            "items": { "$ref": "#/$defs/group" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "group": {
+            "type": "object",
+            "required": ["id", "name", "items"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "meta": { "type": "object", "additionalProperties": true },
+                "items": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/item" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "item": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "meta": { "type": "object", "additionalProperties": true },
+                "items": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/subitem" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "subitem": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "meta": { "type": "object", "additionalProperties": true }
+            },
+            "additionalProperties": false
+        }
+    }
 }
