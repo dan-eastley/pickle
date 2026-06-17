@@ -40,7 +40,8 @@
             "finding": "The decision establishes a mandatory deployment policy aligned with **Application Strategy** (`APP-STR`). APP-STR-001 already captures 'Cloud-native first' intent; the decision operationalises this intent.",
             "impact": "APP-STR is the correct scoped artefact and requires no change — the baseline already encodes the strategic direction. The decision's value is operationalising what strategy already commits to.",
             "recommendation": "Confirm APP-STR-001 remains current. Proceed to update downstream artefacts (principles and guardrails) once this ADR is accepted.",
-            "rationale": "Tight alignment between decision and existing strategy reduces rework risk and demonstrates traceability from commitment to execution."
+            "rationale": "Tight alignment between decision and existing strategy reduces rework risk and demonstrates traceability from commitment to execution.",
+            "review": "declined"
         },
         {
             "finding": "**Application Principles** (`APP-PRN`) and **Application Guardrails** (`APP-GRD`) will require updates to operationalise the cloud-first policy. The baseline APP-GRD is empty and APP-PRN lacks cloud-specific design principles.",
