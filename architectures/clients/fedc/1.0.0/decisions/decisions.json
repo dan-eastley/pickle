@@ -33,7 +33,7 @@
         {
             "decision-id": "ADR-004",
             "title": "Establish a Cloud-First Policy for New Application Development",
-            "status": "proposed",
+            "status": "accepted",
             "scope": {
                 "domain": "application",
                 "abstraction": "conceptual",
