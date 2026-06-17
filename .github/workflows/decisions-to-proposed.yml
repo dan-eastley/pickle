@@ -1,14 +1,13 @@
-name: Decisions Analysis
+name: Decisions — To Proposed
 
-# Orchestrates the 7 analysis workflows that run when a decision moves from
-# DRAFT to PROPOSED. Narrative Review runs separately (decisions-narrative-review.yml).
+# Fires when a decision moves from DRAFT to PROPOSED.
+# Orchestrates the 7 analysis steps sequentially, each writing their findings
+# to the decision.json on the decisions branch.
 #
 # Triggered via workflow_dispatch from the Pickle API on DRAFT → PROPOSED transition.
 # Runs sequentially using `needs:` to avoid the 3-hop workflow_run chaining limit.
-# Each job writes its findings to the decision.json on the decisions branch
-# (in-flight decisions live on their branch, not main).
 #
-# `model` controls which Claude model all seven steps run with — defaults to
+# `model` controls which Claude model all steps run with — defaults to
 # Haiku 4.5 to keep dev-time cost down. Override per-dispatch for higher-quality
 # runs (e.g. claude-sonnet-4-6).
 
@@ -39,7 +38,7 @@ permissions:
 
 jobs:
   impact-assessment:
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Impact Assessment"
       prompt-file:   config/prompts/decisions/architecture-review.md
@@ -52,7 +51,7 @@ jobs:
 
   referential-integrity:
     needs: impact-assessment
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Referential Integrity"
       prompt-file:   config/prompts/decisions/referential-integrity.md
@@ -65,7 +64,7 @@ jobs:
 
   strategy-alignment:
     needs: referential-integrity
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Strategy Alignment"
       prompt-file:   config/prompts/decisions/strategy-alignment.md
@@ -78,7 +77,7 @@ jobs:
 
   principles-alignment:
     needs: strategy-alignment
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Principles Alignment"
       prompt-file:   config/prompts/decisions/principles-alignment.md
@@ -91,7 +90,7 @@ jobs:
 
   guardrails-alignment:
     needs: principles-alignment
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Guardrails Alignment"
       prompt-file:   config/prompts/decisions/guardrails-alignment.md
@@ -104,7 +103,7 @@ jobs:
 
   proponent-analysis:
     needs: guardrails-alignment
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Proponent Analysis"
       prompt-file:   config/prompts/decisions/proponent-analysis.md
@@ -117,7 +116,7 @@ jobs:
 
   challenger-analysis:
     needs: proponent-analysis
-    uses: ./.github/workflows/decisions-analysis-step.yml
+    uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Challenger Analysis"
       prompt-file:   config/prompts/decisions/challenger-analysis.md

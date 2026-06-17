@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-WRD",
+    "title": "Integration Wiring Diagram",
+    "description": "Visual map of the integration landscape. Derived from the Interface Catalogue (INT-IFC) and Application Domains & Platforms (APP-DAP) — no authored data. Shows platform-to-platform connections with flow counts on a landscape view, and interface-level detail on a per-pair drill-down.",
+    "meta": {
+        "domain": "integration",
+        "abstraction": "logical",
+        "format": "diagram",
+        "description": "A visual map of the integration landscape, derived from INT-IFC and APP-DAP.",
+        "purpose": [
+            "Show the full integration landscape across all platforms at a glance.",
+            "Reveal which platforms are most heavily integrated and which are isolated.",
+            "Drill down into individual platform pairs to review the interfaces between them.",
+            "Communicate integration complexity and coupling to stakeholders and architects."
+        ],
+        "diagramType": "wiring",
+        "derivedFrom": ["INT-IFC", "APP-DAP"]
+    },
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        }
+    },
+    "additionalProperties": false
+}

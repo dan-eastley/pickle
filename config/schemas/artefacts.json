@@ -40,6 +40,9 @@
         "INT-IFC": {
             "$ref": "./artefacts/domains/integration/logical/INT-IFC.json"
         },
+        "INT-WRD": {
+            "$ref": "./artefacts/domains/integration/logical/INT-WRD.json"
+        },
         "INT-DAC-IFC": {
             "$ref": "./artefacts/domains/integration/logical/INT-DAC-IFC.json"
         },

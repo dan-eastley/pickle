@@ -229,7 +229,7 @@ export default function ArtefactPage() {
             <MatrixView data={data} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
           {artefact.format === 'diagram' && (
-            <DiagramView data={data} artefact={artefact} schema={schema} />
+            <DiagramView data={data} artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
         </>
       )}

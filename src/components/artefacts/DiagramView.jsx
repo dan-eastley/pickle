@@ -1,5 +1,6 @@
 import EmptyState from '../ui/EmptyState'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
+import WiringDiagram from './diagrams/WiringDiagram'
 
 // Diagram types rendered by NestedGroupDiagram — a grid of group cards, each
 // containing a wrapped grid of item cards. Other diagram types fall back to
@@ -24,9 +25,13 @@ function countSummary(groups, labels) {
   return summary
 }
 
-export default function DiagramView({ data, artefact, schema }) {
+export default function DiagramView({ data, artefact, schema, clientId, versionId }) {
   const diagramType = artefact?.diagramType ?? schema?.meta?.diagramType
   const groups = data?.groups
+
+  if (diagramType === 'wiring') {
+    return <WiringDiagram clientId={clientId} versionId={versionId} />
+  }
 
   if (NESTED_GROUP_TYPES.has(diagramType) && Array.isArray(groups)) {
     return (

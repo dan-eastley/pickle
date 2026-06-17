@@ -61,6 +61,7 @@ This table is the authoritative registry of every defined artefact type. Every r
 | DAT-PRN-GRD | Data | Physical | Matrix | Data Architecture Principles ↔ Guardrails | Many-to-many mapping between DAT-PRN principles and DAT-GRD guardrails |
 | INT-STR | Integration | Conceptual | Catalogue | Integration Architecture Strategy | Outcome-oriented strategic statements for the Integration domain |
 | INT-IFC | Integration | Logical | Catalogue | Interface Catalogue | The logical interfaces that connect platforms across the application landscape, and the direction of data flow between them |
+| INT-WRD | Integration | Logical | Diagram | Integration Wiring Diagram | Visual map of the integration landscape — platform-to-platform connections derived from the Interface Catalogue (INT-IFC), with per-pair interface drill-down |
 | INT-DAC-IFC | Integration | Logical | Matrix | Data Domains & Concepts ↔ Interface Catalogue | Maps each interface in the Interface Catalogue to the conceptual data entities that flow across it |
 | INT-PRN | Integration | Logical | Catalogue | Integration Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Integration domain |
 | INT-STR-PRN | Integration | Logical | Matrix | Integration Architecture Strategy ↔ Principles | Many-to-many mapping between INT-STR strategies and INT-PRN principles |

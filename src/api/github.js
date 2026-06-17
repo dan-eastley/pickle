@@ -132,7 +132,7 @@ async function createDecision({ clientId, versionId, decision }, token, owner, r
   }, token, owner, repo)
 
   // 4. Dispatch narrative review
-  await dispatch('decisions-narrative-review.yml',
+  await dispatch('decisions-to-draft.yml',
     { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId },
     token, owner, repo)
 
@@ -192,8 +192,8 @@ async function updateDecision({ clientId, versionId, decisionId, updates }, toke
   }
 
   // Dispatch workflow on status transition
-  if (newStatus === 'proposed') await dispatch('decisions-analysis.yml', ids, token, owner, repo)
-  else if (newStatus === 'accepted') await dispatch('decisions-architecture-changes.yml', ids, token, owner, repo)
+  if (newStatus === 'proposed') await dispatch('decisions-to-proposed.yml', ids, token, owner, repo)
+  else if (newStatus === 'accepted') await dispatch('decisions-to-accepted.yml', ids, token, owner, repo)
   else if (newStatus === 'staged')   await dispatch('decisions-apply-changes.yml', ids, token, owner, repo)
 
   return { ok: true, decisionId, status: newStatus }
@@ -257,7 +257,7 @@ async function editDecision({ clientId, versionId, decisionId, title, narrative,
   }, token, owner, repo)
 
   // Re-run narrative review on the updated content
-  await dispatch('decisions-narrative-review.yml',
+  await dispatch('decisions-to-draft.yml',
     { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId },
     token, owner, repo)
 

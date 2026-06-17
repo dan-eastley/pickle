@@ -1,23 +1,27 @@
-name: Decisions Analysis Step
+name: Decisions — Claude Step (Reusable)
 
-# Reusable workflow — runs one Claude-driven analysis step and writes its
-# findings to the decision.json on the decisions branch (in-flight decisions
-# live on their branch, not main). Invoked once per section by the
-# orchestrator (decisions-analysis.yml) and once by decisions-narrative-review.yml.
+# Reusable workflow — runs one Claude-driven step and writes its output
+# to the decision.json on the decisions branch (in-flight decisions live
+# on their branch, not main). Invoked by decisions-to-draft.yml,
+# decisions-to-proposed.yml, and decisions-to-accepted.yml.
+#
+# The prompt file is responsible for defining the output format and what
+# to write to `section-key`. This step provides the runtime scaffold:
+# checkout, Claude invocation, commit, and push.
 
 on:
   workflow_call:
     inputs:
       analysis-name:
-        description: "Human-readable analysis name (e.g. Impact Assessment)"
+        description: "Human-readable step name (e.g. Impact Assessment)"
         required: true
         type: string
       prompt-file:
-        description: "Path to the prompt markdown file under config/prompts/decisions/"
+        description: "Path to the prompt markdown file (e.g. config/prompts/decisions/architecture-changes.md)"
         required: true
         type: string
       section-key:
-        description: "Decision JSON property to write results to"
+        description: "Decision JSON property to write results to (e.g. architecture-changes)"
         required: true
         type: string
       client-id:
@@ -33,7 +37,7 @@ on:
         required: true
         type: string
       model:
-        description: "Claude model to run this analysis with"
+        description: "Claude model to run this step with"
         required: false
         type: string
         default: claude-haiku-4-5-20251001
@@ -45,7 +49,7 @@ permissions:
   contents: write
 
 jobs:
-  analyse:
+  run-step:
     runs-on: ubuntu-latest
     env:
       PROMPT_FILE:   ${{ inputs.prompt-file }}
@@ -57,8 +61,7 @@ jobs:
       DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
     steps:
       - name: Started
-        run: |
-          echo "::notice::Started: ${ANALYSIS_NAME} (model: ${{ inputs.model }})"
+        run: echo "::notice::Started: ${ANALYSIS_NAME} (model: ${{ inputs.model }})"
 
       - name: Checkout decisions branch
         uses: actions/checkout@v5
@@ -72,14 +75,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Run Claude analysis
+      - name: Run Claude step
         uses: anthropics/claude-code-base-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           model: ${{ inputs.model }}
           allowed_tools: "Read,Edit,Write,Grep,Glob"
           prompt: |
-            You are running the "${{ env.ANALYSIS_NAME }}" step of the Pickle decisions analysis workflow.
+            You are running the "${{ env.ANALYSIS_NAME }}" step of the Pickle decisions workflow.
 
             Decision file: ${{ env.DECISION_FILE }}
             Prompt file:   ${{ env.PROMPT_FILE }}
@@ -87,19 +90,13 @@ jobs:
 
             Steps:
               1. Read the prompt instructions at ${{ env.PROMPT_FILE }}.
-              2. Read the decision JSON at ${{ env.DECISION_FILE }}; the author's
-                 narrative is in its `narrative` field and any requirements are
-                 in `requirements`.
+              2. Read the decision JSON at ${{ env.DECISION_FILE }}.
               3. Read any other inputs the prompt asks for — architecture data
                  lives under architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
                  schemas under config/schemas/.
-              4. Follow the prompt's task.
-              5. Write your result as a JSON array of four-field objects
-                 {finding, impact, recommendation, rationale} into the decision
-                 JSON's `${{ env.SECTION_KEY }}` property, using the Edit or
-                 Write tool. Schema is at config/schemas/decision.json. The
-                 array may have one element (single finding) or several
-                 (distinct findings).
+              4. Follow the prompt's task exactly, including the output format it specifies.
+              5. Write your result into the decision JSON's `${{ env.SECTION_KEY }}` property
+                 using the Edit or Write tool.
 
             Do not commit or push — the workflow handles that.
 
@@ -117,5 +114,4 @@ jobs:
 
       - name: Finished
         if: always()
-        run: |
-          echo "::notice::Finished: ${ANALYSIS_NAME}"
+        run: echo "::notice::Finished: ${ANALYSIS_NAME}"
