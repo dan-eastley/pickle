@@ -55,7 +55,8 @@
             "finding": "All artefact IDs referenced in the narrative exist in the current architecture baseline.",
             "impact": "Valid references ensure analysis steps can read cited artefacts and the record remains coherent.",
             "recommendation": "Confirm new artefact IDs introduced by this decision follow the established naming convention.",
-            "rationale": "Consistent naming ensures tooling and queries can resolve references without intervention."
+            "rationale": "Consistent naming ensures tooling and queries can resolve references without intervention.",
+            "review": "accepted"
         },
         {
             "finding": "The scope constraint aligns with an existing artefact type. The artefact folder exists for the target client and version.",
