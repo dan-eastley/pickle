@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   validate-structure:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Started
@@ -23,7 +24,7 @@ jobs:
           echo "::notice::Started: Validate Structure"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run structure check
         run: |

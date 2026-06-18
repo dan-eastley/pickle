@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import Spinner from '../components/ui/Spinner'
+import TextLink from '../components/ui/TextLink'
 
 function resolveDocLink(href, currentPath) {
   if (!href) return href
@@ -40,16 +41,12 @@ function MarkdownComponents(currentPath) {
     a({ href, children }) {
       const resolved = resolveDocLink(href, currentPath)
       if (resolved?.startsWith('/docs/')) {
-        return (
-          <Link to={resolved} className="text-brand-600 hover:text-brand-800 underline">
-            {children}
-          </Link>
-        )
+        return <TextLink to={resolved}>{children}</TextLink>
       }
       return (
-        <a href={resolved} className="text-brand-600 hover:text-brand-800 underline" target="_blank" rel="noreferrer">
+        <TextLink href={resolved} target="_blank" rel="noreferrer">
           {children}
-        </a>
+        </TextLink>
       )
     },
     code({ className, children, ...props }) {

@@ -2,14 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getVersions, getVersion } from '../lib/api'
+import { versionStatusBadge } from '../lib/theme'
 import Spinner from '../components/ui/Spinner'
+import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-const STATUS_STYLES = {
-  draft:    'bg-amber-50 text-amber-700',
-  active:   'bg-success-50 text-success-700',
-  retired:  'bg-gray-100 text-gray-500',
-}
 
 export default function VersionsPage() {
   const { clientId } = useParams()
@@ -41,7 +37,7 @@ export default function VersionsPage() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 pb-10">
+    <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-4">
         <Link to="/clients" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
           ← All clients
@@ -56,12 +52,12 @@ export default function VersionsPage() {
 
       <div className="border border-gray-200 bg-white divide-y divide-gray-100">
         {versions.length === 0 && (
-          <div className="px-5 py-8 text-center text-sm text-gray-400">No versions available.</div>
+          <div className="px-5 py-8 text-center text-sm text-gray-400">No versions yet for this client.</div>
         )}
         {versions.map(v => {
           const vId = v['version-id']
           const meta = versionMeta[vId]
-          const statusStyle = STATUS_STYLES[meta?.status] ?? 'bg-gray-100 text-gray-500'
+          const statusStyle = versionStatusBadge(meta?.status)
           return (
             <Link
               key={vId}
@@ -87,9 +83,7 @@ export default function VersionsPage() {
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
                 <span className="text-xs font-mono text-gray-400">{vId}</span>
-                <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" viewBox="0 0 16 16" fill="none">
-                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-                </svg>
+                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
               </div>
             </Link>
           )

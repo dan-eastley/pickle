@@ -16,3 +16,8 @@ __pycache__/
 
 # OS / misc
 Thumbs.db
+
+# Node / build artifacts
+node_modules/
+.vite/
+dist/

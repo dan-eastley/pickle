@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Link } from 'react-router-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
+import ScopeSelector from './ScopeSelector'
+import TextLink from '../ui/TextLink'
+import { PlusIcon, CloseIcon } from '../ui/icons'
 
 function RequirementsList({ requirements, onChange }) {
   const add = () => onChange([...requirements, ''])
@@ -20,9 +22,7 @@ function RequirementsList({ requirements, onChange }) {
             className="flex-1 px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
           <button onClick={() => remove(i)} className="p-1 text-gray-400 hover:text-error-600 transition-colors">
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
+            <CloseIcon className="w-4 h-4" />
           </button>
         </div>
       ))}
@@ -30,9 +30,7 @@ function RequirementsList({ requirements, onChange }) {
         onClick={add}
         className="flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 transition-colors"
       >
-        <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-          <path d="M8 2v12M2 8h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <PlusIcon className="w-4 h-4" />
         Add requirement
       </button>
     </div>
@@ -42,6 +40,9 @@ function RequirementsList({ requirements, onChange }) {
 export default function NewDecisionModal({ artefact, clientId, versionId, onClose }) {
   const [narrative, setNarrative] = useState('')
   const [requirements, setRequirements] = useState([])
+  const [scopeDomain, setScopeDomain] = useState(artefact.domain)
+  const [scopeAbstraction, setScopeAbstraction] = useState(artefact.abstraction)
+  const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
   const [saved, setSaved] = useState(false)
 
   const colors = DOMAIN_COLORS[artefact.domain]
@@ -57,7 +58,12 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
     setSaved(true)
   }
 
-  const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
+  const scopeParams = [
+    scopeDomain      && `domain=${scopeDomain}`,
+    scopeAbstraction && `abstraction=${scopeAbstraction}`,
+    scopeArtefact    && `artefact=${scopeArtefact}`,
+  ].filter(Boolean).join('&')
+  const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
     <>
@@ -71,9 +77,6 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
           <div className={`flex items-center justify-between px-5 py-4 ${colors.bg} flex-shrink-0`}>
             <div>
               <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Scope: {artefact.name} <span className="font-mono">({artefact.id})</span>
-              </p>
             </div>
             <button
               onClick={onClose}
@@ -97,6 +100,21 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
               </div>
             ) : (
               <>
+                {/* Scope */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                  <ScopeSelector
+                    domain={scopeDomain}
+                    abstraction={scopeAbstraction}
+                    artefact={scopeArtefact}
+                    onChange={({ domain, abstraction, artefact: a }) => {
+                      setScopeDomain(domain)
+                      setScopeAbstraction(abstraction)
+                      setScopeArtefact(a)
+                    }}
+                  />
+                </div>
+
                 {/* Narrative */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -130,13 +148,9 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
           {/* Footer */}
           {!saved && (
             <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-gray-200 bg-gray-50 flex-shrink-0">
-              <Link
-                to={fullEditorUrl}
-                onClick={onClose}
-                className="text-sm text-brand-600 hover:text-brand-700 transition-colors"
-              >
+              <TextLink to={fullEditorUrl} onClick={onClose} className="text-sm">
                 Open full editor →
-              </Link>
+              </TextLink>
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
@@ -147,14 +161,8 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
                 <button
                   onClick={handleSave}
                   disabled={!narrative.trim()}
-                  className={`px-4 py-1.5 text-sm font-medium text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                    {
-                      business: 'bg-violet-600 hover:bg-violet-700',
-                      data: 'bg-blue-600 hover:bg-blue-700',
-                      integration: 'bg-emerald-600 hover:bg-emerald-700',
-                      application: 'bg-amber-500 hover:bg-amber-600',
-                      solution: 'bg-rose-600 hover:bg-rose-700',
-                    }[artefact.domain] ?? 'bg-brand-600 hover:bg-brand-700'
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                    colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
                   }`}
                 >
                   Save

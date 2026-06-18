@@ -1,0 +1,75 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:logical:BUS-STR-PRN",
+    "relationships": [
+        {
+            "column-id": "BUS-STR-001",
+            "row-id": "BUS-PRN-001",
+            "rationale": "Capability-based organisation is the structural foundation for shifting from functional silos to customer-centric, end-to-end teams."
+        },
+        {
+            "column-id": "BUS-STR-001",
+            "row-id": "BUS-PRN-002",
+            "rationale": "Customer-centricity requires teams to be measured on the customer outcomes they create, not on departmental output volumes."
+        },
+        {
+            "column-id": "BUS-STR-001",
+            "row-id": "BUS-PRN-005",
+            "rationale": "End-to-end customer outcomes can only be designed for if processes are organised around the customer journey rather than departments."
+        },
+        {
+            "column-id": "BUS-STR-002",
+            "row-id": "BUS-PRN-001",
+            "rationale": "Product teams are organised around capabilities and value streams, not the current org chart, so the capability map must be independent of organisational structure."
+        },
+        {
+            "column-id": "BUS-STR-002",
+            "row-id": "BUS-PRN-002",
+            "rationale": "Full ownership of a value stream is only meaningful if the owning team is measured on the outcome that stream produces."
+        },
+        {
+            "column-id": "BUS-STR-002",
+            "row-id": "BUS-PRN-003",
+            "rationale": "Full value-stream ownership requires the team to hold decision authority for the work within its stream, not escalate it elsewhere."
+        },
+        {
+            "column-id": "BUS-STR-003",
+            "row-id": "BUS-PRN-003",
+            "rationale": "Decision authority sits with the team closest to the customer and the data, so evidence-based decisions are made where the evidence is freshest."
+        },
+        {
+            "column-id": "BUS-STR-003",
+            "row-id": "BUS-PRN-004",
+            "rationale": "Citing evidence for every material decision depends on a continuous discovery practice that generates that evidence."
+        },
+        {
+            "column-id": "BUS-STR-004",
+            "row-id": "BUS-PRN-004",
+            "rationale": "This strategy is the direct mandate for the continuous discovery principle — investment decisions follow evidence generated through ongoing discovery."
+        },
+        {
+            "column-id": "BUS-STR-004",
+            "row-id": "BUS-PRN-002",
+            "rationale": "Quarterly investment rebalancing based on outcome evidence requires roadmaps to be framed as outcome hypotheses rather than fixed deliverable lists."
+        },
+        {
+            "column-id": "BUS-STR-005",
+            "row-id": "BUS-PRN-006",
+            "rationale": "This strategy is the direct mandate for designing every new or redesigned process as fully digital end-to-end."
+        },
+        {
+            "column-id": "BUS-STR-005",
+            "row-id": "BUS-PRN-005",
+            "rationale": "Digitising the top business processes end-to-end requires designing them around the customer journey they serve, not departmental boundaries."
+        },
+        {
+            "column-id": "BUS-STR-006",
+            "row-id": "BUS-PRN-007",
+            "rationale": "This strategy is the direct mandate for sustainability metrics being owned by operating leaders rather than a separate reporting function."
+        },
+        {
+            "column-id": "BUS-STR-006",
+            "row-id": "BUS-PRN-002",
+            "rationale": "Operational KPI dashboards including sustainability metrics by default is an instance of measuring teams on outcomes rather than output."
+        }
+    ]
+}
