@@ -10,7 +10,7 @@ Your findings will be read by business sponsors, decision-makers, and governance
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `referential-integrity`, `strategy-alignment`, and `principles-alignment`.
+- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `referential-integrity`, `strategy-alignment`, `principles-alignment`, and `guardrails-alignment`.
 
 ## Task
 

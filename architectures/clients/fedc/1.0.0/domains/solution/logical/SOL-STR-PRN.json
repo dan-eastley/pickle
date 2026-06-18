@@ -1,0 +1,50 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-STR-PRN",
+    "relationships": [
+        {
+            "column-id": "SOL-STR-001",
+            "row-id": "SOL-PRN-001",
+            "rationale": "Proving value end-to-end within 90 days depends on a single team owning the solution from design through operation, without handovers."
+        },
+        {
+            "column-id": "SOL-STR-001",
+            "row-id": "SOL-PRN-005",
+            "rationale": "An MVP that proves value end-to-end must still be operable, observable, and secure — production readiness cannot be deferred to a later phase."
+        },
+        {
+            "column-id": "SOL-STR-002",
+            "row-id": "SOL-PRN-004",
+            "rationale": "This strategy is the direct mandate for solution architects to search the existing pattern catalogue before commissioning anything bespoke."
+        },
+        {
+            "column-id": "SOL-STR-003",
+            "row-id": "SOL-PRN-005",
+            "rationale": "This strategy is the direct mandate for operability, observability, and security being designed into the solution from the start."
+        },
+        {
+            "column-id": "SOL-STR-003",
+            "row-id": "SOL-PRN-006",
+            "rationale": "No initiative passing its first release gate without operability sign-off depends on every service having a published SLO as part of that sign-off."
+        },
+        {
+            "column-id": "SOL-STR-004",
+            "row-id": "SOL-PRN-002",
+            "rationale": "Five-year operate-and-exit costs being reviewed by Finance and Architecture jointly is enacted through the Architecture Council review gate for cross-domain solutions."
+        },
+        {
+            "column-id": "SOL-STR-004",
+            "row-id": "SOL-PRN-005",
+            "rationale": "Investment cases that include operate and exit costs depend on production readiness — including its ongoing operating cost — being designed in from the start, not bolted on later."
+        },
+        {
+            "column-id": "SOL-STR-005",
+            "row-id": "SOL-PRN-002",
+            "rationale": "A documented evolution and exit plan for every solution is reviewed through the same Architecture Council gate that governs cross-domain solutions."
+        },
+        {
+            "column-id": "SOL-STR-005",
+            "row-id": "SOL-PRN-003",
+            "rationale": "A credible exit path depends on the decisions and constraints that shaped the original design being recorded as ADRs, so future teams can re-evaluate them as constraints evolve."
+        }
+    ]
+}

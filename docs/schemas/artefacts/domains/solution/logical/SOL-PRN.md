@@ -1,4 +1,4 @@
-# SOL-PRN — Solution Principles Catalogue
+# SOL-PRN — Solution Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/solution/logical/SOL-PRN.json`](../../../../../../config/schemas/artefacts/domains/solution/logical/SOL-PRN.json)
 **Architecture Domain / Layer:** Solution / Logical

@@ -59,6 +59,7 @@ function AppRoutes() {
         <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
         <Route path="decisions" element={<DecisionsPage />} />
         <Route path="decisions/new" element={<DecisionEditorPage />} />
+        <Route path="decisions/:decisionId/edit" element={<DecisionEditorPage />} />
         <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
       </Route>
 
