@@ -64,6 +64,16 @@ jobs:
         run: |
           echo "::notice::Started: ${ANALYSIS_NAME} (model: ${{ inputs.model }})"
 
+      - name: Verify ANTHROPIC_API_KEY is set
+        env:
+          API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set or is empty — cannot run Claude step"
+            exit 1
+          fi
+          echo "::notice::ANTHROPIC_API_KEY is present (${#API_KEY} chars)"
+
       - name: Checkout decisions branch
         uses: actions/checkout@v5
         with:
@@ -77,6 +87,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run Claude step
+        id: claude
         uses: anthropics/claude-code-base-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -100,6 +111,15 @@ jobs:
                  using the Edit or Write tool.
 
             Do not commit or push — the workflow handles that.
+
+      - name: Report Claude outcome
+        if: always()
+        run: |
+          echo "::notice::Claude conclusion: ${{ steps.claude.outputs.conclusion }}"
+          if [ -n "${{ steps.claude.outputs.execution_file }}" ] && [ -f "${{ steps.claude.outputs.execution_file }}" ]; then
+            echo "--- Claude execution log (last 100 lines) ---"
+            tail -100 "${{ steps.claude.outputs.execution_file }}"
+          fi
 
       - name: Commit and push to decisions branch
         run: |
