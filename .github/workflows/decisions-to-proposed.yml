@@ -37,7 +37,38 @@ permissions:
   pull-requests: write
 
 jobs:
+  pipeline-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write pipeline summary
+        run: |
+          {
+            echo "## Analysis Pipeline — ${{ inputs.decision-id }}"
+            echo ""
+            echo "> Moving to **Proposed** submits this decision for AI-driven analysis."
+            echo "> The pipeline runs **7 steps sequentially** — each writes its findings to the decision JSON on the decisions branch."
+            echo ""
+            echo "| # | Step | Section key |"
+            echo "|---|---|---|"
+            echo "| 1 | Impact Assessment | \`impact-assessment\` |"
+            echo "| 2 | Referential Integrity | \`referential-integrity\` |"
+            echo "| 3 | Strategy Alignment | \`strategy-alignment\` |"
+            echo "| 4 | Principles Alignment | \`principles-alignment\` |"
+            echo "| 5 | Guardrails Alignment | \`guardrails-alignment\` |"
+            echo "| 6 | Proponent Analysis | \`proponent-analysis\` |"
+            echo "| 7 | Challenger Analysis | \`challenger-analysis\` |"
+            echo ""
+            echo "### Run details"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Decision | \`${{ inputs.decision-id }}\` |"
+            echo "| Client / Version | \`${{ inputs.client-id }}\` / \`${{ inputs.version-id }}\` |"
+            echo "| Model | \`${{ inputs.model }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   impact-assessment:
+    needs: pipeline-summary
     uses: ./.github/workflows/decisions-claude-step.yml
     with:
       analysis-name: "Impact Assessment"
