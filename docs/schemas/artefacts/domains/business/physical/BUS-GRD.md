@@ -1,4 +1,4 @@
-# BUS-GRD — Business Guardrails Catalogue
+# BUS-GRD — Business Architecture Guardrails Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/business/physical/BUS-GRD.json`](../../../../../../config/schemas/artefacts/domains/business/physical/BUS-GRD.json)
 **Architecture Domain / Layer:** Business / Physical

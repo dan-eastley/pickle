@@ -1,0 +1,69 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-STR-PRN",
+    "title": "Application Architecture Strategy ↔ Principles Matrix",
+    "description": "Many-to-many mapping between Application Architecture Strategy (APP-STR) statements and Application Architecture Principles (APP-PRN) — showing which principles operationalise which strategic intents.",
+    "meta": {
+        "domain": "application",
+        "abstraction": "logical",
+        "format": "matrix",
+        "description": "Maps each Application Architecture Strategy statement to the Architecture Principles that operationalise it.",
+        "purpose": [
+            "Shows which principles exist to deliver which strategic intents, and surfaces strategies with no supporting principles",
+            "Supports impact analysis — if a strategy changes, which principles need review?",
+            "Provides traceability from strategic intent (the why) through to design guidance (the how)"
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "APP-STR",
+                "array": "strategies",
+                "idField": "id",
+                "tooltipField": "statement"
+            },
+            "rows": {
+                "artefact": "APP-PRN",
+                "array": "principles",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "statement"
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "relationships"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "relationships": {
+            "type": "array",
+            "description": "Sparse list of required mappings between APP-STR (columns) and APP-PRN (rows). Presence of an entry means the principle is required to operationalise the strategy; absence means no required relationship.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
+                "properties": {
+                    "column-id": {
+                        "type": "string",
+                        "description": "ID of the APP-STR strategy (column)"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "ID of the APP-PRN principle (row)"
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "description": "Why this relationship exists"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

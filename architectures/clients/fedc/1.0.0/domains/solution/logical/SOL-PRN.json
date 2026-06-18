@@ -1,0 +1,71 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-PRN",
+    "principles": [
+        {
+            "id": "SOL-PRN-001",
+            "name": "Cross-functional teams own end-to-end",
+            "statement": "A single team owns the solution from design through operation; handovers between build and run teams are exceptions",
+            "rationale": "Ownership separation between build and run is the root cause of unaddressed operability debt",
+            "implications": [
+                "The team that builds operates",
+                "On-call responsibility is part of the build team's remit",
+                "Operability is a build-time concern, not a hand-off concern"
+            ]
+        },
+        {
+            "id": "SOL-PRN-002",
+            "name": "Architecture review gates cross-domain solutions",
+            "statement": "Solutions touching more than one architecture domain require Architecture Council sign-off before commitment",
+            "rationale": "Cross-domain risk is invisible to single-domain reviewers; the only place to surface it is at the cross-domain forum",
+            "implications": [
+                "Commitment gate in the PMO checklist",
+                "Architecture Council membership represents all five domains",
+                "Council decisions are recorded as ADRs"
+            ]
+        },
+        {
+            "id": "SOL-PRN-003",
+            "name": "Decisions are recorded as ADRs",
+            "statement": "Material architecture decisions are captured as Architecture Decision Records and stored alongside the solution",
+            "rationale": "Undocumented decisions are re-litigated repeatedly and reverse-engineered painfully",
+            "implications": [
+                "Every solution carries at least the headline ADRs in its repository",
+                "ADRs precede implementation of the affected decision",
+                "Status, context, decision, and consequence are all captured"
+            ]
+        },
+        {
+            "id": "SOL-PRN-004",
+            "name": "Reference patterns first",
+            "statement": "Solution architects search the existing solution-pattern catalogue before commissioning anything bespoke",
+            "rationale": "Bespoke solutions multiply the maintenance estate and drift away from common patterns over time",
+            "implications": [
+                "Reuse search is documented before architecture review",
+                "Architecture review rejects designs that duplicate an existing pattern without justification",
+                "The pattern catalogue is curated, not just collected"
+            ]
+        },
+        {
+            "id": "SOL-PRN-005",
+            "name": "Production readiness is a design quality",
+            "statement": "Operability, observability, and security are designed into the solution from the start",
+            "rationale": "Retro-fitting these qualities is expensive and frequently incomplete",
+            "implications": [
+                "A \"production-readiness checklist\" exists and is signed off pre-release",
+                "No release without baseline observability",
+                "Disaster recovery and security posture are tested before go-live"
+            ]
+        },
+        {
+            "id": "SOL-PRN-006",
+            "name": "SLOs per service, error budgets for change",
+            "statement": "Every service has an SLO; change pace is gated by remaining error budget",
+            "rationale": "Without explicit reliability targets, change is the dominant cause of incidents",
+            "implications": [
+                "SLOs published per service alongside the contract",
+                "Error-budget burn pauses non-critical change",
+                "Reliability is an ongoing investment, not a one-off project"
+            ]
+        }
+    ]
+}

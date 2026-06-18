@@ -1,4 +1,4 @@
-# BUS-PRN — Business Principles Catalogue
+# BUS-PRN — Business Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/business/logical/BUS-PRN.json`](../../../../../../config/schemas/artefacts/domains/business/logical/BUS-PRN.json)
 **Architecture Domain / Layer:** Business / Logical

@@ -1,4 +1,4 @@
-# INT-GRD — Integration Guardrails Catalogue
+# INT-GRD — Integration Architecture Guardrails Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/integration/physical/INT-GRD.json`](../../../../../../config/schemas/artefacts/domains/integration/physical/INT-GRD.json)
 **Architecture Domain / Layer:** Integration / Physical
