@@ -1,4 +1,4 @@
-# SOL-STR — Solution Strategy Catalogue
+# SOL-STR — Solution Architecture Strategy Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/solution/conceptual/SOL-STR.json`](../../../../../../config/schemas/artefacts/domains/solution/conceptual/SOL-STR.json)
 **Architecture Domain / Layer:** Solution / Conceptual

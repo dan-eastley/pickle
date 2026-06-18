@@ -1,5 +1,8 @@
-import { Link } from 'react-router-dom'
 import { LayersThree01, GitBranch01, CpuChip01 } from '@untitled-ui/icons-react'
+import { DOMAINS } from '../lib/artefacts'
+import DomainIcon from '../components/ui/DomainIcon'
+import Button from '../components/ui/Button'
+import { ArrowRight, CheckIcon } from '../components/ui/icons'
 
 const FEATURE_CARDS = [
   {
@@ -19,7 +22,7 @@ const FEATURE_CARDS = [
     title: 'Agentic AI Architecture',
     what: 'AI agents that actively participate in the process — analysing and validating changes alongside your architects.',
     points: [
-      'Every decision is analysed across six dimensions: strategy, principles, integrity, review, proponent and challenger',
+      'Every decision is analysed across seven dimensions before it reaches a human',
       'Agents surface conflicts and gaps before a change reaches the review board',
       'Analysis is structured and traceable — not free-form commentary',
       'The human stays in the loop — AI informs, architects decide',
@@ -34,73 +37,230 @@ const FEATURE_CARDS = [
       'Every change must be justified in an Architecture Decision Record',
       'ADRs capture intent, rationale, and analysis — not just the change',
       'Git history provides an immutable audit trail of every decision',
-      'Guardrails and principles are codified, not just documented',
+      'Strategy, principles and guardrails are codified, not just documented',
     ],
     usp: 'Pickle combines the rigour of decision records with the practicality of pull requests — governance that developers and architects can both live with.',
   },
 ]
 
+// The seven analysis steps that run, in order, when a decision is proposed.
+// Layer badges on the three alignment steps reinforce the meta model:
+// Strategy / Principles / Guardrails ↔ Conceptual / Logical / Physical.
+const ANALYSIS_DIMENSIONS = [
+  {
+    n: '01', name: 'Impact Assessment',
+    question: 'What does this change actually touch?',
+    text: 'Identifies the artefacts, domains and abstraction layers affected — the full blast radius of the decision.',
+  },
+  {
+    n: '02', name: 'Referential Integrity',
+    question: 'Does the model stay consistent?',
+    text: 'Checks every reference, ID and index the change relies on, so the architecture model never silently breaks.',
+  },
+  {
+    n: '03', name: 'Strategy Alignment', layer: 'Conceptual',
+    question: 'Does it serve the strategy?',
+    text: 'Tests the decision against each affected domain’s documented strategic goals — the what and why.',
+  },
+  {
+    n: '04', name: 'Principles Alignment', layer: 'Logical',
+    question: 'Does it follow the principles?',
+    text: 'Assesses the decision against the architecture principles that guide how design choices are made.',
+  },
+  {
+    n: '05', name: 'Guardrails Alignment', layer: 'Physical',
+    question: 'Does it stay inside the guardrails?',
+    text: 'Verifies compliance with each domain’s non-negotiable rules and minimum standards. A breach is a blocking issue.',
+  },
+  {
+    n: '06', name: 'Proponent Analysis',
+    question: 'What is the strongest case for?',
+    text: 'An agent argues for the change at its best — benefits, opportunities, and the cost of not acting.',
+  },
+  {
+    n: '07', name: 'Challenger Analysis',
+    question: 'What is the strongest case against?',
+    text: 'A second agent stress-tests the change — risks, gaps and unstated assumptions — before a human ever has to.',
+  },
+]
+
+const LAYER_BADGES = {
+  Conceptual: 'bg-blue-100 text-blue-700',
+  Logical:    'bg-amber-100 text-amber-700',
+  Physical:   'bg-rose-100 text-rose-700',
+}
+
+function Hero() {
+  return (
+    <section className="border-b border-gray-200 bg-gray-50 px-6 py-20 text-center">
+      <h1 className="text-4xl font-bold tracking-tight text-gray-900 uppercase">Pickle</h1>
+      <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
+      <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
+        Enterprise architecture as structured, version-controlled data — with AI agents that analyse
+        every proposed change and a decision-record workflow that keeps humans in charge.
+      </p>
+      <div className="mt-8 flex items-center justify-center gap-3">
+        <Button to="/clients" size="lg">
+          View Clients
+          <ArrowRight className="w-4 h-4" />
+        </Button>
+        <Button to="/docs" variant="secondary" size="lg">
+          Read the Docs
+        </Button>
+      </div>
+
+      {/* Meta-model strip — five domains, three layers */}
+      <div className="mt-12 max-w-2xl mx-auto">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          Five architecture domains · Three abstraction layers
+        </p>
+        <div className="mt-4 flex items-center justify-center gap-x-8 gap-y-3 flex-wrap">
+          {DOMAINS.map(d => (
+            <span key={d.id} className="flex items-center gap-2 text-sm text-gray-500">
+              <DomainIcon domain={d.id} className="w-4 h-4 text-gray-400" />
+              {d.name}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function FeatureCards() {
+  return (
+    <section className="max-w-[1400px] mx-auto px-6 py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {FEATURE_CARDS.map(card => {
+          const Icon = card.icon
+          return (
+            <div key={card.title} className="bg-white border-l-4 border-brand-600 flex flex-col">
+              {/* Header */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="w-10 h-10 bg-brand-50 flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5 text-brand-600" />
+                </div>
+                <h3 className="text-base font-bold text-gray-900 mb-2">{card.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{card.what}</p>
+              </div>
+
+              {/* Points */}
+              <ul className="p-6 space-y-2 flex-1">
+                {card.points.map((point, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="mt-1.5 w-1.5 h-1.5 bg-brand-400 flex-shrink-0" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+
+              {/* USP */}
+              <div className="px-6 pb-6">
+                <div className="bg-brand-50 border-l-2 border-brand-500 px-4 py-3">
+                  <p className="text-sm font-semibold text-brand-700 leading-snug">{card.usp}</p>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+function SevenDimensions() {
+  return (
+    <section className="border-y border-gray-200 bg-white">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+            The analysis pipeline
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Every decision, analysed across seven dimensions
+          </h2>
+          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+            When a decision is proposed, seven AI analysis steps run in sequence against the current
+            architecture state. Each one writes structured findings — finding, impact, recommendation
+            and rationale — into the Decision Record, for architects to accept or decline.
+            Nothing merges until a human says so.
+          </p>
+        </div>
+
+        {/* Pipeline cards — numbered, in execution order */}
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {ANALYSIS_DIMENSIONS.map(dim => (
+            <div key={dim.n} className="border border-gray-200 border-t-2 border-t-brand-600 bg-white p-5">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-mono text-gray-300">{dim.n}</span>
+                {dim.layer && (
+                  <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[dim.layer]}`}>
+                    {dim.layer}
+                  </span>
+                )}
+              </div>
+              <h3 className="text-sm font-bold text-gray-900">{dim.name}</h3>
+              <p className="mt-1 text-xs font-medium text-brand-600">{dim.question}</p>
+              <p className="mt-2 text-xs text-gray-500 leading-relaxed">{dim.text}</p>
+            </div>
+          ))}
+
+          {/* Eighth tile — the human gate that closes the pipeline */}
+          <div className="border border-dashed border-gray-300 bg-gray-50 p-5 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-6 h-6 bg-gray-800 text-white flex items-center justify-center">
+                <CheckIcon className="w-3 h-3" />
+              </span>
+              <h3 className="text-sm font-bold text-gray-900">Human review</h3>
+            </div>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Architects review every finding, then accept, reject or return the decision.
+              AI informs — people decide.
+            </p>
+          </div>
+        </div>
+
+        {/* Meta-model note — ties the three alignment steps to the layers */}
+        <div className="mt-8 bg-gray-50 border-l-2 border-gray-300 px-5 py-4 max-w-3xl">
+          <p className="text-sm text-gray-600 leading-relaxed">
+            <span className="font-semibold text-gray-900">Strategy, Principles and Guardrails</span> are
+            the three foundation artefacts every domain carries — one per abstraction layer
+            (Conceptual, Logical, Physical). The matching analysis steps test every decision against
+            all three, in every domain it touches.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ClosingCta() {
+  return (
+    <section className="px-6 py-16 text-center">
+      <h2 className="text-xl font-bold text-gray-900">See it in action</h2>
+      <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
+        Browse a worked client architecture, or read the docs to understand the model behind it.
+      </p>
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <Button to="/clients" size="lg">
+          View Clients
+          <ArrowRight className="w-4 h-4" />
+        </Button>
+        <Button to="/docs" variant="secondary" size="lg">
+          Read the Docs
+        </Button>
+      </div>
+    </section>
+  )
+}
+
 export default function HomePage() {
   return (
     <div>
-      {/* Hero */}
-      <section className="border-b border-gray-200 bg-gray-50 px-6 py-20 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 uppercase">Pickle</h1>
-        <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
-        <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
-          A structured, version-controlled approach to enterprise architecture. Capture decisions,
-          browse architecture state, and let AI help you assess the impact of every change.
-        </p>
-        <div className="mt-8">
-          <Link
-            to="/clients"
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors"
-          >
-            View Clients
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-
-      {/* Feature cards */}
-      <section className="max-w-[1400px] mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {FEATURE_CARDS.map(card => {
-            const Icon = card.icon
-            return (
-              <div key={card.title} className="bg-white border-l-4 border-brand-600 flex flex-col">
-                {/* Header */}
-                <div className="p-6 border-b border-gray-100">
-                  <div className="w-10 h-10 bg-brand-50 flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-brand-600" />
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-2">{card.title}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{card.what}</p>
-                </div>
-
-                {/* Points */}
-                <ul className="p-6 space-y-2 flex-1">
-                  {card.points.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="mt-1.5 w-1.5 h-1.5 bg-brand-400 flex-shrink-0" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* USP */}
-                <div className="px-6 pb-6">
-                  <div className="bg-brand-50 border-l-2 border-brand-500 px-4 py-3">
-                    <p className="text-sm font-semibold text-brand-700 leading-snug">{card.usp}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </section>
+      <Hero />
+      <FeatureCards />
+      <SevenDimensions />
+      <ClosingCta />
     </div>
   )
 }

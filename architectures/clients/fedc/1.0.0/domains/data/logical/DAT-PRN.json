@@ -1,0 +1,71 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:data:logical:DAT-PRN",
+    "principles": [
+        {
+            "id": "DAT-PRN-001",
+            "name": "Every data domain has an owner",
+            "statement": "Each data domain in DAT-DAC has a single accountable steward responsible for definitions, quality, and lifecycle",
+            "rationale": "Unowned data drifts in quality and meaning; ownership is the precondition for everything else in data governance",
+            "implications": [
+                "A new data domain cannot be published without a named owner",
+                "Disputes over definitions are resolved by the steward, not by committee",
+                "Owner accountability is reflected in operational performance reviews"
+            ]
+        },
+        {
+            "id": "DAT-PRN-002",
+            "name": "Define once, use everywhere",
+            "statement": "Each concept has a single canonical definition in DAT-DAC; downstream models reference it rather than re-defining",
+            "rationale": "Parallel definitions create silent divergence and undermine trust in cross-domain analysis",
+            "implications": [
+                "A new concept must be reviewed against existing definitions before introduction",
+                "Data products that diverge from the canonical definition must declare it explicitly",
+                "Aliases are captured on the canonical concept, not as separate concepts"
+            ]
+        },
+        {
+            "id": "DAT-PRN-003",
+            "name": "Quality is a producer responsibility",
+            "statement": "The team producing a data asset is accountable for its quality; consumers should not need to re-cleanse routinely",
+            "rationale": "Cleansing at point of consumption multiplies effort and produces silent variants",
+            "implications": [
+                "Quality SLAs are part of the data product's contract",
+                "Quality issues are routed to the producer team, not absorbed by analytics",
+                "Producer instrumentation includes quality metrics, not just volume"
+            ]
+        },
+        {
+            "id": "DAT-PRN-004",
+            "name": "Privacy by design",
+            "statement": "Personal data is classified, consent-tracked, and access-controlled from the moment of capture",
+            "rationale": "Retrofitting privacy onto established data flows is expensive, fragile, and incomplete",
+            "implications": [
+                "Personal-data fields are classified at concept definition, not later",
+                "Access rules enforce consent at query time",
+                "Anonymisation is a designed transform, not an afterthought"
+            ]
+        },
+        {
+            "id": "DAT-PRN-005",
+            "name": "Open contracts, open standards",
+            "statement": "Data products expose stable, versioned, machine-readable contracts; proprietary or undocumented formats are last-resort",
+            "rationale": "Lock-in to bespoke formats undermines reuse, vendor portability, and ecosystem integration",
+            "implications": [
+                "JSON Schema / Avro / Parquet preferred for serialised data",
+                "API contracts published before implementation",
+                "Vendor data exports must conform to a documented schema"
+            ]
+        },
+        {
+            "id": "DAT-PRN-006",
+            "name": "Avoid replicating canonical data",
+            "statement": "Copies of canonical data are minimised; where they exist, they are explicit, expiring, and traceable to source",
+            "rationale": "Replication multiplies governance surface area and creates undetected divergence",
+            "implications": [
+                "A new copy of canonical data requires justification and an expiry plan",
+                "Caches and materialised views are flagged as derivations of a primary source",
+                "Sync mechanisms include reconciliation, not just propagation"
+            ]
+        }
+    ]
+}

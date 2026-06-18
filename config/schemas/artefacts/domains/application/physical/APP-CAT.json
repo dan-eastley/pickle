@@ -1,0 +1,92 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:physical:APP-CAT",
+    "title": "Application Catalogue",
+    "description": "Catalogue of physical application products deployed across the estate — the concrete vendor products that realise the logical platforms defined in the Application Domains & Platforms Catalogue (APP-DAP).",
+    "meta": {
+        "domain": "application",
+        "abstraction": "physical",
+        "format": "catalogue",
+        "description": "The physical applications (vendor products) deployed across the organisation, with their lifecycle status and TIME classification.",
+        "purpose": [
+            "Records the real-world products and vendors that implement the logical application landscape",
+            "Tracks each application's deployment status from planning through to retirement",
+            "Classifies each application using the TIME model (Invest, Maintain, Tolerate, Eliminate) to guide investment decisions",
+            "Provides the physical-layer counterpart to APP-DAP, mapped via the Application Domains & Platforms ↔ Application Catalogue matrix (APP-DAP-CAT)"
+        ],
+        "countLabels": {
+            "singular": "Application",
+            "plural": "Applications"
+        }
+    },
+    "type": "object",
+    "required": [
+        "applications"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "applications": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "vendor",
+                    "product",
+                    "status",
+                    "lifecycle-stage"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Unique identifier (e.g. APP-CAT-001)"
+                    },
+                    "vendor": {
+                        "type": "string",
+                        "description": "The company that supplies the product"
+                    },
+                    "product": {
+                        "type": "string",
+                        "description": "Official product name"
+                    },
+                    "aliases": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Other names this product is known by — former names, internal nicknames, or suite names"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "planned",
+                            "in-development",
+                            "live",
+                            "deprecated",
+                            "retired"
+                        ],
+                        "description": "Current deployment status of this application"
+                    },
+                    "lifecycle-stage": {
+                        "type": "string",
+                        "enum": [
+                            "invest",
+                            "maintain",
+                            "tolerate",
+                            "eliminate"
+                        ],
+                        "description": "TIME model classification — the investment posture for this application"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}
