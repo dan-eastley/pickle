@@ -1,6 +1,7 @@
 import { LayersThree01, GitBranch01, CpuChip01 } from '@untitled-ui/icons-react'
-import { DOMAINS } from '../lib/artefacts'
+import { DOMAINS, ABSTRACTIONS, FORMATS, DOMAIN_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
+import FormatIcon from '../components/ui/FormatIcon'
 import Button from '../components/ui/Button'
 import { ArrowRight, CheckIcon } from '../components/ui/icons'
 
@@ -168,6 +169,108 @@ function FeatureCards() {
   )
 }
 
+const ABSTRACTION_META = {
+  conceptual: { label: 'Conceptual', sub: 'The what & why', desc: 'Sets direction and intent — what the architecture needs to achieve and why, without any technology choices.', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', accent: 'border-l-blue-500' },
+  logical:    { label: 'Logical',    sub: 'The how',         desc: 'Defines the rules and principles that guide design decisions, without committing to any specific tool or product.', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', accent: 'border-l-amber-500' },
+  physical:   { label: 'Physical',   sub: 'The where & with what', desc: 'Specifies the concrete standards and technology decisions that govern how the architecture is built and operated.', bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', accent: 'border-l-rose-500' },
+}
+
+const FORMAT_META = {
+  catalogue: { desc: 'A structured list of architecture entities of a single type — capabilities, processes, applications. Hierarchical, machine-readable, schema-validated.' },
+  diagram:   { desc: 'A visual representation of entities and their relationships — capability models, process flows, wiring diagrams. Derived from catalogue content and rendered by the UI.' },
+  document:  { desc: 'Structured narrative content with multiple named instances — vision documents, solution designs, interface specifications. Sections follow the JSON schema structure.' },
+  matrix:    { desc: 'A grid mapping relationships between two sets of entities — capabilities to platforms, interfaces to data concepts. Spans abstraction layers and domains.' },
+}
+
+function ArchitectureModel() {
+  return (
+    <section className="border-b border-gray-200 bg-white">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+
+        {/* Section header */}
+        <div className="max-w-3xl mb-12">
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+            The architecture model
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Five domains · Three abstraction layers · Four output formats
+          </h2>
+          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+            Every piece of architecture content in Pickle sits at the intersection of these three axes.
+            Domain answers <em>which part of the organisation</em>, abstraction layer answers <em>how much detail</em>,
+            and format answers <em>what kind of content</em>.
+          </p>
+        </div>
+
+        {/* Domains */}
+        <div className="mb-12">
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Architecture Domains</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {DOMAINS.map(domain => {
+              const colors = DOMAIN_COLORS[domain.id]
+              return (
+                <div key={domain.id} className={`border border-gray-200 border-l-4 bg-white p-5 flex flex-col gap-3 ${colors?.accent ?? 'border-l-gray-400'}`}>
+                  <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}>
+                    <DomainIcon domain={domain.id} className={`w-4 h-4 ${colors?.text ?? 'text-gray-500'}`} />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-gray-900">{domain.name}</div>
+                    <div className={`text-xs font-mono mt-0.5 ${colors?.text ?? 'text-gray-400'}`}>{domain.acronym}-*</div>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-relaxed flex-1">{domain.description}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Abstraction Layers */}
+        <div className="mb-12">
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Abstraction Layers</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {ABSTRACTIONS.map(layer => {
+              const m = ABSTRACTION_META[layer.id]
+              return (
+                <div key={layer.id} className={`border ${m.border} border-l-4 ${m.accent} p-5 ${m.bg}`}>
+                  <div className={`text-sm font-bold ${m.text}`}>{m.label}</div>
+                  <div className="text-xs text-gray-500 font-medium mt-0.5">{m.sub}</div>
+                  <p className="mt-3 text-xs text-gray-600 leading-relaxed">{m.desc}</p>
+                </div>
+              )
+            })}
+          </div>
+          <p className="mt-3 text-xs text-gray-400 leading-relaxed">
+            Layers are progressive — Logical artefacts build on Conceptual ones; Physical artefacts make Logical ones concrete.
+            Relationships that cross layers are captured in <strong>Matrix</strong> artefact types.
+          </p>
+        </div>
+
+        {/* Output Formats */}
+        <div>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Output Formats</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {FORMATS.map(fmt => {
+              const m = FORMAT_META[fmt.id]
+              return (
+                <div key={fmt.id} className="border border-gray-200 bg-white p-5 flex flex-col gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center bg-brand-50 flex-shrink-0">
+                    <FormatIcon format={fmt.id} className="w-4 h-4 text-brand-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-gray-900">{fmt.label}</div>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-relaxed flex-1">{m.desc}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+      </div>
+    </section>
+  )
+}
+
 function SevenDimensions() {
   return (
     <section className="border-y border-gray-200 bg-white">
@@ -259,6 +362,7 @@ export default function HomePage() {
     <div>
       <Hero />
       <FeatureCards />
+      <ArchitectureModel />
       <SevenDimensions />
       <ClosingCta />
     </div>

@@ -1,34 +1,12 @@
 # Documentation
 
-Start here to understand how Pickle works, how the architecture model is structured, and what each artefact type represents.
+Reference documentation for the Pickle architecture model — schemas, data structures, and automated workflows.
 
-## Architecture Model
-
-| Topic | Description |
-|---|---|
-| [Architecture Domains](domains.md) | The five domains the architecture is organised into: Business, Data, Integration, Application, and Solution |
-| [Abstraction Layers](abstraction-layers.md) | The three levels of detail each domain is modelled at: Conceptual, Logical, and Physical |
-| [Output Formats](output-formats.md) | The three types of artefact: Catalogue, Matrix, and Diagram |
-| [Artefact Types](artefacts.md) | The full list of defined artefact types and how each is classified |
+For an overview of the five architecture domains, three abstraction layers, and four output formats, see the [homepage](/).
 
 ## Schemas
 
-The [schemas/](schemas/) section documents the data structure behind each artefact type — what fields it contains, what values are valid, and how they relate to industry standards.
-
-| Schema | Documentation |
-|---|---|
-| Clients | [schemas/clients.md](schemas/clients.md) |
-| Versions | [schemas/versions.md](schemas/versions.md) |
-| Decisions | [schemas/decisions.md](schemas/decisions.md) |
-| Strategy / Principles / Guardrails | see [schemas/index.md](schemas/index.md) |
-| BUS-CAP | [schemas/artefacts/domains/business/conceptual/BUS-CAP.md](schemas/artefacts/domains/business/conceptual/BUS-CAP.md) |
-| BUS-BCM | [schemas/artefacts/domains/business/conceptual/BUS-BCM.md](schemas/artefacts/domains/business/conceptual/BUS-BCM.md) |
-| BUS-PRO | [schemas/artefacts/domains/business/conceptual/BUS-PRO.md](schemas/artefacts/domains/business/conceptual/BUS-PRO.md) |
-| BUS-BPM | [schemas/artefacts/domains/business/conceptual/BUS-BPM.md](schemas/artefacts/domains/business/conceptual/BUS-BPM.md) |
-| DAT-DAC | [schemas/artefacts/domains/data/conceptual/DAT-DAC.md](schemas/artefacts/domains/data/conceptual/DAT-DAC.md) |
-| DAT-CDM | [schemas/artefacts/domains/data/conceptual/DAT-CDM.md](schemas/artefacts/domains/data/conceptual/DAT-CDM.md) |
-| APP-DAP | [schemas/artefacts/domains/application/logical/APP-DAP.md](schemas/artefacts/domains/application/logical/APP-DAP.md) |
-| APP-DPM | [schemas/artefacts/domains/application/logical/APP-DPM.md](schemas/artefacts/domains/application/logical/APP-DPM.md) |
+The [schemas/](schemas/) section documents the data structure behind every artefact type — fields, valid values, industry alignment, and worked examples. Start at the [schemas overview](schemas/index.md) for the full index.
 
 ## Workflows
 
