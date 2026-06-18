@@ -10,17 +10,25 @@
         "description": "A hierarchical catalogue of what the organisation does, structured by capability area and sub-capability.",
         "purpose": [
             "Provides a stable, technology-independent view of the business that survives reorganisations",
-            "Enables capability-based planning — investment follows what the business does, not how it is structured",
+            "Enables capability-based planning \u2014 investment follows what the business does, not how it is structured",
             "Serves as the mapping anchor between business intent and application and data architecture",
             "Supports maturity assessment to identify where to invest and where to improve",
             "Reduces duplication by making overlapping capabilities visible"
-        ]
+        ],
+        "countLabels": {
+            "level1": "Level 1",
+            "level2": "Level 2"
+        }
     },
     "type": "object",
     "required": [
         "capabilities"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "capabilities": {
             "type": "array",
             "items": {
@@ -45,7 +53,7 @@
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 3,
-                        "description": "Capability level — 1 (highest, e.g. Manage Customer) to 3 (most granular)"
+                        "description": "Capability level \u2014 1 (highest, e.g. Manage Customer) to 3 (most granular)"
                     },
                     "parent-id": {
                         "type": "string",
@@ -62,7 +70,7 @@
                             "differentiating",
                             "foundational"
                         ],
-                        "description": "Strategic importance — strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
+                        "description": "Strategic importance \u2014 strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
                     },
                     "maturity-current": {
                         "$ref": "#/$defs/maturity",

@@ -2,23 +2,24 @@ import { Link, useParams } from 'react-router-dom'
 import { DOMAINS, DOMAIN_COLORS, getArtefactsForDomain } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
+import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-// Per-domain accent border colours (solid, not the -50 tint)
-const DOMAIN_ACCENT = {
-  business:    'border-violet-400',
-  data:        'border-blue-400',
-  integration: 'border-emerald-400',
-  application: 'border-amber-400',
-  solution:    'border-rose-400',
-}
 
 function DomainCard({ domain, base }) {
   const colors = DOMAIN_COLORS[domain.id]
-  const accent = DOMAIN_ACCENT[domain.id]
+  const accent = colors.accent
   const artefacts = getArtefactsForDomain(domain.id)
   const catalogues = artefacts.filter(a => a.format === 'catalogue').length
-  const diagrams = artefacts.filter(a => a.format === 'diagram').length
+  const diagrams   = artefacts.filter(a => a.format === 'diagram').length
+  const matrices   = artefacts.filter(a => a.format === 'matrix').length
+  const documents  = artefacts.filter(a => a.format === 'document').length
+
+  const counts = [
+    { format: 'catalogue', n: catalogues, label: 'Catalogue' },
+    { format: 'diagram',   n: diagrams,   label: 'Diagram' },
+    { format: 'matrix',    n: matrices,   label: 'Matrix', plural: 'Matrices' },
+    { format: 'document',  n: documents,  label: 'Document' },
+  ]
 
   return (
     <Link
@@ -35,22 +36,16 @@ function DomainCard({ domain, base }) {
           {domain.name} Architecture
         </h3>
         <p className="mt-1 text-sm text-gray-500 leading-relaxed line-clamp-2">{domain.description}</p>
-        <div className="mt-3 flex items-center gap-3 text-xs text-gray-400">
-          <span className="flex items-center gap-1">
-            <FormatIcon format="catalogue" className="w-3.5 h-3.5" />
-            {catalogues} {catalogues === 1 ? 'catalogue' : 'catalogues'}
-          </span>
-          {diagrams > 0 && (
-            <span className="flex items-center gap-1">
-              <FormatIcon format="diagram" className="w-3.5 h-3.5" />
-              {diagrams} {diagrams === 1 ? 'diagram' : 'diagrams'}
+        <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
+          {counts.map(({ format, n, label, plural }) => (
+            <span key={format} className="flex items-center gap-1 text-xs text-gray-400">
+              <FormatIcon format={format} className="w-3.5 h-3.5" />
+              {n} {n === 1 ? label : (plural ?? label + 's')}
             </span>
-          )}
+          ))}
         </div>
       </div>
-      <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" viewBox="0 0 16 16" fill="none">
-        <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-      </svg>
+      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" />
     </Link>
   )
 }

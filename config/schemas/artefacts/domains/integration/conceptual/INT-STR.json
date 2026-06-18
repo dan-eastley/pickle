@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:integration:conceptual:INT-STR",
-    "title": "Integration Strategy Catalogue",
-    "description": "Catalogue of strategic statements for the Integration architecture domain — the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
+    "title": "Integration Architecture Strategy Catalogue",
+    "description": "Catalogue of strategic statements for the Integration architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "integration",
         "abstraction": "conceptual",
@@ -14,13 +14,21 @@
             "Aligns API and event design with broader technology and business strategy",
             "Provides the anchor for integration principles and guardrail decisions",
             "Enables assessment of whether proposed integration patterns serve the strategy"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Statement",
+            "plural": "Statements"
+        }
     },
     "type": "object",
     "required": [
         "strategies"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "strategies": {
             "type": "array",
             "items": {
@@ -36,7 +44,7 @@
                     },
                     "statement": {
                         "type": "string",
-                        "description": "Strategic statement — outcome-oriented, time-bound where appropriate"
+                        "description": "Strategic statement \u2014 outcome-oriented, time-bound where appropriate"
                     },
                     "driver": {
                         "type": "string",

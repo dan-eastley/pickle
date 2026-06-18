@@ -72,7 +72,7 @@ For full context on the architecture model — architecture domains, abstraction
 │       ├── index.md
 │       ├── validate-{branch,merge,schema}.md
 │       ├── create-{pull-request,release}.md
-│       └── decisions-pipeline.md   # Covers all decisions-* workflows
+│       └── decisions-analysis.md   # Covers all decisions-* workflows
 │
 ├── architectures/                  # Architecture state
 │   ├── clients/                    # Per-client architecture, versioned by release
@@ -82,16 +82,15 @@ For full context on the architecture model — architecture domains, abstraction
 │   │       ├── versions.json       # Index of versions for this client (IDs only)
 │   │       └── <version>/
 │   │           ├── version.json    # Version metadata (id, name, status, description)
-│   │           ├── artefacts/
-│   │           │   └── domains/
-│   │           │       ├── business/{conceptual,logical,physical}/
-│   │           │       │   └── <ARTEFACT-ID>/    # one folder per artefact type (e.g. BUS-CAP/)
-│   │           │       ├── data/{conceptual,logical,physical}/
-│   │           │       │   └── <ARTEFACT-ID>/
-│   │           │       ├── integration/{conceptual,logical,physical}/
-│   │           │       ├── application/{conceptual,logical,physical}/
-│   │           │       │   └── <ARTEFACT-ID>/
-│   │           │       └── solution/{conceptual,logical,physical}/
+│   │           ├── domains/
+│   │           │   ├── business/{conceptual,logical,physical}/
+│   │           │   │   └── <ARTEFACT-ID>.json   # one file per artefact type (e.g. BUS-CAP.json)
+│   │           │   ├── data/{conceptual,logical,physical}/
+│   │           │   │   └── <ARTEFACT-ID>.json
+│   │           │   ├── integration/{conceptual,logical,physical}/
+│   │           │   ├── application/{conceptual,logical,physical}/
+│   │           │   │   └── <ARTEFACT-ID>.json
+│   │           │   └── solution/{conceptual,logical,physical}/
 │   │           └── decisions/
 │   │               ├── decisions.json          # Index of decision IDs for this version
 │   │               └── <decision-id>/          # One folder per ADR (id form: adr-NNN)
@@ -101,7 +100,7 @@ For full context on the architecture model — architecture domains, abstraction
 └── CLAUDE.md                       # This file
 ```
 
-The `config/schemas/` and `architectures/clients/<client>/<version>/` trees deliberately mirror each other — schema and instance for the same artefact type share a relative path.
+The `config/schemas/artefacts/domains/` tree mirrors `architectures/clients/<client>/<version>/domains/` — schema and instance for the same artefact type share a relative path under those roots (e.g. `config/schemas/artefacts/domains/business/conceptual/BUS-CAP.json` ↔ `architectures/clients/<client>/<version>/domains/business/conceptual/BUS-CAP.json`).
 
 ---
 
@@ -129,9 +128,8 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ## Standards & Conventions
 
 ### File Naming
-- Artefact-type folders: named with the artefact-type ID (e.g. `BUS-CAP/`, `DAT-DAC/`, `APP-DAP/`)
 - Catalogue schemas: named with the artefact-type ID and `.json` suffix (e.g. `BUS-CAP.json`)
-- Catalogue instance files: named with the artefact-type ID inside the artefact-type folder (e.g. `BUS-CAP/BUS-CAP.json`)
+- Catalogue instance files: named with the artefact-type ID and `.json` suffix, at `domains/<domain>/<abstraction>/<ARTEFACT-ID>.json` — mirrors the schema path (e.g. `BUS-CAP.json`)
 - ADR files: `decision.json` inside a folder named after the decision ID (e.g. `adr-001/decision.json`)
 
 ### Branch Naming
@@ -155,11 +153,11 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 - When adding or removing a client/version folder, update the corresponding index file
 
 ### Schema Conventions
-- The `config/schemas/` tree mirrors the `architectures/clients/<client>/<version>/` tree — schema and instance for the same artefact type live at the same relative path
+- The `config/schemas/artefacts/domains/` tree mirrors `architectures/clients/<client>/<version>/domains/` — schema and instance for the same artefact type live at the same relative path
 - Catalogue schemas live at `config/schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.json`
 - Each catalogue schema has a corresponding markdown page in `docs/schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.md`
 - Each catalogue schema includes a `meta` object with `domain`, `abstraction`, and `format` fields
-- Instance data in `architectures/` must conform to the matching schema in `config/schemas/`
+- Instance data in `architectures/` must conform to the matching schema in `config/schemas/`, and references it via a top-level `$schema` field (e.g. `"$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-CAP"`)
 
 ### Artefact Formats
 - Artefact types conform to one of three formats: **Catalogue**, **Diagram**, or **Matrix** (see [`/docs/output-formats.md`](docs/output-formats.md))
@@ -176,12 +174,12 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 
 ### Common Tasks
 - **Add a new artefact type:** See the procedure documented in [`/docs/artefacts.md`](docs/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
-- **Add architecture data for a client:** Create or update instance files inside the relevant artefact-type folder
+- **Add architecture data for a client:** Create or update the `<ARTEFACT-ID>.json` instance file under `domains/<domain>/<abstraction>/`
 - **Raise an ADR:** Create a `decisions/<client-id>/<version-id>/<decision-id>` branch, add the ADR file to the matching `architectures/clients/<client>/<version>/decisions/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `config/schemas/`
 
 ### Things to Preserve
-- The mirroring of `config/schemas/`, `architectures/clients/<client>/<version>/artefacts/`, and `docs/schemas/artefacts/` paths — this is how schemas, instances, and docs are kept in lockstep
+- The mirroring of `config/schemas/artefacts/`, `architectures/clients/<client>/<version>/domains/`, and `docs/schemas/artefacts/` paths — this is how schemas, instances, and docs are kept in lockstep
 - Artefact-type ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the architecture domain
 - Branch naming patterns (`main`, `develop`, `features/...`, `decisions/...`) — enforced by `validate-branch.yml`; other tooling will depend on these
 - The three abstraction layers within each architecture domain — don't flatten or skip levels
