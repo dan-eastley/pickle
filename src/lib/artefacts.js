@@ -200,6 +200,17 @@ export const ARTEFACTS = [
     relatedTo: [{ artefactId: 'SOL-PRN-GRD', relationship: 'informs' }] },
   { id: 'SOL-PRN-GRD', domain: 'solution', abstraction: 'physical', format: 'matrix', key: false, name: 'Solution Architecture Principles ↔ Guardrails', description: 'Maps Solution Architecture Principles to the Guardrails that make them concrete and enforceable.',
     relatedTo: [{ artefactId: 'SOL-PRN', relationship: 'derived-from' }, { artefactId: 'SOL-GRD', relationship: 'derived-from' }] },
+  // Solution — Documents
+  { id: 'SOL-AVI', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Vision(s)',    description: 'One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain. Multiple instances — one per initiative.',
+    relatedTo: [{ artefactId: 'BUS-CAP', relationship: 'informs' }, { artefactId: 'SOL-AIN', relationship: 'informs' }] },
+  { id: 'SOL-AIN', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Intent(s)',   description: 'Structured records of architecture direction before formal ADRs — capturing context, options considered, and the recommended direction. Multiple instances — one per domain or capability area.',
+    relatedTo: [{ artefactId: 'SOL-AVI', relationship: 'derived-from' }, { artefactId: 'SOL-SVI', relationship: 'informs' }] },
+  { id: 'SOL-SVI', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Vision(s)',       description: 'High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative.',
+    relatedTo: [{ artefactId: 'SOL-AIN', relationship: 'derived-from' }, { artefactId: 'SOL-SDE', relationship: 'informs' }, { artefactId: 'APP-DAP', relationship: 'informs' }] },
+  { id: 'SOL-SDE', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Design(s)',       description: 'Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area.',
+    relatedTo: [{ artefactId: 'SOL-SVI', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'informs' }, { artefactId: 'SOL-ISP', relationship: 'informs' }] },
+  { id: 'SOL-ISP', domain: 'solution', abstraction: 'physical',   format: 'document', key: false, name: 'Interface Specification(s)', description: 'Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface.',
+    relatedTo: [{ artefactId: 'SOL-SDE', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'derived-from' }] },
 ]
 
 export const getArtefact = (id) => ARTEFACTS.find(a => a.id === id)

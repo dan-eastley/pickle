@@ -1,0 +1,164 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SVI",
+    "title": "Solution Vision",
+    "description": "A logical-level solution vision document describing the problem, proposed solution, and high-level approach for a specific epic, feature, or initiative.",
+    "meta": {
+        "domain": "solution",
+        "abstraction": "logical",
+        "format": "document",
+        "description": "Solution Vision documents bridge conceptual architecture intent with detailed solution design, scoped to a specific initiative or feature.",
+        "purpose": [
+            "Define the problem being solved and the high-level solution approach",
+            "Identify key platforms, capabilities, assumptions, and risks before detailed design begins"
+        ],
+        "countLabels": {
+            "singular": "Solution Vision",
+            "plural": "Solution Visions"
+        }
+    },
+    "type": "object",
+    "required": ["documents"],
+    "properties": {
+        "$schema": { "type": "string" },
+        "documents": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/document" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "document": {
+            "type": "object",
+            "required": ["id", "title", "description", "status", "scope", "problem-statement", "solution-overview"],
+            "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "status": {
+                    "type": "string",
+                    "enum": ["draft", "in-review", "approved", "superseded"]
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "The epic, feature, or initiative this vision covers"
+                },
+                "executive-summary": {
+                    "type": "string",
+                    "description": "Brief prose summary for stakeholder consumption"
+                },
+                "problem-statement": {
+                    "type": "string",
+                    "description": "Clear articulation of the problem being solved"
+                },
+                "solution-overview": {
+                    "type": "string",
+                    "description": "High-level description of the proposed solution approach"
+                },
+                "key-capabilities": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "BUS-CAP IDs of business capabilities this solution enables or enhances"
+                },
+                "platforms-involved": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "APP-DAP platform IDs involved in this solution (e.g. PLAT-BI)"
+                },
+                "assumptions": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/assumption" }
+                },
+                "risks": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/risk" }
+                },
+                "open-questions": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/open-question" }
+                },
+                "diagrams": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/diagram-ref" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "driver": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["business", "technology", "regulatory", "market"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "constraint": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["technical", "business", "regulatory", "resource"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "assumption": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "risk": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "likelihood": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "impact": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "mitigation": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "open-question": {
+            "type": "object",
+            "required": ["id", "question"],
+            "properties": {
+                "id": { "type": "string" },
+                "question": { "type": "string" },
+                "raised-by": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "diagram-ref": {
+            "type": "object",
+            "required": ["artefact-id"],
+            "properties": {
+                "artefact-id": {
+                    "type": "string",
+                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
+                },
+                "title": { "type": "string" },
+                "caption": { "type": "string" }
+            },
+            "additionalProperties": false
+        }
+    }
+}

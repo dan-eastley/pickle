@@ -1,0 +1,160 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AVI",
+    "documents": [
+        {
+            "id": "AVI-001",
+            "title": "Data & Analytics Vision",
+            "description": "Architecture vision for the Data & Analytics Programme, establishing the strategic direction for self-service analytics, data platform modernisation, and insight-driven operations across fedc.",
+            "status": "approved",
+            "scope": "Data & Analytics Programme — encompassing Oracle Analytics Cloud, Data Lakehouse, and MDM modernisation. Aligned to ADR-013 (Self-Service Analytics for Operational & Commercial Teams).",
+            "executive-summary": "fedc's Data & Analytics Programme establishes an enterprise data platform that democratises access to insight across operational and commercial teams. By consolidating data from Oracle CC&B, MDM, and ERP into a governed Databricks Lakehouse and exposing curated datasets through Oracle Analytics Cloud, the programme eliminates the reliance on centralised IT for report production, accelerates decision-making, and creates a foundation for AI-assisted operations. This vision is aligned to Ofgem's digital reporting obligations and fedc's five-year commercial growth strategy.",
+            "vision-statement": "Every operational and commercial decision at fedc is informed by trusted, timely, self-service analytics drawn from a single governed data platform.",
+            "drivers": [
+                {
+                    "id": "DRV-001",
+                    "description": "Operational teams rely on manual, batch-overnight reports from Oracle CC&B, causing 24-hour lag in key operational metrics such as unread meter counts and failed payment rates.",
+                    "type": "business"
+                },
+                {
+                    "id": "DRV-002",
+                    "description": "Ofgem's evolving digital reporting requirements (including half-hourly settlement and DSR obligations) demand near-real-time data pipelines and auditable data lineage.",
+                    "type": "regulatory"
+                },
+                {
+                    "id": "DRV-003",
+                    "description": "Commercial teams lack reliable cross-system views combining billing data (CC&B), asset data (MDM), and contract data (ERP), limiting pricing and margin analysis.",
+                    "type": "business"
+                },
+                {
+                    "id": "DRV-004",
+                    "description": "Market shift toward AI-assisted grid management and predictive asset maintenance requires a scalable ML-ready data layer.",
+                    "type": "technology"
+                }
+            ],
+            "strategic-objectives": [
+                {
+                    "id": "OBJ-001",
+                    "objective": "Deliver a governed, centralised data lakehouse on Databricks as the single source of truth for enterprise analytics by end of FY2026.",
+                    "linked-capabilities": ["CAP-001", "CAP-004"]
+                },
+                {
+                    "id": "OBJ-002",
+                    "objective": "Enable self-service analytics for at least 200 business users across operational and commercial teams via Oracle Analytics Cloud by Q3 FY2026.",
+                    "linked-capabilities": ["CAP-001", "CAP-004", "CAP-005"]
+                },
+                {
+                    "id": "OBJ-003",
+                    "objective": "Establish event-driven data pipelines from Oracle CC&B and MDM into the lakehouse, reducing data latency from 24 hours to under 15 minutes for critical operational datasets.",
+                    "linked-capabilities": ["CAP-002", "CAP-003"]
+                },
+                {
+                    "id": "OBJ-004",
+                    "objective": "Provide ML-ready feature stores on Databricks to underpin AWS SageMaker model training for customer churn prediction and asset failure forecasting.",
+                    "linked-capabilities": ["CAP-003", "CAP-007"]
+                }
+            ],
+            "constraints": [
+                {
+                    "id": "CON-001",
+                    "description": "Oracle CC&B (PLAT-CIS) cannot be replaced or significantly modified within the programme timescale; all data extraction must use approved APIs or event-based export patterns.",
+                    "type": "technical"
+                },
+                {
+                    "id": "CON-002",
+                    "description": "All data assets containing customer personal data must remain within UK AWS regions in compliance with UK GDPR and fedc's data residency policy.",
+                    "type": "regulatory"
+                },
+                {
+                    "id": "CON-003",
+                    "description": "Programme budget is capped at £4.2M over 24 months; cloud infrastructure spend must be optimised through autoscaling and workspace tiering on Databricks.",
+                    "type": "resource"
+                }
+            ],
+            "assumptions": [
+                {
+                    "id": "ASM-001",
+                    "description": "Oracle Analytics Cloud (PLAT-BI) will be retained as the primary self-service BI tool; no migration to Power BI or Tableau is in scope."
+                },
+                {
+                    "id": "ASM-002",
+                    "description": "The Confluent event broker (PLAT-IPAAS) is available and has sufficient capacity to handle CC&B change-data-capture event volumes at peak (estimated 50,000 events/hour)."
+                },
+                {
+                    "id": "ASM-003",
+                    "description": "A dedicated Data Engineering function of at least four FTEs will be resourced by Q1 FY2026 to own lakehouse pipeline development and governance."
+                }
+            ],
+            "related-capabilities": ["CAP-001", "CAP-002", "CAP-003", "CAP-004", "CAP-005"],
+            "related-domains": ["data", "application", "integration"],
+            "diagrams": []
+        },
+        {
+            "id": "AVI-002",
+            "title": "Digital Customer Experience Vision",
+            "description": "Architecture vision for the CX Transformation Programme, defining the strategic direction for a unified, omnichannel customer experience built on Salesforce CRM and integrated with Oracle CC&B.",
+            "status": "in-review",
+            "scope": "CX Transformation Programme — covering Salesforce CRM (PLAT-CRM), Oracle CC&B (PLAT-CIS), and ServiceNow ITSM (PLAT-FSM) customer-facing processes including account management, billing enquiries, complaints, and field service.",
+            "executive-summary": "fedc's customers interact across web, app, phone, and field channels with inconsistent experiences driven by fragmented systems. The CX Transformation Programme establishes Salesforce CRM as the unified customer engagement layer, synchronised in near-real-time with Oracle CC&B for billing and account data. This creates a single agent desktop, enables proactive outbound engagement based on billing events, and reduces average handle time for contact centre agents. The programme is a prerequisite for smart meter rollout communications and Ofgem's consumer duty obligations.",
+            "vision-statement": "fedc customers receive a consistent, proactive, and personalised experience across every channel, underpinned by a real-time view of their account and energy usage.",
+            "drivers": [
+                {
+                    "id": "DRV-001",
+                    "description": "Contact centre agents currently toggle between Salesforce CRM and Oracle CC&B to resolve billing enquiries, adding an average of 3.5 minutes to handle time per call.",
+                    "type": "business"
+                },
+                {
+                    "id": "DRV-002",
+                    "description": "Ofgem's Consumer Duty requirements mandate proactive customer communication for vulnerable customers at risk of disconnection — currently performed manually.",
+                    "type": "regulatory"
+                },
+                {
+                    "id": "DRV-003",
+                    "description": "Smart meter rollout requires coordinated field service scheduling via ServiceNow FSM and outbound customer communications via Salesforce Marketing Cloud.",
+                    "type": "business"
+                }
+            ],
+            "strategic-objectives": [
+                {
+                    "id": "OBJ-001",
+                    "objective": "Deploy a unified agent desktop in Salesforce CRM with embedded Oracle CC&B billing summary, reducing average handle time by 25% by end of FY2026.",
+                    "linked-capabilities": ["CAP-001"]
+                },
+                {
+                    "id": "OBJ-002",
+                    "objective": "Establish event-driven proactive outbound communications triggered by billing events (payment failures, estimated reads) within 4 hours of the triggering event.",
+                    "linked-capabilities": ["CAP-001", "CAP-004"]
+                },
+                {
+                    "id": "OBJ-003",
+                    "objective": "Integrate ServiceNow FSM with Salesforce CRM to provide end-to-end field service visibility for smart meter installation appointments.",
+                    "linked-capabilities": ["CAP-001", "CAP-006"]
+                }
+            ],
+            "constraints": [
+                {
+                    "id": "CON-001",
+                    "description": "Salesforce CRM must remain the system of record for customer interactions and cases; Oracle CC&B remains the system of record for billing and account data.",
+                    "type": "business"
+                },
+                {
+                    "id": "CON-002",
+                    "description": "All integration between Salesforce and Oracle CC&B must be mediated via the PLAT-IPAAS layer (Confluent/Oracle Integration Cloud); no direct database links permitted.",
+                    "type": "technical"
+                }
+            ],
+            "assumptions": [
+                {
+                    "id": "ASM-001",
+                    "description": "Salesforce Sales Cloud and Service Cloud licences are already provisioned and within contractual scope for the number of agents in the contact centre."
+                },
+                {
+                    "id": "ASM-002",
+                    "description": "The Confluent event broker can propagate CC&B billing events to Salesforce within a 5-minute SLA during business hours."
+                }
+            ],
+            "related-capabilities": ["CAP-001", "CAP-004", "CAP-006"],
+            "related-domains": ["application", "integration", "data"],
+            "diagrams": []
+        }
+    ]
+}

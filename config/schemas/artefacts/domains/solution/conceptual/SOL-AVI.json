@@ -1,0 +1,178 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AVI",
+    "title": "Architecture Vision",
+    "description": "A high-level architecture vision document capturing strategic intent, objectives, and direction for a programme or initiative.",
+    "meta": {
+        "domain": "solution",
+        "abstraction": "conceptual",
+        "format": "document",
+        "description": "Architecture Vision documents articulate the high-level strategic direction for a programme or initiative, aligning business drivers with architecture outcomes.",
+        "purpose": [
+            "Communicate the architecture direction to senior stakeholders and decision-makers",
+            "Establish strategic objectives and link them to business capabilities"
+        ],
+        "countLabels": {
+            "singular": "Vision",
+            "plural": "Visions"
+        }
+    },
+    "type": "object",
+    "required": ["documents"],
+    "properties": {
+        "$schema": { "type": "string" },
+        "documents": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/document" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "document": {
+            "type": "object",
+            "required": ["id", "title", "description", "status", "scope", "vision-statement"],
+            "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "status": {
+                    "type": "string",
+                    "enum": ["draft", "in-review", "approved", "superseded"]
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "What programme, initiative, or domain this vision covers"
+                },
+                "executive-summary": {
+                    "type": "string",
+                    "description": "Prose summary of the vision for executive audiences"
+                },
+                "vision-statement": {
+                    "type": "string",
+                    "description": "A single concise statement of the architecture vision"
+                },
+                "drivers": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/driver" }
+                },
+                "strategic-objectives": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/strategic-objective" }
+                },
+                "constraints": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/constraint" }
+                },
+                "assumptions": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/assumption" }
+                },
+                "related-capabilities": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "BUS-CAP IDs of business capabilities this vision is aligned to"
+                },
+                "related-domains": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Architecture domains in scope for this vision"
+                },
+                "diagrams": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/diagram-ref" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "strategic-objective": {
+            "type": "object",
+            "required": ["id", "objective"],
+            "properties": {
+                "id": { "type": "string" },
+                "objective": { "type": "string" },
+                "linked-capabilities": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "BUS-CAP IDs linked to this objective"
+                }
+            },
+            "additionalProperties": false
+        },
+        "driver": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["business", "technology", "regulatory", "market"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "constraint": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["technical", "business", "regulatory", "resource"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "assumption": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "risk": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "likelihood": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "impact": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "mitigation": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "open-question": {
+            "type": "object",
+            "required": ["id", "question"],
+            "properties": {
+                "id": { "type": "string" },
+                "question": { "type": "string" },
+                "raised-by": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "diagram-ref": {
+            "type": "object",
+            "required": ["artefact-id"],
+            "properties": {
+                "artefact-id": {
+                    "type": "string",
+                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
+                },
+                "title": { "type": "string" },
+                "caption": { "type": "string" }
+            },
+            "additionalProperties": false
+        }
+    }
+}

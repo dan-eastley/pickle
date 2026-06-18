@@ -123,6 +123,21 @@
         },
         "SOL-PRN-GRD": {
             "$ref": "./artefacts/domains/solution/physical/SOL-PRN-GRD.json"
+        },
+        "SOL-AVI": {
+            "$ref": "./artefacts/domains/solution/conceptual/SOL-AVI.json"
+        },
+        "SOL-AIN": {
+            "$ref": "./artefacts/domains/solution/conceptual/SOL-AIN.json"
+        },
+        "SOL-SVI": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-SVI.json"
+        },
+        "SOL-SDE": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-SDE.json"
+        },
+        "SOL-ISP": {
+            "$ref": "./artefacts/domains/solution/physical/SOL-ISP.json"
         }
     }
 }
