@@ -6,31 +6,7 @@ import {
 } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
-
-function ChevronDown() {
-  return (
-    <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-      <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" />
-    </svg>
-  )
-}
-
-function KeyStar() {
-  return (
-    <svg className="w-2.5 h-2.5 text-amber-500 flex-shrink-0" viewBox="0 0 12 12" fill="currentColor">
-      <path d="M6 1l1.29 3.09L10.5 4.5 8.25 6.65l.54 3.1L6 8.25 3.21 9.75l.54-3.1L1.5 4.5l3.21-.41z" />
-    </svg>
-  )
-}
-
-// Per-domain active tab colours
-const DOMAIN_ACTIVE = {
-  business:    { border: 'border-violet-500',  text: 'text-violet-700',  bg: 'bg-violet-50',  icon: 'text-violet-600' },
-  data:        { border: 'border-blue-500',    text: 'text-blue-700',    bg: 'bg-blue-50',    icon: 'text-blue-600' },
-  integration: { border: 'border-emerald-500', text: 'text-emerald-700', bg: 'bg-emerald-50', icon: 'text-emerald-600' },
-  application: { border: 'border-amber-500',   text: 'text-amber-700',   bg: 'bg-amber-50',   icon: 'text-amber-600' },
-  solution:    { border: 'border-rose-500',    text: 'text-rose-700',    bg: 'bg-rose-50',    icon: 'text-rose-600' },
-}
+import { ChevronDown, ChevronRight, KeyStar, DecisionIcon } from '../ui/icons'
 
 function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose }) {
   const fmt = getFormat(format)
@@ -40,7 +16,7 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
 
   return (
     <div className="mb-3 last:mb-0">
-      <div className="flex items-center gap-1 mb-1">
+      <div className="flex items-center gap-1.5 px-2 py-1 mb-1 bg-gray-50">
         <FormatIcon format={format} className="w-3 h-3 text-gray-400" />
         <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{fmt.label}</span>
       </div>
@@ -50,11 +26,13 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
             key={artefact.id}
             to={`${base}/domains/${domainId}/${abstractionId}/${artefact.id}`}
             onClick={onClose}
-            className={`flex items-center gap-2 px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors ${
-              artefact.key ? 'border-l-2 border-amber-400' : 'border-l-2 border-transparent'
+            className={`flex items-center gap-2 px-2 py-1.5 text-sm transition-colors border-l-2 ${
+              artefact.key
+                ? 'border-amber-400 bg-amber-50 hover:bg-amber-100 text-gray-700'
+                : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'
             }`}
           >
-            {artefact.key && <KeyStar />}
+            {artefact.key && <KeyStar className="w-2.5 h-2.5" />}
             <span className="truncate flex-1">{artefact.name}</span>
           </Link>
         ))}
@@ -87,9 +65,7 @@ function DomainDropdown({ domain, base, onClose }) {
             </p>
             <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{domain.description}</p>
           </div>
-          <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 ml-auto flex-shrink-0 transition-colors" viewBox="0 0 16 16" fill="none">
-            <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
+          <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 ml-auto flex-shrink-0 transition-colors" />
         </Link>
 
         {/* Three abstraction columns */}
@@ -105,12 +81,12 @@ function DomainDropdown({ domain, base, onClose }) {
                 <Link
                   to={`${base}/domains/${domain.id}/${abstraction.id}`}
                   onClick={onClose}
-                  className="group flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 hover:opacity-80 transition-opacity"
+                  className={`group flex items-center gap-2 mb-3 px-2 py-1.5 transition-colors ${abColors.header} hover:opacity-90`}
                 >
-                  <span className={`text-xs font-semibold px-1.5 py-0.5 ${abColors.badge}`}>
+                  <span className="text-xs font-semibold px-1.5 py-0.5 bg-white bg-opacity-30">
                     {abstraction.label}
                   </span>
-                  <span className="text-xs font-semibold text-gray-600 group-hover:text-brand-700 transition-colors">
+                  <span className="text-xs font-semibold group-hover:opacity-90 transition-opacity">
                     {abstraction.name}
                   </span>
                 </Link>
@@ -180,7 +156,7 @@ export default function DomainNav() {
           {DOMAINS.map(domain => {
             const isActive = activeDomain === domain.id
             const isOpen = activeDropdown === domain.id
-            const ac = DOMAIN_ACTIVE[domain.id]
+            const ac = DOMAIN_COLORS[domain.id].nav
 
             return (
               <button
@@ -197,7 +173,7 @@ export default function DomainNav() {
                 </span>
                 {domain.name}
                 <span className={`transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}>
-                  <ChevronDown />
+                  <ChevronDown className="w-3.5 h-3.5" />
                 </span>
               </button>
             )
@@ -214,9 +190,7 @@ export default function DomainNav() {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
             }`}
           >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-              <path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
-            </svg>
+            <DecisionIcon className="w-3.5 h-3.5" />
             Decisions
           </Link>
         </div>

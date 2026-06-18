@@ -34,7 +34,7 @@ A decision branch is for client-specific architecture change. A feature branch i
    }
    ```
 6. Commits the decision file back via `GITHUB_TOKEN`.
-7. Exits non-zero on violation, which halts the rest of the decision pipeline ([Decisions Pipeline](decisions-pipeline.md) chains via `workflow_run` and only fires on success).
+7. Exits non-zero on violation, surfacing the failure on the branch's checks before the decision can move to Proposed and trigger [Decisions Analysis](decisions-analysis.md).
 
 ### Feature branches
 
@@ -49,4 +49,4 @@ A decision branch is for client-specific architecture change. A feature branch i
 
 - Logic is deterministic; no AI involvement.
 - The two diff bases differ deliberately: decision branches integrate to `main`, feature branches integrate to `develop`.
-- The shape of `context-validation` is permissive in [`schemas/decision.json`](../../schemas/decision.json) — it deviates from the 4-string `$defs/section` shape used by the analysis workflows because the output is structured data, not narrative.
+- The shape of `context-validation` is permissive in [`config/schemas/decision.json`](../../config/schemas/decision.json) — it deviates from the 4-string `$defs/section` shape used by the analysis workflows because the output is structured data, not narrative.

@@ -1,4 +1,4 @@
-# INT-STR — Integration Strategy Catalogue
+# INT-STR — Integration Architecture Strategy Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/integration/conceptual/INT-STR.json`](../../../../../../config/schemas/artefacts/domains/integration/conceptual/INT-STR.json)
 **Architecture Domain / Layer:** Integration / Conceptual

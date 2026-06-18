@@ -22,9 +22,13 @@ The [schemas/](schemas/) section documents the data structure behind each artefa
 | Decisions | [schemas/decisions.md](schemas/decisions.md) |
 | Strategy / Principles / Guardrails | see [schemas/index.md](schemas/index.md) |
 | BUS-CAP | [schemas/artefacts/domains/business/conceptual/BUS-CAP.md](schemas/artefacts/domains/business/conceptual/BUS-CAP.md) |
+| BUS-BCM | [schemas/artefacts/domains/business/conceptual/BUS-BCM.md](schemas/artefacts/domains/business/conceptual/BUS-BCM.md) |
 | BUS-PRO | [schemas/artefacts/domains/business/conceptual/BUS-PRO.md](schemas/artefacts/domains/business/conceptual/BUS-PRO.md) |
+| BUS-BPM | [schemas/artefacts/domains/business/conceptual/BUS-BPM.md](schemas/artefacts/domains/business/conceptual/BUS-BPM.md) |
 | DAT-DAC | [schemas/artefacts/domains/data/conceptual/DAT-DAC.md](schemas/artefacts/domains/data/conceptual/DAT-DAC.md) |
+| DAT-CDM | [schemas/artefacts/domains/data/conceptual/DAT-CDM.md](schemas/artefacts/domains/data/conceptual/DAT-CDM.md) |
 | APP-DAP | [schemas/artefacts/domains/application/logical/APP-DAP.md](schemas/artefacts/domains/application/logical/APP-DAP.md) |
+| APP-DPM | [schemas/artefacts/domains/application/logical/APP-DPM.md](schemas/artefacts/domains/application/logical/APP-DPM.md) |
 
 ## Workflows
 
