@@ -1,4 +1,4 @@
-# APP-STR — Application Strategy Catalogue
+# APP-STR — Application Architecture Strategy Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/application/conceptual/APP-STR.json`](../../../../../../config/schemas/artefacts/domains/application/conceptual/APP-STR.json)
 **Architecture Domain / Layer:** Application / Conceptual

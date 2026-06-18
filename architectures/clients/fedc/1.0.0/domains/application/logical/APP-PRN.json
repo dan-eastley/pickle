@@ -1,0 +1,82 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-PRN",
+    "principles": [
+        {
+            "id": "APP-PRN-001",
+            "name": "Twelve-factor app methodology",
+            "statement": "New applications follow the twelve-factor methodology (config in env, stateless processes, port-binding, etc.)",
+            "rationale": "Twelve-factor patterns are the lowest-cost baseline for portability, scaling, and operability",
+            "implications": [
+                "No configuration baked into images",
+                "No local filesystem dependencies for state",
+                "Logs to stdout; aggregation is platform responsibility"
+            ]
+        },
+        {
+            "id": "APP-PRN-002",
+            "name": "Composable over monolithic",
+            "statement": "Prefer composing capabilities from independent, replaceable services over building integrated monoliths",
+            "rationale": "Monoliths constrain pace and concentrate risk; composable architectures enable independent evolution and team autonomy",
+            "implications": [
+                "New applications publish capabilities via stable, versioned interfaces",
+                "Shared business logic lives in a service, not duplicated in consuming applications",
+                "Replaceability is a first-class design quality assessed at architecture review"
+            ]
+        },
+        {
+            "id": "APP-PRN-003",
+            "name": "Independent deployability",
+            "statement": "A service can be deployed without coordinating with other teams",
+            "rationale": "Coordination tax kills delivery throughput; coupling at deployment time is the most damaging form",
+            "implications": [
+                "Database migrations are backwards-compatible until the writer is upgraded",
+                "API consumers tolerate at least N-1 producer version",
+                "Feature flags decouple deploy from release"
+            ]
+        },
+        {
+            "id": "APP-PRN-004",
+            "name": "Stateless services, externalised state",
+            "statement": "Application processes hold no durable state; state lives in managed stores",
+            "rationale": "Stateful processes block horizontal scaling, immutable deploys, and routine restarts",
+            "implications": [
+                "Sessions held in shared store, not process memory",
+                "Failover is a routine event, not an exception",
+                "Restarts have no functional impact beyond brief unavailability"
+            ]
+        },
+        {
+            "id": "APP-PRN-005",
+            "name": "Observability is built in, not bolted on",
+            "statement": "Every service exposes health, structured logs, RED metrics, and distributed traces from day one",
+            "rationale": "Adding observability retrospectively misses the events most worth investigating",
+            "implications": [
+                "Standard observability libraries are mandatory dependencies",
+                "Business-outcome metrics are emitted alongside technical metrics",
+                "Incidents are debugged from telemetry, not log-fishing"
+            ]
+        },
+        {
+            "id": "APP-PRN-006",
+            "name": "Security shifted left",
+            "statement": "Threat modelling, dependency scanning, and policy checks are part of the development workflow, not a release gate",
+            "rationale": "Findings discovered at release are expensive to fix and frequently shipped anyway under pressure",
+            "implications": [
+                "CI pipelines fail on vulnerable dependencies above an agreed severity",
+                "Threat models exist for every customer-facing service",
+                "Secrets are managed by the platform, never committed to source"
+            ]
+        },
+        {
+            "id": "APP-PRN-007",
+            "name": "Infrastructure as code, immutable artefacts",
+            "statement": "All environments are described in version-controlled code; runtime artefacts are immutable",
+            "rationale": "Hand-managed environments drift, and drift is invisible until something breaks",
+            "implications": [
+                "Production matches non-production via the same IaC",
+                "A deploy is the replacement of an artefact, not a mutation",
+                "No manual changes in production environments"
+            ]
+        }
+    ]
+}

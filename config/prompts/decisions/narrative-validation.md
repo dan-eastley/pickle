@@ -37,16 +37,13 @@ Assess the `requirements` array against these criteria:
 
 ## Output
 
-Write a JSON **array** to the decision JSON's `narrative-validation` property. Each element of the array is an object containing the four fields below (and no other keys). Emit a separate finding for each distinct issue or recommendation. If the narrative and requirements are well-formed, emit a single finding stating that and closing with a recommendation for anything worth tightening.
+Write a JSON **array** to the decision JSON's `recommendations` property. Each element of the array is an object with a single `recommendation` field (and no other keys) — a concrete, actionable suggestion for improving the narrative or requirements. Emit a separate entry for each distinct suggestion. If the narrative and requirements are well-formed, emit a single entry saying so and suggesting anything worth tightening.
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed — be specific, reference the actual text where relevant. Max ~500 characters. |
-| `impact` | Why it matters — what downstream risk or quality issue this creates. Max ~500 characters. |
 | `recommendation` | A concrete, actionable suggestion for how to improve the text. Max ~500 characters. |
-| `rationale` | Why this change would improve the decision record. Max ~500 characters. |
 
-Use **markdown** in each field — bullet points, bold, and code spans are encouraged where they aid readability.
+There is no accept/decline tracking for these — it is down to the author whether to act on each suggestion. Use **markdown** in the field — bullet points, bold, and code spans are encouraged where they aid readability.
 
 ## Constraints
 

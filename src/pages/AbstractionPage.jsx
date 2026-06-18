@@ -4,6 +4,7 @@ import {
   ABSTRACTION_COLORS, FORMAT_ORDER, getFormat,
 } from '../lib/artefacts'
 import FormatIcon from '../components/ui/FormatIcon'
+import TextLink from '../components/ui/TextLink'
 import ArtefactRow from '../components/artefacts/ArtefactRow'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -36,7 +37,7 @@ export default function AbstractionPage() {
 
   const rows = []
   groups.forEach(group => {
-    rows.push({ type: 'header', format: group.format, fmt: group.fmt })
+    rows.push({ type: 'header', format: group.format, fmt: group.fmt, count: group.items.length })
     group.items.forEach((artefact, i) => rows.push({ type: 'artefact', artefact, firstInGroup: i === 0 }))
   })
 
@@ -51,6 +52,9 @@ export default function AbstractionPage() {
         </div>
         <h1 className="text-xl font-semibold text-gray-900">{abstractionData.name}</h1>
         <p className="mt-1 text-sm text-gray-500 max-w-3xl">{abstractionData.description}</p>
+        <TextLink to={`${base}/decisions?domain=${domain}&abstraction=${abstraction}`} className="inline-flex items-center gap-1 mt-2 text-xs">
+          View decisions for this domain and abstraction →
+        </TextLink>
       </div>
 
       <div className="border border-gray-200 bg-white">
@@ -59,7 +63,7 @@ export default function AbstractionPage() {
             <div key={`h-${row.format}`} className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100">
               <FormatIcon format={row.format} className="w-3 h-3 text-gray-400" />
               <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                {row.fmt?.label ?? row.format}
+                {row.fmt?.label ?? row.format} ({row.count})
               </span>
             </div>
           ) : (
