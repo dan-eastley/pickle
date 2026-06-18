@@ -1,0 +1,70 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:physical:BUS-PRN-GRD",
+    "title": "Business Architecture Principles ↔ Guardrails Matrix",
+    "description": "Many-to-many mapping between Business Architecture Principles (BUS-PRN) and Business Architecture Guardrails (BUS-GRD) — showing which guardrails make which principles concrete and enforceable.",
+    "meta": {
+        "domain": "business",
+        "abstraction": "physical",
+        "format": "matrix",
+        "description": "Maps each Business Architecture Principle to the Guardrails that make it concrete and enforceable.",
+        "purpose": [
+            "Shows which guardrails exist to enforce which principles, and surfaces principles with no enforcing guardrail",
+            "Supports impact analysis — if a principle changes, which guardrails need review?",
+            "Provides traceability from design guidance (the how) through to non-negotiable, enforceable rules (the where & with what)"
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "BUS-PRN",
+                "array": "principles",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "statement"
+            },
+            "rows": {
+                "artefact": "BUS-GRD",
+                "array": "guardrails",
+                "idField": "id",
+                "labelField": "rule",
+                "tooltipField": "rationale"
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "relationships"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "relationships": {
+            "type": "array",
+            "description": "Sparse list of required mappings between BUS-PRN (columns) and BUS-GRD (rows). Presence of an entry means the guardrail is required to enforce the principle; absence means no required relationship.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
+                "properties": {
+                    "column-id": {
+                        "type": "string",
+                        "description": "ID of the BUS-PRN principle (column)"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "ID of the BUS-GRD guardrail (row)"
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "description": "Why this relationship exists"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

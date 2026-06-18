@@ -97,10 +97,10 @@
             "type": "object",
             "description": "Output of the Validate Context workflow."
         },
-        "narrative-validation": {
+        "recommendations": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
-            "description": "Output of the Narrative Review workflow — fires on DRAFT creation."
+            "items": { "$ref": "#/$defs/recommendation" },
+            "description": "Output of the Narrative Review workflow — fires on DRAFT creation. Plain suggestions for tightening the narrative and requirements; it is up to the author whether to act on them."
         },
         "impact-assessment": {
             "type": "array",
@@ -121,6 +121,11 @@
             "type": "array",
             "items": { "$ref": "#/$defs/section" },
             "description": "Output of the Principles Alignment workflow — fires on PROPOSED."
+        },
+        "guardrails-alignment": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/section" },
+            "description": "Output of the Guardrails Alignment workflow — fires on PROPOSED."
         },
         "proponent-analysis": {
             "type": "array",
@@ -145,6 +150,15 @@
                     "type": "string",
                     "enum": ["Functional", "Non-Functional"]
                 }
+            },
+            "additionalProperties": false
+        },
+        "recommendation": {
+            "type": "object",
+            "description": "A single suggestion for improving the narrative or requirements. No accept/decline tracking — it's down to the author to act on it or not.",
+            "required": ["recommendation"],
+            "properties": {
+                "recommendation": { "type": "string", "description": "A concrete, actionable suggestion. Max ~500 characters." }
             },
             "additionalProperties": false
         },

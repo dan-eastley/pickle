@@ -1,14 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, NavLink, Link } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
-
-function ChevronDown() {
-  return (
-    <svg className="w-3.5 h-3.5 text-gray-400" viewBox="0 0 14 14" fill="none">
-      <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" />
-    </svg>
-  )
-}
+import { ChevronDown } from '../ui/icons'
 
 function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
   const [open, setOpen] = useState(false)
@@ -31,7 +24,7 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
         className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 transition-colors border-0"
       >
         <span className="max-w-[200px] truncate">{currentOpt ? getLabel(currentOpt) : label}</span>
-        <ChevronDown />
+        <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
       </button>
 
       {open && (
