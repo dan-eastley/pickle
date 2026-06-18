@@ -1,4 +1,4 @@
-# DAT-PRN — Data Principles Catalogue
+# DAT-PRN — Data Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/data/logical/DAT-PRN.json`](../../../../../../config/schemas/artefacts/domains/data/logical/DAT-PRN.json)
 **Architecture Domain / Layer:** Data / Logical

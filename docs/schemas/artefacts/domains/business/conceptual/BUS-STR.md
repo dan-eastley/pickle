@@ -1,4 +1,4 @@
-# BUS-STR — Business Strategy Catalogue
+# BUS-STR — Business Architecture Strategy Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/business/conceptual/BUS-STR.json`](../../../../../../config/schemas/artefacts/domains/business/conceptual/BUS-STR.json)
 **Architecture Domain / Layer:** Business / Conceptual

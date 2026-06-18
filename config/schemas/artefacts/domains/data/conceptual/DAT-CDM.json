@@ -1,0 +1,85 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:data:conceptual:DAT-CDM",
+    "title": "Conceptual Data Model",
+    "description": "Visual model of the Data Domains & Concepts Catalogue (DAT-DAC), arranged as a nested entity diagram: data domains as groups, conceptual data entities as items within each group. Derived from DAT-DAC rather than authored directly.",
+    "meta": {
+        "domain": "data",
+        "abstraction": "conceptual",
+        "format": "diagram",
+        "description": "A visual map of the organisation's key data concepts and how they relate.",
+        "purpose": [
+            "Give a single-page view of the conceptual data landscape, grouped by data domain.",
+            "Provide a shared reference point for data modelling and integration discussions.",
+            "Provide an embeddable diagram for presentations, kept in sync with DAT-DAC."
+        ],
+        "diagramType": "entity-based",
+        "countLabels": {
+            "groups": "domains",
+            "items": "concepts"
+        }
+    },
+    "type": "object",
+    "required": ["groups"],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "groups": {
+            "type": "array",
+            "description": "Data domains, each containing its conceptual data entities.",
+            "items": { "$ref": "#/$defs/group" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "group": {
+            "type": "object",
+            "description": "A data domain and its conceptual data entities, matching the corresponding entries in DAT-DAC.",
+            "required": ["id", "name", "items"],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Data domain ID, matching DAT-DAC."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Data domain name, matching DAT-DAC."
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "Additional display attributes for this domain group. Open-ended; none are currently rendered.",
+                    "additionalProperties": true
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Conceptual data entities belonging to this domain.",
+                    "items": { "$ref": "#/$defs/item" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "item": {
+            "type": "object",
+            "description": "A conceptual data entity, matching the corresponding entry in DAT-DAC.",
+            "required": ["id", "name"],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Conceptual data entity ID, matching DAT-DAC."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Conceptual data entity name, matching DAT-DAC."
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "Additional display attributes for this entity card. Open-ended; none are currently rendered.",
+                    "additionalProperties": true
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
