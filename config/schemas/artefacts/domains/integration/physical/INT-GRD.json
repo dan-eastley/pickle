@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:integration:physical:INT-GRD",
-    "title": "Integration Guardrails Catalogue",
+    "title": "Integration Architecture Guardrails Catalogue",
     "description": "Catalogue of non-negotiable constraints, mandatory standards, and concrete patterns for the Integration architecture domain. Aligned to Policy-as-Code conventions (AWS Service Control Policies, Azure Policy).",
     "meta": {
         "domain": "integration",
@@ -14,13 +14,21 @@
             "Provides enforceable standards for API design, authentication, and data in transit",
             "Enables automated guardrail checking during integration decision review",
             "Prevents accumulation of integration debt caused by rule exceptions"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Guardrail",
+            "plural": "Guardrails"
+        }
     },
     "type": "object",
     "required": [
         "guardrails"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "guardrails": {
             "type": "array",
             "items": {
@@ -46,7 +54,7 @@
                     },
                     "rationale": {
                         "type": "string",
-                        "description": "Why this is mandatory — often references a principle or compliance requirement"
+                        "description": "Why this is mandatory \u2014 often references a principle or compliance requirement"
                     },
                     "enforcement": {
                         "type": "string",

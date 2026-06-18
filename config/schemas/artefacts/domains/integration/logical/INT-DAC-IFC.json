@@ -1,0 +1,70 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-DAC-IFC",
+    "title": "Data Domains & Concepts ↔ Interface Catalogue Matrix",
+    "description": "Many-to-many mapping between conceptual data entities in the Data Domains & Concepts Catalogue (DAT-DAC) and the interfaces in the Interface Catalogue (INT-IFC) that carry them.",
+    "meta": {
+        "domain": "integration",
+        "abstraction": "logical",
+        "format": "matrix",
+        "description": "Maps each INT-IFC interface to the DAT-DAC concepts that flow across it.",
+        "purpose": [
+            "Shows which conceptual data entities flow across which interfaces, and surfaces concepts with no integration coverage",
+            "Supports impact analysis — if a concept's definition changes, which interfaces need review?",
+            "Provides traceability from the conceptual data model (the what) through to the integration landscape (how it moves)"
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "DAT-DAC",
+                "array": "concepts",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description"
+            },
+            "rows": {
+                "artefact": "INT-IFC",
+                "array": "interfaces",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description"
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "relationships"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "relationships": {
+            "type": "array",
+            "description": "Sparse list of mappings between DAT-DAC concepts (columns) and INT-IFC interfaces (rows). An entry's presence means the concept flows across the interface; absence means no mapping.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
+                "properties": {
+                    "column-id": {
+                        "type": "string",
+                        "description": "ID of the DAT-DAC concept (column)"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "ID of the INT-IFC interface (row)"
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "description": "Why this relationship exists"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

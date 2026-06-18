@@ -1,0 +1,239 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:data:conceptual:DAT-CDM",
+    "groups": [
+        {
+            "id": "DAT-DOM-CUSTOMER",
+            "name": "Customer",
+            "items": [
+                {
+                    "id": "CON-CUSTOMER",
+                    "name": "Customer"
+                },
+                {
+                    "id": "CON-ACCOUNT",
+                    "name": "Account"
+                },
+                {
+                    "id": "CON-CONTRACT",
+                    "name": "Contract"
+                },
+                {
+                    "id": "CON-PREMISE",
+                    "name": "Premise"
+                },
+                {
+                    "id": "CON-CUST-INTERACTION",
+                    "name": "Customer Interaction"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-ASSET",
+            "name": "Asset",
+            "items": [
+                {
+                    "id": "CON-ASSET",
+                    "name": "Asset"
+                },
+                {
+                    "id": "CON-ASSET-TYPE",
+                    "name": "Asset Type"
+                },
+                {
+                    "id": "CON-ASSET-CONDITION",
+                    "name": "Asset Condition"
+                },
+                {
+                    "id": "CON-MAINT-WORK-ORDER",
+                    "name": "Maintenance Work Order"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-GENERATION",
+            "name": "Generation",
+            "items": [
+                {
+                    "id": "CON-GEN-UNIT",
+                    "name": "Generation Unit"
+                },
+                {
+                    "id": "CON-PRODUCTION-OUTPUT",
+                    "name": "Production Output"
+                },
+                {
+                    "id": "CON-FUEL-CONSUMPTION",
+                    "name": "Fuel Consumption"
+                },
+                {
+                    "id": "CON-GEN-OUTAGE",
+                    "name": "Generation Outage"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-NETWORK",
+            "name": "Network",
+            "items": [
+                {
+                    "id": "CON-NETWORK-NODE",
+                    "name": "Network Node"
+                },
+                {
+                    "id": "CON-CONNECTION-POINT",
+                    "name": "Connection Point"
+                },
+                {
+                    "id": "CON-NETWORK-CAPACITY",
+                    "name": "Network Capacity"
+                },
+                {
+                    "id": "CON-POWER-FLOW",
+                    "name": "Power Flow"
+                },
+                {
+                    "id": "CON-NETWORK-OUTAGE",
+                    "name": "Network Outage"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-MARKET",
+            "name": "Market & Trading",
+            "items": [
+                {
+                    "id": "CON-MARKET-PRICE",
+                    "name": "Market Price"
+                },
+                {
+                    "id": "CON-TRADE",
+                    "name": "Trade"
+                },
+                {
+                    "id": "CON-POSITION",
+                    "name": "Position"
+                },
+                {
+                    "id": "CON-COUNTERPARTY",
+                    "name": "Counterparty"
+                },
+                {
+                    "id": "CON-SETTLEMENT",
+                    "name": "Settlement"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-METER",
+            "name": "Metering",
+            "items": [
+                {
+                    "id": "CON-METER",
+                    "name": "Meter"
+                },
+                {
+                    "id": "CON-METER-POINT",
+                    "name": "Metering Point"
+                },
+                {
+                    "id": "CON-METER-READING",
+                    "name": "Meter Reading"
+                },
+                {
+                    "id": "CON-CONSUMPTION",
+                    "name": "Consumption"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-BILLING",
+            "name": "Billing & Payment",
+            "items": [
+                {
+                    "id": "CON-TARIFF",
+                    "name": "Tariff"
+                },
+                {
+                    "id": "CON-BILL",
+                    "name": "Bill"
+                },
+                {
+                    "id": "CON-PAYMENT",
+                    "name": "Payment"
+                },
+                {
+                    "id": "CON-ARREARS",
+                    "name": "Arrears"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-REGULATORY",
+            "name": "Regulatory & Compliance",
+            "items": [
+                {
+                    "id": "CON-LICENCE",
+                    "name": "Licence"
+                },
+                {
+                    "id": "CON-REG-OBLIGATION",
+                    "name": "Regulatory Obligation"
+                },
+                {
+                    "id": "CON-COMPLIANCE-REPORT",
+                    "name": "Compliance Report"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-SUSTAINABILITY",
+            "name": "Sustainability",
+            "items": [
+                {
+                    "id": "CON-EMISSION",
+                    "name": "Emission"
+                },
+                {
+                    "id": "CON-RENEWABLE-SOURCE",
+                    "name": "Renewable Source"
+                },
+                {
+                    "id": "CON-CARBON-CREDIT",
+                    "name": "Carbon Credit"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-WORKFORCE",
+            "name": "Workforce",
+            "items": [
+                {
+                    "id": "CON-EMPLOYEE",
+                    "name": "Employee"
+                },
+                {
+                    "id": "CON-FIELD-CREW",
+                    "name": "Field Crew"
+                }
+            ]
+        },
+        {
+            "id": "DAT-DOM-FINANCE",
+            "name": "Finance",
+            "items": [
+                {
+                    "id": "CON-SUPPLIER",
+                    "name": "Supplier"
+                },
+                {
+                    "id": "CON-INVOICE-PAYABLE",
+                    "name": "Invoice Payable"
+                },
+                {
+                    "id": "CON-COST-CENTRE",
+                    "name": "Cost Centre"
+                }
+            ]
+        }
+    ]
+}
