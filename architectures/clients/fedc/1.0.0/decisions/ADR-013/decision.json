@@ -20,6 +20,17 @@
             "type": "Non-Functional"
         }
     ],
+    "recommendations": [
+        {
+            "recommendation": "The first requirement uses the phrase **'standard query patterns'** without defining what qualifies. Consider clarifying whether this means predefined report templates, drag-and-drop UI builders, or a specific set of query types — this will help downstream design work."
+        },
+        {
+            "recommendation": "**'Semantic layer'** is technical jargon. Consider rephrasing to emphasise the business benefit: e.g., *'A business-friendly metrics layer that lets teams use familiar terminology (e.g., \"monthly revenue\", \"customer count\") rather than technical database field names'* — this makes the intent clearer for non-technical stakeholders."
+        },
+        {
+            "recommendation": "Strong overall narrative — clear problem statement, business impact, and scope. The requirement set is testable and well-classified. Minor addition: consider mentioning whether the role-based access model should prevent analysts from accessing certain metrics or only limit row-level data visibility — this distinction will matter for downstream design."
+        }
+    ],
     "scope": {
         "domain": "data",
         "abstraction": "logical",
