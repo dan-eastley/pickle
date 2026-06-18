@@ -98,6 +98,7 @@ Each architecture domain also carries two many-to-many matrices linking adjacent
 | [APP-DAP.md](artefacts/domains/application/logical/APP-DAP.md) | Application Domains & Platforms | Application / Logical | TOGAF Application Architecture, Gartner Pace Layers |
 | [APP-CAT.md](artefacts/domains/application/physical/APP-CAT.md) | Application Catalogue | Application / Physical | Application Portfolio Management (TIME model), ITAM |
 | [INT-IFC.md](artefacts/domains/integration/logical/INT-IFC.md) | Interface Catalogue | Integration / Logical | TOGAF Integration/Application Communication Diagrams, C4 System Context |
+| [BUS-CAP-PRO.md](artefacts/domains/business/conceptual/BUS-CAP-PRO.md) | Business Capabilities ↔ Business Processes | Business / Conceptual | APQC PCF, TOGAF capability mapping |
 
 ## Cross-domain / cross-layer matrices
 
@@ -111,15 +112,28 @@ Beyond the per-domain Strategy ↔ Principles / Principles ↔ Guardrails pairs 
 
 ## Diagram schemas
 
-Diagram artefacts are derived from a source catalogue rather than authored directly. BUS-BCM, DAT-CDM, and APP-DPM define a `groups[].items[]` shape rendered by [`NestedGroupDiagram`](../../src/components/artefacts/diagrams/NestedGroupDiagram.jsx) (see [Diagram rendering](#diagram-rendering) below). BUS-BPM is not yet implemented — its schema currently defines only a `meta` block (including `diagramType`) plus an open `additionalProperties: true` body.
+Diagram artefacts are derived from a source catalogue rather than authored directly. Valid `diagramType` values and their renderers are defined in [output-formats.md](../output-formats.md#diagram-types).
 
-| Schema | Artefact Type | Architecture Domain / Layer | Derived from | Status |
+| Schema | Artefact Type | Architecture Domain / Layer | Derived from | `diagramType` |
 |---|---|---|---|---|
-| [BUS-BCM.md](artefacts/domains/business/conceptual/BUS-BCM.md) | Business Capability Model | Business / Conceptual | BUS-CAP | Defined (`card-based`) |
-| [BUS-BPM.md](artefacts/domains/business/conceptual/BUS-BPM.md) | Business Process Model | Business / Conceptual | BUS-PRO | Placeholder (`flow-based`) |
-| [DAT-CDM.md](artefacts/domains/data/conceptual/DAT-CDM.md) | Conceptual Data Model | Data / Conceptual | DAT-DAC | Defined (`entity-based`) |
-| [APP-DPM.md](artefacts/domains/application/logical/APP-DPM.md) | Domains & Platforms Model | Application / Logical | APP-DAP | Defined (`card-based`) |
+| [BUS-BCM.md](artefacts/domains/business/conceptual/BUS-BCM.md) | Business Capability Model | Business / Conceptual | BUS-CAP | `card-based` |
+| [BUS-BPM.md](artefacts/domains/business/conceptual/BUS-BPM.md) | Business Process Model | Business / Conceptual | BUS-PRO | `card-based` (groups/items/subitems) |
+| [DAT-CDM.md](artefacts/domains/data/conceptual/DAT-CDM.md) | Conceptual Data Model | Data / Conceptual | DAT-DAC | `entity-based` |
+| [APP-DPM.md](artefacts/domains/application/logical/APP-DPM.md) | Domains & Platforms Model | Application / Logical | APP-DAP | `card-based` |
+| [INT-WRD.md](artefacts/domains/integration/logical/INT-WRD.md) | Interface Wiring Diagram | Integration / Logical | INT-IFC + APP-DAP | `wiring` |
 
 ### Diagram rendering
 
-`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group (e.g. a Level 1 capability or a data domain) is rendered as a card containing its items (e.g. Level 2 sub-capabilities or conceptual data entities). Both groups and items carry an open `meta` object for additional display attributes — e.g. BUS-BCM uses `meta.importance` to badge each capability card. The two diagram types share the same layout component and theme ([`src/lib/diagramTheme.js`](../../src/lib/diagramTheme.js)) and differ only in corner styling.
+`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group is rendered as a card containing its items. Groups and items carry an open `meta` object for additional display attributes — e.g. BUS-BCM uses `meta.importance` to badge each capability card. The `wiring` type (`INT-WRD`) derives its data from INT-IFC and APP-DAP at render time — no authored data in the instance file.
+
+## Document schemas
+
+Document artefacts contain a `documents` array — each element is a named instance (e.g. one Architecture Vision per programme). See [output-formats.md](../output-formats.md#document-sections) for the section structure of each type.
+
+| Schema | Artefact Type | Architecture Domain / Layer |
+|---|---|---|
+| [SOL-AVI.md](artefacts/domains/solution/conceptual/SOL-AVI.md) | Architecture Vision(s) | Solution / Conceptual |
+| [SOL-AIN.md](artefacts/domains/solution/conceptual/SOL-AIN.md) | Architecture Intent(s) | Solution / Conceptual |
+| [SOL-SVI.md](artefacts/domains/solution/logical/SOL-SVI.md) | Solution Vision(s) | Solution / Logical |
+| [SOL-SDE.md](artefacts/domains/solution/logical/SOL-SDE.md) | Solution Design(s) | Solution / Logical |
+| [SOL-ISP.md](artefacts/domains/solution/physical/SOL-ISP.md) | Interface Specification(s) | Solution / Physical |

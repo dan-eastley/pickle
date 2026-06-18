@@ -219,7 +219,11 @@ export default function ArtefactPage() {
         </div>
       )}
 
-      <JsonPreview data={data ?? undefined} label={`${artefact.id}.json`} />
+      <JsonPreview
+        data={data ?? undefined}
+        label={`${artefact.id}.json`}
+        docUrl={`/docs/schemas/artefacts/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
+      />
 
       {!loading && !error && data !== null && data !== undefined && (
         <>
