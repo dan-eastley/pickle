@@ -1,0 +1,45 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-STR",
+    "strategies": [
+        {
+            "id": "SOL-STR-001",
+            "statement": "Deliver solutions as thin vertical MVPs \u2014 prove value end-to-end before scaling",
+            "driver": "Big-bang programmes overshoot timeline and budget while under-delivering on outcome",
+            "target-outcome": "Initiatives over GBP 500k deliver a measurable customer outcome within 90 days of kick-off",
+            "horizon": "medium-term",
+            "owner": "Chief Architect"
+        },
+        {
+            "id": "SOL-STR-002",
+            "statement": "Reuse before bespoke \u2014 solution patterns are the first port of call for every new initiative",
+            "driver": "Bespoke solutions multiply maintenance load and architectural drift; reuse compounds investment",
+            "target-outcome": "A documented solution-pattern catalogue covering the top 10 solution archetypes; reuse evidenced in every architecture review",
+            "horizon": "medium-term",
+            "owner": "Chief Architect"
+        },
+        {
+            "id": "SOL-STR-003",
+            "statement": "Production-ready from day one \u2014 operations, observability, and security are part of the MVP, not a follow-up",
+            "driver": "Production-readiness debt accumulated during build is dramatically more expensive to retire afterwards",
+            "target-outcome": "No initiative passes its first release gate without operability sign-off",
+            "horizon": "short-term",
+            "owner": "Head of SRE"
+        },
+        {
+            "id": "SOL-STR-004",
+            "statement": "Total cost of ownership \u2014 solution investment cases include operations and exit, not just build",
+            "driver": "Build-only TCO understates lifecycle cost and biases towards over-building",
+            "target-outcome": "Every approved investment case includes 5-year operate-and-exit costs reviewed by Finance and Architecture jointly",
+            "horizon": "short-term",
+            "owner": "Chief Architect"
+        },
+        {
+            "id": "SOL-STR-005",
+            "statement": "Build for change \u2014 every solution assumes its constraints will evolve, including a credible exit path",
+            "driver": "Solutions designed for permanence become irreversible when constraints shift",
+            "target-outcome": "Every solution design includes a documented evolution and exit plan",
+            "horizon": "medium-term",
+            "owner": "Chief Architect"
+        }
+    ]
+}

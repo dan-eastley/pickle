@@ -1,0 +1,4 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:physical:BUS-GRD",
+    "guardrails": []
+}

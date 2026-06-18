@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:business:logical:BUS-PRN",
-    "title": "Business Principles Catalogue",
-    "description": "Catalogue of architecture principles for the Business architecture domain — vendor-neutral guidelines that shape design decisions. Aligned to TOGAF Architecture Principles (Name, Statement, Rationale, Implications).",
+    "title": "Business Architecture Principles Catalogue",
+    "description": "Catalogue of architecture principles for the Business architecture domain \u2014 vendor-neutral guidelines that shape design decisions. Aligned to TOGAF Architecture Principles (Name, Statement, Rationale, Implications).",
     "meta": {
         "domain": "business",
         "abstraction": "logical",
@@ -14,13 +14,21 @@
             "Reduces architectural drift by making the rules explicit and traceable",
             "Enables automated analysis of new decisions against established principles",
             "Builds a body of architectural wisdom that accumulates over time"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Principle",
+            "plural": "Principles"
+        }
     },
     "type": "object",
     "required": [
         "principles"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "principles": {
             "type": "array",
             "items": {
@@ -46,7 +54,7 @@
                     },
                     "rationale": {
                         "type": "string",
-                        "description": "Why this principle exists — the underlying motivation"
+                        "description": "Why this principle exists \u2014 the underlying motivation"
                     },
                     "implications": {
                         "type": "array",

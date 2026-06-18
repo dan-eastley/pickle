@@ -1,0 +1,53 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-STR",
+    "strategies": [
+        {
+            "id": "BUS-STR-001",
+            "statement": "Operate as a customer-centric organisation, organised around end-to-end customer outcomes rather than internal functions",
+            "driver": "Customers compare every interaction against best-in-class digital experiences regardless of industry",
+            "target-outcome": "Net Promoter Score top-quartile in sector; 90% of frontline staff working in cross-functional customer-facing teams by end of 2027",
+            "horizon": "long-term",
+            "owner": "Chief Customer Officer"
+        },
+        {
+            "id": "BUS-STR-002",
+            "statement": "Run on outcome-based, cross-functional product teams with full ownership of their value stream",
+            "driver": "Functional silos create handoff friction and dilute accountability for end-to-end performance",
+            "target-outcome": "All value-creating work delivered by persistent product teams by 2026; no project-based funding for in-life products",
+            "horizon": "medium-term",
+            "owner": "Chief Operating Officer"
+        },
+        {
+            "id": "BUS-STR-003",
+            "statement": "Decide with data \u2014 every material business decision must cite the evidence that supports it",
+            "driver": "Decisions made on intuition are slow to challenge and slow to correct",
+            "target-outcome": "Self-serve analytics available to every team; decision logs in place for executive-grade decisions",
+            "horizon": "medium-term",
+            "owner": "Chief Data Officer"
+        },
+        {
+            "id": "BUS-STR-004",
+            "statement": "Embed continuous discovery so investment follows learning, not the plan",
+            "driver": "Annual planning cycles lock investment ahead of evidence and create sunk-cost momentum",
+            "target-outcome": "Quarterly rebalancing of investment based on outcome evidence; no business case lifecycle exceeds the time to first learning",
+            "horizon": "medium-term",
+            "owner": "Chief Strategy Officer"
+        },
+        {
+            "id": "BUS-STR-005",
+            "statement": "Build digital-by-default operations \u2014 paper, manual handovers, and bespoke spreadsheets are exceptions, not the norm",
+            "driver": "Manual operations cap throughput, hide quality issues, and erode margin",
+            "target-outcome": "Top 20 business processes fully digital end-to-end by 2026",
+            "horizon": "medium-term",
+            "owner": "Chief Operating Officer"
+        },
+        {
+            "id": "BUS-STR-006",
+            "statement": "Position sustainability as a primary capability of the business, not a reporting overlay",
+            "driver": "Regulator, investor, and customer expectations on ESG are converging on operational standards, not disclosure",
+            "target-outcome": "Carbon and ESG metrics owned by line management with operational KPIs; reporting is a by-product, not the goal",
+            "horizon": "long-term",
+            "owner": "Chief Sustainability Officer"
+        }
+    ]
+}

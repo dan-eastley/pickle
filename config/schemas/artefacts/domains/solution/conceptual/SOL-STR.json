@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-STR",
-    "title": "Solution Strategy Catalogue",
-    "description": "Catalogue of strategic statements for the Solution architecture domain — the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
+    "title": "Solution Architecture Strategy Catalogue",
+    "description": "Catalogue of strategic statements for the Solution architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "solution",
         "abstraction": "conceptual",
@@ -14,13 +14,21 @@
             "Aligns solution design with business outcomes spanning multiple architecture domains",
             "Anchors solution principles and guardrails to a traceable set of intentions",
             "Enables assessment of whether proposed solutions serve a coherent strategic purpose"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Statement",
+            "plural": "Statements"
+        }
     },
     "type": "object",
     "required": [
         "strategies"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "strategies": {
             "type": "array",
             "items": {
@@ -36,7 +44,7 @@
                     },
                     "statement": {
                         "type": "string",
-                        "description": "Strategic statement — outcome-oriented, time-bound where appropriate"
+                        "description": "Strategic statement \u2014 outcome-oriented, time-bound where appropriate"
                     },
                     "driver": {
                         "type": "string",
