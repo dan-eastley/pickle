@@ -1,0 +1,89 @@
+name: Decisions — To Draft
+
+# Fires when a decision enters DRAFT status (on creation).
+# Runs the Narrative Review step — the only analysis that runs at this stage.
+# Full analysis pipeline fires later when the decision moves to PROPOSED.
+#
+# Triggers:
+#   push     — fires automatically when a new decisions/** branch is pushed.
+#              Loop-prevention: skips if the commit was written by this workflow.
+#   workflow_dispatch — called explicitly by the Pickle API on decision creation.
+
+on:
+  push:
+    branches:
+      - 'decisions/**'
+    paths:
+      - 'architectures/**/decisions/**/decision.json'
+
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-001)"
+        required: true
+        type: string
+      model:
+        description: "Claude model to run with"
+        required: false
+        type: string
+        default: claude-haiku-4-5-20251001
+
+permissions:
+  contents: write
+
+jobs:
+  # Parse client/version/decision IDs from the branch name when triggered by push.
+  # For workflow_dispatch the inputs are provided directly.
+  parse:
+    runs-on: ubuntu-latest
+    # Skip if this push was made by the workflow itself (loop prevention).
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.event.head_commit.message, '[Narrative Review]')
+    outputs:
+      client-id:   ${{ steps.ids.outputs.client-id }}
+      version-id:  ${{ steps.ids.outputs.version-id }}
+      decision-id: ${{ steps.ids.outputs.decision-id }}
+      model:       ${{ steps.ids.outputs.model }}
+    steps:
+      - name: Extract IDs from branch name or inputs
+        id: ids
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "client-id=${{ inputs.client-id }}"     >> "$GITHUB_OUTPUT"
+            echo "version-id=${{ inputs.version-id }}"   >> "$GITHUB_OUTPUT"
+            echo "decision-id=${{ inputs.decision-id }}" >> "$GITHUB_OUTPUT"
+            echo "model=${{ inputs.model }}"             >> "$GITHUB_OUTPUT"
+          else
+            # Branch format: decisions/<client-id>/<version-id>/<decision-id>
+            BRANCH="${{ github.ref_name }}"
+            CLIENT=$(echo  "$BRANCH" | cut -d'/' -f2)
+            VERSION=$(echo "$BRANCH" | cut -d'/' -f3)
+            DECISION=$(echo "$BRANCH" | cut -d'/' -f4)
+            echo "client-id=$CLIENT"                         >> "$GITHUB_OUTPUT"
+            echo "version-id=$VERSION"                       >> "$GITHUB_OUTPUT"
+            echo "decision-id=$DECISION"                     >> "$GITHUB_OUTPUT"
+            echo "model=claude-haiku-4-5-20251001"           >> "$GITHUB_OUTPUT"
+            echo "::notice::Parsed from branch: $CLIENT / $VERSION / $DECISION"
+          fi
+
+  narrative-review:
+    needs: parse
+    uses: ./.github/workflows/decisions-claude-step.yml
+    with:
+      analysis-name: "Narrative Review"
+      prompt-file:   config/prompts/decisions/narrative-validation.md
+      section-key:   recommendations
+      client-id:     ${{ needs.parse.outputs.client-id }}
+      version-id:    ${{ needs.parse.outputs.version-id }}
+      decision-id:   ${{ needs.parse.outputs.decision-id }}
+      model:         ${{ needs.parse.outputs.model }}
+    secrets: inherit

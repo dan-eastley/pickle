@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DAP",
     "title": "Application Domains & Platforms Catalogue",
-    "description": "Two-tier logical catalogue of application domains (TOGAF Application Architecture groupings, e.g. Customer Engagement, Back Office) and the platforms that sit within them (e.g. DXP, CRM, ERP). Vendor-neutral — physical product instances belong in the Physical layer.",
+    "description": "Two-tier logical catalogue of application domains (TOGAF Application Architecture groupings, e.g. Customer Engagement, Back Office) and the platforms that sit within them (e.g. DXP, CRM, ERP). Vendor-neutral \u2014 physical product instances belong in the Physical layer.",
     "meta": {
         "domain": "application",
         "abstraction": "logical",
@@ -14,7 +14,17 @@
             "Provides the mapping between business capabilities and the applications that support them",
             "Enables rationalisation by making duplication and fragmentation visible",
             "Supports investment decisions by showing where applications cluster and where coverage is thin"
-        ]
+        ],
+        "renderAs": "grouped",
+        "grouping": {
+            "parentArray": "domains",
+            "childArray": "platforms",
+            "foreignKey": "domain-id"
+        },
+        "countLabels": {
+            "parent": "Domain",
+            "child": "Platform"
+        }
     },
     "type": "object",
     "required": [
@@ -22,6 +32,10 @@
         "platforms"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "domains": {
             "type": "array",
             "items": {

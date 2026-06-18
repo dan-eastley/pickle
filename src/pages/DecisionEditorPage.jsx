@@ -1,43 +1,58 @@
-import { useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { DOMAINS, ABSTRACTIONS, ARTEFACTS } from '../lib/artefacts'
+import { getDecision } from '../lib/api'
+import ScopeSelector from '../components/decisions/ScopeSelector'
+import TextLink from '../components/ui/TextLink'
+import Spinner from '../components/ui/Spinner'
+import { PlusIcon, CloseIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
-  function add() { onChange([...requirements, '']) }
-  function update(i, val) { onChange(requirements.map((r, j) => j === i ? val : r)) }
+  function add() { onChange([...requirements, { title: '', description: '', type: 'Functional' }]) }
+  function update(i, field, val) {
+    onChange(requirements.map((r, j) => j === i ? { ...r, [field]: val } : r))
+  }
   function remove(i) { onChange(requirements.filter((_, j) => j !== i)) }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {requirements.map((req, i) => (
-        <div key={i} className="flex items-start gap-2">
-          <input
-            type="text"
-            value={req}
-            onChange={e => update(i, e.target.value)}
-            placeholder={`Requirement ${i + 1}`}
-            className="flex-1 px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+        <div key={i} className="border border-gray-200 bg-gray-50 p-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={req.title ?? ''}
+              onChange={e => update(i, 'title', e.target.value)}
+              placeholder="Requirement title"
+              className="flex-1 px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+            <select
+              value={req.type ?? 'Functional'}
+              onChange={e => update(i, 'type', e.target.value)}
+              className="px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            >
+              <option>Functional</option>
+              <option>Non-Functional</option>
+            </select>
+            <button onClick={() => remove(i)} className="p-1.5 text-gray-400 hover:text-error-600 transition-colors flex-shrink-0" title="Remove">
+              <CloseIcon className="w-4 h-4" />
+            </button>
+          </div>
+          <textarea
+            value={req.description ?? ''}
+            onChange={e => update(i, 'description', e.target.value)}
+            rows={2}
+            placeholder="What must the system do or achieve? Be specific and testable."
+            className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-none"
           />
-          <button
-            onClick={() => remove(i)}
-            className="p-2 text-gray-400 hover:text-error-600 transition-colors flex-shrink-0"
-            title="Remove"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
-          </button>
         </div>
       ))}
       <button
         onClick={add}
         className="flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 transition-colors"
       >
-        <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-          <path d="M8 2v12M2 8h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <PlusIcon className="w-4 h-4" />
         Add requirement
       </button>
     </div>
@@ -45,12 +60,15 @@ function RequirementsList({ requirements, onChange }) {
 }
 
 export default function DecisionEditorPage() {
-  const { clientId, versionId } = useParams()
+  const { clientId, versionId, decisionId } = useParams()
   const [searchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
   const clientName = clientsMetadata[clientId]?.name ?? clientId
-  usePageTitle(`New Decision — ${clientName}`)
+  const isEdit = !!decisionId
 
+  usePageTitle(isEdit ? `Edit ${decisionId} — ${clientName}` : `New Decision — ${clientName}`)
+
+  const [loadingExisting, setLoadingExisting] = useState(isEdit)
   const [title, setTitle] = useState('')
   const [narrative, setNarrative] = useState('')
   const [requirements, setRequirements] = useState([])
@@ -60,52 +78,74 @@ export default function DecisionEditorPage() {
   const [saving, setSaving] = useState(false)
   const [saveResult, setSaveResult] = useState(null)
 
-  const filteredAbstractions = scopeDomain ? ABSTRACTIONS : []
-  const filteredArtefacts = scopeDomain
-    ? ARTEFACTS.filter(a =>
-        a.domain === scopeDomain &&
-        (!scopeAbstraction || a.abstraction === scopeAbstraction)
-      )
-    : []
+  // In edit mode, fetch existing decision and pre-populate fields
+  useEffect(() => {
+    if (!isEdit) return
+    getDecision(clientId, versionId, decisionId)
+      .then(d => {
+        if (!d) return
+        setTitle(d.title ?? '')
+        setNarrative(d.narrative ?? '')
+        setRequirements(d.requirements ?? [])
+        setScopeDomain(d.scope?.domain ?? '')
+        setScopeAbstraction(d.scope?.abstraction ?? '')
+        setScopeArtefact(d.scope?.artefact ?? '')
+      })
+      .finally(() => setLoadingExisting(false))
+  }, [isEdit, clientId, versionId, decisionId])
 
-  const decision = {
-    'decision-id': 'ADR-NEW',
-    title: title,
-    status: 'draft',
-    narrative: narrative || '',
-    ...(requirements.filter(Boolean).length > 0 && {
-      requirements: requirements.filter(Boolean).map((r, i) => ({
-        id: `REQ-${String(i + 1).padStart(3, '0')}`,
-        description: r,
-      })),
-    }),
-    ...(scopeDomain && {
-      scope: {
-        domain: scopeDomain,
-        ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-        ...(scopeArtefact && { artefact: scopeArtefact }),
-      },
-    }),
-  }
+  const scope = scopeDomain ? {
+    domain: scopeDomain,
+    ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+    ...(scopeArtefact    && { artefact: scopeArtefact }),
+  } : null
 
   async function handleSave() {
     setSaving(true)
     setSaveResult(null)
     try {
-      const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
-      const { nextId, error: idError } = await idRes.json()
-      if (idError) throw new Error(idError)
+      if (isEdit) {
+        // Edit mode — update existing decision on branch, re-run narrative review
+        const res = await fetch('/api/github', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'edit-decision',
+            clientId, versionId, decisionId,
+            title, narrative,
+            requirements: requirements.filter(r => r.description?.trim()),
+            scope,
+          }),
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error ?? 'Failed to save changes')
+        setSaveResult({ ok: true, edit: true, decisionId })
+      } else {
+        // Create mode — get next ID, create decision, open PR
+        const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
+        const { nextId, error: idError } = await idRes.json()
+        if (idError) throw new Error(idError)
 
-      const fullDecision = { ...decision, 'decision-id': nextId }
+        const decision = {
+          'decision-id': nextId,
+          title,
+          status: 'draft',
+          narrative,
+          ...(requirements.filter(r => r.description?.trim()).length > 0 && {
+            requirements: requirements.filter(r => r.description?.trim()),
+          }),
+          ...(scope && { scope }),
+        }
 
-      const res = await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create-decision', clientId, versionId, decision: fullDecision }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
-      setSaveResult({ ok: true, prUrl: data.prUrl, prNumber: data.prNumber, decisionId: nextId })
+        const res = await fetch('/api/github', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'create-decision', clientId, versionId, decision }),
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
+        setSaveResult({ ok: true, edit: false, prUrl: data.prUrl, prNumber: data.prNumber, decisionId: nextId })
+      }
     } catch (err) {
       setSaveResult({ ok: false, error: err.message })
     } finally {
@@ -113,40 +153,72 @@ export default function DecisionEditorPage() {
     }
   }
 
+  if (loadingExisting) {
+    return <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
+  }
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">New Decision</h1>
+          <h1 className="text-xl font-semibold text-gray-900">
+            {isEdit ? `Edit ${decisionId}` : 'New Decision'}
+          </h1>
           <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={!title.trim() || !narrative.trim() || saving}
-          className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
-          {saving ? 'Creating…' : 'Create Decision & Open PR'}
-        </button>
+        <div className="flex items-center gap-2">
+          {isEdit && (
+            <Link
+              to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
+              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </Link>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={!title.trim() || !narrative.trim() || saving}
+            className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            {saving
+              ? (isEdit ? 'Saving…' : 'Creating…')
+              : (isEdit ? 'Save Changes' : 'Create Decision')}
+          </button>
+        </div>
       </div>
 
-      {saveResult?.ok && (
+      {saveResult?.ok && isEdit && (
+        <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
+          Changes saved. Narrative Review is running to refresh the analysis.{' '}
+          <TextLink
+            to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
+            state={{ cacheBust: true }}
+            className="font-medium"
+          >
+            Back to {decisionId} →
+          </TextLink>
+        </div>
+      )}
+      {saveResult?.ok && !isEdit && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
           <span className="font-semibold">{saveResult.decisionId}</span> created.{' '}
-          <a href={saveResult.prUrl} target="_blank" rel="noreferrer" className="underline font-medium">
+          <TextLink href={saveResult.prUrl} target="_blank" rel="noreferrer" className="font-medium">
             View PR #{saveResult.prNumber} on GitHub →
-          </a>
+          </TextLink>
         </div>
       )}
       {saveResult?.ok === false && (
         <div className="mb-4 px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
-          Failed to create decision: {saveResult.error}
+          {saveResult.error}
         </div>
       )}
 
       <div className="max-w-3xl space-y-5">
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Title <span className="text-error-500">*</span></label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Title <span className="text-error-500">*</span>
+          </label>
           <input
             type="text"
             value={title}
@@ -167,7 +239,7 @@ export default function DecisionEditorPage() {
           <textarea
             value={narrative}
             onChange={e => setNarrative(e.target.value)}
-            rows={6}
+            rows={8}
             placeholder="We require... This is based on... The proposed approach is..."
             className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
           />
@@ -188,43 +260,16 @@ export default function DecisionEditorPage() {
           <p className="text-xs text-gray-400 mb-2">
             Optional. Constrain the decision to a specific domain, abstraction layer, or artefact type.
           </p>
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Domain</label>
-              <select
-                value={scopeDomain}
-                onChange={e => { setScopeDomain(e.target.value); setScopeAbstraction(''); setScopeArtefact('') }}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-              >
-                <option value="">Any</option>
-                {DOMAINS.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Abstraction</label>
-              <select
-                value={scopeAbstraction}
-                onChange={e => { setScopeAbstraction(e.target.value); setScopeArtefact('') }}
-                disabled={!scopeDomain}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
-              >
-                <option value="">Any</option>
-                {filteredAbstractions.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Artefact type</label>
-              <select
-                value={scopeArtefact}
-                onChange={e => setScopeArtefact(e.target.value)}
-                disabled={!scopeDomain}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:opacity-40"
-              >
-                <option value="">Any</option>
-                {filteredArtefacts.map(a => <option key={a.id} value={a.id}>{a.id} — {a.name}</option>)}
-              </select>
-            </div>
-          </div>
+          <ScopeSelector
+            domain={scopeDomain}
+            abstraction={scopeAbstraction}
+            artefact={scopeArtefact}
+            onChange={({ domain, abstraction, artefact }) => {
+              setScopeDomain(domain)
+              setScopeAbstraction(abstraction)
+              setScopeArtefact(artefact)
+            }}
+          />
         </div>
       </div>
     </div>

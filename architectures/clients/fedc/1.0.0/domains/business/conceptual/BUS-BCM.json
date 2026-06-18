@@ -1,0 +1,316 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BCM",
+    "groups": [
+        {
+            "id": "CAP-001",
+            "name": "Customer Management",
+            "meta": {
+                "importance": "differentiating"
+            },
+            "items": [
+                {
+                    "id": "CAP-001-01",
+                    "name": "Acquire Customer",
+                    "items": [
+                        {
+                            "id": "CAP-001-01-01",
+                            "name": "Generate Leads"
+                        },
+                        {
+                            "id": "CAP-001-01-02",
+                            "name": "Qualify Prospects"
+                        },
+                        {
+                            "id": "CAP-001-01-03",
+                            "name": "Convert Sales"
+                        },
+                        {
+                            "id": "CAP-001-01-04",
+                            "name": "Onboard Customer"
+                        }
+                    ]
+                },
+                {
+                    "id": "CAP-001-02",
+                    "name": "Service Customer"
+                },
+                {
+                    "id": "CAP-001-03",
+                    "name": "Manage Customer Insight"
+                },
+                {
+                    "id": "CAP-001-04",
+                    "name": "Retain Customer"
+                }
+            ]
+        },
+        {
+            "id": "CAP-002",
+            "name": "Energy Generation",
+            "meta": {
+                "importance": "strategic"
+            },
+            "items": [
+                {
+                    "id": "CAP-002-01",
+                    "name": "Plan Generation Capacity"
+                },
+                {
+                    "id": "CAP-002-02",
+                    "name": "Operate Generation Assets",
+                    "items": [
+                        {
+                            "id": "CAP-002-02-01",
+                            "name": "Dispatch Units"
+                        },
+                        {
+                            "id": "CAP-002-02-02",
+                            "name": "Manage Real-Time Performance"
+                        },
+                        {
+                            "id": "CAP-002-02-03",
+                            "name": "Quality Control"
+                        }
+                    ]
+                },
+                {
+                    "id": "CAP-002-03",
+                    "name": "Manage Fuel & Inputs"
+                },
+                {
+                    "id": "CAP-002-04",
+                    "name": "Optimise Generation Portfolio"
+                }
+            ]
+        },
+        {
+            "id": "CAP-003",
+            "name": "Energy Trading & Risk Management",
+            "meta": {
+                "importance": "strategic"
+            },
+            "items": [
+                {
+                    "id": "CAP-003-01",
+                    "name": "Forecast Demand & Supply"
+                },
+                {
+                    "id": "CAP-003-02",
+                    "name": "Trade Energy & Products",
+                    "items": [
+                        {
+                            "id": "CAP-003-02-01",
+                            "name": "Trade Day-Ahead"
+                        },
+                        {
+                            "id": "CAP-003-02-02",
+                            "name": "Trade Intraday"
+                        },
+                        {
+                            "id": "CAP-003-02-03",
+                            "name": "Negotiate Bilateral Contracts"
+                        }
+                    ]
+                },
+                {
+                    "id": "CAP-003-03",
+                    "name": "Manage Trading Risk"
+                },
+                {
+                    "id": "CAP-003-04",
+                    "name": "Settle Trades"
+                }
+            ]
+        },
+        {
+            "id": "CAP-004",
+            "name": "Network Operations",
+            "meta": {
+                "importance": "foundational"
+            },
+            "items": [
+                {
+                    "id": "CAP-004-01",
+                    "name": "Plan Network Investment"
+                },
+                {
+                    "id": "CAP-004-02",
+                    "name": "Operate Network"
+                },
+                {
+                    "id": "CAP-004-03",
+                    "name": "Maintain Network"
+                },
+                {
+                    "id": "CAP-004-04",
+                    "name": "Manage Outages",
+                    "items": [
+                        {
+                            "id": "CAP-004-04-01",
+                            "name": "Plan Planned Outages"
+                        },
+                        {
+                            "id": "CAP-004-04-02",
+                            "name": "Respond to Unplanned Outages"
+                        },
+                        {
+                            "id": "CAP-004-04-03",
+                            "name": "Communicate to Affected Customers"
+                        }
+                    ]
+                },
+                {
+                    "id": "CAP-004-05",
+                    "name": "Connect Customers & Generators"
+                }
+            ]
+        },
+        {
+            "id": "CAP-005",
+            "name": "Asset Management",
+            "meta": {
+                "importance": "foundational"
+            },
+            "items": [
+                {
+                    "id": "CAP-005-01",
+                    "name": "Plan Assets"
+                },
+                {
+                    "id": "CAP-005-02",
+                    "name": "Acquire & Construct Assets"
+                },
+                {
+                    "id": "CAP-005-03",
+                    "name": "Operate Assets"
+                },
+                {
+                    "id": "CAP-005-04",
+                    "name": "Maintain Assets"
+                },
+                {
+                    "id": "CAP-005-05",
+                    "name": "Decommission Assets"
+                }
+            ]
+        },
+        {
+            "id": "CAP-006",
+            "name": "Retail & Billing",
+            "meta": {
+                "importance": "foundational"
+            },
+            "items": [
+                {
+                    "id": "CAP-006-01",
+                    "name": "Manage Tariffs & Products"
+                },
+                {
+                    "id": "CAP-006-02",
+                    "name": "Read & Validate Meters"
+                },
+                {
+                    "id": "CAP-006-03",
+                    "name": "Generate Bills",
+                    "items": [
+                        {
+                            "id": "CAP-006-03-01",
+                            "name": "Calculate Charges"
+                        },
+                        {
+                            "id": "CAP-006-03-02",
+                            "name": "Validate Bills"
+                        },
+                        {
+                            "id": "CAP-006-03-03",
+                            "name": "Dispatch Bills"
+                        }
+                    ]
+                },
+                {
+                    "id": "CAP-006-04",
+                    "name": "Collect Payment"
+                },
+                {
+                    "id": "CAP-006-05",
+                    "name": "Manage Arrears"
+                }
+            ]
+        },
+        {
+            "id": "CAP-007",
+            "name": "Regulatory & Compliance",
+            "meta": {
+                "importance": "foundational"
+            },
+            "items": [
+                {
+                    "id": "CAP-007-01",
+                    "name": "Manage Licensing"
+                },
+                {
+                    "id": "CAP-007-02",
+                    "name": "Report to Regulators"
+                },
+                {
+                    "id": "CAP-007-03",
+                    "name": "Manage Audits & Investigations"
+                },
+                {
+                    "id": "CAP-007-04",
+                    "name": "Manage Safety & Environment"
+                }
+            ]
+        },
+        {
+            "id": "CAP-008",
+            "name": "Sustainability & Decarbonisation",
+            "meta": {
+                "importance": "strategic"
+            },
+            "items": [
+                {
+                    "id": "CAP-008-01",
+                    "name": "Measure Emissions"
+                },
+                {
+                    "id": "CAP-008-02",
+                    "name": "Integrate Renewable Generation"
+                },
+                {
+                    "id": "CAP-008-03",
+                    "name": "Manage Carbon Credits & Offsets"
+                },
+                {
+                    "id": "CAP-008-04",
+                    "name": "Report ESG Performance"
+                }
+            ]
+        },
+        {
+            "id": "CAP-009",
+            "name": "Enterprise Support",
+            "meta": {
+                "importance": "foundational"
+            },
+            "items": [
+                {
+                    "id": "CAP-009-01",
+                    "name": "Manage Finance"
+                },
+                {
+                    "id": "CAP-009-02",
+                    "name": "Manage People"
+                },
+                {
+                    "id": "CAP-009-03",
+                    "name": "Manage Technology"
+                },
+                {
+                    "id": "CAP-009-04",
+                    "name": "Manage Procurement"
+                }
+            ]
+        }
+    ]
+}

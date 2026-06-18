@@ -1,0 +1,58 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-CAP-PRO",
+    "title": "Business Capabilities ↔ Business Processes",
+    "description": "Many-to-many mapping between BUS-CAP business capabilities and BUS-PRO business processes at Level 1 (strategic) and Level 2 (operational). Aligns what the business does with how it does it.",
+    "meta": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "format": "matrix",
+        "description": "Maps business capabilities to the processes that realise them, at L1 and L2 — the bridge between the what and the how.",
+        "purpose": [
+            "Show which processes deliver each business capability, making the operating model explicit.",
+            "Identify capability gaps where no process exists, and process orphans with no clear capability owner.",
+            "Provide the linkage from strategy (BUS-CAP) to execution (BUS-PRO).",
+            "Support process improvement prioritisation by capability importance."
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "BUS-CAP",
+                "array": "capabilities",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description",
+                "filter": { "field": "level", "in": [1, 2] }
+            },
+            "rows": {
+                "artefact": "BUS-PRO",
+                "array": "processes",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description",
+                "filter": { "field": "level", "in": [1, 2] }
+            }
+        }
+    },
+    "type": "object",
+    "required": ["relationships"],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "relationships": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["column-id", "row-id"],
+                "properties": {
+                    "column-id": { "type": "string", "description": "BUS-CAP capability ID" },
+                    "row-id": { "type": "string", "description": "BUS-PRO process ID" },
+                    "rationale": { "type": "string" }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,45 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:integration:conceptual:INT-STR",
+    "strategies": [
+        {
+            "id": "INT-STR-001",
+            "statement": "API-first: every new inter-system exchange is a versioned, managed API by default",
+            "driver": "Point-to-point integration debt slows every new product; ~40% of new-initiative effort is integration plumbing",
+            "target-outcome": "All new inter-system exchange via managed APIs by 2026; legacy point-to-point reduced 50% by 2027",
+            "horizon": "medium-term",
+            "owner": "Head of Integration"
+        },
+        {
+            "id": "INT-STR-002",
+            "statement": "Event-driven by default for state changes; synchronous request/response only where unavoidable",
+            "driver": "Synchronous coupling is the dominant cause of cascading failure in the estate",
+            "target-outcome": "All material state changes published as events on a shared backbone by 2027",
+            "horizon": "long-term",
+            "owner": "Head of Integration"
+        },
+        {
+            "id": "INT-STR-003",
+            "statement": "Contract-first: API and event schemas are designed and reviewed before implementation begins",
+            "driver": "Implementation-first integrations leak internal models into shared contracts",
+            "target-outcome": "Every published API has a reviewed schema; consumer codegen-ready by default",
+            "horizon": "short-term",
+            "owner": "Head of Integration"
+        },
+        {
+            "id": "INT-STR-004",
+            "statement": "Zero direct cross-zone traffic \u2014 all inter-zone integration flows through the managed gateway and broker",
+            "driver": "Direct connections undermine centralised security, observability, and rate management",
+            "target-outcome": "No production direct cross-zone connections by 2026; gateway/broker mediates everything",
+            "horizon": "medium-term",
+            "owner": "Head of Network Security"
+        },
+        {
+            "id": "INT-STR-005",
+            "statement": "Composability: integrations are designed for reuse, with stable contracts independent of consumers",
+            "driver": "Single-consumer integrations multiply the integration surface and prevent ecosystem effects",
+            "target-outcome": "A documented catalogue of reusable integration capabilities; new initiatives consume before they commission",
+            "horizon": "medium-term",
+            "owner": "Head of Integration"
+        }
+    ]
+}
