@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import Spinner from '../components/ui/Spinner'
+import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function clientInitials(name) {
@@ -33,9 +34,7 @@ function ClientCard({ client, clientsMetadata }) {
           </h3>
           <p className="text-xs font-mono text-gray-400 mt-0.5">{clientId}</p>
         </div>
-        <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" viewBox="0 0 16 16" fill="none">
-          <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-        </svg>
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
       </div>
     </Link>
   )
@@ -54,7 +53,7 @@ export default function ClientsPage() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 pb-10">
+    <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
         <p className="mt-1 text-sm text-gray-500">

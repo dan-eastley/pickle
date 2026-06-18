@@ -11,9 +11,9 @@ Asserts these invariants:
   5.  The client.json's client-id field equals the folder name.
   6.  Every version-id in versions.json has a matching <client>/<version>/ folder.
   7.  Every <client>/<version>/ folder has an entry in versions.json (no orphans).
-  8.  Each version folder has version.json, artefacts/, decisions/.
+  8.  Each version folder has version.json, domains/, decisions/.
   9.  The version.json's version-id field equals the folder name.
- 10.  Under artefacts/domains/, the 5 architecture-domain folders are present
+ 10.  Under domains/, the 5 architecture-domain folders are present
       (business, data, integration, application, solution) and each contains
       the 3 abstraction-layer folders (conceptual, logical, physical).
  11.  Under decisions/, decisions.json exists.
@@ -120,28 +120,24 @@ def check_version(client_id: str, version_id: str) -> None:
                 f'match folder name "{version_id}"'
             )
 
-    # artefacts/domains/<dom>/<layer>/
-    artefacts = base / "artefacts"
-    if not artefacts.is_dir():
-        err(f"Missing: {artefacts}/")
+    # domains/<dom>/<layer>/
+    domains = base / "domains"
+    if not domains.is_dir():
+        err(f"Missing: {domains}/")
     else:
-        domains = artefacts / "domains"
-        if not domains.is_dir():
-            err(f"Missing: {domains}/")
-        else:
-            present_doms = child_dirs(domains)
-            for d in EXPECTED_DOMAINS - present_doms:
-                err(f"Missing architecture-domain folder: {domains}/{d}/")
-            for d in present_doms - EXPECTED_DOMAINS:
-                err(f"Unexpected folder under {domains}/: {d}/")
+        present_doms = child_dirs(domains)
+        for d in EXPECTED_DOMAINS - present_doms:
+            err(f"Missing architecture-domain folder: {domains}/{d}/")
+        for d in present_doms - EXPECTED_DOMAINS:
+            err(f"Unexpected folder under {domains}/: {d}/")
 
-            for d in present_doms & EXPECTED_DOMAINS:
-                layer_dir = domains / d
-                present_layers = child_dirs(layer_dir)
-                for layer in EXPECTED_LAYERS - present_layers:
-                    err(f"Missing abstraction-layer folder: {layer_dir}/{layer}/")
-                for layer in present_layers - EXPECTED_LAYERS:
-                    err(f"Unexpected folder under {layer_dir}/: {layer}/")
+        for d in present_doms & EXPECTED_DOMAINS:
+            layer_dir = domains / d
+            present_layers = child_dirs(layer_dir)
+            for layer in EXPECTED_LAYERS - present_layers:
+                err(f"Missing abstraction-layer folder: {layer_dir}/{layer}/")
+            for layer in present_layers - EXPECTED_LAYERS:
+                err(f"Unexpected folder under {layer_dir}/: {layer}/")
 
     # decisions/
     decisions = base / "decisions"

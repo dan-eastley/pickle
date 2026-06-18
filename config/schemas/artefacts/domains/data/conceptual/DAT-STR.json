@@ -1,8 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:data:conceptual:DAT-STR",
-    "title": "Data Strategy Catalogue",
-    "description": "Catalogue of strategic statements for the Data architecture domain — the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
+    "title": "Data Architecture Strategy Catalogue",
+    "description": "Catalogue of strategic statements for the Data architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "data",
         "abstraction": "conceptual",
@@ -14,13 +14,21 @@
             "Provides the 'why' behind data governance, quality, and architecture decisions",
             "Creates accountability for data outcomes at the executive level",
             "Anchors all Data architecture decisions to a traceable set of intentions"
-        ]
+        ],
+        "countLabels": {
+            "singular": "Statement",
+            "plural": "Statements"
+        }
     },
     "type": "object",
     "required": [
         "strategies"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
         "strategies": {
             "type": "array",
             "items": {
@@ -36,7 +44,7 @@
                     },
                     "statement": {
                         "type": "string",
-                        "description": "Strategic statement — outcome-oriented, time-bound where appropriate"
+                        "description": "Strategic statement \u2014 outcome-oriented, time-bound where appropriate"
                     },
                     "driver": {
                         "type": "string",

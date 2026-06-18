@@ -27,7 +27,7 @@ flowchart LR
         I4["&lt;client&gt;/&lt;version&gt;/<br/>version.json"]
         I5["&lt;client&gt;/&lt;version&gt;/decisions/<br/>decisions.json"]
         I6["&lt;client&gt;/&lt;version&gt;/decisions/<br/>&lt;decision-id&gt;.json"]
-        I7["&lt;client&gt;/&lt;version&gt;/artefacts/domains/<br/>&lt;dom&gt;/&lt;layer&gt;/&lt;ID&gt;/&lt;ID&gt;.json"]
+        I7["&lt;client&gt;/&lt;version&gt;/domains/<br/>&lt;dom&gt;/&lt;layer&gt;/&lt;ID&gt;.json"]
     end
 
     S1 -. validates .-> I1
@@ -76,6 +76,18 @@ Each architecture domain carries a Strategy (Conceptual), Principles (Logical), 
 | Application | [APP-STR.md](artefacts/domains/application/conceptual/APP-STR.md) | [APP-PRN.md](artefacts/domains/application/logical/APP-PRN.md) | [APP-GRD.md](artefacts/domains/application/physical/APP-GRD.md) |
 | Solution | [SOL-STR.md](artefacts/domains/solution/conceptual/SOL-STR.md) | [SOL-PRN.md](artefacts/domains/solution/logical/SOL-PRN.md) | [SOL-GRD.md](artefacts/domains/solution/physical/SOL-GRD.md) |
 
+## Strategy ↔ Principles / Principles ↔ Guardrails matrices (one pair per architecture domain)
+
+Each architecture domain also carries two many-to-many matrices linking adjacent layers of the Strategy / Principles / Guardrails baseline above: `<DOM>-STR-PRN` (Logical) maps Strategy statements to the Principles that operationalise them, and `<DOM>-PRN-GRD` (Physical) maps Principles to the Guardrails that make them concrete. Both share the `meta.matrix` + sparse `relationships[]` shape described in [artefacts.md](artefacts.md).
+
+| Architecture Domain | Strategy ↔ Principles | Principles ↔ Guardrails |
+|---|---|---|
+| Business | [BUS-STR-PRN.md](artefacts/domains/business/logical/BUS-STR-PRN.md) | [BUS-PRN-GRD.md](artefacts/domains/business/physical/BUS-PRN-GRD.md) |
+| Data | [DAT-STR-PRN.md](artefacts/domains/data/logical/DAT-STR-PRN.md) | [DAT-PRN-GRD.md](artefacts/domains/data/physical/DAT-PRN-GRD.md) |
+| Integration | [INT-STR-PRN.md](artefacts/domains/integration/logical/INT-STR-PRN.md) | [INT-PRN-GRD.md](artefacts/domains/integration/physical/INT-PRN-GRD.md) |
+| Application | [APP-STR-PRN.md](artefacts/domains/application/logical/APP-STR-PRN.md) | [APP-PRN-GRD.md](artefacts/domains/application/physical/APP-PRN-GRD.md) |
+| Solution | [SOL-STR-PRN.md](artefacts/domains/solution/logical/SOL-STR-PRN.md) | [SOL-PRN-GRD.md](artefacts/domains/solution/physical/SOL-PRN-GRD.md) |
+
 ## Domain-specific catalogue schemas
 
 | Schema | Artefact Type | Architecture Domain / Layer | Aligned to |
@@ -84,3 +96,30 @@ Each architecture domain carries a Strategy (Conceptual), Principles (Logical), 
 | [BUS-PRO.md](artefacts/domains/business/conceptual/BUS-PRO.md) | Business Processes | Business / Conceptual | APQC PCF, Porter value chain |
 | [DAT-DAC.md](artefacts/domains/data/conceptual/DAT-DAC.md) | Data Domains & Concepts | Data / Conceptual | DAMA-DMBOK, ISO 27001 |
 | [APP-DAP.md](artefacts/domains/application/logical/APP-DAP.md) | Application Domains & Platforms | Application / Logical | TOGAF Application Architecture, Gartner Pace Layers |
+| [APP-CAT.md](artefacts/domains/application/physical/APP-CAT.md) | Application Catalogue | Application / Physical | Application Portfolio Management (TIME model), ITAM |
+| [INT-IFC.md](artefacts/domains/integration/logical/INT-IFC.md) | Interface Catalogue | Integration / Logical | TOGAF Integration/Application Communication Diagrams, C4 System Context |
+
+## Cross-domain / cross-layer matrices
+
+Beyond the per-domain Strategy ↔ Principles / Principles ↔ Guardrails pairs above, matrices can also join two artefacts from different domains and/or abstraction layers. The domain/layer the matrix lives in, and which source becomes `columns` vs `rows`, follow the [Matrix placement](../output-formats.md#matrix-placement) convention.
+
+| Schema | Artefact Type | Architecture Domain / Layer | Joins |
+|---|---|---|---|
+| [APP-DAP-CAT.md](artefacts/domains/application/physical/APP-DAP-CAT.md) | Application Domains & Platforms ↔ Application Catalogue | Application / Physical | APP-DAP ↔ APP-CAT |
+| [APP-CAP-DAP.md](artefacts/domains/application/logical/APP-CAP-DAP.md) | Business Capabilities ↔ Application Domains & Platforms | Application / Logical | BUS-CAP (Level 2) ↔ APP-DAP |
+| [INT-DAC-IFC.md](artefacts/domains/integration/logical/INT-DAC-IFC.md) | Data Domains & Concepts ↔ Interface Catalogue | Integration / Logical | DAT-DAC ↔ INT-IFC |
+
+## Diagram schemas
+
+Diagram artefacts are derived from a source catalogue rather than authored directly. BUS-BCM, DAT-CDM, and APP-DPM define a `groups[].items[]` shape rendered by [`NestedGroupDiagram`](../../src/components/artefacts/diagrams/NestedGroupDiagram.jsx) (see [Diagram rendering](#diagram-rendering) below). BUS-BPM is not yet implemented — its schema currently defines only a `meta` block (including `diagramType`) plus an open `additionalProperties: true` body.
+
+| Schema | Artefact Type | Architecture Domain / Layer | Derived from | Status |
+|---|---|---|---|---|
+| [BUS-BCM.md](artefacts/domains/business/conceptual/BUS-BCM.md) | Business Capability Model | Business / Conceptual | BUS-CAP | Defined (`card-based`) |
+| [BUS-BPM.md](artefacts/domains/business/conceptual/BUS-BPM.md) | Business Process Model | Business / Conceptual | BUS-PRO | Placeholder (`flow-based`) |
+| [DAT-CDM.md](artefacts/domains/data/conceptual/DAT-CDM.md) | Conceptual Data Model | Data / Conceptual | DAT-DAC | Defined (`entity-based`) |
+| [APP-DPM.md](artefacts/domains/application/logical/APP-DPM.md) | Domains & Platforms Model | Application / Logical | APP-DAP | Defined (`card-based`) |
+
+### Diagram rendering
+
+`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group (e.g. a Level 1 capability or a data domain) is rendered as a card containing its items (e.g. Level 2 sub-capabilities or conceptual data entities). Both groups and items carry an open `meta` object for additional display attributes — e.g. BUS-BCM uses `meta.importance` to badge each capability card. The two diagram types share the same layout component and theme ([`src/lib/diagramTheme.js`](../../src/lib/diagramTheme.js)) and differ only in corner styling.

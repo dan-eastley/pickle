@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { getDomain, getAbstraction, getArtefact } from '../../lib/artefacts'
-
-function ChevronRight() {
-  return (
-    <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
-      <path d="M6 12l4-4-4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
+import { ChevronRight } from '../ui/icons'
 
 function Crumbs({ crumbs }) {
   return (
@@ -16,7 +9,7 @@ function Crumbs({ crumbs }) {
       <nav className="flex items-center gap-1.5 py-3 text-sm" aria-label="Breadcrumb">
         {crumbs.map((crumb, i) => (
           <span key={i} className="flex items-center gap-1.5">
-            {i > 0 && <ChevronRight />}
+            {i > 0 && <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />}
             {crumb.to ? (
               <Link to={crumb.to} className="text-gray-500 hover:text-gray-700 transition-colors">
                 {crumb.label}

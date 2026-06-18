@@ -1,4 +1,4 @@
-# SOL-GRD — Solution Guardrails Catalogue
+# SOL-GRD — Solution Architecture Guardrails Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/solution/physical/SOL-GRD.json`](../../../../../../config/schemas/artefacts/domains/solution/physical/SOL-GRD.json)
 **Architecture Domain / Layer:** Solution / Physical
