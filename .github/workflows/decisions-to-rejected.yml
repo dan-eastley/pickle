@@ -1,0 +1,151 @@
+name: Decisions — To Rejected
+
+# Fires when a decision is rejected.
+# Updates the decision status, merges the decisions branch PR into main for
+# traceability (preserving the full decision history), and deletes the branch.
+#
+# Triggered via workflow_dispatch from the Pickle API on decision rejection.
+
+on:
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-018)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  reject:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH:        decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
+      DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
+      INDEX_FILE:    architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/decisions.json
+      DECISION_ID:   ${{ inputs.decision-id }}
+      CLIENT_ID:     ${{ inputs.client-id }}
+      VERSION_ID:    ${{ inputs.version-id }}
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Decisions — To Rejected (${DECISION_ID})"
+
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update decision.json on decisions branch
+        run: |
+          echo "::notice::Fetching origin and checking out ${BRANCH}"
+          git fetch origin
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          echo "::notice::Setting status=rejected in decision.json"
+          python3 << 'PYEOF'
+          import json, os
+          path = os.environ['DECISION_FILE']
+          with open(path) as f:
+              data = json.load(f)
+          prev = data.get('status', '(unset)')
+          data['status'] = 'rejected'
+          with open(path, 'w') as f:
+              json.dump(data, f, indent=4)
+          print(f"Status updated: {prev} → rejected")
+          PYEOF
+          git add "$DECISION_FILE"
+          if git diff --cached --quiet; then
+            echo "::notice::decision.json already had status=rejected — no commit needed"
+          else
+            git commit -m "Update ${DECISION_ID}: status → rejected"
+            git push origin "$BRANCH"
+            echo "::notice::Pushed status update to ${BRANCH}"
+          fi
+
+      - name: Update decisions.json index on main
+        run: |
+          echo "::notice::Switching to main to update decisions index"
+          git checkout main
+          git pull origin main
+          python3 << 'PYEOF'
+          import json, os
+          path = os.environ['INDEX_FILE']
+          did  = os.environ['DECISION_ID']
+          with open(path) as f:
+              data = json.load(f)
+          found = False
+          for d in data.get('decisions', []):
+              if d.get('decision-id') == did:
+                  d['status'] = 'rejected'
+                  found = True
+                  break
+          if not found:
+              print(f"::warning::Decision {did} not found in decisions.json — skipping index update")
+          with open(path, 'w') as f:
+              json.dump(data, f, indent=4)
+          print(f"decisions.json updated for {did}")
+          PYEOF
+          git add "$INDEX_FILE"
+          if git diff --cached --quiet; then
+            echo "::notice::decisions.json already reflects rejected — no commit needed"
+          else
+            git commit -m "Sync ${DECISION_ID} in decisions index (rejected)"
+            git push origin main
+            echo "::notice::Pushed decisions.json update to main"
+          fi
+
+      - name: Merge decisions branch PR into main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::notice::Looking for open PR for branch ${BRANCH}"
+          PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$PR" ]; then
+            echo "::notice::Merging PR #${PR} (${BRANCH} → main) for traceability"
+            gh pr merge "$PR" --merge --delete-branch \
+              --body "Decision rejected — merging for traceability."
+            echo "::notice::PR #${PR} merged and branch deleted"
+          else
+            echo "::warning::No open PR found for ${BRANCH} — attempting direct branch deletion"
+            git push origin --delete "$BRANCH" 2>/dev/null \
+              && echo "::notice::Branch ${BRANCH} deleted" \
+              || echo "::warning::Branch deletion failed or branch already removed"
+          fi
+
+      - name: Write summary
+        if: always()
+        run: |
+          {
+            echo "## Decisions — To Rejected"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Decision | \`${DECISION_ID}\` |"
+            echo "| Client | \`${CLIENT_ID}\` |"
+            echo "| Version | \`${VERSION_ID}\` |"
+            echo "| Branch | \`${BRANCH}\` |"
+            echo ""
+            echo "The decision was marked **rejected**. The decisions branch PR was merged into"
+            echo "main for traceability and the branch was deleted."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Decisions — To Rejected (${DECISION_ID})"
