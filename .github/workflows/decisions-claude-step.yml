@@ -61,7 +61,8 @@ jobs:
       DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
     steps:
       - name: Started
-        run: echo "::notice::Started: ${ANALYSIS_NAME} (model: ${{ inputs.model }})"
+        run: |
+          echo "::notice::Started: ${ANALYSIS_NAME} (model: ${{ inputs.model }})"
 
       - name: Checkout decisions branch
         uses: actions/checkout@v5
@@ -114,4 +115,5 @@ jobs:
 
       - name: Finished
         if: always()
-        run: echo "::notice::Finished: ${ANALYSIS_NAME}"
+        run: |
+          echo "::notice::Finished: ${ANALYSIS_NAME}"
