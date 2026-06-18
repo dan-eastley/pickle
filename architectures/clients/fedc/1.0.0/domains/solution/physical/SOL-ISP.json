@@ -1,0 +1,122 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:physical:SOL-ISP",
+    "documents": [
+        {
+            "id": "SOL-ISP-001",
+            "title": "CIS to Data Lakehouse — Billing Ingestion Specification",
+            "description": "Physical interface specification for the nightly batch extraction of billing event data from Oracle CC&B (CIS) to the Databricks Data Lakehouse bronze layer, orchestrated by Oracle Integration Cloud.",
+            "status": "in-review",
+            "scope": "ADR-013 Phase 1 — Operational Analytics data ingestion",
+            "interface-id": "INT-IFC-CIS-LAKE",
+            "source-system": "PLAT-CIS",
+            "target-system": "PLAT-LAKEHOUSE",
+            "technical-protocol": "batch-file",
+            "authentication": "OAuth2",
+            "data-format": "Avro",
+            "trigger": "scheduled",
+            "overview": "Nightly batch extraction of billing delta records from Oracle CC&B via Oracle Integration Cloud. OIC runs the CC&B batch extract adapter at 01:00 UTC, producing Avro-encoded billing event files that are written to the Databricks Lakehouse DBFS bronze path. The Avro schema is registered in the Confluent Schema Registry for governance and evolution management.",
+            "endpoints": [
+                {
+                    "path": "/api/v1/batch/billing/extract",
+                    "method": "POST",
+                    "description": "OIC trigger endpoint — initiates a CC&B batch extract job for the specified date range. Returns a job_id for status polling."
+                },
+                {
+                    "path": "/api/v1/batch/billing/status/{job_id}",
+                    "method": "GET",
+                    "description": "Poll the status of a running extract job. Returns: pending | running | complete | failed."
+                },
+                {
+                    "path": "/api/v1/batch/billing/files/{job_id}",
+                    "method": "GET",
+                    "description": "Retrieve the list of Avro output files produced by a completed extract job."
+                }
+            ],
+            "data-model": "Avro schema: fedc.cis.billing.BillingEvent (v2)\n\n{\n  \"type\": \"record\",\n  \"name\": \"BillingEvent\",\n  \"namespace\": \"fedc.cis.billing\",\n  \"fields\": [\n    { \"name\": \"event_id\",        \"type\": \"string\" },\n    { \"name\": \"account_id\",      \"type\": \"string\" },\n    { \"name\": \"customer_id\",     \"type\": \"string\" },\n    { \"name\": \"bill_date\",       \"type\": { \"type\": \"int\", \"logicalType\": \"date\" } },\n    { \"name\": \"due_date\",        \"type\": { \"type\": \"int\", \"logicalType\": \"date\" } },\n    { \"name\": \"amount_due\",      \"type\": { \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 10, \"scale\": 2 } },\n    { \"name\": \"amount_paid\",     \"type\": [\"null\", { \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 10, \"scale\": 2 }], \"default\": null },\n    { \"name\": \"bill_status\",     \"type\": { \"type\": \"enum\", \"name\": \"BillStatus\", \"symbols\": [\"ISSUED\", \"PAID\", \"OVERDUE\", \"CANCELLED\"] } },\n    { \"name\": \"tariff_code\",     \"type\": \"string\" },\n    { \"name\": \"meter_id\",        \"type\": [\"null\", \"string\"], \"default\": null },\n    { \"name\": \"consumption_kwh\", \"type\": [\"null\", \"double\"], \"default\": null },\n    { \"name\": \"extracted_at\",    \"type\": { \"type\": \"long\", \"logicalType\": \"timestamp-millis\" } }\n  ]\n}",
+            "error-handling": "OIC implements a three-tier error strategy:\n\n1. Transient errors (network timeout, CC&B API 503): OIC retries the failed step up to 3 times with exponential backoff (30s, 60s, 120s).\n2. CC&B extract job failure: OIC raises an alert to the Data Engineering on-call channel (ServiceNow event); next night's run will include the previous day's delta.\n3. Avro schema validation failure: Files that fail schema validation are quarantined to bronze/cis/billing/_quarantine/ with an error manifest. Data Engineering reviews and either re-processes or raises a CC&B schema change ticket.",
+            "sla": {
+                "latency-p99-ms": null,
+                "throughput-tps": null,
+                "availability-percent": 99.0
+            },
+            "test-scenarios": [
+                {
+                    "id": "ISP-001-T01",
+                    "description": "Full extract: 500k billing records extracted and landed in Databricks DBFS bronze layer within the 2-hour SLA window (01:00–03:00 UTC).",
+                    "expected-outcome": "All records present in bronze/cis/billing/YYYY-MM-DD/ with Avro schema conformance. No quarantine files generated."
+                },
+                {
+                    "id": "ISP-001-T02",
+                    "description": "Transient failure recovery: OIC extract job fails on first attempt due to simulated CC&B timeout.",
+                    "expected-outcome": "OIC retries after 30s. Second attempt succeeds. No manual intervention required. Alert raised on first failure and cleared on success."
+                },
+                {
+                    "id": "ISP-001-T03",
+                    "description": "Schema evolution: CC&B adds an optional new field (payment_method) not in current Avro schema.",
+                    "expected-outcome": "Avro schema backward-compatible evolution accepted by schema registry. Existing consumers unaffected. New field available in next Databricks silver refresh."
+                }
+            ]
+        },
+        {
+            "id": "SOL-ISP-002",
+            "title": "CRM to CIS — Customer Account Sync Specification",
+            "description": "Physical interface specification for real-time bidirectional synchronisation of customer account data between Salesforce CRM and Oracle CC&B, orchestrated via Oracle Integration Cloud.",
+            "status": "draft",
+            "scope": "Customer Experience Programme — CRM Integration Phase 1",
+            "interface-id": "INT-IFC-CRM-CIS",
+            "source-system": "PLAT-CRM",
+            "target-system": "PLAT-CIS",
+            "technical-protocol": "REST",
+            "authentication": "OAuth2",
+            "data-format": "JSON",
+            "trigger": "real-time",
+            "overview": "Bidirectional real-time synchronisation between Salesforce CRM (Account/Contact) and Oracle CC&B (Person/Account) via Oracle Integration Cloud. Salesforce Platform Events trigger OIC on account create/update. OIC transforms and routes to CC&B REST API. MDM golden record matching is applied to prevent duplicate person records. The reverse direction (CC&B → CRM) is triggered by CC&B account status changes.",
+            "endpoints": [
+                {
+                    "path": "/services/data/v58.0/sobjects/Account",
+                    "method": "POST",
+                    "description": "Salesforce REST API — create a new Account record. Used by the CC&B → CRM sync direction."
+                },
+                {
+                    "path": "/services/data/v58.0/sobjects/Account/{id}",
+                    "method": "PATCH",
+                    "description": "Salesforce REST API — update an existing Account (address, phone, status changes from CC&B)."
+                },
+                {
+                    "path": "/api/v1/customers",
+                    "method": "POST",
+                    "description": "CC&B REST API — create a new Person + Account from CRM data. Returns account_id."
+                },
+                {
+                    "path": "/api/v1/customers/{account_id}",
+                    "method": "PUT",
+                    "description": "CC&B REST API — update an existing customer account (address, contact details)."
+                }
+            ],
+            "data-model": "CRM Account → CC&B Person mapping (OIC transformation):\n\nSalesforce Account         CC&B Person/Account\n─────────────────────      ────────────────────────\nId                    →    external_crm_id\nName                  →    person.name (split: first/last)\nBillingStreet         →    address.line1\nBillingCity           →    address.city\nBillingPostalCode     →    address.postcode\nPhone                 →    contact.phone\nEmail                 →    contact.email\nAccount_Status__c     →    account.status (ACTIVE/INACTIVE)\nExternal_ID__c        ←    account.account_id (written back)",
+            "error-handling": "OIC error handling for CRM→CIS direction:\n- HTTP 4xx from CC&B (validation error): OIC posts a failed event to Salesforce Platform Event (Account_Sync_Error__e) with error detail. Salesforce workflow alerts the CRM admin.\n- HTTP 5xx from CC&B: OIC retries up to 3 times (15s interval). On persistent failure, event lands in OIC error queue for manual replay.\n- MDM duplicate detected: OIC resolves via golden record match and links to existing CC&B account. No new account created. Logged in OIC audit trail.",
+            "sla": {
+                "latency-p99-ms": 5000,
+                "throughput-tps": 10,
+                "availability-percent": 99.5
+            },
+            "test-scenarios": [
+                {
+                    "id": "ISP-002-T01",
+                    "description": "New customer created in Salesforce CRM — account provisioned in CC&B within 30 seconds.",
+                    "expected-outcome": "CC&B Person + Account created. Salesforce External_ID__c updated with new account_id. No duplicate in MDM."
+                },
+                {
+                    "id": "ISP-002-T02",
+                    "description": "Customer address updated in CC&B — Salesforce Account billing address updated within 60 seconds.",
+                    "expected-outcome": "Salesforce BillingStreet, BillingCity, BillingPostalCode match CC&B updated values."
+                },
+                {
+                    "id": "ISP-002-T03",
+                    "description": "Concurrent create: same customer created in CRM and CC&B simultaneously before integration is active.",
+                    "expected-outcome": "MDM match detects duplicate. OIC links both records to single golden record. No duplicate Person in CC&B. Alert raised for data steward review."
+                }
+            ]
+        }
+    ]
+}

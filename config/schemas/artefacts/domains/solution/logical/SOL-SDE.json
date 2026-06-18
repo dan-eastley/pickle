@@ -1,0 +1,226 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SDE",
+    "title": "Solution Design",
+    "description": "A logical-level solution design document describing components, data flows, interface requirements, and non-functional requirements for a specific solution.",
+    "meta": {
+        "domain": "solution",
+        "abstraction": "logical",
+        "format": "document",
+        "description": "Solution Design documents provide a structured logical design covering components, data flows, UML diagrams, interface requirements, and non-functional requirements.",
+        "purpose": [
+            "Document the logical structure and behaviour of a solution before physical implementation",
+            "Provide sufficient detail for interface specification and development planning"
+        ],
+        "countLabels": {
+            "singular": "Solution Design",
+            "plural": "Solution Designs"
+        }
+    },
+    "type": "object",
+    "required": ["documents"],
+    "properties": {
+        "$schema": { "type": "string" },
+        "documents": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/document" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "document": {
+            "type": "object",
+            "required": ["id", "title", "description", "status", "scope", "overview"],
+            "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "status": {
+                    "type": "string",
+                    "enum": ["draft", "in-review", "approved", "superseded"]
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "The solution or initiative this design covers"
+                },
+                "overview": {
+                    "type": "string",
+                    "description": "Prose overview of the solution design"
+                },
+                "solution-components": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/solution-component" }
+                },
+                "data-flows": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/data-flow" }
+                },
+                "uml-diagrams": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/uml-diagram" }
+                },
+                "interface-requirements": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/interface-requirement" }
+                },
+                "non-functional-requirements": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/non-functional-requirement" }
+                },
+                "assumptions": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/assumption" }
+                },
+                "open-questions": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/open-question" }
+                },
+                "diagrams": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/diagram-ref" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "solution-component": {
+            "type": "object",
+            "required": ["platform-id", "role"],
+            "properties": {
+                "platform-id": { "type": "string" },
+                "role": { "type": "string" },
+                "notes": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "data-flow": {
+            "type": "object",
+            "required": ["id", "name", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "steps": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Ordered sequence steps describing the data flow"
+                }
+            },
+            "additionalProperties": false
+        },
+        "uml-diagram": {
+            "type": "object",
+            "required": ["type", "title", "format", "content"],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": ["sequence", "component", "class", "state", "activity"]
+                },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "format": {
+                    "type": "string",
+                    "enum": ["mermaid", "plantuml", "url"]
+                },
+                "content": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "interface-requirement": {
+            "type": "object",
+            "required": ["interface-id", "direction", "data-format"],
+            "properties": {
+                "interface-id": { "type": "string" },
+                "direction": { "type": "string" },
+                "data-format": { "type": "string" },
+                "notes": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "non-functional-requirement": {
+            "type": "object",
+            "required": ["category", "requirement"],
+            "properties": {
+                "category": { "type": "string" },
+                "requirement": { "type": "string" },
+                "rationale": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "driver": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["business", "technology", "regulatory", "market"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "constraint": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["technical", "business", "regulatory", "resource"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "assumption": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "risk": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "likelihood": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "impact": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "mitigation": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "open-question": {
+            "type": "object",
+            "required": ["id", "question"],
+            "properties": {
+                "id": { "type": "string" },
+                "question": { "type": "string" },
+                "raised-by": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "diagram-ref": {
+            "type": "object",
+            "required": ["artefact-id"],
+            "properties": {
+                "artefact-id": {
+                    "type": "string",
+                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
+                },
+                "title": { "type": "string" },
+                "caption": { "type": "string" }
+            },
+            "additionalProperties": false
+        }
+    }
+}

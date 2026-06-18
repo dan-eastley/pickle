@@ -6,6 +6,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
+import DocumentView from '../components/artefacts/DocumentView'
 import NewDecisionModal from '../components/decisions/NewDecisionModal'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
@@ -211,7 +212,7 @@ export default function ArtefactPage() {
       {!loading && !error && data === null && (
         <div className="border border-gray-200 bg-white">
           <EmptyState
-            illustration={artefact.format === 'matrix' ? 'matrix' : artefact.format === 'diagram' ? 'diagram' : 'catalogue'}
+            illustration={artefact.format === 'matrix' ? 'matrix' : artefact.format === 'diagram' ? 'diagram' : artefact.format === 'document' ? 'catalogue' : 'catalogue'}
             title="Nothing here yet"
             description="No content has been added for this version. Use the button above to raise an Architecture Decision Record and propose changes."
           />
@@ -230,6 +231,9 @@ export default function ArtefactPage() {
           )}
           {artefact.format === 'diagram' && (
             <DiagramView data={data} artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+          )}
+          {artefact.format === 'document' && (
+            <DocumentView data={data} artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
         </>
       )}

@@ -1,0 +1,207 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:solution:physical:SOL-ISP",
+    "title": "Interface Specification",
+    "description": "A physical-level interface specification document defining the technical details of a system integration, including protocol, authentication, data format, endpoints, and SLA.",
+    "meta": {
+        "domain": "solution",
+        "abstraction": "physical",
+        "format": "document",
+        "description": "Interface Specification documents provide the complete technical specification required to implement and test a system-to-system interface.",
+        "purpose": [
+            "Define the physical contract between two systems with sufficient detail for implementation",
+            "Provide test scenarios and SLA targets to validate and operate the interface"
+        ],
+        "countLabels": {
+            "singular": "Interface Specification",
+            "plural": "Interface Specifications"
+        }
+    },
+    "type": "object",
+    "required": ["documents"],
+    "properties": {
+        "$schema": { "type": "string" },
+        "documents": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/document" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "document": {
+            "type": "object",
+            "required": ["id", "title", "description", "status", "interface-id", "overview", "source-system", "target-system", "technical-protocol", "authentication", "data-format", "trigger"],
+            "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "status": {
+                    "type": "string",
+                    "enum": ["draft", "in-review", "approved", "superseded"]
+                },
+                "interface-id": {
+                    "type": "string",
+                    "description": "References an INT-IFC interface entry (e.g. INT-IFC-001)"
+                },
+                "overview": {
+                    "type": "string",
+                    "description": "Prose overview of the interface purpose and behaviour"
+                },
+                "source-system": {
+                    "type": "string",
+                    "description": "APP-DAP platform ID of the source system"
+                },
+                "target-system": {
+                    "type": "string",
+                    "description": "APP-DAP platform ID of the target system"
+                },
+                "technical-protocol": {
+                    "type": "string",
+                    "enum": ["REST", "SOAP", "GraphQL", "gRPC", "event-stream", "batch-file", "database-link"]
+                },
+                "authentication": {
+                    "type": "string",
+                    "enum": ["OAuth2", "API-key", "mTLS", "service-account", "none"]
+                },
+                "data-format": {
+                    "type": "string",
+                    "enum": ["JSON", "XML", "CSV", "Parquet", "Avro", "Protobuf", "EDI", "binary"]
+                },
+                "trigger": {
+                    "type": "string",
+                    "enum": ["real-time", "scheduled", "event-driven", "on-demand"]
+                },
+                "endpoints": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/endpoint" }
+                },
+                "data-model": {
+                    "type": "string",
+                    "description": "Prose description or inline JSON Schema snippet describing the data payload"
+                },
+                "error-handling": {
+                    "type": "string",
+                    "description": "Description of error handling, retry, and dead-letter strategy"
+                },
+                "sla": { "$ref": "#/$defs/sla" },
+                "test-scenarios": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/test-scenario" }
+                },
+                "diagrams": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/diagram-ref" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "endpoint": {
+            "type": "object",
+            "required": ["path", "method", "description"],
+            "properties": {
+                "path": { "type": "string" },
+                "method": {
+                    "type": "string",
+                    "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "SUBSCRIBE", "PUBLISH"]
+                },
+                "description": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "sla": {
+            "type": "object",
+            "properties": {
+                "latency-p99-ms": { "type": "integer" },
+                "throughput-tps": { "type": "integer" },
+                "availability-percent": { "type": "number" }
+            },
+            "additionalProperties": false
+        },
+        "test-scenario": {
+            "type": "object",
+            "required": ["id", "description", "expected-outcome"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "expected-outcome": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "driver": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["business", "technology", "regulatory", "market"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "constraint": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": {
+                    "type": "string",
+                    "enum": ["technical", "business", "regulatory", "resource"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "assumption": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "risk": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "likelihood": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "impact": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"]
+                },
+                "mitigation": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "open-question": {
+            "type": "object",
+            "required": ["id", "question"],
+            "properties": {
+                "id": { "type": "string" },
+                "question": { "type": "string" },
+                "raised-by": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "diagram-ref": {
+            "type": "object",
+            "required": ["artefact-id"],
+            "properties": {
+                "artefact-id": {
+                    "type": "string",
+                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
+                },
+                "title": { "type": "string" },
+                "caption": { "type": "string" }
+            },
+            "additionalProperties": false
+        }
+    }
+}
