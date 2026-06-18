@@ -1,0 +1,78 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BPM",
+    "title": "Business Process Model",
+    "description": "Visual model of the Business Processes Catalogue (BUS-PRO), rendered as a sequential chevron flow: Level 1 processes as row labels, Level 2 processes as chevrons (left-to-right execution sequence) within each row. Drill-down views show Level 2 labels with Level 3 chevrons. Derived from BUS-PRO rather than authored directly.",
+    "meta": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "format": "diagram",
+        "description": "A visual map of the organisation's key processes, arranged as a nested hierarchy.",
+        "purpose": [
+            "Give a single-page view of the process landscape for workshops and roadmap discussions.",
+            "Reveal the decomposition from process groups down to individual process steps.",
+            "Drill into each Level 1 process to see its Level 2 and Level 3 breakdown.",
+            "Provide an embeddable diagram for presentations, kept in sync with BUS-PRO."
+        ],
+        "diagramType": "process-flow",
+        "countLabels": {
+            "groups": "Level 1",
+            "items": "Level 2",
+            "subitems": "Level 3"
+        }
+    },
+    "type": "object",
+    "required": ["groups"],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "groups": {
+            "type": "array",
+            "description": "Level 1 processes, each containing its Level 2 sub-processes.",
+            "items": { "$ref": "#/$defs/group" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "group": {
+            "type": "object",
+            "required": ["id", "name", "items"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "meta": { "type": "object", "additionalProperties": true },
+                "items": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/item" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "item": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "meta": { "type": "object", "additionalProperties": true },
+                "items": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/subitem" }
+                }
+            },
+            "additionalProperties": false
+        },
+        "subitem": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "meta": { "type": "object", "additionalProperties": true }
+            },
+            "additionalProperties": false
+        }
+    }
+}

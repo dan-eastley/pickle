@@ -1,0 +1,45 @@
+name: Decisions — To Accepted
+
+# Fires when a decision moves from PROPOSED to ACCEPTED.
+# Reads the accepted analysis findings, derives discrete architecture changes
+# per artefact via Claude, and writes them to the decision.json on the
+# decisions branch under 'architecture-changes'.
+#
+# Triggered via workflow_dispatch from the Pickle API on PROPOSED → ACCEPTED transition.
+
+on:
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-018)"
+        required: true
+        type: string
+      model:
+        description: "Claude model to run with"
+        required: false
+        type: string
+        default: claude-haiku-4-5-20251001
+
+permissions:
+  contents: write
+
+jobs:
+  generate-changes:
+    uses: ./.github/workflows/decisions-claude-step.yml
+    with:
+      analysis-name: "Architecture Changes"
+      prompt-file:   config/prompts/decisions/architecture-changes.md
+      section-key:   architecture-changes
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.decision-id }}
+      model:         ${{ inputs.model }}
+    secrets: inherit

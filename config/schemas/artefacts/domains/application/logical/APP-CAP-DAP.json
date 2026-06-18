@@ -1,0 +1,74 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-CAP-DAP",
+    "title": "Business Capabilities ↔ Application Domains & Platforms Matrix",
+    "description": "Many-to-many mapping between Level 2 Business Capabilities (BUS-CAP) and the Application Domains & Platforms (APP-DAP) platforms that support them.",
+    "meta": {
+        "domain": "application",
+        "abstraction": "logical",
+        "format": "matrix",
+        "description": "Maps each APP-DAP platform to the Level 2 business capabilities it supports.",
+        "purpose": [
+            "Shows which platforms support which business capabilities, and surfaces capabilities with no supporting platform",
+            "Supports impact analysis — if a platform is retired, which capabilities need a replacement?",
+            "Provides traceability from business capability (the what) through to the application landscape (how it is delivered)"
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "BUS-CAP",
+                "array": "capabilities",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description",
+                "filter": {
+                    "field": "level",
+                    "equals": 2
+                }
+            },
+            "rows": {
+                "artefact": "APP-DAP",
+                "array": "platforms",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description"
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "relationships"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "relationships": {
+            "type": "array",
+            "description": "Sparse list of mappings between BUS-CAP Level 2 capabilities (columns) and APP-DAP platforms (rows). An entry's presence means the platform supports the capability; absence means no mapping.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
+                "properties": {
+                    "column-id": {
+                        "type": "string",
+                        "description": "ID of the BUS-CAP Level 2 capability (column)"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "ID of the APP-DAP platform (row)"
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "description": "Why this relationship exists"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

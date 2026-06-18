@@ -1,0 +1,61 @@
+name: Sync decisions branches
+
+# Merges main into every open decisions/** branch whenever main is pushed.
+# This keeps decisions branches current with prompt files, schema changes,
+# workflow fixes, and any other infrastructure updates on main so that the
+# Claude analysis steps always run against the latest tooling.
+#
+# A merge conflict (rare — decisions branches only touch their own
+# decision.json) is skipped with a warning annotation rather than failing
+# the push to main.
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into open decisions branches
+        run: |
+          set -euo pipefail
+          git fetch origin
+
+          branches=$(git branch -r | grep -E '^\s+origin/decisions/' | sed 's|.*origin/||g')
+
+          if [ -z "$branches" ]; then
+            echo "No open decisions branches found."
+            exit 0
+          fi
+
+          for branch in $branches; do
+            echo "--- Syncing $branch ---"
+            git checkout -B "$branch" "origin/$branch"
+
+            if git merge origin/main --no-edit -m "chore: sync main into $branch"; then
+              git push origin "$branch"
+              echo "::notice::Merged main into $branch"
+            else
+              echo "::warning::Merge conflict merging main into $branch — skipping"
+              git merge --abort
+              git checkout main
+            fi
+          done
+
+          git checkout main
