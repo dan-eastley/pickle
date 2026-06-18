@@ -121,6 +121,53 @@ jobs:
             tail -100 "${{ steps.claude.outputs.execution_file }}"
           fi
 
+      - name: Write step summary
+        if: always()
+        env:
+          CONCLUSION: ${{ steps.claude.outputs.conclusion }}
+        run: |
+          COUNT=$(python3 -c "
+          import json, os, sys
+          path = os.environ.get('DECISION_FILE', '')
+          key  = os.environ.get('SECTION_KEY', '')
+          if not path or not key:
+              print('?'); sys.exit()
+          try:
+              data = json.load(open(path))
+              section = data.get(key)
+              if section is None:
+                  print('0')
+              elif isinstance(section, list):
+                  print(len(section))
+              elif isinstance(section, dict):
+                  print(len(section))
+              else:
+                  print('1')
+          except Exception:
+              print('?')
+          " 2>/dev/null || echo "?")
+          ICON="✅"
+          [ "$CONCLUSION" != "success" ] && ICON="❌"
+          {
+            echo "## ${ICON} ${ANALYSIS_NAME}"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Decision | \`${DECISION_ID}\` |"
+            echo "| Model | \`${{ inputs.model }}\` |"
+            echo "| Section | \`${SECTION_KEY}\` |"
+            echo "| Conclusion | \`${CONCLUSION}\` |"
+            echo "| Findings | ${COUNT} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Claude execution log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-${{ inputs.analysis-name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ steps.claude.outputs.execution_file }}
+          retention-days: 30
+
       - name: Commit and push to decisions branch
         run: |
           set -euo pipefail

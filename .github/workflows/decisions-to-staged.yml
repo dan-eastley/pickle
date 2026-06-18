@@ -1,0 +1,102 @@
+name: Decisions — To Staged
+
+# Fires when a decision moves from ACCEPTED to STAGED.
+# Updates the decisions.json index on main to reflect the staged status.
+# Staged signals that architecture changes are being prepared for implementation.
+# No analysis or PR merge at this stage.
+#
+# Triggered via workflow_dispatch from the Pickle API on ACCEPTED → STAGED transition.
+
+on:
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      decision-id:
+        description: "Decision ID (e.g. ADR-018)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH:      decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
+      INDEX_FILE:  architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/decisions.json
+      DECISION_ID: ${{ inputs.decision-id }}
+      CLIENT_ID:   ${{ inputs.client-id }}
+      VERSION_ID:  ${{ inputs.version-id }}
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started: Decisions — To Staged (${DECISION_ID})"
+
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update decisions.json index on main
+        run: |
+          echo "::notice::Setting ${DECISION_ID} status=staged in decisions.json"
+          python3 << 'PYEOF'
+          import json, os
+          path = os.environ['INDEX_FILE']
+          did  = os.environ['DECISION_ID']
+          with open(path) as f:
+              data = json.load(f)
+          found = False
+          for d in data.get('decisions', []):
+              if d.get('decision-id') == did:
+                  d['status'] = 'staged'
+                  found = True
+                  break
+          if not found:
+              print(f"::warning::Decision {did} not found in decisions.json — skipping index update")
+          with open(path, 'w') as f:
+              json.dump(data, f, indent=4)
+          print(f"decisions.json updated for {did}")
+          PYEOF
+          git add "$INDEX_FILE"
+          if git diff --cached --quiet; then
+            echo "::notice::decisions.json already reflects staged — no commit needed"
+          else
+            git commit -m "Sync ${DECISION_ID} in decisions index (staged)"
+            git push origin main
+            echo "::notice::Pushed decisions.json update to main"
+          fi
+
+      - name: Write summary
+        if: always()
+        run: |
+          {
+            echo "## Decisions — To Staged"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Decision | \`${DECISION_ID}\` |"
+            echo "| Client | \`${CLIENT_ID}\` |"
+            echo "| Version | \`${VERSION_ID}\` |"
+            echo ""
+            echo "The decision has been marked **staged**. Architecture changes are being"
+            echo "prepared for implementation. No further automation runs at this stage."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished: Decisions — To Staged (${DECISION_ID})"
