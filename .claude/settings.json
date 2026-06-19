@@ -103,7 +103,8 @@
       "Bash(sips -c 60 1280 --cropOffset 1900 0 -o cap-footer.png cap-full.png)",
       "Bash(sips -c 60 1280 --cropOffset 1010 0 -o cap-footer2.png cap-full.png)",
       "Bash(*)",
-      "Bash(sips -c 30 1280 --cropOffset 1060 0 -o cap-footer3.png cap-full.png)"
+      "Bash(sips -c 30 1280 --cropOffset 1060 0 -o cap-footer3.png cap-full.png)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { fileURLToPath } from 'url'
@@ -121,13 +121,22 @@ async function handleApiRequest(req, res, next) {
   return res.end(readFileSync(filePath, 'utf-8'))
 }
 
-export default defineConfig({
-  plugins: [
-    react(),
-    architectureApiPlugin(),
-    // Data is now served by the /api/content Vercel function (reads from GitHub).
-    // Static copy removed — no build needed when architecture data changes.
-    // viteStaticCopy kept as dependency in case it's needed for other assets.
-  ],
-  server: { port: 3000 },
+export default defineConfig(({ mode }) => {
+  // Load .env (no prefix filter) so the /api/arch GitHub proxy can read
+  // GITHUB_* from a local .env. Real shell env vars take precedence.
+  const env = loadEnv(mode, __dirname, '')
+  for (const key of ['GITHUB_TOKEN', 'GITHUB_OWNER', 'GITHUB_REPO']) {
+    if (!process.env[key] && env[key]) process.env[key] = env[key]
+  }
+
+  return {
+    plugins: [
+      react(),
+      architectureApiPlugin(),
+      // Data is now served by the /api/content Vercel function (reads from GitHub).
+      // Static copy removed — no build needed when architecture data changes.
+      // viteStaticCopy kept as dependency in case it's needed for other assets.
+    ],
+    server: { port: 3000 },
+  }
 })
