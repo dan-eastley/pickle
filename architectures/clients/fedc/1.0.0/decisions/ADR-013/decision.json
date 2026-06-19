@@ -130,6 +130,50 @@
             "rationale": "Referential integrity is achieved when every reference points to a defined entity and every required entity is defined. This decision's recommendations create the missing entity (guardrails), so integrity will be established during resolution."
         }
     ],
+    "principles-alignment": [
+        {
+            "finding": "**Data Principles** (`DAT-PRN`) principle *'Define once, use everywhere'* (DAT-PRN-002) is **adhered to**. The decision explicitly mandates a semantic layer that 'translates business terminology to underlying data structures, ensuring consistent metric definitions across teams.' This centralised, canonical definition is the core mechanism for enforcing DAT-PRN-002.",
+            "impact": "Adherence to DAT-PRN-002 is critical to the decision's success. Without a single, authoritative semantic layer, consuming teams will create parallel metric definitions, fragmenting the self-service platform and undermining the governance intent.",
+            "recommendation": "Document in the implementation plan how the semantic layer will enforce the 'define once' principle: e.g., metadata governance controls that prevent teams from creating custom metric definitions outside the semantic layer, audit trails for metric changes, and a review process for new metrics.",
+            "rationale": "DAT-PRN-002 exists to prevent silent divergence. The self-service analytics capability scales the number of metric consumers from a few (data team) to 150 (operational and commercial analysts). Without strict 'define once' enforcement, the platform will degrade into a fragmented metrics repository."
+        },
+        {
+            "finding": "**Data Principles** (`DAT-PRN`) principle *'Quality is a producer responsibility'* (DAT-PRN-003) is **adhered to**. The decision narrative states that 'teams can only access data appropriate to their function' through role-based access, and the semantic layer mediates access to 'authorised data.' This positions the data producer (centralised platform) as responsible for quality and access governance, not the consuming analyst.",
+            "impact": "Adherence ensures that data quality expectations are explicitly owned by the platform team, not pushed downstream to consumers. This prevents the common self-service anti-pattern of 'consumers re-cleanse data at query time.'",
+            "recommendation": "Include in the semantic layer design a quality attestation model: each metric exposed via the semantic layer must have a defined SLA (e.g., refresh frequency, expected completeness). Document quality issues and escalation paths in the platform runbook.",
+            "rationale": "DAT-PRN-003 protects against distributed quality debt. As the platform scales to 150 users, the producer must own quality explicitly, or the platform becomes a distribution mechanism for data-quality problems."
+        },
+        {
+            "finding": "**Data Principles** (`DAT-PRN`) principle *'Privacy by design'* (DAT-PRN-004) is **silent — a material gap**. The decision narrative mentions role-based access control but does not address personal-data classification, consent traceability, or privacy-aware semantic layer design. This is a critical silence given the scale (150 new users) and regulatory environment.",
+            "impact": "The silence creates a compliance risk. Self-service analytics at scale expands data access without explicit privacy-design controls. Consumers may unknowingly access personal data without knowing consent constraints, and the platform lacks audit trails for personal-data access. This violates the principle's core intent ('privacy from capture, not retrofitted').",
+            "recommendation": "Add explicit privacy-design requirements to the decision: (1) personal-data fields are classified in the semantic layer; (2) consent-linked masking or filtering is applied at query time; (3) all access to personal data is audited; (4) the semantic layer design document includes a privacy threat model. Reference DAT-PRN-004 by ID to signal that privacy is non-negotiable.",
+            "rationale": "DAT-PRN-004 is short-term strategic priority. Self-service analytics makes privacy-design decisions visible to 150 users; if privacy is not designed in from the start, compliance retrofits will be expensive and incomplete."
+        },
+        {
+            "finding": "**Data Principles** (`DAT-PRN`) principle *'Every data domain has an owner'* (DAT-PRN-001) is **silent**. The decision narrative does not identify who owns the semantic layer itself or who is accountable for its metrics, definitions, and lifecycle. While the semantic layer is governance infrastructure (centralised), the principle requires that 'each data domain in DAT-DAC has a single accountable steward.'",
+            "impact": "The silence creates ambiguity about accountability. If the semantic layer is viewed as a shared utility with no clear owner, disputes over metric definitions will lack an escalation path and changes will be slow or contested.",
+            "recommendation": "Before platform build begins, define the semantic layer ownership model: Is it owned by the central data team, or by a rotating domain steward? Document who is accountable for metric definitions, change review, and SLA compliance. Link this explicitly to the ADR resolution and to the data governance working group.",
+            "rationale": "DAT-PRN-001 recognises that unowned data drifts in quality and meaning. A semantic layer is owned data infrastructure; without clear stewardship, it will become unmaintainable or untrustworthy."
+        },
+        {
+            "finding": "**Data Principles** (`DAT-PRN`) principle *'Open contracts, open standards'* (DAT-PRN-005) is **implicitly adhered to** but not explicitly documented. The decision does not specify the technical format or interface for the semantic layer (e.g., API, SQL interface, JSON Schema), so it is unclear whether the 'open contracts' principle will be satisfied in implementation.",
+            "impact": "If the semantic layer implementation uses proprietary or undocumented query formats, downstream consumers (analysts and other applications) will be locked into the platform, reducing reuse and limiting vendor portability.",
+            "recommendation": "Document in the design brief that the semantic layer's query interface must be schema-documented and standards-based (e.g., SQL, GraphQL, or REST with OpenAPI). Require the platform team to publish the semantic layer's contract before implementation. This makes DAT-PRN-005 enforceable.",
+            "rationale": "DAT-PRN-005 prevents vendor and format lock-in. At self-service scale, many consumers will depend on the semantic layer's interface; locking them into a proprietary format is a long-term operational risk."
+        },
+        {
+            "finding": "**Business Principles** (`BUS-PRN`) principle *'Process digital by default'* (BUS-PRN-006) is **strongly adhered to**. The decision explicitly addresses shadow spreadsheet analysis and manual workarounds as the current state problem; the self-service analytics capability moves analytical work from spreadsheets and manual processes to a governed digital platform.",
+            "impact": "Strong alignment with BUS-PRN-006 increases the likelihood of adoption and operational efficiency. By removing the spreadsheet friction point, the decision removes a barrier to digital-by-default operations.",
+            "recommendation": "In project communications and rollout, explicitly link the self-service platform to the BUS-PRN-006 strategic objective. When training the 150 analysts, highlight that self-service replaces manual spreadsheet work with governed, auditable analytics. Track spreadsheet displacement as a success metric.",
+            "rationale": "BUS-PRN-006 drives digital excellence. Self-service analytics is a concrete realisation of the principle; making this explicit in communications reinforces the strategic intent."
+        },
+        {
+            "finding": "**Application Principles** (`APP-PRN`) principle *'Observability is built in, not bolted on'* (APP-PRN-005) is **silent**. The decision does not specify that the self-service platform will include observability (health checks, structured logs, metrics, traces) from day one. This is material because consumption patterns and query performance are critical to the success and operations of the platform.",
+            "impact": "Without built-in observability, the operations team will lack visibility into query patterns, performance degradation, and user adoption. Troubleshooting will be slow, and the platform will be difficult to scale as analytics volume grows.",
+            "recommendation": "Add a non-functional requirement to the decision: 'The self-service platform must expose health endpoints, structure logs in machine-readable format, emit RED metrics (request rate, error rate, duration) for all queries, and support distributed tracing. Observability must be configured and tested before production launch.'",
+            "rationale": "APP-PRN-005 is a non-negotiable quality standard for applications. The semantic layer and query interface are applications; without observability built in from day one, operations teams will be flying blind, increasing the risk of outages and degraded user experience."
+        }
+    ],
     "scope": {
         "domain": "data",
         "abstraction": "logical",
