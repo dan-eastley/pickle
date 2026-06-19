@@ -92,6 +92,67 @@ const LAYER_BADGES = {
   Physical:   'bg-rose-100 text-rose-700',
 }
 
+// The solution document chain — each step adds detail and moves from
+// conceptual to physical, with the audience shifting from exec to engineer.
+const DOCUMENT_CHAIN = [
+  { id: 'SOL-AVI', name: 'Architecture Vision',        layer: 'Conceptual', audience: 'Executive & leadership', adds: 'Strategic direction and the high-level target architecture.' },
+  { id: 'SOL-AIN', name: 'Architecture Intent',        layer: 'Conceptual', audience: 'Architecture board',     adds: 'The decided direction — options weighed and rationale recorded.' },
+  { id: 'SOL-SVI', name: 'Solution Vision',            layer: 'Logical',    audience: 'Solution architects',    adds: 'Per-initiative problem, approach, capabilities and platforms.' },
+  { id: 'SOL-SDE', name: 'Solution Design',            layer: 'Logical',    audience: 'Designers & tech leads', adds: 'Logical design across the four domains, NFRs and flows.' },
+  { id: 'SOL-ISP', name: 'Interface Spec & LLD',       layer: 'Physical',   audience: 'Engineers',              adds: 'Concrete protocols, endpoints and contracts to build against.' },
+]
+
+const LAYER_ACCENT = {
+  Conceptual: 'border-t-blue-500',
+  Logical:    'border-t-amber-500',
+  Physical:   'border-t-rose-500',
+}
+
+function DocumentChain() {
+  return (
+    <section className="border-b border-gray-200 bg-gray-50">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-3xl mb-10">
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+            The document chain
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            From vision to build, one step at a time
+          </h2>
+          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+            Solution documents form a chain — each one elaborates the last. As you move along it, detail
+            increases and the architecture moves from conceptual to physical, while the audience shifts from
+            executives to engineers.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {DOCUMENT_CHAIN.map((doc, i) => (
+            <div key={doc.id} className={`relative bg-white border border-gray-200 border-t-2 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col`}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-mono text-gray-300">{String(i + 1).padStart(2, '0')}</span>
+                <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[doc.layer]}`}>{doc.layer}</span>
+              </div>
+              <h3 className="text-sm font-bold text-gray-900">{doc.name}</h3>
+              <p className="text-xs font-mono text-gray-400 mt-0.5">{doc.id}</p>
+              <p className="mt-2 text-xs text-gray-500 leading-relaxed flex-1">{doc.adds}</p>
+              <p className="mt-3 pt-2 border-t border-gray-100 text-xs text-gray-400">
+                <span className="font-medium text-gray-500">Audience:</span> {doc.audience}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 flex items-center justify-between text-xs font-medium text-gray-400 uppercase tracking-wider">
+          <span>Conceptual · more strategic</span>
+          <span className="hidden sm:block flex-1 mx-4 border-t border-dashed border-gray-300" />
+          <span>Physical · more detailed</span>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function Hero() {
   return (
     <section className="border-b border-gray-200 bg-gray-50 px-6 py-20">
@@ -375,6 +436,7 @@ export default function HomePage() {
       <Hero />
       <FeatureCards />
       <ArchitectureModel />
+      <DocumentChain />
       <SevenDimensions />
       <ClosingCta />
     </div>
