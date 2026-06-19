@@ -58,7 +58,9 @@ function buildGroupedTree(data, grouping) {
   const byId = Object.fromEntries(parents.map(p => [p.id, p]))
   ;(data[childArray] ?? []).forEach(child => {
     const parent = byId[child[foreignKey]]
-    if (parent) parent._children.push(child)
+    // `_children: []` so grouped rows render through the same TreeRow as
+    // hierarchical catalogues (BUS-CAP), keeping the two layouts identical.
+    if (parent) parent._children.push({ ...child, _children: [] })
   })
   return parents
 }
@@ -181,53 +183,6 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
   )
 }
 
-// ── Grouped rows (two-tier: parent array + child array) ───────────────────────
-
-function GroupedSection({ parent, childColumns, expanded, onToggle, foreignKey }) {
-  const isExpanded = expanded.has(parent.id)
-  const childCount = parent._children.length
-
-  return (
-    <>
-      {/* Parent header row */}
-      <tr className="bg-gray-50 border-y border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
-          onClick={() => onToggle(parent.id)}>
-        <td colSpan={childColumns.length} className="px-4 py-2.5">
-          <div className="flex items-center gap-2">
-            <svg viewBox="0 0 16 16" fill="none"
-              className={`w-3.5 h-3.5 flex-shrink-0 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
-              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="font-mono text-xs bg-white border border-gray-200 text-gray-600 px-1.5 py-0.5">{parent.id}</span>
-            <span className="text-sm font-semibold text-gray-800">{parent.name}</span>
-            {parent.description && (
-              <span className="text-xs text-gray-400 truncate max-w-xs">{parent.description}</span>
-            )}
-            <span className="ml-auto text-xs text-gray-400 flex-shrink-0">{childCount} {childCount === 1 ? 'item' : 'items'}</span>
-          </div>
-        </td>
-      </tr>
-      {/* Child rows */}
-      {isExpanded && parent._children.map(child => (
-        <tr key={child.id} className="hover:bg-gray-50 transition-colors">
-          {childColumns.map((col, ci) => (
-            <td key={col.key} className={`px-4 py-3 text-sm align-top ${ci === 0 ? 'pl-10' : ''}`}>
-              <CellValue value={child[col.key]} colDef={col} />
-            </td>
-          ))}
-        </tr>
-      ))}
-      {isExpanded && childCount === 0 && (
-        <tr>
-          <td colSpan={childColumns.length} className="px-10 py-3 text-xs text-gray-400">
-            No items in this group.
-          </td>
-        </tr>
-      )}
-    </>
-  )
-}
-
 // ── Column header row ─────────────────────────────────────────────────────────
 
 function ColHeaders({ columns }) {
@@ -304,8 +259,8 @@ export default function CatalogueView({ data, schema }) {
         <thead><ColHeaders columns={childColumns} /></thead>
         <tbody className="divide-y divide-gray-100">
           {groupedData.map(parent => (
-            <GroupedSection key={parent.id} parent={parent} childColumns={childColumns}
-              expanded={expanded} onToggle={toggleGrouped} foreignKey={foreignKey} />
+            <TreeRow key={parent.id} node={parent} columns={childColumns} depth={0}
+              expanded={expanded} onToggle={toggleGrouped} />
           ))}
         </tbody>
       </table>
