@@ -264,6 +264,64 @@
             "rationale": "Integration and Solution domains are not in scope for this decision."
         }
     ],
+    "architecture-changes": [
+        {
+            "artefact-id": "DAT-GRD",
+            "artefact-name": "Data Architecture Guardrails",
+            "change-type": "create",
+            "description": "Add guardrail DAT-GRD-001: All data access (including self-service queries) must be role-based and enforced at the query engine level. Scope: self-service analytics platforms. Exception process: data security review board.",
+            "detail": "Required by impact-assessment finding on role-based access control. Self-service analytics scales data access to 150 new users; guardrail makes RBAC enforcement non-negotiable for the platform team."
+        },
+        {
+            "artefact-id": "DAT-GRD",
+            "artefact-name": "Data Architecture Guardrails",
+            "change-type": "create",
+            "description": "Add guardrail DAT-GRD-002: Denied or anomalous access attempts to sensitive data (PII, restricted classification) must be logged in tamper-proof audit trail. Scope: all systems with personal-data access. Exception process: none.",
+            "detail": "Required by impact-assessment and challenger-analysis findings on audit logging and privacy risk. Supports compliance and data governance visibility."
+        },
+        {
+            "artefact-id": "DAT-GRD",
+            "artefact-name": "Data Architecture Guardrails",
+            "change-type": "create",
+            "description": "Add guardrail DAT-GRD-003: Role-to-data mappings must be reviewed and re-certified quarterly. Scope: all systems with role-based data access control. Exception process: none.",
+            "detail": "Required by guardrails-alignment finding on access control governance. Ensures role-based access remains current and compliant as organisational structure and data sensitivity change."
+        },
+        {
+            "artefact-id": "APP-GRD",
+            "artefact-name": "Application Architecture Guardrails",
+            "change-type": "create",
+            "description": "Add guardrail APP-GRD-001: All production analytics platforms must expose health endpoints and emit RED metrics (request rate, error rate, duration) before production launch. Scope: self-service analytics and BI platforms. Exception process: CISO and VP Engineering sign-off.",
+            "detail": "Required by challenger-analysis and principles-alignment findings on observability. APP-PRN-005 mandates observability as non-negotiable; supports 30-second query SLA compliance and operational visibility."
+        },
+        {
+            "artefact-id": "APP-GRD",
+            "artefact-name": "Application Architecture Guardrails",
+            "change-type": "create",
+            "description": "Add guardrail APP-GRD-002: All production applications must expose structured logs in machine-readable format (JSON) and support distributed tracing. Scope: new self-service platforms. Exception process: none.",
+            "detail": "Required by challenger-analysis finding on operational visibility. Ensures platform team can troubleshoot performance issues and detect failures without log-fishing."
+        },
+        {
+            "artefact-id": "DAT-PRN",
+            "artefact-name": "Data Architecture Principles",
+            "change-type": "update",
+            "description": "Reinforce DAT-PRN-004 (Privacy by design) in semantic layer design: Personal-data fields must be classified in the semantic model at schema definition time, not later. Consent-linked data masking or filtering must be applied at query time. All access to personal data must be audited with full traceability.",
+            "detail": "Privacy-by-design is a short-term strategic priority (DAT-STR-004). Self-service analytics scales data access to 150 users; privacy design must be enforced from day one, not retrofitted. Update design brief and project charter to make privacy non-negotiable."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "update",
+            "description": "Update CAP-001-03 (Manage Customer Insight) description to explicitly include self-service analytics capability and reference the new semantic layer as a key asset for customer insight teams. Reflect the shift of analytics capability from central data team to business teams.",
+            "detail": "Impact-assessment finding: self-service analytics redistributes capability ownership away from central data team to business teams (150 operational and commercial analysts). BUS-CAP should reflect this shift in capability ownership and enablement scope."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "update",
+            "description": "Update CAP-009-01 (Manage Finance) description to explicitly include self-service analytics capability as a supporting asset. Finance teams are identified as primary consumers of self-service analytics (operational team).",
+            "detail": "Impact-assessment finding: Finance teams are consuming self-service analytics for operational reporting and analysis. Capability model should reflect analytics enablement as a key asset supporting finance decision-making."
+        }
+    ],
     "scope": {
         "domain": "data",
         "abstraction": "logical",
