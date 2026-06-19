@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import Spinner from '../components/ui/Spinner'
+import Illustration from '../components/ui/Illustration'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -54,22 +55,35 @@ export default function ClientsPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Select a client to view its architecture versions.
-        </p>
+      <div className="mb-8 flex items-center justify-between gap-8">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Select a client to view its architecture versions.
+          </p>
+        </div>
+        <Illustration name="select-option" className="hidden md:block w-52 flex-shrink-0" />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {clients.map(client => (
-          <ClientCard
-            key={client['client-id']}
-            client={client}
-            clientsMetadata={clientsMetadata}
-          />
-        ))}
-      </div>
+      {clients.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Illustration name="no-data" className="w-56 mb-6" />
+          <p className="text-sm font-semibold text-gray-700">No clients yet</p>
+          <p className="mt-1 text-sm text-gray-500 max-w-sm">
+            Architecture is organised per client. Add a client folder under <code className="font-mono text-xs bg-gray-100 px-1">architectures/clients/</code> to get started.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {clients.map(client => (
+            <ClientCard
+              key={client['client-id']}
+              client={client}
+              clientsMetadata={clientsMetadata}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

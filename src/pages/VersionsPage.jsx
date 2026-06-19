@@ -4,6 +4,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import { getVersions, getVersion } from '../lib/api'
 import { versionStatusBadge } from '../lib/theme'
 import Spinner from '../components/ui/Spinner'
+import Illustration from '../components/ui/Illustration'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -43,17 +44,27 @@ export default function VersionsPage() {
           ← All clients
         </Link>
       </div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Select a version to browse its architecture.
-        </p>
+      <div className="mb-8 flex items-center justify-between gap-8">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Select a version to browse its architecture.
+          </p>
+        </div>
+        <Illustration name="timeline" className="hidden md:block w-52 flex-shrink-0" />
       </div>
 
+      {versions.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Illustration name="no-data" className="w-56 mb-6" />
+          <p className="text-sm font-semibold text-gray-700">No versions yet</p>
+          <p className="mt-1 text-sm text-gray-500 max-w-sm">
+            Each release baseline lives in its own version folder under this client.
+          </p>
+        </div>
+      ) : (
       <div className="border border-gray-200 bg-white divide-y divide-gray-100">
-        {versions.length === 0 && (
-          <div className="px-5 py-8 text-center text-sm text-gray-400">No versions yet for this client.</div>
-        )}
+        {/* empty handled above */}
         {versions.map(v => {
           const vId = v['version-id']
           const meta = versionMeta[vId]
@@ -89,6 +100,7 @@ export default function VersionsPage() {
           )
         })}
       </div>
+      )}
     </div>
   )
 }
