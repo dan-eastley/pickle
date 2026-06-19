@@ -249,7 +249,7 @@ export default function DecisionEditorPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
           <p className="text-xs text-gray-400 mb-2">
-            Optional. List the specific things this decision must achieve. Each requirement should be testable and state the <em>what</em>, not the <em>how</em>.
+            Optional. List the specific things this decision must achieve. Each requirement should be testable and state the "what", not the "how".
           </p>
           <RequirementsList requirements={requirements} onChange={setRequirements} />
         </div>

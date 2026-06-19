@@ -34,7 +34,7 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
       </button>
 
       {open && decisions.length === 0 && (
-        <div className="px-5 py-3 text-xs text-gray-400 italic">No decisions at this stage.</div>
+        <div className="px-5 py-3 text-xs text-gray-400">No decisions at this stage.</div>
       )}
 
       {open && decisions.length > 0 && (

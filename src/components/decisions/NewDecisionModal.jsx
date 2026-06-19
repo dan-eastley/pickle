@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
+import { nameWithId } from '../../lib/format'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import { PlusIcon, CloseIcon } from '../ui/icons'
@@ -37,15 +38,21 @@ function RequirementsList({ requirements, onChange }) {
   )
 }
 
-export default function NewDecisionModal({ artefact, clientId, versionId, onClose }) {
+export default function NewDecisionModal({ artefact, documents = [], selectedDocument, clientId, versionId, onClose }) {
   const [narrative, setNarrative] = useState('')
   const [requirements, setRequirements] = useState([])
   const [scopeDomain, setScopeDomain] = useState(artefact.domain)
   const [scopeAbstraction, setScopeAbstraction] = useState(artefact.abstraction)
   const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
+  const [scopeDocument, setScopeDocument] = useState(selectedDocument?.id ?? '')
   const [saved, setSaved] = useState(false)
 
   const colors = DOMAIN_COLORS[artefact.domain]
+
+  // A document-level scope is only offered when the scoped artefact is the
+  // document artefact we're viewing (the one whose documents we have to hand).
+  const showDocumentScope =
+    artefact.format === 'document' && scopeArtefact === artefact.id && documents.length > 0
 
   useEffect(() => {
     function onKey(e) { if (e.key === 'Escape') onClose() }
@@ -62,6 +69,7 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
     scopeDomain      && `domain=${scopeDomain}`,
     scopeAbstraction && `abstraction=${scopeAbstraction}`,
     scopeArtefact    && `artefact=${scopeArtefact}`,
+    showDocumentScope && scopeDocument && `document=${scopeDocument}`,
   ].filter(Boolean).join('&')
   const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
 
@@ -111,8 +119,25 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
                       setScopeDomain(domain)
                       setScopeAbstraction(abstraction)
                       setScopeArtefact(a)
+                      if (a !== artefact.id) setScopeDocument('')
                     }}
                   />
+
+                  {showDocumentScope && (
+                    <div className="mt-2">
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Document</label>
+                      <select
+                        value={scopeDocument}
+                        onChange={e => setScopeDocument(e.target.value)}
+                        className="w-full px-3 py-1.5 text-sm border border-gray-300 bg-white focus:outline-none focus:border-brand-500 text-gray-700"
+                      >
+                        <option value="">Whole artefact (all documents)</option>
+                        {documents.map(d => (
+                          <option key={d.id} value={d.id}>{nameWithId(d.title, d.id)}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
 
                 {/* Narrative */}
@@ -137,7 +162,7 @@ export default function NewDecisionModal({ artefact, clientId, versionId, onClos
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
                   <p className="text-xs text-gray-400 mb-2">
-                    List the specific things this decision must achieve. Each requirement should be testable, free of implementation detail, and state the <em>what</em> not the <em>how</em>.
+                    List the specific things this decision must achieve. Each requirement should be testable, free of implementation detail, and state the "what" not the "how".
                   </p>
                   <RequirementsList requirements={requirements} onChange={setRequirements} />
                 </div>

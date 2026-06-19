@@ -213,6 +213,19 @@ export const ARTEFACTS = [
     relatedTo: [{ artefactId: 'SOL-SDE', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'derived-from' }] },
 ]
 
+// Maps an entity instance ID (e.g. CAP-006, PLAT-BI, INT-IFC-001, SOL-PRN-002)
+// to the artefact type whose catalogue holds it, so references in documents can
+// link or open a detail view. Returns null when the prefix isn't recognised.
+export const resolveRefArtefactId = (entityId) => {
+  if (!entityId) return null
+  if (entityId.startsWith('CAP-')) return 'BUS-CAP'
+  if (entityId.startsWith('PLAT-')) return 'APP-DAP'
+  if (entityId.startsWith('INT-IFC')) return 'INT-IFC'
+  const prn = entityId.match(/^([A-Z]+)-PRN/)
+  if (prn) return `${prn[1]}-PRN`
+  return null
+}
+
 export const getArtefact = (id) => ARTEFACTS.find(a => a.id === id)
 export const getDomain = (id) => DOMAINS.find(d => d.id === id)
 export const getAbstraction = (id) => ABSTRACTIONS.find(a => a.id === id)
