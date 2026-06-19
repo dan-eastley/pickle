@@ -7,8 +7,8 @@ import useActiveSection from '../../hooks/useActiveSection'
 import EntityPanel from './EntityPanel'
 
 // ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
-// Used as a fallback for SOL-AVI / SOL-AIN / SOL-SVI / SOL-ISP until their schemas
-// carry a meta.sections block. SOL-SDE is fully schema-driven (see below).
+// Fallback for SOL-AVI / SOL-AIN / SOL-ISP until their schemas carry a
+// meta.sections block. SOL-SDE and SOL-SVI are fully schema-driven.
 // type values: prose | highlight | cards | tags | risks | options | diagrams |
 //              components | flows | uml | endpoints | sla | code
 
@@ -32,17 +32,6 @@ const SECTION_CONFIGS = {
     { key: 'recommended-direction',   label: 'Recommended Direction',    type: 'prose' },
     { key: 'architecture-principles', label: 'Architecture Principles',  type: 'tags' },
     { key: 'guardrails',              label: 'Guardrails',               type: 'tags' },
-    { key: 'open-questions',          label: 'Open Questions',           type: 'cards', titleField: 'question', metaField: 'raised-by' },
-    { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
-  ],
-  'SOL-SVI': [
-    { key: 'executive-summary',       label: 'Executive Summary',        type: 'prose' },
-    { key: 'problem-statement',       label: 'Problem Statement',        type: 'prose' },
-    { key: 'solution-overview',       label: 'Solution Overview',        type: 'prose' },
-    { key: 'key-capabilities',        label: 'Key Capabilities',         type: 'tags' },
-    { key: 'platforms-involved',      label: 'Platforms Involved',       type: 'tags' },
-    { key: 'assumptions',             label: 'Assumptions',              type: 'cards', titleField: 'description' },
-    { key: 'risks',                   label: 'Risks',                    type: 'risks' },
     { key: 'open-questions',          label: 'Open Questions',           type: 'cards', titleField: 'question', metaField: 'raised-by' },
     { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
   ],
@@ -89,6 +78,27 @@ const ADHERENCE_STYLES = {
 
 function ProseSection({ text }) {
   return <p className="text-gray-700 leading-relaxed whitespace-pre-line">{text}</p>
+}
+
+// Executive summary: an opening paragraph followed by key statements/bullets.
+// Tolerates a plain string for not-yet-migrated content.
+function ExecSummary({ value }) {
+  if (typeof value === 'string') return <ProseSection text={value} />
+  return (
+    <div className="space-y-3">
+      {value.summary && <p className="text-gray-700 leading-relaxed">{value.summary}</p>}
+      {value.points?.length > 0 && (
+        <ul className="space-y-1.5">
+          {value.points.map((p, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+              <span className="mt-1.5 w-1.5 h-1.5 bg-rose-400 flex-shrink-0" />
+              {p}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
 }
 
 function HighlightSection({ text }) {
@@ -539,10 +549,19 @@ function SectionContent({ config, value, clientId, versionId }) {
 function SchemaContent({ contentType, value, clientId, versionId, onOpenEntity }) {
   switch (contentType) {
     case 'prose':               return <ProseSection text={value} />
+    case 'exec-summary':        return <ExecSummary value={value} />
+    case 'highlight':           return <HighlightSection text={value} />
     case 'context-links':       return <ContextLinks items={value} clientId={clientId} versionId={versionId} />
-    case 'capability-refs':     return <EntityRefList items={value} onOpenEntity={onOpenEntity} />
+    case 'capability-refs':
+    case 'entity-refs':         return <EntityRefList items={value} onOpenEntity={onOpenEntity} />
+    case 'tags':                return <TagList items={value} />
     case 'requirements':        return <RequirementList items={value} />
     case 'features':            return <FeatureList items={value} />
+    case 'drivers':             return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
+    case 'options':             return <OptionList items={value} />
+    case 'assumptions':         return <CardList items={value} config={{ titleField: 'description' }} />
+    case 'risks':               return <RiskList items={value} />
+    case 'open-questions':      return <CardList items={value} config={{ titleField: 'question', metaField: 'raised-by' }} />
     case 'domain-architecture': return <DomainArchitecture value={value} clientId={clientId} versionId={versionId} onOpenEntity={onOpenEntity} />
     case 'principle-adherence': return <PrincipleAdherenceList items={value} onOpenEntity={onOpenEntity} />
     case 'flows':               return <FlowSection items={value} />

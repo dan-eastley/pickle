@@ -18,6 +18,7 @@
             "plural": "Solution Designs"
         },
         "sectionContentTypes": {
+            "exec-summary": "An opening paragraph followed by key statements / bullets.",
             "prose": "A single block of prose.",
             "context-links": "Links to related documents earlier and later in the document chain.",
             "capability-refs": "References to business capabilities (BUS-CAP).",
@@ -37,7 +38,7 @@
                         "key": "executive-summary",
                         "title": "Executive Summary",
                         "description": "A plain-language summary of the solution and the outcome it delivers, written for senior and executive readers.",
-                        "content": "prose"
+                        "content": "exec-summary"
                     },
                     {
                         "key": "context",
@@ -230,7 +231,7 @@
                     "description": "The solution or initiative this design covers"
                 },
 
-                "executive-summary": { "type": "string" },
+                "executive-summary": { "$ref": "#/$defs/exec-summary" },
                 "context": {
                     "type": "array",
                     "items": { "$ref": "#/$defs/context-link" }
@@ -273,6 +274,19 @@
                 "flows-user": { "type": "array", "items": { "$ref": "#/$defs/flow" } },
                 "flows-information": { "type": "array", "items": { "$ref": "#/$defs/flow" } },
                 "flows-system": { "type": "array", "items": { "$ref": "#/$defs/flow" } }
+            },
+            "additionalProperties": false
+        },
+        "exec-summary": {
+            "type": "object",
+            "required": ["summary"],
+            "properties": {
+                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "points": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Key statements / bullets"
+                }
             },
             "additionalProperties": false
         },
