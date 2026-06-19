@@ -136,5 +136,17 @@ export default defineConfig(({ mode }) => {
       // Static copy removed — no build needed when architecture data changes.
     ],
     server: { port: 3000 },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Stable, cacheable vendor chunk shared by every route.
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            // Markdown stack — only pulled in with the docs route.
+            'markdown-vendor': ['react-markdown', 'remark-gfm'],
+          },
+        },
+      },
+    },
   }
 })

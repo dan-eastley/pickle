@@ -1,5 +1,6 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import Footer from './Footer'
+import RouteContent from './RouteContent'
 
 export default function PublicLayout() {
   return (
@@ -28,7 +29,7 @@ export default function PublicLayout() {
         </NavLink>
       </header>
       <main className="flex-1">
-        <Outlet />
+        <RouteContent />
       </main>
       <Footer />
     </div>

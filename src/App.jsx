@@ -1,21 +1,27 @@
+import { lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
 import NavigationProgress from './components/ui/NavigationProgress'
 import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
-import HomePage from './pages/HomePage'
-import ClientsPage from './pages/ClientsPage'
-import VersionsPage from './pages/VersionsPage'
-import DecisionsPage from './pages/DecisionsPage'
-import DecisionEditorPage from './pages/DecisionEditorPage'
-import DecisionDetailPage from './pages/DecisionDetailPage'
-import DomainsPage from './pages/DomainsPage'
-import DomainPage from './pages/DomainPage'
-import AbstractionPage from './pages/AbstractionPage'
-import ArtefactPage from './pages/ArtefactPage'
-import DocsPage from './pages/DocsPage'
 import Spinner from './components/ui/Spinner'
+
+// Pages are route-split — each loads its own chunk on first navigation, so the
+// heavy ones (ArtefactPage's view renderers, DocsPage's markdown stack) stay
+// out of the initial bundle. The Suspense boundary lives inside each layout
+// (see RouteContent) so the chrome stays put while a chunk loads.
+const HomePage = lazy(() => import('./pages/HomePage'))
+const ClientsPage = lazy(() => import('./pages/ClientsPage'))
+const VersionsPage = lazy(() => import('./pages/VersionsPage'))
+const DecisionsPage = lazy(() => import('./pages/DecisionsPage'))
+const DecisionEditorPage = lazy(() => import('./pages/DecisionEditorPage'))
+const DecisionDetailPage = lazy(() => import('./pages/DecisionDetailPage'))
+const DomainsPage = lazy(() => import('./pages/DomainsPage'))
+const DomainPage = lazy(() => import('./pages/DomainPage'))
+const AbstractionPage = lazy(() => import('./pages/AbstractionPage'))
+const ArtefactPage = lazy(() => import('./pages/ArtefactPage'))
+const DocsPage = lazy(() => import('./pages/DocsPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
