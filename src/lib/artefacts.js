@@ -219,10 +219,13 @@ export const ARTEFACTS = [
 export const resolveRefArtefactId = (entityId) => {
   if (!entityId) return null
   if (entityId.startsWith('CAP-')) return 'BUS-CAP'
-  if (entityId.startsWith('PLAT-')) return 'APP-DAP'
+  if (entityId.startsWith('PROC-')) return 'BUS-PRO'
+  if (entityId.startsWith('APP-DOM-') || entityId.startsWith('PLAT-')) return 'APP-DAP'
   if (entityId.startsWith('INT-IFC')) return 'INT-IFC'
   const prn = entityId.match(/^([A-Z]+)-PRN/)
   if (prn) return `${prn[1]}-PRN`
+  const str = entityId.match(/^([A-Z]+)-STR/)
+  if (str) return `${str[1]}-STR`
   return null
 }
 

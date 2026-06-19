@@ -7,7 +7,29 @@
             "description": "Architecture vision for the Data & Analytics Programme, establishing the strategic direction for self-service analytics, data platform modernisation, and insight-driven operations across fedc.",
             "status": "approved",
             "scope": "Data & Analytics Programme — encompassing Oracle Analytics Cloud, Data Lakehouse, and MDM modernisation. Aligned to ADR-013 (Self-Service Analytics for Operational & Commercial Teams).",
-            "executive-summary": "fedc's Data & Analytics Programme establishes an enterprise data platform that democratises access to insight across operational and commercial teams. By consolidating data from Oracle CC&B, MDM, and ERP into a governed Databricks Lakehouse and exposing curated datasets through Oracle Analytics Cloud, the programme eliminates the reliance on centralised IT for report production, accelerates decision-making, and creates a foundation for AI-assisted operations. This vision is aligned to Ofgem's digital reporting obligations and fedc's five-year commercial growth strategy.",
+            "executive-summary": {
+                "summary": "fedc's Data & Analytics Programme establishes an enterprise data platform that democratises trusted insight across operational and commercial teams, aligned to Ofgem's digital reporting obligations and fedc's five-year growth strategy.",
+                "points": [
+                    "Consolidates data from Oracle CC&B, MDM, and ERP into a governed Databricks Lakehouse.",
+                    "Exposes curated, governed datasets through Oracle Analytics Cloud for self-service.",
+                    "Eliminates reliance on centralised IT for report production and accelerates decision-making.",
+                    "Creates an ML-ready foundation for AI-assisted operations."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-AIN",
+                    "document-id": "AIN-001",
+                    "title": "Analytical Platform Architecture Intent"
+                },
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-AIN",
+                    "document-id": "AIN-002",
+                    "title": "Integration Platform Architecture Intent"
+                }
+            ],
             "vision-statement": "Every operational and commercial decision at fedc is informed by trusted, timely, self-service analytics drawn from a single governed data platform.",
             "drivers": [
                 {
@@ -53,6 +75,32 @@
                     "linked-capabilities": ["CAP-003", "CAP-007"]
                 }
             ],
+            "business-capabilities": [
+                { "artefact-id": "CAP-001" },
+                { "artefact-id": "CAP-002" },
+                { "artefact-id": "CAP-003" },
+                { "artefact-id": "CAP-004" },
+                { "artefact-id": "CAP-005" }
+            ],
+            "business-processes": [
+                { "artefact-id": "PROC-006", "note": "Retail & Revenue Management — billing and metering data feeds." },
+                { "artefact-id": "PROC-007", "note": "Regulatory Reporting & Compliance — Ofgem digital reporting." },
+                { "artefact-id": "PROC-001-05", "note": "Manage Customer Insights — segmentation and analytics consumption." },
+                { "artefact-id": "PROC-004", "note": "Network Operations & Control — operational KPI consumption." }
+            ],
+            "application-landscape": [
+                { "artefact-id": "APP-DOM-CUSTOMER", "note": "Customer domain — operational and commercial analytics consumers." },
+                { "artefact-id": "PLAT-BI", "note": "Oracle Analytics Cloud — self-service BI surface." },
+                { "artefact-id": "PLAT-DATA-LAKEHOUSE", "note": "Databricks — governed enterprise data tier." },
+                { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent — event-driven ingestion / CDC." },
+                { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B — primary operational data source." }
+            ],
+            "cross-domain-strategies": [
+                { "artefact-id": "DAT-STR-001", "note": "Data strategy — governed, trusted enterprise data." },
+                { "artefact-id": "INT-STR-001", "note": "Integration strategy — event-driven by default." },
+                { "artefact-id": "APP-STR-001", "note": "Application strategy — platform consolidation." }
+            ],
+            "guiding-principles": ["SOL-PRN-004", "DAT-PRN-001", "INT-PRN-001"],
             "constraints": [
                 {
                     "id": "CON-001",
@@ -77,16 +125,24 @@
                 },
                 {
                     "id": "ASM-002",
-                    "description": "The Confluent event broker (PLAT-IPAAS) is available and has sufficient capacity to handle CC&B change-data-capture event volumes at peak (estimated 50,000 events/hour)."
+                    "description": "The Confluent event broker is available and has sufficient capacity to handle CC&B change-data-capture event volumes at peak (estimated 50,000 events/hour)."
                 },
                 {
                     "id": "ASM-003",
                     "description": "A dedicated Data Engineering function of at least four FTEs will be resourced by Q1 FY2026 to own lakehouse pipeline development and governance."
                 }
             ],
-            "related-capabilities": ["CAP-001", "CAP-002", "CAP-003", "CAP-004", "CAP-005"],
-            "related-domains": ["data", "application", "integration"],
-            "diagrams": []
+            "transformation-themes": [
+                { "id": "THEME-001", "name": "Foundation — Governed Lakehouse", "description": "Stand up the Databricks lakehouse with Unity Catalog governance and event-driven ingestion from CC&B." },
+                { "id": "THEME-002", "name": "Self-Service Enablement", "description": "Build the OAC semantic layer and onboard operational and commercial users to governed self-service analytics." },
+                { "id": "THEME-003", "name": "AI-Ready Data", "description": "Expose ML feature stores for SageMaker-based churn and asset-failure prediction." }
+            ],
+            "expected-benefits": [
+                "Critical operational reporting lag reduced from 24 hours to under 15 minutes.",
+                "200+ business users self-serving analytics without IT-mediated report production.",
+                "Auditable data lineage that satisfies Ofgem digital reporting obligations.",
+                "An ML-ready foundation enabling churn prediction and predictive asset maintenance."
+            ]
         },
         {
             "id": "AVI-002",
@@ -94,7 +150,23 @@
             "description": "Architecture vision for the CX Transformation Programme, defining the strategic direction for a unified, omnichannel customer experience built on Salesforce CRM and integrated with Oracle CC&B.",
             "status": "in-review",
             "scope": "CX Transformation Programme — covering Salesforce CRM (PLAT-CRM), Oracle CC&B (PLAT-CIS), and ServiceNow ITSM (PLAT-FSM) customer-facing processes including account management, billing enquiries, complaints, and field service.",
-            "executive-summary": "fedc's customers interact across web, app, phone, and field channels with inconsistent experiences driven by fragmented systems. The CX Transformation Programme establishes Salesforce CRM as the unified customer engagement layer, synchronised in near-real-time with Oracle CC&B for billing and account data. This creates a single agent desktop, enables proactive outbound engagement based on billing events, and reduces average handle time for contact centre agents. The programme is a prerequisite for smart meter rollout communications and Ofgem's consumer duty obligations.",
+            "executive-summary": {
+                "summary": "fedc's customers interact across web, app, phone, and field channels with inconsistent experiences driven by fragmented systems; the CX Transformation Programme makes Salesforce CRM the unified, real-time customer engagement layer.",
+                "points": [
+                    "Synchronises Salesforce CRM with Oracle CC&B in near-real-time for billing and account data.",
+                    "Creates a single agent desktop and reduces average contact-centre handle time.",
+                    "Enables proactive outbound engagement triggered by billing events.",
+                    "Is a prerequisite for smart meter rollout communications and Ofgem Consumer Duty obligations."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-AIN",
+                    "document-id": "AIN-002",
+                    "title": "Integration Platform Architecture Intent"
+                }
+            ],
             "vision-statement": "fedc customers receive a consistent, proactive, and personalised experience across every channel, underpinned by a real-time view of their account and energy usage.",
             "drivers": [
                 {
@@ -130,6 +202,30 @@
                     "linked-capabilities": ["CAP-001", "CAP-006"]
                 }
             ],
+            "business-capabilities": [
+                { "artefact-id": "CAP-001" },
+                { "artefact-id": "CAP-004" },
+                { "artefact-id": "CAP-006" }
+            ],
+            "business-processes": [
+                { "artefact-id": "PROC-001", "note": "Customer Lifecycle Management — unified across channels." },
+                { "artefact-id": "PROC-001-03", "note": "Service & Manage Customers — agent desktop and enquiries." },
+                { "artefact-id": "PROC-006-03", "note": "Bill Customers — billing context surfaced to agents." },
+                { "artefact-id": "PROC-006-05", "note": "Manage Debt & Arrears — proactive Consumer Duty communications." }
+            ],
+            "application-landscape": [
+                { "artefact-id": "APP-DOM-CUSTOMER", "note": "Customer domain — engagement and service." },
+                { "artefact-id": "PLAT-CRM", "note": "Salesforce CRM — unified customer engagement layer." },
+                { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B — system of record for billing and accounts." },
+                { "artefact-id": "PLAT-FSM", "note": "ServiceNow FSM — field service scheduling." },
+                { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent / OIC — CRM-to-CIS synchronisation." }
+            ],
+            "cross-domain-strategies": [
+                { "artefact-id": "BUS-STR-001", "note": "Business strategy — customer-centric growth." },
+                { "artefact-id": "INT-STR-001", "note": "Integration strategy — mediated, governed integration." },
+                { "artefact-id": "APP-STR-001", "note": "Application strategy — platform consolidation." }
+            ],
+            "guiding-principles": ["SOL-PRN-001", "INT-PRN-004", "INT-PRN-006"],
             "constraints": [
                 {
                     "id": "CON-001",
@@ -138,7 +234,7 @@
                 },
                 {
                     "id": "CON-002",
-                    "description": "All integration between Salesforce and Oracle CC&B must be mediated via the PLAT-IPAAS layer (Confluent/Oracle Integration Cloud); no direct database links permitted.",
+                    "description": "All integration between Salesforce and Oracle CC&B must be mediated via the iPaaS layer (Confluent / Oracle Integration Cloud); no direct database links permitted.",
                     "type": "technical"
                 }
             ],
@@ -152,9 +248,17 @@
                     "description": "The Confluent event broker can propagate CC&B billing events to Salesforce within a 5-minute SLA during business hours."
                 }
             ],
-            "related-capabilities": ["CAP-001", "CAP-004", "CAP-006"],
-            "related-domains": ["application", "integration", "data"],
-            "diagrams": []
+            "transformation-themes": [
+                { "id": "THEME-001", "name": "Unified Agent Desktop", "description": "Embed real-time CC&B billing context into the Salesforce agent experience." },
+                { "id": "THEME-002", "name": "Proactive Engagement", "description": "Trigger outbound communications from billing events to meet Consumer Duty obligations." },
+                { "id": "THEME-003", "name": "Omnichannel Field Service", "description": "Coordinate ServiceNow FSM scheduling with CRM for smart-meter installations." }
+            ],
+            "expected-benefits": [
+                "25% reduction in average contact-centre handle time.",
+                "Proactive Consumer Duty communications within 4 hours of a triggering billing event.",
+                "A single, real-time customer view across web, app, phone, and field channels.",
+                "Coordinated smart-meter field scheduling tied to customer communications."
+            ]
         }
     ]
 }

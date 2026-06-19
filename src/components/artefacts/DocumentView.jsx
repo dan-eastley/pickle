@@ -7,23 +7,12 @@ import useActiveSection from '../../hooks/useActiveSection'
 import EntityPanel from './EntityPanel'
 
 // ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
-// Fallback for SOL-AVI / SOL-ISP until their schemas carry a meta.sections
-// block. SOL-SDE, SOL-SVI, and SOL-AIN are fully schema-driven.
+// Fallback for SOL-ISP until its schema carries a meta.sections block.
+// SOL-SDE, SOL-SVI, SOL-AIN, and SOL-AVI are fully schema-driven.
 // type values: prose | highlight | cards | tags | risks | options | diagrams |
 //              components | flows | uml | endpoints | sla | code
 
 const SECTION_CONFIGS = {
-  'SOL-AVI': [
-    { key: 'executive-summary',       label: 'Executive Summary',        type: 'prose' },
-    { key: 'vision-statement',        label: 'Vision Statement',         type: 'highlight' },
-    { key: 'drivers',                 label: 'Drivers',                  type: 'cards', titleField: 'description', tagField: 'type' },
-    { key: 'strategic-objectives',    label: 'Strategic Objectives',     type: 'cards', titleField: 'objective', linksField: 'linked-capabilities' },
-    { key: 'constraints',             label: 'Constraints',              type: 'cards', titleField: 'description', tagField: 'type' },
-    { key: 'assumptions',             label: 'Assumptions',              type: 'cards', titleField: 'description' },
-    { key: 'related-capabilities',    label: 'Related Capabilities',     type: 'tags' },
-    { key: 'related-domains',         label: 'Related Domains',          type: 'tags' },
-    { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
-  ],
   'SOL-ISP': [
     { key: 'overview',                label: 'Overview',                 type: 'prose' },
     { key: 'endpoints',               label: 'Endpoints',                type: 'endpoints' },
@@ -428,6 +417,19 @@ function RequirementList({ items }) {
   )
 }
 
+function BulletList({ items }) {
+  return (
+    <ul className="space-y-1.5">
+      {items.map((b, i) => (
+        <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+          <span className="mt-1.5 w-1.5 h-1.5 bg-rose-400 flex-shrink-0" />
+          {b}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function FeatureList({ items }) {
   return (
     <div className="space-y-2">
@@ -546,7 +548,10 @@ function SchemaContent({ contentType, value, clientId, versionId, onOpenEntity }
     case 'tags':                return <TagList items={value} />
     case 'requirements':        return <RequirementList items={value} />
     case 'features':            return <FeatureList items={value} />
-    case 'drivers':             return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
+    case 'bullets':             return <BulletList items={value} />
+    case 'objectives':          return <CardList items={value} config={{ titleField: 'objective', linksField: 'linked-capabilities' }} />
+    case 'drivers':
+    case 'constraints':         return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
     case 'options':             return <OptionList items={value} />
     case 'assumptions':         return <CardList items={value} config={{ titleField: 'description' }} />
     case 'risks':               return <RiskList items={value} />

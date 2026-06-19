@@ -2,20 +2,155 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AVI",
     "title": "Architecture Vision",
-    "description": "A high-level architecture vision document capturing strategic intent, objectives, and direction for a programme or initiative.",
+    "description": "A conceptual-level architecture vision document for a programme or initiative, written for executive and leadership audiences. Sets strategic direction and sketches the target architecture at a high (L1/L2) level across the business, data, integration, and application domains.",
     "meta": {
         "domain": "solution",
         "abstraction": "conceptual",
         "format": "document",
-        "description": "Architecture Vision documents articulate the high-level strategic direction for a programme or initiative, aligning business drivers with architecture outcomes.",
+        "description": "Architecture Vision documents are the most conceptual link in the chain. They establish the strategic direction and high-level target architecture for a programme — high-level capabilities, processes, application domains and platforms, and cross-domain strategies — and inform the Architecture Intent(s) that follow.",
         "purpose": [
-            "Communicate the architecture direction to senior stakeholders and decision-makers",
-            "Establish strategic objectives and link them to business capabilities"
+            "Set the strategic direction and target architecture for a programme at an executive level",
+            "Frame the high-level capabilities, processes, platforms, and strategies the programme touches",
+            "Inform the Architecture Intent(s) [SOL-AIN] that decide the detailed direction"
         ],
         "countLabels": {
             "singular": "Vision",
             "plural": "Visions"
-        }
+        },
+        "sectionContentTypes": {
+            "exec-summary": "An opening paragraph followed by key statements / bullets.",
+            "context-links": "Links to related documents later in the document chain.",
+            "highlight": "A single emphasised statement.",
+            "drivers": "A list of drivers behind the vision.",
+            "objectives": "Strategic objectives, each linked to capabilities.",
+            "entity-refs": "References to architecture entities (capabilities, processes, platforms, strategies).",
+            "tags": "A list of referenced IDs.",
+            "constraints": "A list of constraints.",
+            "assumptions": "A list of assumptions.",
+            "features": "Named themes, each with a description.",
+            "bullets": "A list of statements / bullets."
+        },
+        "sections": [
+            {
+                "key": "overview",
+                "title": "Overview",
+                "description": "Orients leadership to what this vision covers and where it sits in the architecture document chain.",
+                "subsections": [
+                    {
+                        "key": "executive-summary",
+                        "title": "Executive Summary",
+                        "description": "A plain-language summary of the vision and the outcome it delivers, written for executive and leadership readers.",
+                        "content": "exec-summary"
+                    },
+                    {
+                        "key": "context",
+                        "title": "Context",
+                        "description": "Where this vision sits in the document chain — the Architecture Intent(s) it informs.",
+                        "content": "context-links"
+                    }
+                ]
+            },
+            {
+                "key": "vision-and-drivers",
+                "title": "Vision & Drivers",
+                "description": "The vision statement, the forces driving change, and the strategic objectives to achieve.",
+                "subsections": [
+                    {
+                        "key": "vision-statement",
+                        "title": "Vision Statement",
+                        "description": "The aspirational end-state stated in one sentence.",
+                        "content": "highlight"
+                    },
+                    {
+                        "key": "drivers",
+                        "title": "Strategic Drivers",
+                        "description": "The business, technology, regulatory, and market forces driving this vision.",
+                        "content": "drivers"
+                    },
+                    {
+                        "key": "strategic-objectives",
+                        "title": "Strategic Objectives",
+                        "description": "The measurable outcomes the programme is targeting, each linked to the capabilities it advances.",
+                        "content": "objectives"
+                    }
+                ]
+            },
+            {
+                "key": "target-architecture",
+                "title": "Target Architecture",
+                "description": "The high-level (L1/L2, conceptual) target architecture across the four delivery domains — the capabilities, processes, platforms, and strategies in scope.",
+                "subsections": [
+                    {
+                        "key": "business-capabilities",
+                        "title": "Business Capabilities",
+                        "description": "The high-level business capabilities (BUS-CAP) this programme advances.",
+                        "content": "entity-refs"
+                    },
+                    {
+                        "key": "business-processes",
+                        "title": "Business Processes",
+                        "description": "The high-level business processes (BUS-PRO) this programme affects.",
+                        "content": "entity-refs"
+                    },
+                    {
+                        "key": "application-landscape",
+                        "title": "Application Domains & Platforms",
+                        "description": "The application domains and platforms (APP-DAP) the vision relies on.",
+                        "content": "entity-refs"
+                    },
+                    {
+                        "key": "cross-domain-strategies",
+                        "title": "Cross-Domain Strategies",
+                        "description": "The domain strategies (BUS/DAT/INT/APP/SOL-STR) this vision aligns to.",
+                        "content": "entity-refs"
+                    }
+                ]
+            },
+            {
+                "key": "principles-and-constraints",
+                "title": "Principles & Constraints",
+                "description": "The guiding principles the vision honours and the constraints and assumptions it operates within.",
+                "subsections": [
+                    {
+                        "key": "guiding-principles",
+                        "title": "Guiding Principles",
+                        "description": "High-level principles (SOL-PRN and domain principles) that shape this vision.",
+                        "content": "tags"
+                    },
+                    {
+                        "key": "constraints",
+                        "title": "Constraints",
+                        "description": "The technical, business, regulatory, and resource constraints the vision must respect.",
+                        "content": "constraints"
+                    },
+                    {
+                        "key": "assumptions",
+                        "title": "Assumptions",
+                        "description": "What is assumed to be true for this vision to hold.",
+                        "content": "assumptions"
+                    }
+                ]
+            },
+            {
+                "key": "roadmap-and-impact",
+                "title": "Roadmap & Impact",
+                "description": "The high-level transformation themes and the benefits the programme is expected to deliver.",
+                "subsections": [
+                    {
+                        "key": "transformation-themes",
+                        "title": "Transformation Themes",
+                        "description": "The high-level phases or themes the programme is organised around.",
+                        "content": "features"
+                    },
+                    {
+                        "key": "expected-benefits",
+                        "title": "Expected Benefits",
+                        "description": "The outcomes and benefits leadership can expect from the programme.",
+                        "content": "bullets"
+                    }
+                ]
+            }
+        ]
     },
     "type": "object",
     "required": ["documents"],
@@ -30,7 +165,7 @@
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "scope", "vision-statement"],
+            "required": ["id", "title", "description", "status", "executive-summary", "vision-statement"],
             "properties": {
                 "id": { "type": "string" },
                 "title": { "type": "string" },
@@ -41,23 +176,41 @@
                 },
                 "scope": {
                     "type": "string",
-                    "description": "What programme, initiative, or domain this vision covers"
+                    "description": "The programme or initiative this vision covers"
                 },
-                "executive-summary": {
-                    "type": "string",
-                    "description": "Prose summary of the vision for executive audiences"
+                "executive-summary": { "$ref": "#/$defs/exec-summary" },
+                "context": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/context-link" }
                 },
-                "vision-statement": {
-                    "type": "string",
-                    "description": "A single concise statement of the architecture vision"
-                },
+                "vision-statement": { "type": "string" },
                 "drivers": {
                     "type": "array",
                     "items": { "$ref": "#/$defs/driver" }
                 },
                 "strategic-objectives": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/strategic-objective" }
+                    "items": { "$ref": "#/$defs/objective" }
+                },
+                "business-capabilities": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/artefact-ref" }
+                },
+                "business-processes": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/artefact-ref" }
+                },
+                "application-landscape": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/artefact-ref" }
+                },
+                "cross-domain-strategies": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/artefact-ref" }
+                },
+                "guiding-principles": {
+                    "type": "array",
+                    "items": { "type": "string" }
                 },
                 "constraints": {
                     "type": "array",
@@ -67,34 +220,41 @@
                     "type": "array",
                     "items": { "$ref": "#/$defs/assumption" }
                 },
-                "related-capabilities": {
+                "transformation-themes": {
                     "type": "array",
-                    "items": { "type": "string" },
-                    "description": "BUS-CAP IDs of business capabilities this vision is aligned to"
+                    "items": { "$ref": "#/$defs/theme" }
                 },
-                "related-domains": {
+                "expected-benefits": {
                     "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Architecture domains in scope for this vision"
-                },
-                "diagrams": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/diagram-ref" }
+                    "items": { "type": "string" }
                 }
             },
             "additionalProperties": false
         },
-        "strategic-objective": {
+        "exec-summary": {
             "type": "object",
-            "required": ["id", "objective"],
+            "required": ["summary"],
             "properties": {
-                "id": { "type": "string" },
-                "objective": { "type": "string" },
-                "linked-capabilities": {
+                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "points": {
                     "type": "array",
                     "items": { "type": "string" },
-                    "description": "BUS-CAP IDs linked to this objective"
+                    "description": "Key statements / bullets"
                 }
+            },
+            "additionalProperties": false
+        },
+        "context-link": {
+            "type": "object",
+            "required": ["relationship", "artefact-id", "document-id"],
+            "properties": {
+                "relationship": {
+                    "type": "string",
+                    "enum": ["informed-by", "informs", "related"]
+                },
+                "artefact-id": { "type": "string" },
+                "document-id": { "type": "string" },
+                "title": { "type": "string" }
             },
             "additionalProperties": false
         },
@@ -104,10 +264,30 @@
             "properties": {
                 "id": { "type": "string" },
                 "description": { "type": "string" },
-                "type": {
-                    "type": "string",
-                    "enum": ["business", "technology", "regulatory", "market"]
+                "type": { "type": "string", "enum": ["business", "technology", "regulatory", "market"] }
+            },
+            "additionalProperties": false
+        },
+        "objective": {
+            "type": "object",
+            "required": ["id", "objective"],
+            "properties": {
+                "id": { "type": "string" },
+                "objective": { "type": "string" },
+                "linked-capabilities": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "BUS-CAP IDs this objective advances"
                 }
+            },
+            "additionalProperties": false
+        },
+        "artefact-ref": {
+            "type": "object",
+            "required": ["artefact-id"],
+            "properties": {
+                "artefact-id": { "type": "string" },
+                "note": { "type": "string" }
             },
             "additionalProperties": false
         },
@@ -117,10 +297,7 @@
             "properties": {
                 "id": { "type": "string" },
                 "description": { "type": "string" },
-                "type": {
-                    "type": "string",
-                    "enum": ["technical", "business", "regulatory", "resource"]
-                }
+                "type": { "type": "string", "enum": ["technical", "business", "regulatory", "resource"] }
             },
             "additionalProperties": false
         },
@@ -133,44 +310,13 @@
             },
             "additionalProperties": false
         },
-        "risk": {
+        "theme": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": ["id", "name"],
             "properties": {
                 "id": { "type": "string" },
-                "description": { "type": "string" },
-                "likelihood": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                },
-                "impact": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                },
-                "mitigation": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "open-question": {
-            "type": "object",
-            "required": ["id", "question"],
-            "properties": {
-                "id": { "type": "string" },
-                "question": { "type": "string" },
-                "raised-by": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "diagram-ref": {
-            "type": "object",
-            "required": ["artefact-id"],
-            "properties": {
-                "artefact-id": {
-                    "type": "string",
-                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
-                },
-                "title": { "type": "string" },
-                "caption": { "type": "string" }
+                "name": { "type": "string" },
+                "description": { "type": "string" }
             },
             "additionalProperties": false
         }
