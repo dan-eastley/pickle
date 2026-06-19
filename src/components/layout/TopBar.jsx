@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate, NavLink, Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import { ChevronDown } from '../ui/icons'
 
@@ -87,17 +87,18 @@ export default function TopBar() {
         {clientMeta?.name ?? ''}
       </div>
 
-      {/* Docs link */}
-      <NavLink
-        to="/docs"
-        className={({ isActive }) =>
-          `text-sm font-medium px-3 py-1.5 transition-colors flex-shrink-0 ${
-            isActive ? 'text-brand-700 bg-brand-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-          }`
-        }
+      {/* Docs link — opens in a new window */}
+      <a
+        href="/docs"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm font-medium px-3 py-1.5 transition-colors flex-shrink-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100 inline-flex items-center gap-1"
       >
         Docs
-      </NavLink>
+        <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
+          <path d="M6 3h7v7M13 3L6.5 9.5M11 9.5V13H3V5h3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </a>
 
       {/* Selectors */}
       <div className="flex items-center gap-2 flex-shrink-0">

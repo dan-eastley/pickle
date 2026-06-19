@@ -2,20 +2,206 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SDE",
     "title": "Solution Design",
-    "description": "A logical-level solution design document describing components, data flows, interface requirements, and non-functional requirements for a specific solution.",
+    "description": "A logical-level solution design document. Structured into numbered sections (Overview, Business Context & Functional Overview, Non-Functional Requirements, Logical Architecture, Principles Adherence, Sequence Diagrams), each calling out the relevant content from the four delivery domains.",
     "meta": {
         "domain": "solution",
         "abstraction": "logical",
         "format": "document",
-        "description": "Solution Design documents provide a structured logical design covering components, data flows, UML diagrams, interface requirements, and non-functional requirements.",
+        "description": "Solution Design documents describe the logical design of a specific solution — its functional and non-functional requirements, its logical architecture across the business, data, integration, and application domains, the principles it adheres to, and its dynamic behaviour.",
         "purpose": [
-            "Document the logical structure and behaviour of a solution before physical implementation",
-            "Provide sufficient detail for interface specification and development planning"
+            "Elaborate a Solution Vision [SOL-SVI] into a logical design sufficient to drive low-level design",
+            "Call out the relevant business, data, integration, and application architecture for the solution in one place",
+            "Inform the Interface Specification(s) [SOL-ISP] and other low-level designs that follow"
         ],
         "countLabels": {
             "singular": "Solution Design",
             "plural": "Solution Designs"
-        }
+        },
+        "sectionContentTypes": {
+            "prose": "A single block of prose.",
+            "context-links": "Links to related documents earlier and later in the document chain.",
+            "capability-refs": "References to business capabilities (BUS-CAP).",
+            "requirements": "A list of discrete requirements.",
+            "features": "A list of features grouping related functional requirements.",
+            "domain-architecture": "Prose plus references and diagrams calling out one domain's architecture.",
+            "principle-adherence": "A list of principles and how the design adheres to each.",
+            "flows": "A list of flows, each expressed as a diagram and/or ordered steps."
+        },
+        "sections": [
+            {
+                "key": "overview",
+                "title": "Overview",
+                "description": "Orients any reader to what this design covers and where it sits in the architecture document chain.",
+                "subsections": [
+                    {
+                        "key": "executive-summary",
+                        "title": "Executive Summary",
+                        "description": "A plain-language summary of the solution and the outcome it delivers, written for senior and executive readers.",
+                        "content": "prose"
+                    },
+                    {
+                        "key": "context",
+                        "title": "Context",
+                        "description": "Where this design sits in the document chain — the Solution Vision(s) it elaborates and the Interface Specification(s) and other low-level designs it informs.",
+                        "content": "context-links"
+                    }
+                ]
+            },
+            {
+                "key": "business-context",
+                "title": "Business Context & Functional Overview",
+                "description": "The business need the solution serves and what it must functionally do.",
+                "subsections": [
+                    {
+                        "key": "capabilities",
+                        "title": "Capabilities",
+                        "description": "The business capabilities (BUS-CAP) this solution enables or enhances.",
+                        "content": "capability-refs"
+                    },
+                    {
+                        "key": "functional-requirements",
+                        "title": "Functional Requirements",
+                        "description": "What the solution must do, expressed as discrete, testable requirements.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "features",
+                        "title": "Features",
+                        "description": "The feature set the solution delivers, grouping related functional requirements.",
+                        "content": "features"
+                    }
+                ]
+            },
+            {
+                "key": "non-functional-requirements",
+                "title": "Non-Functional Requirements",
+                "description": "The quality attributes and operational constraints the solution must satisfy.",
+                "subsections": [
+                    {
+                        "key": "nfr-business-continuity",
+                        "title": "Business Continuity (Back-up, Recovery & Reliability)",
+                        "description": "Requirements for back-up, recovery, failover, and overall reliability of the solution.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-environment-hosting",
+                        "title": "Environment & Hosting",
+                        "description": "Requirements covering where and how the solution is hosted and the environments it runs in.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-security-control",
+                        "title": "Security & Control",
+                        "description": "Security and control requirements — threat protection, encryption, segregation, and related controls.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-support-slas",
+                        "title": "Support & SLAs",
+                        "description": "Support model and service-level requirements the solution must meet in operation.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-user-access",
+                        "title": "User Access (RBAC)",
+                        "description": "Role-based access control requirements — who may do what within the solution.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-data-classification",
+                        "title": "Data Classification & Protection",
+                        "description": "Requirements for classifying data and protecting it according to its classification.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-audit-logging",
+                        "title": "Auditing, Logging & Monitoring",
+                        "description": "Requirements for auditing, logging, and monitoring the solution's behaviour.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-accessibility",
+                        "title": "Accessibility & Usability",
+                        "description": "Accessibility and usability requirements for the solution's interfaces.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-data-retention",
+                        "title": "Data Retention & Archiving",
+                        "description": "Requirements for how long data is retained and how it is archived or disposed of.",
+                        "content": "requirements"
+                    },
+                    {
+                        "key": "nfr-performance",
+                        "title": "Performance, Scalability & Response",
+                        "description": "Performance, scalability, and response-time requirements the solution must satisfy.",
+                        "content": "requirements"
+                    }
+                ]
+            },
+            {
+                "key": "logical-architecture",
+                "title": "Logical Architecture",
+                "description": "The logical design of the solution, organised by the four delivery domains. Each subsection calls out the relevant domain architecture.",
+                "subsections": [
+                    {
+                        "key": "arch-business",
+                        "title": "Business Architecture",
+                        "description": "The business processes and operating-model touchpoints the solution affects (BUS-PRO).",
+                        "content": "domain-architecture"
+                    },
+                    {
+                        "key": "arch-data",
+                        "title": "Data Architecture",
+                        "description": "The data concepts and models the solution relies on or produces (DAT-DAC, DAT-CDM).",
+                        "content": "domain-architecture"
+                    },
+                    {
+                        "key": "arch-integration",
+                        "title": "Integration Architecture",
+                        "description": "The interfaces, events, and messaging between the solution's components (INT-IFC, INT-WRD).",
+                        "content": "domain-architecture"
+                    },
+                    {
+                        "key": "arch-application",
+                        "title": "Application Architecture",
+                        "description": "The platforms and applications that realise the solution and the role each one plays (APP-DAP, APP-CAT).",
+                        "content": "domain-architecture"
+                    }
+                ]
+            },
+            {
+                "key": "principles-adherence",
+                "title": "Principles Adherence",
+                "description": "How the design adheres to the relevant architecture and integration principles, with any justified deviations called out. Each row is a principle (SOL-PRN and domain principles) and a statement of how the design adheres to it.",
+                "content": "principle-adherence"
+            },
+            {
+                "key": "sequence-diagrams",
+                "title": "Sequence Diagrams",
+                "description": "The dynamic behaviour of the solution across user, information, and system perspectives.",
+                "subsections": [
+                    {
+                        "key": "flows-user",
+                        "title": "User Flows",
+                        "description": "Sequence diagrams showing how users interact with the solution.",
+                        "content": "flows"
+                    },
+                    {
+                        "key": "flows-information",
+                        "title": "Information Flows",
+                        "description": "Sequence diagrams showing how information moves through the solution.",
+                        "content": "flows"
+                    },
+                    {
+                        "key": "flows-system",
+                        "title": "System Flows",
+                        "description": "Sequence diagrams showing how systems and components interact.",
+                        "content": "flows"
+                    }
+                ]
+            }
+        ]
     },
     "type": "object",
     "required": ["documents"],
@@ -30,7 +216,7 @@
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "scope", "overview"],
+            "required": ["id", "title", "description", "status", "executive-summary"],
             "properties": {
                 "id": { "type": "string" },
                 "title": { "type": "string" },
@@ -43,37 +229,121 @@
                     "type": "string",
                     "description": "The solution or initiative this design covers"
                 },
-                "overview": {
+
+                "executive-summary": { "type": "string" },
+                "context": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/context-link" }
+                },
+
+                "capabilities": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/artefact-ref" }
+                },
+                "functional-requirements": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/requirement" }
+                },
+                "features": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/feature" }
+                },
+
+                "nfr-business-continuity": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-environment-hosting": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-security-control": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-support-slas": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-user-access": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-data-classification": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-audit-logging": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-accessibility": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-data-retention": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+                "nfr-performance": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
+
+                "arch-business": { "$ref": "#/$defs/domain-architecture" },
+                "arch-data": { "$ref": "#/$defs/domain-architecture" },
+                "arch-integration": { "$ref": "#/$defs/domain-architecture" },
+                "arch-application": { "$ref": "#/$defs/domain-architecture" },
+
+                "principles-adherence": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/principle-adherence" }
+                },
+
+                "flows-user": { "type": "array", "items": { "$ref": "#/$defs/flow" } },
+                "flows-information": { "type": "array", "items": { "$ref": "#/$defs/flow" } },
+                "flows-system": { "type": "array", "items": { "$ref": "#/$defs/flow" } }
+            },
+            "additionalProperties": false
+        },
+        "context-link": {
+            "type": "object",
+            "required": ["relationship", "artefact-id", "document-id"],
+            "properties": {
+                "relationship": {
                     "type": "string",
-                    "description": "Prose overview of the solution design"
+                    "enum": ["informed-by", "informs", "related"],
+                    "description": "How the linked document relates to this one"
                 },
-                "solution-components": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/solution-component" }
+                "artefact-id": {
+                    "type": "string",
+                    "description": "Artefact type of the linked document (e.g. SOL-SVI, SOL-ISP)"
                 },
-                "data-flows": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/data-flow" }
+                "document-id": {
+                    "type": "string",
+                    "description": "ID of the specific linked document instance (e.g. SVI-001)"
                 },
-                "uml-diagrams": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/uml-diagram" }
+                "title": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "artefact-ref": {
+            "type": "object",
+            "required": ["artefact-id"],
+            "properties": {
+                "artefact-id": {
+                    "type": "string",
+                    "description": "Artefact or entity ID being referenced (e.g. BUS-CAP id)"
                 },
-                "interface-requirements": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/interface-requirement" }
+                "note": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "requirement": {
+            "type": "object",
+            "required": ["id", "requirement"],
+            "properties": {
+                "id": { "type": "string" },
+                "requirement": { "type": "string" },
+                "rationale": { "type": "string" },
+                "priority": {
+                    "type": "string",
+                    "enum": ["must", "should", "could", "wont"]
+                }
+            },
+            "additionalProperties": false
+        },
+        "feature": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "domain-architecture": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "Prose describing this domain's architecture for the solution"
                 },
-                "non-functional-requirements": {
+                "references": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/non-functional-requirement" }
-                },
-                "assumptions": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/assumption" }
-                },
-                "open-questions": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/open-question" }
+                    "items": { "$ref": "#/$defs/artefact-ref" },
+                    "description": "Artefacts from this domain that the design calls out"
                 },
                 "diagrams": {
                     "type": "array",
@@ -82,130 +352,46 @@
             },
             "additionalProperties": false
         },
-        "solution-component": {
+        "principle-adherence": {
             "type": "object",
-            "required": ["platform-id", "role"],
+            "required": ["principle-id", "adherence"],
             "properties": {
-                "platform-id": { "type": "string" },
-                "role": { "type": "string" },
-                "notes": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "data-flow": {
-            "type": "object",
-            "required": ["id", "name", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "description": { "type": "string" },
-                "steps": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Ordered sequence steps describing the data flow"
+                "principle-id": {
+                    "type": "string",
+                    "description": "Principle being adhered to (e.g. SOL-PRN, INT-PRN id)"
+                },
+                "adherence": {
+                    "type": "string",
+                    "enum": ["adheres", "partial", "deviation"]
+                },
+                "statement": {
+                    "type": "string",
+                    "description": "How the design adheres to or deviates from the principle"
                 }
             },
             "additionalProperties": false
         },
-        "uml-diagram": {
+        "flow": {
             "type": "object",
-            "required": ["type", "title", "format", "content"],
+            "required": ["title"],
             "properties": {
-                "type": {
-                    "type": "string",
-                    "enum": ["sequence", "component", "class", "state", "activity"]
-                },
+                "id": { "type": "string" },
                 "title": { "type": "string" },
                 "description": { "type": "string" },
                 "format": {
                     "type": "string",
-                    "enum": ["mermaid", "plantuml", "url"]
+                    "enum": ["mermaid", "plantuml", "url"],
+                    "description": "Diagram format, when the flow is expressed as a diagram"
                 },
-                "content": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "interface-requirement": {
-            "type": "object",
-            "required": ["interface-id", "direction", "data-format"],
-            "properties": {
-                "interface-id": { "type": "string" },
-                "direction": { "type": "string" },
-                "data-format": { "type": "string" },
-                "notes": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "non-functional-requirement": {
-            "type": "object",
-            "required": ["category", "requirement"],
-            "properties": {
-                "category": { "type": "string" },
-                "requirement": { "type": "string" },
-                "rationale": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "driver": {
-            "type": "object",
-            "required": ["id", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "type": {
+                "content": {
                     "type": "string",
-                    "enum": ["business", "technology", "regulatory", "market"]
+                    "description": "Diagram source, when the flow is expressed as a diagram"
+                },
+                "steps": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Ordered steps, when the flow is expressed as a step sequence"
                 }
-            },
-            "additionalProperties": false
-        },
-        "constraint": {
-            "type": "object",
-            "required": ["id", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "type": {
-                    "type": "string",
-                    "enum": ["technical", "business", "regulatory", "resource"]
-                }
-            },
-            "additionalProperties": false
-        },
-        "assumption": {
-            "type": "object",
-            "required": ["id", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "risk": {
-            "type": "object",
-            "required": ["id", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "likelihood": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                },
-                "impact": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                },
-                "mitigation": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "open-question": {
-            "type": "object",
-            "required": ["id", "question"],
-            "properties": {
-                "id": { "type": "string" },
-                "question": { "type": "string" },
-                "raised-by": { "type": "string" }
             },
             "additionalProperties": false
         },
@@ -215,7 +401,7 @@
             "properties": {
                 "artefact-id": {
                     "type": "string",
-                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
+                    "description": "Artefact ID to render inline (e.g. INT-WRD)"
                 },
                 "title": { "type": "string" },
                 "caption": { "type": "string" }
