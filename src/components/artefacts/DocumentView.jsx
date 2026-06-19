@@ -598,7 +598,7 @@ function Chevron({ open, className = 'w-3.5 h-3.5' }) {
 
 export function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
   return (
-    <div className="mb-5 px-5 py-4 bg-white border border-gray-200 shadow-sm">
+    <div className="mb-5 px-5 py-4 bg-white border border-gray-200 shadow-xl">
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
         {nameWithId(artefact?.name, artefact?.id)}
       </p>
@@ -661,13 +661,28 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
   const expandAll = () => setCollapsed(new Set())
   const collapseAll = () => setCollapsed(new Set(allKeys))
 
+  // Map each subsection key to its parent section key, so clicking a nav entry
+  // can expand whatever needs expanding before scrolling to it.
+  const parentOf = {}
+  for (const s of visible) for (const sub of s.subs) parentOf[sub.key] = s.key
+
   function scrollTo(key) {
-    sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const toReveal = parentOf[key] ? [parentOf[key], key] : [key]
+    setCollapsed(prev => {
+      if (!toReveal.some(k => prev.has(k))) return prev
+      const next = new Set(prev)
+      toReveal.forEach(k => next.delete(k))
+      return next
+    })
+    // Wait a frame so a just-expanded section is in the DOM before scrolling.
+    requestAnimationFrame(() => {
+      sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   return (
     <>
-    <div className="flex gap-8 items-start">
+    <div className="flex gap-8">
       {/* Contents nav — H1 + H2 only, stays on the page background */}
       <aside className="hidden lg:block w-64 flex-shrink-0">
         <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
@@ -717,7 +732,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
       </aside>
 
       {/* Document body — white box with drop shadow, the 'document' surface */}
-      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-sm px-8 py-7">
+      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-xl px-8 py-7">
         {/* Document title (H0) */}
         <header className="mb-8 pb-5 border-b border-gray-200">
           <h1 className="text-2xl font-bold text-gray-900">{nameWithId(doc.title, doc.id)}</h1>
@@ -832,7 +847,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
   }
 
   return (
-    <div className="flex gap-8 items-start">
+    <div className="flex gap-8">
       <aside className="hidden lg:block w-48 flex-shrink-0">
         <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Contents</p>
@@ -867,7 +882,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
         </nav>
       </aside>
 
-      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-sm px-8 py-7">
+      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-xl px-8 py-7">
         <div
           ref={el => { sectionRefs.current['overview'] = el }}
           data-section="overview"
