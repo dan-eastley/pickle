@@ -28,6 +28,9 @@
             "recommendation": "**'Semantic layer'** is technical jargon. Consider rephrasing to emphasise the business benefit: e.g., *'A business-friendly metrics layer that lets teams use familiar terminology (e.g., \"monthly revenue\", \"customer count\") rather than technical database field names'* — this makes the intent clearer for non-technical stakeholders."
         },
         {
+            "recommendation": "The narrative mentions **role-based access** as a key control, but no explicit requirement captures access enforcement. Consider adding a requirement that access controls must be enforced and that unauthorised data access attempts are logged or prevented — this ensures the governance intent is measurable."
+        },
+        {
             "recommendation": "Strong overall narrative — clear problem statement, business impact, and scope. The requirement set is testable and well-classified. Minor addition: consider mentioning whether the role-based access model should prevent analysts from accessing certain metrics or only limit row-level data visibility — this distinction will matter for downstream design."
         }
     ],
