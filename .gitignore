@@ -21,3 +21,7 @@ Thumbs.db
 node_modules/
 .vite/
 dist/
+
+# Local env (secrets) — never commit
+.env
+.env.*
