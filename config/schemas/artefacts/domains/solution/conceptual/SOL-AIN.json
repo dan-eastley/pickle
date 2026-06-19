@@ -2,20 +2,121 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AIN",
     "title": "Architecture Intent",
-    "description": "A structured document capturing the architecture intent for a programme or initiative, including context, options considered, and recommended direction.",
+    "description": "A conceptual-level architecture intent document capturing the chosen architecture direction for a programme or initiative. Structured into numbered sections covering the intent and drivers, the options considered and recommended direction, the principles and guardrails it honours, and the open questions to resolve.",
     "meta": {
         "domain": "solution",
         "abstraction": "conceptual",
         "format": "document",
-        "description": "Architecture Intent documents articulate the rationale and chosen direction for an architecture decision area, bridging high-level vision with detailed design.",
+        "description": "Architecture Intent documents elaborate an Architecture Vision into a decided direction for an architecture area — recording the options considered and the reasoning — before solution-level design begins.",
         "purpose": [
-            "Record the context, options, and reasoning behind a chosen architecture direction",
-            "Provide traceability from architecture principles and guardrails to solution choices"
+            "Elaborate an Architecture Vision [SOL-AVI] into a decided architecture direction",
+            "Record the options considered and the rationale for the recommended direction",
+            "Inform the Solution Vision(s) [SOL-SVI] that follow"
         ],
         "countLabels": {
             "singular": "Intent",
             "plural": "Intents"
-        }
+        },
+        "sectionContentTypes": {
+            "exec-summary": "An opening paragraph followed by key statements / bullets.",
+            "context-links": "Links to related documents earlier and later in the document chain.",
+            "highlight": "A single emphasised statement.",
+            "prose": "A single block of prose.",
+            "drivers": "A list of drivers behind the intent.",
+            "options": "The options considered, with pros and cons.",
+            "tags": "A list of referenced IDs.",
+            "open-questions": "A list of open questions to resolve."
+        },
+        "sections": [
+            {
+                "key": "overview",
+                "title": "Overview",
+                "description": "Orients any reader to what this intent covers and where it sits in the architecture document chain.",
+                "subsections": [
+                    {
+                        "key": "executive-summary",
+                        "title": "Executive Summary",
+                        "description": "A plain-language summary of the chosen direction and why, written for stakeholders.",
+                        "content": "exec-summary"
+                    },
+                    {
+                        "key": "context",
+                        "title": "Context",
+                        "description": "Where this intent sits in the document chain — the Architecture Vision it elaborates and the Solution Vision(s) it informs.",
+                        "content": "context-links"
+                    }
+                ]
+            },
+            {
+                "key": "intent-and-drivers",
+                "title": "Intent & Drivers",
+                "description": "The core intent, the background that prompted it, and the forces driving the decision.",
+                "subsections": [
+                    {
+                        "key": "intent-statement",
+                        "title": "Intent Statement",
+                        "description": "The chosen direction stated in one clear paragraph.",
+                        "content": "highlight"
+                    },
+                    {
+                        "key": "background",
+                        "title": "Background",
+                        "description": "The current situation and the need that prompted this intent.",
+                        "content": "prose"
+                    },
+                    {
+                        "key": "drivers",
+                        "title": "Drivers",
+                        "description": "The business, technology, regulatory, and market forces driving the decision.",
+                        "content": "drivers"
+                    }
+                ]
+            },
+            {
+                "key": "options-and-direction",
+                "title": "Options & Direction",
+                "description": "The options weighed and the recommended direction with its rationale.",
+                "subsections": [
+                    {
+                        "key": "options-considered",
+                        "title": "Options Considered",
+                        "description": "The candidate directions, each with its pros and cons.",
+                        "content": "options"
+                    },
+                    {
+                        "key": "recommended-direction",
+                        "title": "Recommended Direction",
+                        "description": "The recommended option and the reasoning for choosing it over the alternatives.",
+                        "content": "prose"
+                    }
+                ]
+            },
+            {
+                "key": "principles-and-guardrails",
+                "title": "Principles & Guardrails",
+                "description": "The architecture principles and guardrails this intent adheres to.",
+                "subsections": [
+                    {
+                        "key": "architecture-principles",
+                        "title": "Architecture Principles",
+                        "description": "Principles (SOL-PRN and domain principles) that underpin this intent.",
+                        "content": "tags"
+                    },
+                    {
+                        "key": "guardrails",
+                        "title": "Guardrails",
+                        "description": "Guardrails (SOL-GRD and domain guardrails) that apply to this intent.",
+                        "content": "tags"
+                    }
+                ]
+            },
+            {
+                "key": "open-questions",
+                "title": "Open Questions",
+                "description": "Questions that must be resolved before, or during, solution design.",
+                "content": "open-questions"
+            }
+        ]
     },
     "type": "object",
     "required": ["documents"],
@@ -30,7 +131,7 @@
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "scope", "intent-statement"],
+            "required": ["id", "title", "description", "status", "executive-summary", "intent-statement"],
             "properties": {
                 "id": { "type": "string" },
                 "title": { "type": "string" },
@@ -43,14 +144,13 @@
                     "type": "string",
                     "description": "The programme, initiative, or domain this intent covers"
                 },
-                "intent-statement": {
-                    "type": "string",
-                    "description": "Core intent expressed in one clear paragraph"
-                },
+                "executive-summary": { "$ref": "#/$defs/exec-summary" },
                 "context": {
-                    "type": "string",
-                    "description": "Background prose explaining the situation and need"
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/context-link" }
                 },
+                "intent-statement": { "type": "string" },
+                "background": { "type": "string" },
                 "drivers": {
                     "type": "array",
                     "items": { "$ref": "#/$defs/driver" }
@@ -59,46 +159,46 @@
                     "type": "array",
                     "items": { "$ref": "#/$defs/option" }
                 },
-                "recommended-direction": {
-                    "type": "string",
-                    "description": "Prose articulating the recommended architecture direction and rationale"
-                },
+                "recommended-direction": { "type": "string" },
                 "architecture-principles": {
                     "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Principle IDs from SOL-PRN or BUS-PRN that underpin this intent"
+                    "items": { "type": "string" }
                 },
                 "guardrails": {
                     "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Guardrail IDs from SOL-GRD or domain GRD entries that apply"
+                    "items": { "type": "string" }
                 },
                 "open-questions": {
                     "type": "array",
                     "items": { "$ref": "#/$defs/open-question" }
-                },
-                "diagrams": {
-                    "type": "array",
-                    "items": { "$ref": "#/$defs/diagram-ref" }
                 }
             },
             "additionalProperties": false
         },
-        "option": {
+        "exec-summary": {
             "type": "object",
-            "required": ["id", "name", "description"],
+            "required": ["summary"],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "description": { "type": "string" },
-                "pros": {
+                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "points": {
                     "type": "array",
-                    "items": { "type": "string" }
-                },
-                "cons": {
-                    "type": "array",
-                    "items": { "type": "string" }
+                    "items": { "type": "string" },
+                    "description": "Key statements / bullets"
                 }
+            },
+            "additionalProperties": false
+        },
+        "context-link": {
+            "type": "object",
+            "required": ["relationship", "artefact-id", "document-id"],
+            "properties": {
+                "relationship": {
+                    "type": "string",
+                    "enum": ["informed-by", "informs", "related"]
+                },
+                "artefact-id": { "type": "string" },
+                "document-id": { "type": "string" },
+                "title": { "type": "string" }
             },
             "additionalProperties": false
         },
@@ -115,43 +215,15 @@
             },
             "additionalProperties": false
         },
-        "constraint": {
+        "option": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": ["id", "name", "description"],
             "properties": {
                 "id": { "type": "string" },
+                "name": { "type": "string" },
                 "description": { "type": "string" },
-                "type": {
-                    "type": "string",
-                    "enum": ["technical", "business", "regulatory", "resource"]
-                }
-            },
-            "additionalProperties": false
-        },
-        "assumption": {
-            "type": "object",
-            "required": ["id", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "risk": {
-            "type": "object",
-            "required": ["id", "description"],
-            "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "likelihood": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                },
-                "impact": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                },
-                "mitigation": { "type": "string" }
+                "pros": { "type": "array", "items": { "type": "string" } },
+                "cons": { "type": "array", "items": { "type": "string" } }
             },
             "additionalProperties": false
         },
@@ -162,19 +234,6 @@
                 "id": { "type": "string" },
                 "question": { "type": "string" },
                 "raised-by": { "type": "string" }
-            },
-            "additionalProperties": false
-        },
-        "diagram-ref": {
-            "type": "object",
-            "required": ["artefact-id"],
-            "properties": {
-                "artefact-id": {
-                    "type": "string",
-                    "description": "Artefact ID to render inline (e.g. BUS-BCM)"
-                },
-                "title": { "type": "string" },
-                "caption": { "type": "string" }
             },
             "additionalProperties": false
         }

@@ -7,8 +7,30 @@
             "description": "Architecture intent for fedc's analytical platform modernisation, establishing the chosen direction for self-service analytics in response to ADR-013.",
             "status": "approved",
             "scope": "Self-Service Analytics initiative — the analytical platform layer covering ingestion, storage, transformation, and consumption of enterprise data. Directly aligned to ADR-013.",
+            "executive-summary": {
+                "summary": "This intent sets fedc's direction for analytical platform modernisation: a Databricks lakehouse as the enterprise data tier, with Oracle Analytics Cloud retained as the self-service BI layer.",
+                "points": [
+                    "Chosen over a full SaaS replacement (too costly and high-risk) and a native-OAC-only approach (no ML tier, cannot meet latency).",
+                    "Event-driven ingestion from CC&B, MDM, and ERP via the Confluent event broker meets sub-15-minute latency targets.",
+                    "Preserves existing OAC investment while adding an ML-ready tier governed by Unity Catalog."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AVI",
+                    "document-id": "AVI-001",
+                    "title": "Data & Analytics Vision"
+                },
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-SVI",
+                    "document-id": "SVI-001",
+                    "title": "Self-Service Analytics Solution Vision"
+                }
+            ],
             "intent-statement": "fedc will adopt a lakehouse architecture on Databricks as its enterprise data platform, with Oracle Analytics Cloud (OAC) retained as the self-service consumption layer. Data will be ingested from Oracle CC&B, MDM, and ERP via event-driven pipelines through the Confluent event broker. This approach avoids replacing OAC (preserving existing user investment and training), while providing a modern, scalable storage and transformation tier that can serve both BI and ML workloads.",
-            "context": "fedc's current analytical landscape is fragmented: operational reports are generated directly from Oracle CC&B via custom OBIEE dashboards, commercial teams extract data to Excel for modelling, and there is no governed enterprise data store. The Oracle Analytics Cloud (OAC) licence is underutilised — it is connected only to CC&B and lacks a governed semantic layer. ADR-013 has been raised to address this fragmentation. The architecture intent decision centres on how to modernise the platform: whether to invest in OAC natively, adopt a fully cloud-native SaaS alternative, or introduce a lakehouse tier beneath OAC.",
+            "background": "fedc's current analytical landscape is fragmented: operational reports are generated directly from Oracle CC&B via custom OBIEE dashboards, commercial teams extract data to Excel for modelling, and there is no governed enterprise data store. The Oracle Analytics Cloud (OAC) licence is underutilised — it is connected only to CC&B and lacks a governed semantic layer. ADR-013 has been raised to address this fragmentation. The architecture intent decision centres on how to modernise the platform: whether to invest in OAC natively, adopt a fully cloud-native SaaS alternative, or introduce a lakehouse tier beneath OAC.",
             "drivers": [
                 {
                     "id": "DRV-001",
@@ -91,17 +113,38 @@
                     "question": "What is the agreed Databricks workspace tiering model — will operational and commercial teams share a single workspace with Unity Catalog namespace separation, or require separate workspaces?",
                     "raised-by": "Data Engineering Lead"
                 }
-            ],
-            "diagrams": []
+            ]
         },
         {
             "id": "AIN-002",
             "title": "Integration Platform Architecture Intent",
             "description": "Architecture intent for the modernisation of fedc's integration landscape, establishing the role of the Confluent event broker and Oracle Integration Cloud within the target integration architecture.",
             "status": "in-review",
-            "scope": "Integration landscape modernisation — covering the iPaaS layer (PLAT-IPAAS), point-to-point integrations between PLAT-CIS, PLAT-CRM, PLAT-ERP, PLAT-MDM, and PLAT-LAKEHOUSE, and the adoption of event-driven patterns across fedc's application estate.",
+            "scope": "Integration landscape modernisation — covering the iPaaS layer, point-to-point integrations between CC&B, CRM, ERP, MDM, and the lakehouse, and the adoption of event-driven patterns across fedc's application estate.",
+            "executive-summary": {
+                "summary": "This intent establishes a hybrid integration architecture: Confluent Kafka as the enterprise event backbone for real-time flows and Oracle Integration Cloud for synchronous API orchestration.",
+                "points": [
+                    "All new integrations must route through this iPaaS tier; bespoke middleware and direct database links are decommissioned on a schedule.",
+                    "Chosen over a single managed iPaaS (cost-prohibitive at scale) and retaining ODI batch (cannot meet latency or lineage needs).",
+                    "Maximises existing Oracle investment and provides Ofgem-ready audit trails and data lineage."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AVI",
+                    "document-id": "AVI-002",
+                    "title": "Digital Customer Experience Vision"
+                },
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-SVI",
+                    "document-id": "SVI-002",
+                    "title": "Asset Lifecycle Management Solution Vision"
+                }
+            ],
             "intent-statement": "fedc will adopt a hybrid integration architecture combining Confluent Kafka as the enterprise event backbone for real-time, high-volume data flows and Oracle Integration Cloud (OIC) as the API management and orchestration layer for synchronous service integrations. All new integrations must be routed via this iPaaS tier; direct application-to-application database links and bespoke middleware will be decommissioned on a scheduled basis.",
-            "context": "fedc's current integration landscape has grown organically and includes a mix of Oracle Data Integrator batch jobs, direct database links between CC&B and MDM, and several bespoke Java middleware components connecting Salesforce to CC&B. This creates a fragile, hard-to-govern integration mesh with no central observability. The integration platform modernisation intent is being driven by the Data & Analytics Programme (which requires event streams from CC&B) and the CX Transformation Programme (which requires real-time CRM-to-CIS sync).",
+            "background": "fedc's current integration landscape has grown organically and includes a mix of Oracle Data Integrator batch jobs, direct database links between CC&B and MDM, and several bespoke Java middleware components connecting Salesforce to CC&B. This creates a fragile, hard-to-govern integration mesh with no central observability. The integration platform modernisation intent is being driven by the Data & Analytics Programme (which requires event streams from CC&B) and the CX Transformation Programme (which requires real-time CRM-to-CIS sync).",
             "drivers": [
                 {
                     "id": "DRV-001",
@@ -178,8 +221,7 @@
                     "question": "Should Oracle Data Integrator (ODI) be retained for any ongoing batch ETL use cases (e.g. ERP period-end extracts), or is OIC capable of replacing all ODI patterns within the programme scope?",
                     "raised-by": "Data Engineering Lead"
                 }
-            ],
-            "diagrams": []
+            ]
         }
     ]
 }
