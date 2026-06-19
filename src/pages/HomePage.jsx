@@ -3,6 +3,7 @@ import { DOMAINS, ABSTRACTIONS, FORMATS, DOMAIN_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
 import Button from '../components/ui/Button'
+import Illustration from '../components/ui/Illustration'
 import { ArrowRight, CheckIcon } from '../components/ui/icons'
 
 const FEATURE_CARDS = [
@@ -93,25 +94,30 @@ const LAYER_BADGES = {
 
 function Hero() {
   return (
-    <section className="border-b border-gray-200 bg-gray-50 px-6 py-20 text-center">
-      <h1 className="text-4xl font-bold tracking-tight text-gray-900 uppercase">Pickle</h1>
-      <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
-      <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
-        Enterprise architecture as structured, version-controlled data — with AI agents that analyse
-        every proposed change and a decision-record workflow that keeps humans in charge.
-      </p>
-      <div className="mt-8 flex items-center justify-center gap-3">
-        <Button to="/clients" size="lg">
-          View Clients
-          <ArrowRight className="w-4 h-4" />
-        </Button>
-        <Button to="/docs" variant="secondary" size="lg">
-          Read the Docs
-        </Button>
+    <section className="border-b border-gray-200 bg-gray-50 px-6 py-20">
+      <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 items-center">
+        <div className="text-center lg:text-left">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 uppercase">Pickle</h1>
+          <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
+          <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Enterprise architecture as structured, version-controlled data — with AI agents that analyse
+            every proposed change and a decision-record workflow that keeps humans in charge.
+          </p>
+          <div className="mt-8 flex items-center justify-center lg:justify-start gap-3">
+            <Button to="/clients" size="lg">
+              View Clients
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+            <Button to="/docs" variant="secondary" size="lg">
+              Read the Docs
+            </Button>
+          </div>
+        </div>
+        <Illustration name="version-control" className="hidden lg:block w-full max-w-md mx-auto" />
       </div>
 
       {/* Meta-model strip — five domains, three layers */}
-      <div className="mt-12 max-w-2xl mx-auto">
+      <div className="mt-16 max-w-2xl mx-auto text-center">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
           Five architecture domains · Three abstraction layers
         </p>
@@ -188,18 +194,21 @@ function ArchitectureModel() {
       <div className="max-w-[1400px] mx-auto px-6 py-16">
 
         {/* Section header */}
-        <div className="max-w-3xl mb-12">
-          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
-            The architecture model
-          </p>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Five domains · Three abstraction layers · Four output formats
-          </h2>
-          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Every piece of architecture content in Pickle sits at the intersection of these three axes.
-            Domain answers "which part of the organisation", abstraction layer answers "how much detail",
-            and format answers "what kind of content".
-          </p>
+        <div className="mb-12 flex items-start justify-between gap-10">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+              The architecture model
+            </p>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Five domains · Three abstraction layers · Four output formats
+            </h2>
+            <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+              Every piece of architecture content in Pickle sits at the intersection of these three axes.
+              Domain answers "which part of the organisation", abstraction layer answers "how much detail",
+              and format answers "what kind of content".
+            </p>
+          </div>
+          <Illustration name="building-blocks" className="hidden xl:block w-72 flex-shrink-0 self-center" />
         </div>
 
         {/* Domains */}
@@ -275,19 +284,22 @@ function SevenDimensions() {
   return (
     <section className="border-y border-gray-200 bg-white">
       <div className="max-w-[1400px] mx-auto px-6 py-16">
-        <div className="max-w-3xl">
-          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
-            The analysis pipeline
-          </p>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Every decision, analysed across seven dimensions
-          </h2>
-          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            When a decision is proposed, seven AI analysis steps run in sequence against the current
-            architecture state. Each one writes structured findings — finding, impact, recommendation
-            and rationale — into the Decision Record, for architects to accept or decline.
-            Nothing merges until a human says so.
-          </p>
+        <div className="flex items-start justify-between gap-10">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+              The analysis pipeline
+            </p>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Every decision, analysed across seven dimensions
+            </h2>
+            <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+              When a decision is proposed, seven AI analysis steps run in sequence against the current
+              architecture state. Each one writes structured findings — finding, impact, recommendation
+              and rationale — into the Decision Record, for architects to accept or decline.
+              Nothing merges until a human says so.
+            </p>
+          </div>
+          <Illustration name="code-review" className="hidden xl:block w-72 flex-shrink-0 self-center" />
         </div>
 
         {/* Pipeline cards — numbered, in execution order */}
