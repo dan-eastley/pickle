@@ -6,34 +6,90 @@
             "title": "Analytics Portal Solution Design",
             "description": "Logical solution design for the fedc Analytics Portal, covering the platform roles of Oracle Analytics Cloud, Databricks Lakehouse, and the Confluent iPaaS orchestration layer, with a sequence diagram illustrating the end-to-end data flow from CC&B to business user.",
             "status": "approved",
-            "scope": "Analytics Portal — the self-service BI surface and underlying data pipeline from Oracle CC&B through Confluent and Databricks to Oracle Analytics Cloud. Aligned to SVI-001 and ADR-013.",
-            "overview": "The Analytics Portal solution is composed of three primary platform components: Oracle Analytics Cloud (PLAT-BI) as the self-service BI and reporting surface; the Databricks Lakehouse (PLAT-LAKEHOUSE) as the governed data storage and transformation tier; and the Confluent iPaaS (PLAT-IPAAS) as the event orchestration layer that moves data from Oracle CC&B into the lakehouse in near-real-time. Oracle Analytics Cloud connects to the lakehouse via a Databricks SQL endpoint (JDBC). Unity Catalog enforces row- and column-level security so that operational and commercial users access only datasets appropriate to their role. Scheduled batch ingestion supplements event-driven flows for MDM and ERP source systems.",
-            "solution-components": [
+            "scope": "Analytics Portal — the self-service BI surface and underlying data pipeline from Oracle CC&B through Confluent and Databricks to Oracle Analytics Cloud.",
+            "executive-summary": "The Analytics Portal solution is composed of three primary platform components: Oracle Analytics Cloud (PLAT-BI) as the self-service BI and reporting surface; the Databricks Lakehouse (PLAT-DATA-LAKEHOUSE) as the governed data storage and transformation tier; and the Confluent iPaaS (PLAT-EVENT-BROKER) as the event orchestration layer that moves data from Oracle CC&B into the lakehouse in near-real-time. Oracle Analytics Cloud connects to the lakehouse via a Databricks SQL endpoint (JDBC). Unity Catalog enforces row- and column-level security so that operational and commercial users access only datasets appropriate to their role. Scheduled batch ingestion supplements event-driven flows for MDM and ERP source systems.",
+            "context": [
                 {
-                    "platform-id": "PLAT-BI",
-                    "role": "Self-service analytics portal — provides workbooks, subject areas, dashboards, and natural language querying for operational and commercial business users. Connects to the Databricks lakehouse via JDBC SQL endpoint. Hosts the fedc Semantic Model (governed metrics, KPIs, and dimensions).",
-                    "notes": "Oracle Analytics Cloud 23.x. OAC Data Gateway deployed in the fedc AWS VPC to bridge OAC SaaS to private Databricks SQL endpoint."
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-SVI",
+                    "document-id": "SVI-001",
+                    "title": "Self-Service Analytics Solution Vision"
                 },
                 {
-                    "platform-id": "PLAT-LAKEHOUSE",
-                    "role": "Enterprise data lakehouse — stores raw (bronze), cleansed (silver), and curated (gold) Delta tables. Unity Catalog provides data governance, lineage, and access control. Gold-layer tables are exposed to OAC via the Databricks SQL serverless endpoint.",
-                    "notes": "Databricks on AWS. Unity Catalog with three catalogues: ops_catalogue (operational datasets), commercial_catalogue (commercial and financial datasets), regulatory_catalogue (Ofgem settlement and RIIO-ED2 datasets)."
-                },
-                {
-                    "platform-id": "PLAT-IPAAS",
-                    "role": "Event orchestration layer — Confluent Kafka receives CC&B change-data-capture events via the Debezium Oracle connector, routes them through transformation topics, and delivers them to Databricks Auto Loader via the Databricks Kafka connector. Also orchestrates scheduled batch ingestion triggers for MDM and ERP.",
-                    "notes": "Confluent Cloud on AWS (same region as Databricks). Schema Registry enforces Avro schema compatibility. Event retention: 7 days on operational topics, 90 days on regulatory topics."
-                },
-                {
-                    "platform-id": "PLAT-CIS",
-                    "role": "Primary operational data source — Oracle CC&B provides billing, account, payment, and service order data via change-data-capture (LogMiner-based Debezium connector). CC&B is read-only from the lakehouse perspective; no write-back.",
-                    "notes": "Oracle CC&B version 2.9. Debezium Oracle CDC connector deployed on a dedicated Kafka Connect cluster in the fedc data centre DMZ."
+                    "relationship": "informs",
+                    "artefact-id": "SOL-ISP",
+                    "document-id": "SOL-ISP-001",
+                    "title": "CIS to Data Lakehouse — Billing Ingestion Specification"
                 }
             ],
-            "data-flows": [
+            "capabilities": [
+                { "artefact-id": "CAP-006", "note": "Retail & Billing — operational billing KPIs surfaced through the portal." },
+                { "artefact-id": "CAP-001", "note": "Customer Management — operational dashboards for contact centre and field teams." },
+                { "artefact-id": "CAP-007", "note": "Regulatory & Compliance — Ofgem settlement and RIIO-ED2 reporting datasets." }
+            ],
+            "functional-requirements": [
+                { "id": "FR-001", "requirement": "Provide self-service workbooks, subject areas, dashboards, and natural-language querying for operational and commercial business users.", "priority": "must" },
+                { "id": "FR-002", "requirement": "Surface CC&B operational data in the gold layer for reporting without exposing raw PII to analytics users.", "priority": "must" },
+                { "id": "FR-003", "requirement": "Supplement event-driven ingestion with scheduled batch ingestion for MDM and ERP source systems.", "priority": "should" }
+            ],
+            "features": [
+                { "id": "FEAT-001", "name": "Operational Dashboard", "description": "Near-real-time operational KPI dashboard (DSO, payment failure rate, unread meter percentage) for contact centre and field operations." },
+                { "id": "FEAT-002", "name": "Governed Self-Service BI", "description": "Semantic model of governed metrics, KPIs, and dimensions with role-aware access via Unity Catalog." },
+                { "id": "FEAT-003", "name": "Near-Real-Time Ingestion", "description": "Change-data-capture pipeline delivering CC&B changes to the lakehouse within minutes." }
+            ],
+            "nfr-business-continuity": [
+                { "id": "NFR-BC-001", "requirement": "The end-to-end pipeline (PLAT-CIS → PLAT-EVENT-BROKER → PLAT-DATA-LAKEHOUSE) must achieve 99.5% availability during business hours (07:00–22:00 UK time).", "rationale": "Operational dashboards are used by contact centre and field operations teams throughout the business day." }
+            ],
+            "nfr-data-classification": [
+                { "id": "NFR-DC-001", "requirement": "PII fields (customer name, address, contact details) must be masked at the Confluent transformation layer and must not be present in Databricks bronze or silver tables. Gold-layer tables may surface pseudonymised identifiers only.", "rationale": "UK GDPR data minimisation principle. Databricks analytics users should not have access to raw PII." }
+            ],
+            "nfr-performance": [
+                { "id": "NFR-PF-001", "requirement": "CC&B operational data must be available in the gold layer of the Databricks Lakehouse within 15 minutes of the originating transaction being committed in Oracle CC&B.", "rationale": "Reduce operational information lag from 24 hours to under 15 minutes for critical operational KPIs." },
+                { "id": "NFR-PF-002", "requirement": "The Confluent cluster and Databricks Auto Loader must handle 3x current peak event volume (150,000 events/hour) without degradation.", "rationale": "Smart meter estate is projected to grow from 800,000 to 2.5 million endpoints by 2028, significantly increasing CC&B event volumes." }
+            ],
+            "arch-business": {
+                "description": "The portal serves operational, commercial, and regulatory reporting consumers. Operational users (contact centre, field operations) consume near-real-time KPIs; commercial users consume financial and trading datasets; regulatory users consume Ofgem settlement and RIIO-ED2 datasets.",
+                "references": [
+                    { "artefact-id": "CAP-006", "note": "Retail & Billing" },
+                    { "artefact-id": "CAP-007", "note": "Regulatory & Compliance" }
+                ]
+            },
+            "arch-data": {
+                "description": "The Databricks Lakehouse stores raw (bronze), cleansed (silver), and curated (gold) Delta tables. Unity Catalog provides governance, lineage, and access control across three catalogues: ops_catalogue (operational datasets), commercial_catalogue (commercial and financial datasets), and regulatory_catalogue (Ofgem settlement and RIIO-ED2 datasets). Gold-layer tables are exposed to OAC via the Databricks SQL serverless endpoint."
+            },
+            "arch-integration": {
+                "description": "Oracle CC&B changes are captured by a Debezium Oracle CDC connector (LogMiner) and published to Confluent Kafka. A Kafka Streams processor applies PII masking before Databricks Auto Loader consumes events and lands them in the bronze layer. Scheduled connectors orchestrate batch ingestion for MDM and ERP.",
+                "references": [
+                    { "artefact-id": "INT-IFC-001", "note": "PLAT-CIS → iPaaS — Avro CDC, events within 60s of DB commit, up to 50,000 events/hour at peak." },
+                    { "artefact-id": "INT-IFC-002", "note": "iPaaS → PLAT-DATA-LAKEHOUSE — Databricks Auto Loader, micro-batches every 10 minutes." },
+                    { "artefact-id": "INT-IFC-003", "note": "PLAT-DATA-LAKEHOUSE → PLAT-BI — SQL over JDBC via OAC Data Gateway, OAuth2 service principal." }
+                ]
+            },
+            "arch-application": {
+                "description": "Three primary platforms realise the solution, with Oracle CC&B as a read-only operational source.",
+                "references": [
+                    { "artefact-id": "PLAT-BI", "note": "Oracle Analytics Cloud 23.x — self-service BI surface. OAC Data Gateway deployed in the fedc AWS VPC to bridge OAC SaaS to the private Databricks SQL endpoint. Hosts the fedc Semantic Model." },
+                    { "artefact-id": "PLAT-DATA-LAKEHOUSE", "note": "Databricks on AWS — bronze/silver/gold Delta tables governed by Unity Catalog. Gold-layer tables exposed to OAC via the SQL serverless endpoint." },
+                    { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent Cloud on AWS — Kafka event orchestration. Schema Registry enforces Avro compatibility. Retention: 7 days operational, 90 days regulatory." },
+                    { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B 2.9 — primary operational data source via Debezium LogMiner CDC. Read-only; no write-back." }
+                ]
+            },
+            "principles-adherence": [
+                { "principle-id": "INT-PRN-001", "adherence": "adheres", "statement": "Ingestion is event-driven by default via CC&B change-data-capture, keeping the non-critical analytics path asynchronous." },
+                { "principle-id": "INT-PRN-006", "adherence": "adheres", "statement": "The CC&B internal model is transformed and masked at the integration layer before landing in the lakehouse; the source model does not leak into the analytics estate." },
+                { "principle-id": "SOL-PRN-004", "adherence": "adheres", "statement": "Uses the reference medallion (bronze/silver/gold) lakehouse pattern rather than a bespoke pipeline design." }
+            ],
+            "flows-information": [
                 {
-                    "id": "DF-001",
-                    "name": "CC&B Operational Data CDC Flow",
+                    "id": "FLOW-001",
+                    "title": "CC&B to Analytics Cloud Data Flow",
+                    "description": "End-to-end sequence showing data movement from Oracle CC&B through the Confluent event backbone and Databricks Lakehouse to Oracle Analytics Cloud and the business user.",
+                    "format": "mermaid",
+                    "content": "sequenceDiagram\n    participant CIS as Oracle CC&B (PLAT-CIS)\n    participant CDC as Debezium CDC Connector\n    participant Kafka as Confluent Kafka (PLAT-EVENT-BROKER)\n    participant SR as Schema Registry\n    participant DBX as Databricks Lakehouse (PLAT-DATA-LAKEHOUSE)\n    participant OAC as Oracle Analytics Cloud (PLAT-BI)\n    participant User as Business User\n\n    CIS->>CDC: Write billing/account change (LogMiner)\n    CDC->>SR: Validate Avro schema\n    SR-->>CDC: Schema OK\n    CDC->>Kafka: Publish change event (ccb.billing.account.changes)\n    Kafka->>Kafka: PII masking transformation (Kafka Streams)\n    Kafka->>DBX: Auto Loader consumes masked events\n    DBX->>DBX: Append to Bronze Delta table (raw.ccb_billing_accounts)\n    DBX->>DBX: DLT pipeline: Bronze -> Silver (cleansed.billing_accounts)\n    DBX->>DBX: DLT pipeline: Silver -> Gold (reporting.billing_kpis)\n    User->>OAC: Open Operational Dashboard workbook\n    OAC->>DBX: JDBC query via Databricks SQL serverless endpoint\n    DBX-->>OAC: Return gold-layer KPI rows\n    OAC-->>User: Render dashboard with up-to-date metrics"
+                },
+                {
+                    "id": "FLOW-002",
+                    "title": "CC&B Operational Data CDC Flow",
                     "description": "Near-real-time change-data-capture flow from Oracle CC&B to the Databricks Lakehouse bronze layer, covering billing account changes, payment events, and service order updates.",
                     "steps": [
                         "Oracle CC&B writes a billing or account change transaction to its Oracle DB (CC&B schema).",
@@ -47,8 +103,8 @@
                     ]
                 },
                 {
-                    "id": "DF-002",
-                    "name": "MDM Batch Ingestion Flow",
+                    "id": "FLOW-003",
+                    "title": "MDM Batch Ingestion Flow",
                     "description": "Nightly batch ingestion of Oracle MDM meter register data into the Databricks Lakehouse, providing a daily snapshot of the active meter estate for use in regulatory and commercial reporting.",
                     "steps": [
                         "A Confluent scheduled connector triggers an Oracle MDM REST API export at 01:00 UTC, requesting a full snapshot of active meter records.",
@@ -59,110 +115,94 @@
                         "The gold table ops_catalogue.reporting.meter_estate_summary is refreshed, providing counts by meter type, region, and lifecycle status for regulatory reporting."
                     ]
                 }
-            ],
-            "uml-diagrams": [
-                {
-                    "type": "sequence",
-                    "title": "CC&B to Analytics Cloud Data Flow",
-                    "description": "End-to-end sequence diagram showing data movement from Oracle CC&B through the Confluent event backbone and Databricks Lakehouse to Oracle Analytics Cloud and the business user.",
-                    "format": "mermaid",
-                    "content": "sequenceDiagram\n    participant CIS as Oracle CC&B (PLAT-CIS)\n    participant CDC as Debezium CDC Connector\n    participant Kafka as Confluent Kafka (PLAT-IPAAS)\n    participant SR as Schema Registry\n    participant DBX as Databricks Lakehouse (PLAT-LAKEHOUSE)\n    participant OAC as Oracle Analytics Cloud (PLAT-BI)\n    participant User as Business User\n\n    CIS->>CDC: Write billing/account change (LogMiner)\n    CDC->>SR: Validate Avro schema\n    SR-->>CDC: Schema OK\n    CDC->>Kafka: Publish change event (ccb.billing.account.changes)\n    Kafka->>Kafka: PII masking transformation (Kafka Streams)\n    Kafka->>DBX: Auto Loader consumes masked events\n    DBX->>DBX: Append to Bronze Delta table (raw.ccb_billing_accounts)\n    DBX->>DBX: DLT pipeline: Bronze -> Silver (cleansed.billing_accounts)\n    DBX->>DBX: DLT pipeline: Silver -> Gold (reporting.billing_kpis)\n    User->>OAC: Open Operational Dashboard workbook\n    OAC->>DBX: JDBC query via Databricks SQL serverless endpoint\n    DBX-->>OAC: Return gold-layer KPI rows\n    OAC-->>User: Render dashboard with up-to-date metrics"
-                }
-            ],
-            "interface-requirements": [
-                {
-                    "interface-id": "INT-IFC-001",
-                    "direction": "PLAT-CIS → PLAT-IPAAS (outbound from CIS)",
-                    "data-format": "Avro (via Debezium Oracle CDC connector)",
-                    "notes": "CDC via Oracle LogMiner. Target latency: events published within 60 seconds of DB commit. Throughput: up to 50,000 events/hour during billing cycle peak."
-                },
-                {
-                    "interface-id": "INT-IFC-002",
-                    "direction": "PLAT-IPAAS → PLAT-LAKEHOUSE (inbound to lakehouse)",
-                    "data-format": "Avro (Databricks Kafka connector / Auto Loader)",
-                    "notes": "Databricks Auto Loader in Kafka mode with incremental checkpointing. Triggered continuously; commits micro-batches every 10 minutes."
-                },
-                {
-                    "interface-id": "INT-IFC-003",
-                    "direction": "PLAT-LAKEHOUSE → PLAT-BI (inbound to OAC)",
-                    "data-format": "SQL over JDBC (Databricks SQL serverless endpoint)",
-                    "notes": "OAC Data Gateway (deployed in fedc AWS VPC) proxies JDBC queries from OAC SaaS to the private Databricks SQL endpoint. Authentication via OAuth2 service principal."
-                }
-            ],
-            "non-functional-requirements": [
-                {
-                    "category": "Latency",
-                    "requirement": "CC&B operational data must be available in the gold layer of the Databricks Lakehouse within 15 minutes of the originating transaction being committed in Oracle CC&B.",
-                    "rationale": "ADR-013 target: reduce operational information lag from 24 hours to under 15 minutes for critical operational KPIs."
-                },
-                {
-                    "category": "Availability",
-                    "requirement": "The end-to-end pipeline (PLAT-CIS → PLAT-IPAAS → PLAT-LAKEHOUSE) must achieve 99.5% availability during business hours (07:00–22:00 UK time).",
-                    "rationale": "Operational dashboards are used by contact centre and field operations teams throughout the business day."
-                },
-                {
-                    "category": "Scalability",
-                    "requirement": "The Confluent cluster and Databricks Auto Loader must handle 3x current peak event volume (150,000 events/hour) without degradation, to accommodate smart meter rollout event growth.",
-                    "rationale": "Smart meter estate is projected to grow from 800,000 to 2.5 million endpoints by 2028, significantly increasing CC&B event volumes."
-                },
-                {
-                    "category": "Security",
-                    "requirement": "PII fields (customer name, address, contact details) must be masked at the Confluent transformation layer and must not be present in Databricks bronze or silver tables. Gold-layer tables may surface pseudonymised identifiers only.",
-                    "rationale": "UK GDPR data minimisation principle. Databricks analytics users should not have access to raw PII."
-                }
-            ],
-            "assumptions": [
-                {
-                    "id": "ASM-001",
-                    "description": "Oracle LogMiner is enabled on the CC&B Oracle DB instance and the DBA team has confirmed supplemental logging is active on the relevant billing and account tables."
-                },
-                {
-                    "id": "ASM-002",
-                    "description": "The Databricks SQL serverless endpoint is available in the AWS region being used for the fedc Databricks workspace."
-                }
-            ],
-            "open-questions": [
-                {
-                    "id": "OQ-001",
-                    "question": "Should the OAC Semantic Model (metrics and dimensions) be built in OAC's native semantic modeller or sourced from a dbt semantic layer on Databricks? This affects where business logic resides and which team owns metric definitions.",
-                    "raised-by": "Data Engineering Lead"
-                },
-                {
-                    "id": "OQ-002",
-                    "question": "What is the agreed approach for handling schema evolution on the ccb.billing.account.changes Avro topic — backward compatibility only, or full compatibility? This determines whether CC&B schema changes require a Kafka topic migration.",
-                    "raised-by": "Integration Architecture"
-                }
-            ],
-            "diagrams": []
+            ]
         },
         {
             "id": "SDE-002",
             "title": "CRM Integration Solution Design",
             "description": "Logical solution design for the integration between Salesforce CRM (PLAT-CRM) and Oracle CC&B (PLAT-CIS), enabling a unified agent desktop with embedded billing context and event-driven proactive outbound communications.",
             "status": "in-review",
-            "scope": "CRM-to-CIS integration — covering the synchronisation of account and billing data between Salesforce CRM (PLAT-CRM) and Oracle CC&B (PLAT-CIS), mediated by Oracle Integration Cloud (PLAT-IPAAS). Aligned to AVI-002 (Digital Customer Experience Vision).",
-            "overview": "The CRM Integration solution mediates between Salesforce CRM (the system of record for customer interactions and cases) and Oracle CC&B (the system of record for billing accounts). Oracle Integration Cloud (OIC) is used as the API orchestration layer for synchronous account lookup requests from Salesforce, and as the event consumer for CC&B billing events (via Confluent Kafka) that trigger proactive outbound communications in Salesforce Marketing Cloud. The integration replaces the existing bespoke Java middleware and establishes a governed, observable integration layer.",
-            "solution-components": [
+            "scope": "CRM-to-CIS integration — synchronisation of account and billing data between Salesforce CRM (PLAT-CRM) and Oracle CC&B (PLAT-CIS), mediated by Oracle Integration Cloud.",
+            "executive-summary": "The CRM Integration solution mediates between Salesforce CRM (the system of record for customer interactions and cases) and Oracle CC&B (the system of record for billing accounts). Oracle Integration Cloud (OIC) is used as the API orchestration layer for synchronous account lookup requests from Salesforce, and as the event consumer for CC&B billing events (via Confluent Kafka) that trigger proactive outbound communications in Salesforce Marketing Cloud. The integration replaces the existing bespoke Java middleware and establishes a governed, observable integration layer.",
+            "context": [
                 {
-                    "platform-id": "PLAT-CRM",
-                    "role": "Salesforce CRM acts as the customer engagement system of record. Agents use a Salesforce Lightning component to view embedded billing summary data retrieved in real-time from CC&B via OIC. Salesforce Marketing Cloud triggers proactive outbound communications (email, SMS) based on CC&B billing events consumed via Kafka.",
-                    "notes": "Salesforce Sales Cloud + Service Cloud + Marketing Cloud. Lightning Web Component for embedded billing summary (Salesforce Canvas or OIC REST API call-out)."
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AVI",
+                    "document-id": "AVI-002",
+                    "title": "Digital Customer Experience Vision"
                 },
                 {
-                    "platform-id": "PLAT-CIS",
-                    "role": "Oracle CC&B is the system of record for billing accounts, payment history, and service agreements. CC&B exposes account data via its REST API (CC&B Service Layer) to OIC. CC&B billing events (payment failures, estimated reads, disconnection warnings) are published to Confluent Kafka via the existing Debezium CDC connector.",
-                    "notes": "CC&B Service Layer REST API — authenticated via service account. Rate limit: 500 requests/minute from OIC."
-                },
-                {
-                    "platform-id": "PLAT-IPAAS",
-                    "role": "Oracle Integration Cloud (OIC) orchestrates synchronous account lookup requests: receives a REST call from Salesforce, calls CC&B Service Layer, transforms the response to a Salesforce-compatible JSON payload, and returns it. OIC also acts as a Kafka consumer for CC&B billing events, transforming and routing them to Salesforce Marketing Cloud REST API for outbound communication triggers.",
-                    "notes": "OIC Generation 3. Two integration flows: (1) CRM-to-CIS Account Lookup (synchronous REST-to-REST), (2) CIS Billing Event to Marketing Cloud Trigger (Kafka-to-REST async)."
+                    "relationship": "informs",
+                    "artefact-id": "SOL-ISP",
+                    "document-id": "SOL-ISP-002",
+                    "title": "CRM to CIS — Customer Account Sync Specification"
                 }
             ],
-            "data-flows": [
+            "capabilities": [
+                { "artefact-id": "CAP-001", "note": "Customer Management — unified agent desktop with embedded billing context." },
+                { "artefact-id": "CAP-006", "note": "Retail & Billing — billing account data surfaced to agents and used in notifications." },
+                { "artefact-id": "CAP-007", "note": "Regulatory & Compliance — Ofgem Consumer Duty proactive communications." }
+            ],
+            "functional-requirements": [
+                { "id": "FR-001", "requirement": "Display a real-time billing summary (balance, last payment date, last meter read, service agreement status) inline within the Salesforce agent's customer record.", "priority": "must" },
+                { "id": "FR-002", "requirement": "Trigger proactive outbound customer communications (email/SMS) in response to CC&B payment failure events, respecting customer communication preferences.", "priority": "must" },
+                { "id": "FR-003", "requirement": "Maintain a cross-reference between Salesforce Account/Contact IDs and CC&B Account Numbers to mediate lookups and event routing.", "priority": "must" }
+            ],
+            "features": [
+                { "id": "FEAT-001", "name": "Embedded Billing Panel", "description": "Salesforce Lightning Web Component showing real-time CC&B billing summary within the agent's customer record." },
+                { "id": "FEAT-002", "name": "Proactive Payment-Failure Notifications", "description": "Event-driven outbound email/SMS to customers within 4 hours of a CC&B payment failure, via Salesforce Marketing Cloud." }
+            ],
+            "nfr-support-slas": [
+                { "id": "NFR-SLA-001", "requirement": "CC&B payment failure events must trigger Salesforce Marketing Cloud notification dispatches within 4 hours of the originating payment failure event.", "rationale": "Ofgem Consumer Duty requirement for proactive customer communication." }
+            ],
+            "nfr-business-continuity": [
+                { "id": "NFR-BC-001", "requirement": "The Kafka consumer (OIC) must process payment failure events with at-least-once delivery semantics. Duplicate suppression must be applied using the CC&B event ID as an idempotency key.", "rationale": "A missed payment failure notification constitutes a Consumer Duty breach. Duplicates are preferable to missed notifications but must be suppressed to avoid customer confusion." }
+            ],
+            "nfr-performance": [
+                { "id": "NFR-PF-001", "requirement": "The agent billing context lookup must complete within 3 seconds end-to-end (Salesforce callout to OIC to CC&B and back) under normal load.", "rationale": "Contact centre UX requirement: agents cannot wait more than 3 seconds for the billing panel to render before the call experience degrades." }
+            ],
+            "arch-business": {
+                "description": "Contact centre agents are the primary users of the embedded billing panel. Proactive notifications support Ofgem Consumer Duty obligations by reaching customers quickly after payment failures.",
+                "references": [
+                    { "artefact-id": "CAP-001", "note": "Customer Management" },
+                    { "artefact-id": "CAP-006", "note": "Retail & Billing" }
+                ]
+            },
+            "arch-data": {
+                "description": "A cross-reference mapping table (Salesforce Account/Contact ID ↔ CC&B Account Number) is maintained in OIC's lookup store. Customer communication preferences (email/SMS opt-in, language) are sourced from Salesforce at notification time."
+            },
+            "arch-integration": {
+                "description": "Two OIC integration flows: a synchronous REST-to-REST account lookup, and an asynchronous Kafka-to-REST flow consuming CC&B billing events and triggering Salesforce Marketing Cloud journeys. OIC mediates all calls and applies idempotency on event consumption.",
+                "references": [
+                    { "artefact-id": "INT-IFC-004", "note": "PLAT-CRM → iPaaS — synchronous JSON/REST, 10s timeout, OAuth2 client credentials." },
+                    { "artefact-id": "INT-IFC-005", "note": "iPaaS → PLAT-CIS — synchronous JSON/REST to CC&B Service Layer, 500 requests/minute rate limit." },
+                    { "artefact-id": "INT-IFC-006", "note": "iPaaS → PLAT-CRM — async JSON/REST to Salesforce Marketing Cloud Transactional Messaging API." }
+                ]
+            },
+            "arch-application": {
+                "description": "Salesforce CRM is the customer engagement system of record; Oracle CC&B is the billing system of record; Oracle Integration Cloud mediates between them.",
+                "references": [
+                    { "artefact-id": "PLAT-CRM", "note": "Salesforce Sales + Service + Marketing Cloud. Lightning Web Component for the embedded billing summary; Marketing Cloud triggers outbound communications." },
+                    { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B — system of record for billing accounts. Exposes account data via the CC&B Service Layer REST API; publishes billing events via Debezium CDC." },
+                    { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent Kafka — carries CC&B billing events (ccb.billing.events) consumed by OIC." }
+                ]
+            },
+            "principles-adherence": [
+                { "principle-id": "INT-PRN-005", "adherence": "adheres", "statement": "Payment failure event consumption uses the CC&B event ID as an idempotency key, honouring the consumer's idempotency contract under at-least-once delivery." },
+                { "principle-id": "INT-PRN-004", "adherence": "adheres", "statement": "All cross-system calls are mediated through Oracle Integration Cloud rather than point-to-point bespoke middleware." },
+                { "principle-id": "SOL-PRN-006", "adherence": "partial", "statement": "A 4-hour notification SLA is defined; per-service SLOs and error budgets for the integration flows are still to be formalised." }
+            ],
+            "flows-user": [
                 {
-                    "id": "DF-001",
-                    "name": "Agent Billing Context Lookup",
+                    "id": "FLOW-001",
+                    "title": "Agent Billing Context Lookup — Sequence",
+                    "description": "Synchronous sequence for the Salesforce agent billing context lookup via Oracle Integration Cloud to CC&B.",
+                    "format": "mermaid",
+                    "content": "sequenceDiagram\n    participant Agent as Salesforce Agent\n    participant SF as Salesforce CRM (PLAT-CRM)\n    participant OIC as Oracle Integration Cloud (iPaaS)\n    participant CIS as Oracle CC&B (PLAT-CIS)\n\n    Agent->>SF: Open Customer Account record\n    SF->>OIC: POST /cis/account/{accountId}/summary (OAuth2)\n    OIC->>OIC: Resolve Salesforce ID -> CC&B Account Number (cache)\n    OIC->>CIS: GET /api/v1/accounts/{ccbAccountId}/summary (service account)\n    CIS-->>OIC: 200 OK — account summary JSON\n    OIC->>OIC: Transform CC&B response to Salesforce billing panel schema\n    OIC-->>SF: 200 OK — billing panel payload\n    SF-->>Agent: Render billing summary panel in UI"
+                },
+                {
+                    "id": "FLOW-002",
+                    "title": "Agent Billing Context Lookup",
                     "description": "Synchronous lookup of billing account summary from CC&B when a Salesforce agent opens a customer record, providing real-time balance, payment status, and last meter read within the Salesforce UI.",
                     "steps": [
                         "Salesforce agent opens a customer Account record in Salesforce Service Cloud.",
@@ -173,10 +213,12 @@
                         "OIC transforms the CC&B response to the Salesforce billing panel schema and returns it to the Lightning Web Component.",
                         "The Salesforce billing panel renders the account summary inline within the agent's customer record view."
                     ]
-                },
+                }
+            ],
+            "flows-information": [
                 {
-                    "id": "DF-002",
-                    "name": "CC&B Payment Failure Proactive Notification",
+                    "id": "FLOW-003",
+                    "title": "CC&B Payment Failure Proactive Notification",
                     "description": "Event-driven flow from CC&B payment failure event through Confluent and OIC to Salesforce Marketing Cloud, triggering a proactive outbound email and SMS to the customer within 4 hours of the payment failure.",
                     "steps": [
                         "Oracle CC&B records a payment failure on a billing account (direct debit return or card decline).",
@@ -185,74 +227,10 @@
                         "OIC queries Salesforce CRM REST API to retrieve the customer's communication preferences (email/SMS opt-in status and language preference) using the cross-referenced Salesforce Contact ID.",
                         "OIC calls the Salesforce Marketing Cloud REST API (Transactional Messaging) to trigger the PAYMENT_FAILURE journey with the customer's communication preferences and account details as personalisation data.",
                         "Salesforce Marketing Cloud sends the outbound email and/or SMS to the customer within the 4-hour SLA window.",
-                        "OIC logs the notification dispatch event to the integration audit log (OAC observability topic) for Ofgem Consumer Duty reporting."
+                        "OIC logs the notification dispatch event to the integration audit log for Ofgem Consumer Duty reporting."
                     ]
                 }
-            ],
-            "uml-diagrams": [
-                {
-                    "type": "sequence",
-                    "title": "Agent Billing Context Lookup — Sequence",
-                    "description": "Synchronous sequence for the Salesforce agent billing context lookup via Oracle Integration Cloud to CC&B.",
-                    "format": "mermaid",
-                    "content": "sequenceDiagram\n    participant Agent as Salesforce Agent\n    participant SF as Salesforce CRM (PLAT-CRM)\n    participant OIC as Oracle Integration Cloud (PLAT-IPAAS)\n    participant CIS as Oracle CC&B (PLAT-CIS)\n\n    Agent->>SF: Open Customer Account record\n    SF->>OIC: POST /cis/account/{accountId}/summary (OAuth2)\n    OIC->>OIC: Resolve Salesforce ID -> CC&B Account Number (cache)\n    OIC->>CIS: GET /api/v1/accounts/{ccbAccountId}/summary (service account)\n    CIS-->>OIC: 200 OK — account summary JSON\n    OIC->>OIC: Transform CC&B response to Salesforce billing panel schema\n    OIC-->>SF: 200 OK — billing panel payload\n    SF-->>Agent: Render billing summary panel in UI"
-                }
-            ],
-            "interface-requirements": [
-                {
-                    "interface-id": "INT-IFC-004",
-                    "direction": "PLAT-CRM → PLAT-IPAAS (outbound from CRM, synchronous)",
-                    "data-format": "JSON (REST)",
-                    "notes": "Salesforce Apex callout to OIC REST endpoint. Timeout: 10 seconds. Authentication: OAuth2 client credentials."
-                },
-                {
-                    "interface-id": "INT-IFC-005",
-                    "direction": "PLAT-IPAAS → PLAT-CIS (outbound from OIC, synchronous)",
-                    "data-format": "JSON (REST)",
-                    "notes": "OIC calls CC&B Service Layer REST API. Service account authentication. Rate limit: 500 requests/minute."
-                },
-                {
-                    "interface-id": "INT-IFC-006",
-                    "direction": "PLAT-IPAAS → PLAT-CRM (outbound to Salesforce Marketing Cloud, async)",
-                    "data-format": "JSON (REST — Salesforce Marketing Cloud Transactional Messaging API)",
-                    "notes": "OIC calls Salesforce Marketing Cloud REST API after consuming CC&B billing events from Confluent. Async fire-and-forget; OIC logs dispatch confirmation."
-                }
-            ],
-            "non-functional-requirements": [
-                {
-                    "category": "Latency",
-                    "requirement": "The agent billing context lookup (DF-001) must complete within 3 seconds end-to-end (Salesforce callout to OIC to CC&B and back) under normal load.",
-                    "rationale": "Contact centre UX requirement: agents cannot wait more than 3 seconds for billing panel to render before the call experience degrades."
-                },
-                {
-                    "category": "Latency",
-                    "requirement": "CC&B payment failure events must trigger Salesforce Marketing Cloud notification dispatches within 4 hours of the originating payment failure event.",
-                    "rationale": "Ofgem Consumer Duty requirement for proactive customer communication. ADR-013 target."
-                },
-                {
-                    "category": "Reliability",
-                    "requirement": "The Kafka consumer (OIC) must process payment failure events with at-least-once delivery semantics. Duplicate suppression must be applied using the CC&B event ID as an idempotency key.",
-                    "rationale": "A missed payment failure notification constitutes a Consumer Duty breach. Duplicates are preferable to missed notifications but must be suppressed to avoid customer confusion."
-                }
-            ],
-            "assumptions": [
-                {
-                    "id": "ASM-001",
-                    "description": "A cross-reference mapping table between Salesforce Account/Contact IDs and CC&B Account Numbers is maintained in OIC's lookup table store and is kept current by the existing Salesforce-CC&B account matching process."
-                },
-                {
-                    "id": "ASM-002",
-                    "description": "Salesforce Marketing Cloud is licensed and configured with the PAYMENT_FAILURE transactional journey template and the customer communication preference data extension."
-                }
-            ],
-            "open-questions": [
-                {
-                    "id": "OQ-001",
-                    "question": "Should the OIC cross-reference lookup table (Salesforce ID to CC&B Account Number) be cached in OIC or synchronised to a shared Redis cache? At contact centre scale (500 concurrent agents), OIC lookup table read performance needs to be validated under load.",
-                    "raised-by": "Integration Architecture"
-                }
-            ],
-            "diagrams": []
+            ]
         }
     ]
 }

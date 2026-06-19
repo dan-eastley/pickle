@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefact } from '../../lib/artefacts'
 
-// ─── Section configuration per document artefact type ─────────────────────────
+// ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
+// Used as a fallback for SOL-AVI / SOL-AIN / SOL-SVI / SOL-ISP until their schemas
+// carry a meta.sections block. SOL-SDE is fully schema-driven (see below).
 // type values: prose | highlight | cards | tags | risks | options | diagrams |
 //              components | flows | uml | endpoints | sla | code
 
@@ -40,17 +42,6 @@ const SECTION_CONFIGS = {
     { key: 'open-questions',          label: 'Open Questions',           type: 'cards', titleField: 'question', metaField: 'raised-by' },
     { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
   ],
-  'SOL-SDE': [
-    { key: 'overview',                label: 'Overview',                 type: 'prose' },
-    { key: 'solution-components',     label: 'Solution Components',      type: 'components' },
-    { key: 'data-flows',              label: 'Data Flows',               type: 'flows' },
-    { key: 'uml-diagrams',            label: 'UML Diagrams',             type: 'uml' },
-    { key: 'interface-requirements',  label: 'Interface Requirements',   type: 'cards', titleField: 'interface-id', metaField: 'direction' },
-    { key: 'non-functional-requirements', label: 'Non-Functional Requirements', type: 'cards', titleField: 'requirement', tagField: 'category' },
-    { key: 'assumptions',             label: 'Assumptions',              type: 'cards', titleField: 'description' },
-    { key: 'open-questions',          label: 'Open Questions',           type: 'cards', titleField: 'question', metaField: 'raised-by' },
-    { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
-  ],
   'SOL-ISP': [
     { key: 'overview',                label: 'Overview',                 type: 'prose' },
     { key: 'endpoints',               label: 'Endpoints',                type: 'endpoints' },
@@ -77,6 +68,39 @@ const METHOD_STYLES = {
   DELETE:  'bg-red-100 text-red-700',
 }
 
+const PRIORITY_STYLES = {
+  must:   'bg-red-50 text-red-600',
+  should: 'bg-amber-50 text-amber-700',
+  could:  'bg-blue-50 text-blue-700',
+  wont:   'bg-gray-100 text-gray-500',
+}
+
+const ADHERENCE_STYLES = {
+  adheres:   'bg-emerald-50 text-emerald-700',
+  partial:   'bg-amber-50 text-amber-700',
+  deviation: 'bg-red-50 text-red-600',
+}
+
+// ─── Reference resolution ────────────────────────────────────────────────────
+// Maps an entity ID (e.g. CAP-006, PLAT-BI, INT-IFC-001, SOL-PRN-002) to the
+// artefact type whose catalogue holds it, so references can link through.
+
+function resolveRefArtefactId(entityId) {
+  if (!entityId) return null
+  if (entityId.startsWith('CAP-')) return 'BUS-CAP'
+  if (entityId.startsWith('PLAT-')) return 'APP-DAP'
+  if (entityId.startsWith('INT-IFC')) return 'INT-IFC'
+  const prn = entityId.match(/^([A-Z]+)-PRN/)
+  if (prn) return `${prn[1]}-PRN`
+  return null
+}
+
+// "<Name> [<ID>]" — the canonical way to render a named entity alongside its ID.
+function nameWithId(name, id) {
+  if (name && id) return `${name} [${id}]`
+  return name || id || ''
+}
+
 // ─── Sub-renderers ─────────────────────────────────────────────────────────────
 
 function ProseSection({ text }) {
@@ -86,7 +110,7 @@ function ProseSection({ text }) {
 function HighlightSection({ text }) {
   return (
     <blockquote className="border-l-4 border-rose-400 pl-5 py-1">
-      <p className="text-lg text-gray-800 font-medium leading-relaxed italic">{text}</p>
+      <p className="text-lg text-gray-800 font-medium leading-relaxed">{text}</p>
     </blockquote>
   )
 }
@@ -310,10 +334,9 @@ function DiagramRefs({ refs, clientId, versionId }) {
         return (
           <div key={i} className="border border-gray-200 bg-white px-4 py-3 flex items-center gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-800">{ref.title ?? artefact?.name ?? ref['artefact-id']}</p>
+              <p className="text-sm font-medium text-gray-800">{nameWithId(ref.title ?? artefact?.name, ref['artefact-id'])}</p>
               {ref.caption && <p className="text-xs text-gray-500 mt-0.5">{ref.caption}</p>}
             </div>
-            <span className="font-mono text-xs text-gray-400 flex-shrink-0">{ref['artefact-id']}</span>
             {artefact && (
               <Link
                 to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
@@ -329,8 +352,195 @@ function DiagramRefs({ refs, clientId, versionId }) {
   )
 }
 
-// ─── Section renderer dispatcher ─────────────────────────────────────────────
+// ─── New (schema-driven) content renderers ───────────────────────────────────
 
+// A clickable chip for an entity reference (capability, platform, interface,
+// principle). Links through to the catalogue that holds the entity.
+function EntityRef({ id, note, clientId, versionId }) {
+  const targetId = resolveRefArtefactId(id)
+  const artefact = targetId ? getArtefact(targetId) : null
+  const chip = (
+    <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-700 group-hover:bg-rose-50 group-hover:text-rose-700 transition-colors">
+      {id}
+    </span>
+  )
+  return (
+    <div className="border border-gray-200 bg-white px-4 py-2.5 flex items-start gap-3">
+      {artefact ? (
+        <Link
+          to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
+          className="group flex-shrink-0"
+          title={`View in ${nameWithId(artefact.name, artefact.id)}`}
+        >
+          {chip}
+        </Link>
+      ) : (
+        <span className="flex-shrink-0">{chip}</span>
+      )}
+      {note && <p className="text-sm text-gray-600 min-w-0">{note}</p>}
+    </div>
+  )
+}
+
+function EntityRefList({ items, clientId, versionId }) {
+  return (
+    <div className="space-y-2">
+      {items.map((ref, i) => (
+        <EntityRef key={ref['artefact-id'] ?? i} id={ref['artefact-id']} note={ref.note} clientId={clientId} versionId={versionId} />
+      ))}
+    </div>
+  )
+}
+
+function ContextLinks({ items, clientId, versionId }) {
+  const REL_LABEL = { 'informed-by': 'Informed by', 'informs': 'Informs', 'related': 'Related' }
+  return (
+    <div className="space-y-2">
+      {items.map((link, i) => {
+        const artefact = getArtefact(link['artefact-id'])
+        const href = artefact
+          ? `/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
+          : null
+        return (
+          <div key={i} className="border border-gray-200 bg-white px-4 py-3 flex items-center gap-3">
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0 w-28">
+              {REL_LABEL[link.relationship] ?? link.relationship}
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-800">{nameWithId(link.title, link['document-id'])}</p>
+              {artefact && <p className="text-xs text-gray-400 mt-0.5">{nameWithId(artefact.name, artefact.id)}</p>}
+            </div>
+            {href && (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                Open ↗
+              </a>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function RequirementList({ items }) {
+  return (
+    <div className="space-y-2">
+      {items.map((req, i) => (
+        <div key={req.id ?? i} className="border border-gray-200 px-4 py-3 bg-white">
+          <div className="flex items-start gap-3">
+            {req.id && <span className="text-xs font-mono text-gray-400 pt-0.5 flex-shrink-0">{req.id}</span>}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-gray-800">{req.requirement}</p>
+              {req.rationale && <p className="mt-1 text-xs text-gray-500"><span className="font-medium">Rationale:</span> {req.rationale}</p>}
+            </div>
+            {req.priority && (
+              <span className={`text-xs px-2 py-0.5 uppercase tracking-wide flex-shrink-0 ${PRIORITY_STYLES[req.priority] ?? 'bg-gray-100 text-gray-500'}`}>
+                {req.priority}
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function FeatureList({ items }) {
+  return (
+    <div className="space-y-2">
+      {items.map((feat, i) => (
+        <div key={feat.id ?? i} className="border border-gray-200 px-4 py-3 bg-white">
+          <div className="flex items-baseline gap-3">
+            {feat.id && <span className="text-xs font-mono text-gray-400 flex-shrink-0">{feat.id}</span>}
+            <span className="text-sm font-semibold text-gray-900">{feat.name}</span>
+          </div>
+          {feat.description && <p className="mt-1 text-sm text-gray-600">{feat.description}</p>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function DomainArchitecture({ value, clientId, versionId }) {
+  return (
+    <div className="space-y-4">
+      {value.description && <ProseSection text={value.description} />}
+      {value.references?.length > 0 && (
+        <EntityRefList items={value.references} clientId={clientId} versionId={versionId} />
+      )}
+      {value.diagrams?.length > 0 && (
+        <DiagramRefs refs={value.diagrams} clientId={clientId} versionId={versionId} />
+      )}
+    </div>
+  )
+}
+
+function PrincipleAdherenceList({ items, clientId, versionId }) {
+  return (
+    <div className="space-y-2">
+      {items.map((row, i) => {
+        const targetId = resolveRefArtefactId(row['principle-id'])
+        const artefact = targetId ? getArtefact(targetId) : null
+        const idChip = (
+          <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-700">{row['principle-id']}</span>
+        )
+        return (
+          <div key={i} className="border border-gray-200 bg-white px-4 py-3 flex items-start gap-3">
+            {artefact ? (
+              <Link
+                to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
+                className="flex-shrink-0 hover:opacity-80 transition-opacity"
+                title={`View in ${nameWithId(artefact.name, artefact.id)}`}
+              >
+                {idChip}
+              </Link>
+            ) : (
+              <span className="flex-shrink-0">{idChip}</span>
+            )}
+            {row.statement && <p className="text-sm text-gray-700 flex-1 min-w-0">{row.statement}</p>}
+            <span className={`text-xs px-2 py-0.5 uppercase tracking-wide flex-shrink-0 ${ADHERENCE_STYLES[row.adherence] ?? 'bg-gray-100 text-gray-500'}`}>
+              {row.adherence}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function FlowSection({ items }) {
+  return (
+    <div className="space-y-4">
+      {items.map((flow, i) => (
+        <div key={flow.id ?? i} className="border border-gray-200 bg-white">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
+            {flow.id && <span className="text-xs font-mono text-gray-400">{flow.id}</span>}
+            <span className="text-sm font-semibold text-gray-900">{flow.title}</span>
+            {flow.format && <span className="ml-auto text-xs px-2 py-0.5 bg-gray-50 border border-gray-200 text-gray-500">{flow.format}</span>}
+          </div>
+          {flow.description && <p className="px-4 pt-3 text-sm text-gray-600">{flow.description}</p>}
+          {flow.steps?.length > 0 && (
+            <ol className="px-4 py-3 space-y-1 list-decimal list-inside">
+              {flow.steps.map((step, j) => <li key={j} className="text-sm text-gray-700">{step}</li>)}
+            </ol>
+          )}
+          {flow.content && (
+            <pre className="px-4 py-3 text-xs text-gray-700 overflow-x-auto bg-gray-50 font-mono leading-relaxed whitespace-pre">{flow.content}</pre>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Content dispatchers ─────────────────────────────────────────────────────
+
+// Legacy flat dispatcher (SECTION_CONFIGS path)
 function SectionContent({ config, value, clientId, versionId }) {
   if (!value || (Array.isArray(value) && value.length === 0)) return null
   switch (config.type) {
@@ -349,6 +559,30 @@ function SectionContent({ config, value, clientId, versionId }) {
     case 'diagrams':   return <DiagramRefs refs={value} clientId={clientId} versionId={versionId} />
     default:           return <pre className="text-xs text-gray-500">{JSON.stringify(value, null, 2)}</pre>
   }
+}
+
+// Schema-driven dispatcher (meta.sections content types)
+function SchemaContent({ contentType, value, clientId, versionId }) {
+  switch (contentType) {
+    case 'prose':               return <ProseSection text={value} />
+    case 'context-links':       return <ContextLinks items={value} clientId={clientId} versionId={versionId} />
+    case 'capability-refs':     return <EntityRefList items={value} clientId={clientId} versionId={versionId} />
+    case 'requirements':        return <RequirementList items={value} />
+    case 'features':            return <FeatureList items={value} />
+    case 'domain-architecture': return <DomainArchitecture value={value} clientId={clientId} versionId={versionId} />
+    case 'principle-adherence': return <PrincipleAdherenceList items={value} clientId={clientId} versionId={versionId} />
+    case 'flows':               return <FlowSection items={value} />
+    default:                    return <pre className="text-xs text-gray-500">{JSON.stringify(value, null, 2)}</pre>
+  }
+}
+
+function hasContent(value) {
+  if (value == null || value === '') return false
+  if (Array.isArray(value)) return value.length > 0
+  if (typeof value === 'object') {
+    return Object.values(value).some(v => hasContent(v))
+  }
+  return true
 }
 
 // ─── ISP metadata table (shown at top for interface spec docs) ────────────────
@@ -376,49 +610,359 @@ function IspMetaTable({ doc }) {
   )
 }
 
-// ─── Main DocumentView ─────────────────────────────────────────────────────────
+// ─── Chevron icon ─────────────────────────────────────────────────────────────
 
-export default function DocumentView({ data, artefact, clientId, versionId }) {
-  const documents = data?.documents ?? []
-  const [selectedIdx, setSelectedIdx] = useState(0)
-  const [activeSection, setActiveSection] = useState('overview')
+function Chevron({ open, className = 'w-3.5 h-3.5' }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={`${className} transition-transform ${open ? 'rotate-90' : ''}`}>
+      <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// ─── Document selector ────────────────────────────────────────────────────────
+
+function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
+  return (
+    <div className="mb-5 px-5 py-4 bg-white border border-gray-200 shadow-sm">
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+        {nameWithId(artefact?.name, artefact?.id)}
+      </p>
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="relative flex-1 min-w-0">
+          <select
+            value={selectedIdx}
+            onChange={e => onSelect(Number(e.target.value))}
+            className="w-full appearance-none pl-3 pr-10 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 cursor-pointer"
+          >
+            {documents.map((d, i) => (
+              <option key={d.id ?? i} value={i}>{nameWithId(d.title, d.id)}</option>
+            ))}
+          </select>
+          <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <span className="text-xs text-gray-400 flex-shrink-0">
+          {documents.length} document{documents.length !== 1 ? 's' : ''}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// ─── Schema-driven document body ──────────────────────────────────────────────
+
+function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
   const sectionRefs = useRef({})
   const observerRef = useRef(null)
+  const [activeKey, setActiveKey] = useState(null)
+  const [collapsed, setCollapsed] = useState(() => new Set())
 
-  const doc = documents[selectedIdx]
-  const sections = (SECTION_CONFIGS[artefact?.id] ?? []).filter(cfg => {
-    const val = doc?.[cfg.key]
-    return val != null && val !== '' && !(Array.isArray(val) && val.length === 0)
-  })
+  // Build visible structure with stable, schema-derived numbering.
+  // A section is either a parent (has `subsections`) or a leaf (has its own `content`).
+  const visible = sections
+    .map((section, si) => {
+      const subs = (section.subsections ?? [])
+        .map((sub, ssi) => ({ ...sub, number: `${si + 1}.${ssi + 1}`, value: doc[sub.key] }))
+        .filter(sub => hasContent(sub.value))
+      const leafValue = section.content ? doc[section.key] : undefined
+      const isLeaf = !section.subsections && section.content != null
+      return { ...section, number: `${si + 1}`, subs, isLeaf, leafValue }
+    })
+    .filter(section => (section.isLeaf ? hasContent(section.leafValue) : section.subs.length > 0))
 
-  // Reset on document change
+  const allKeys = visible.flatMap(s => [s.key, ...s.subs.map(ss => ss.key)])
+
+  // Reset state when the document changes.
   useEffect(() => {
-    setActiveSection('overview')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [selectedIdx])
+    setCollapsed(new Set())
+    setActiveKey(visible[0]?.subs[0]?.key ?? visible[0]?.key ?? null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc])
 
-  // Track active section via IntersectionObserver
+  // Track the active subsection for the nav.
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect()
-    const refs = sectionRefs.current
     observerRef.current = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.dataset.section)
-          }
+          if (entry.isIntersecting) setActiveKey(entry.target.dataset.section)
         }
       },
       { rootMargin: '-10% 0px -75% 0px' }
     )
-    Object.values(refs).forEach(el => { if (el) observerRef.current.observe(el) })
+    Object.values(sectionRefs.current).forEach(el => { if (el) observerRef.current.observe(el) })
+    return () => observerRef.current?.disconnect()
+  }, [doc, collapsed])
+
+  function toggle(key) {
+    setCollapsed(prev => {
+      const next = new Set(prev)
+      next.has(key) ? next.delete(key) : next.add(key)
+      return next
+    })
+  }
+  const expandAll = () => setCollapsed(new Set())
+  const collapseAll = () => setCollapsed(new Set(allKeys))
+
+  function scrollTo(key) {
+    sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  return (
+    <div className="flex gap-8 items-start">
+      {/* Contents nav — H1 + H2 only, stays on the page background */}
+      <aside className="hidden lg:block w-64 flex-shrink-0">
+        <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Contents</p>
+            <div className="flex items-center gap-2">
+              <button onClick={expandAll} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">Expand all</button>
+              <span className="text-gray-300">·</span>
+              <button onClick={collapseAll} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">Collapse all</button>
+            </div>
+          </div>
+          <ul className="space-y-0.5">
+            {visible.map(section => (
+              <li key={section.key}>
+                <button
+                  onClick={() => scrollTo(section.key)}
+                  className={`w-full text-left text-sm px-3 py-1.5 font-medium transition-colors flex gap-2 ${
+                    section.isLeaf && activeKey === section.key
+                      ? 'bg-rose-50 text-rose-700'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="text-gray-400 font-mono text-xs pt-0.5">{section.number}</span>
+                  <span className="min-w-0">{section.title}</span>
+                </button>
+                <ul className="space-y-0.5">
+                  {section.subs.map(sub => (
+                    <li key={sub.key}>
+                      <button
+                        onClick={() => scrollTo(sub.key)}
+                        className={`w-full text-left text-sm pl-7 pr-3 py-1 transition-colors flex gap-2 border-l-2 ${
+                          activeKey === sub.key
+                            ? 'bg-rose-50 text-rose-700 border-rose-500'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+                        }`}
+                      >
+                        <span className="font-mono text-xs pt-0.5 opacity-60">{sub.number}</span>
+                        <span className="min-w-0">{sub.title}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Document body — white box with drop shadow, the 'document' surface */}
+      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-sm px-8 py-7">
+        {/* Document title (H0) */}
+        <header className="mb-8 pb-5 border-b border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-900">{nameWithId(doc.title, doc.id)}</h1>
+          {doc.description && <p className="mt-2 text-gray-600 leading-relaxed">{doc.description}</p>}
+        </header>
+
+        {visible.map(section => {
+          const sectionCollapsed = collapsed.has(section.key)
+          return (
+            <section
+              key={section.key}
+              ref={el => { sectionRefs.current[section.key] = el }}
+              data-section={section.key}
+              className="mb-8 scroll-mt-20"
+            >
+              <button
+                onClick={() => toggle(section.key)}
+                className="w-full flex items-start gap-2 text-left group"
+              >
+                <span className="text-gray-300 group-hover:text-gray-500 mt-1.5"><Chevron open={!sectionCollapsed} /></span>
+                <h2 className="text-xl font-bold text-gray-900">
+                  <span className="text-gray-400 font-mono text-base mr-2">{section.number}</span>
+                  {section.title}
+                </h2>
+              </button>
+              {section.description && (
+                <p className="mt-1 ml-6 text-sm text-gray-500">{section.description}</p>
+              )}
+
+              {!sectionCollapsed && section.isLeaf && (
+                <div className="mt-4 ml-6">
+                  <SchemaContent
+                    contentType={section.content}
+                    value={section.leafValue}
+                    clientId={clientId}
+                    versionId={versionId}
+                  />
+                </div>
+              )}
+
+              {!sectionCollapsed && !section.isLeaf && (
+                <div className="mt-5 ml-6 space-y-8">
+                  {section.subs.map(sub => {
+                    const subCollapsed = collapsed.has(sub.key)
+                    return (
+                      <div
+                        key={sub.key}
+                        ref={el => { sectionRefs.current[sub.key] = el }}
+                        data-section={sub.key}
+                        className="scroll-mt-20"
+                      >
+                        <button
+                          onClick={() => toggle(sub.key)}
+                          className="w-full flex items-start gap-2 text-left group"
+                        >
+                          <span className="text-gray-300 group-hover:text-gray-500 mt-1"><Chevron open={!subCollapsed} className="w-3 h-3" /></span>
+                          <h3 className="text-base font-semibold text-gray-900">
+                            <span className="text-gray-400 font-mono text-sm mr-2">{sub.number}</span>
+                            {sub.title}
+                          </h3>
+                        </button>
+                        {sub.description && (
+                          <p className="mt-0.5 ml-5 text-sm text-gray-500">{sub.description}</p>
+                        )}
+                        {!subCollapsed && (
+                          <div className="mt-3 ml-5">
+                            <SchemaContent
+                              contentType={sub.content}
+                              value={sub.value}
+                              clientId={clientId}
+                              versionId={versionId}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </section>
+          )
+        })}
+      </article>
+    </div>
+  )
+}
+
+// ─── Legacy flat document body (doc types without meta.sections) ──────────────
+
+function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
+  const sectionRefs = useRef({})
+  const observerRef = useRef(null)
+  const [activeSection, setActiveSection] = useState('overview')
+
+  useEffect(() => {
+    setActiveSection('overview')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [doc])
+
+  useEffect(() => {
+    if (observerRef.current) observerRef.current.disconnect()
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActiveSection(entry.target.dataset.section)
+        }
+      },
+      { rootMargin: '-10% 0px -75% 0px' }
+    )
+    Object.values(sectionRefs.current).forEach(el => { if (el) observerRef.current.observe(el) })
     return () => observerRef.current?.disconnect()
   }, [doc, sections.length])
 
   function scrollTo(key) {
-    const el = sectionRefs.current[key]
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
+  return (
+    <div className="flex gap-8 items-start">
+      <aside className="hidden lg:block w-48 flex-shrink-0">
+        <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Contents</p>
+          <ul className="space-y-0.5">
+            <li>
+              <button
+                onClick={() => scrollTo('overview')}
+                className={`w-full text-left text-sm px-3 py-1.5 transition-colors ${
+                  activeSection === 'overview'
+                    ? 'bg-rose-50 text-rose-700 font-medium border-l-2 border-rose-500'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-l-2 border-transparent'
+                }`}
+              >
+                Overview
+              </button>
+            </li>
+            {sections.map(cfg => (
+              <li key={cfg.key}>
+                <button
+                  onClick={() => scrollTo(cfg.key)}
+                  className={`w-full text-left text-sm px-3 py-1.5 transition-colors ${
+                    activeSection === cfg.key
+                      ? 'bg-rose-50 text-rose-700 font-medium border-l-2 border-rose-500'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-l-2 border-transparent'
+                  }`}
+                >
+                  {cfg.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+
+      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-sm px-8 py-7">
+        <div
+          ref={el => { sectionRefs.current['overview'] = el }}
+          data-section="overview"
+          className="mb-8 scroll-mt-20"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            {doc.status && (
+              <span className={`text-xs px-2 py-0.5 font-medium uppercase tracking-wide ${STATUS_STYLES[doc.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                {doc.status}
+              </span>
+            )}
+            {doc.scope && (
+              <span className="text-xs text-gray-500 border border-gray-200 px-2 py-0.5">{doc.scope}</span>
+            )}
+            <span className="text-xs font-mono text-gray-300 ml-auto">{doc.id}</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{doc.title}</h2>
+          {doc.description && <p className="text-gray-600 leading-relaxed">{doc.description}</p>}
+
+          {artefact?.id === 'SOL-ISP' && (
+            <div className="mt-5"><IspMetaTable doc={doc} /></div>
+          )}
+        </div>
+
+        {sections.map(cfg => (
+          <section
+            key={cfg.key}
+            ref={el => { sectionRefs.current[cfg.key] = el }}
+            data-section={cfg.key}
+            className="mb-10 scroll-mt-20"
+          >
+            <h3 className="text-base font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">{cfg.label}</h3>
+            <SectionContent config={cfg} value={doc[cfg.key]} clientId={clientId} versionId={versionId} />
+          </section>
+        ))}
+      </article>
+    </div>
+  )
+}
+
+// ─── Main DocumentView ─────────────────────────────────────────────────────────
+
+export default function DocumentView({ data, artefact, schema, clientId, versionId }) {
+  const documents = data?.documents ?? []
+  const [selectedIdx, setSelectedIdx] = useState(0)
+
+  useEffect(() => { setSelectedIdx(0) }, [artefact?.id])
 
   if (documents.length === 0) {
     return (
@@ -428,122 +972,24 @@ export default function DocumentView({ data, artefact, clientId, versionId }) {
     )
   }
 
+  const doc = documents[selectedIdx] ?? documents[0]
+  const metaSections = schema?.meta?.sections
+  const legacySections = (SECTION_CONFIGS[artefact?.id] ?? []).filter(cfg => hasContent(doc?.[cfg.key]))
+
   return (
     <div>
-      {/* ── Instance selector ──────────────────────────────────────────────── */}
-      <div className="mb-6 pb-5 border-b border-gray-200 flex items-center gap-3 flex-wrap">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0">
-          {artefact?.name}
-        </span>
-        <div className="relative flex-shrink-0">
-          <select
-            value={selectedIdx}
-            onChange={e => setSelectedIdx(Number(e.target.value))}
-            className="appearance-none pl-3 pr-8 py-1.5 border border-gray-300 bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 cursor-pointer"
-          >
-            {documents.map((d, i) => (
-              <option key={d.id ?? i} value={i}>{d.title} — {d.id}</option>
-            ))}
-          </select>
-          <svg className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        <span className="text-xs text-gray-400">{documents.length} document{documents.length !== 1 ? 's' : ''}</span>
-      </div>
+      <DocumentSelector
+        artefact={artefact}
+        documents={documents}
+        selectedIdx={selectedIdx}
+        onSelect={setSelectedIdx}
+      />
 
-      {/* ── Two-column layout ──────────────────────────────────────────────── */}
-      <div className="flex gap-8 items-start">
-        {/* Sticky nav */}
-        <aside className="hidden lg:block w-48 flex-shrink-0">
-          <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Contents</p>
-            <ul className="space-y-0.5">
-              <li>
-                <button
-                  onClick={() => scrollTo('overview')}
-                  className={`w-full text-left text-sm px-3 py-1.5 transition-colors ${
-                    activeSection === 'overview'
-                      ? 'bg-rose-50 text-rose-700 font-medium border-l-2 border-rose-500'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-l-2 border-transparent'
-                  }`}
-                >
-                  Overview
-                </button>
-              </li>
-              {sections.map(cfg => (
-                <li key={cfg.key}>
-                  <button
-                    onClick={() => scrollTo(cfg.key)}
-                    className={`w-full text-left text-sm px-3 py-1.5 transition-colors ${
-                      activeSection === cfg.key
-                        ? 'bg-rose-50 text-rose-700 font-medium border-l-2 border-rose-500'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-l-2 border-transparent'
-                    }`}
-                  >
-                    {cfg.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </aside>
-
-        {/* Content */}
-        <article className="flex-1 min-w-0">
-          {/* ── Document header ─────────────────────────────────────────── */}
-          <div
-            ref={el => { sectionRefs.current['overview'] = el }}
-            data-section="overview"
-            className="mb-8 scroll-mt-20"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              {doc.status && (
-                <span className={`text-xs px-2 py-0.5 font-medium uppercase tracking-wide ${STATUS_STYLES[doc.status] ?? 'bg-gray-100 text-gray-600'}`}>
-                  {doc.status}
-                </span>
-              )}
-              {doc.scope && (
-                <span className="text-xs text-gray-500 border border-gray-200 px-2 py-0.5">
-                  {doc.scope}
-                </span>
-              )}
-              <span className="text-xs font-mono text-gray-300 ml-auto">{doc.id}</span>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{doc.title}</h2>
-            {doc.description && (
-              <p className="text-gray-600 leading-relaxed">{doc.description}</p>
-            )}
-
-            {/* ISP-specific metadata */}
-            {artefact?.id === 'SOL-ISP' && (
-              <div className="mt-5">
-                <IspMetaTable doc={doc} />
-              </div>
-            )}
-          </div>
-
-          {/* ── Sections ────────────────────────────────────────────────── */}
-          {sections.map(cfg => (
-            <section
-              key={cfg.key}
-              ref={el => { sectionRefs.current[cfg.key] = el }}
-              data-section={cfg.key}
-              className="mb-10 scroll-mt-20"
-            >
-              <h3 className="text-base font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
-                {cfg.label}
-              </h3>
-              <SectionContent
-                config={cfg}
-                value={doc[cfg.key]}
-                clientId={clientId}
-                versionId={versionId}
-              />
-            </section>
-          ))}
-        </article>
-      </div>
+      {Array.isArray(metaSections) && metaSections.length > 0 ? (
+        <SchemaDrivenDocument doc={doc} sections={metaSections} clientId={clientId} versionId={versionId} />
+      ) : (
+        <LegacyDocument doc={doc} sections={legacySections} artefact={artefact} clientId={clientId} versionId={versionId} />
+      )}
     </div>
   )
 }
