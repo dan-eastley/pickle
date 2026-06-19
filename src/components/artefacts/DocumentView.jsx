@@ -7,8 +7,8 @@ import useActiveSection from '../../hooks/useActiveSection'
 import EntityPanel from './EntityPanel'
 
 // ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
-// Fallback for SOL-AVI / SOL-AIN / SOL-ISP until their schemas carry a
-// meta.sections block. SOL-SDE and SOL-SVI are fully schema-driven.
+// Fallback for SOL-AVI / SOL-ISP until their schemas carry a meta.sections
+// block. SOL-SDE, SOL-SVI, and SOL-AIN are fully schema-driven.
 // type values: prose | highlight | cards | tags | risks | options | diagrams |
 //              components | flows | uml | endpoints | sla | code
 
@@ -22,17 +22,6 @@ const SECTION_CONFIGS = {
     { key: 'assumptions',             label: 'Assumptions',              type: 'cards', titleField: 'description' },
     { key: 'related-capabilities',    label: 'Related Capabilities',     type: 'tags' },
     { key: 'related-domains',         label: 'Related Domains',          type: 'tags' },
-    { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
-  ],
-  'SOL-AIN': [
-    { key: 'intent-statement',        label: 'Intent Statement',         type: 'highlight' },
-    { key: 'context',                 label: 'Context',                  type: 'prose' },
-    { key: 'drivers',                 label: 'Drivers',                  type: 'cards', titleField: 'description', tagField: 'type' },
-    { key: 'options-considered',      label: 'Options Considered',       type: 'options' },
-    { key: 'recommended-direction',   label: 'Recommended Direction',    type: 'prose' },
-    { key: 'architecture-principles', label: 'Architecture Principles',  type: 'tags' },
-    { key: 'guardrails',              label: 'Guardrails',               type: 'tags' },
-    { key: 'open-questions',          label: 'Open Questions',           type: 'cards', titleField: 'question', metaField: 'raised-by' },
     { key: 'diagrams',                label: 'Diagrams',                 type: 'diagrams' },
   ],
   'SOL-ISP': [
