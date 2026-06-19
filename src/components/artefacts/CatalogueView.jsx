@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Expand01, Minimize01 } from '@untitled-ui/icons-react'
 import Badge from '../ui/Badge'
 import EmptyState from '../ui/EmptyState'
+import useEscapeKey from '../../hooks/useEscapeKey'
+import { toggleInSet, getRootArrayKey } from '../../lib/collections'
 
 // ── Schema helpers ───────────────────────────────────────────────────────────
-
-function getRootArrayKey(data) {
-  return Object.keys(data).find(k => Array.isArray(data[k]))
-}
 
 function getColumnsFromProps(itemProps) {
   const priority = ['id', 'name', 'statement', 'rule', 'title']
@@ -250,12 +248,7 @@ export default function CatalogueView({ data, schema }) {
   const [expanded, setExpanded] = useState(new Set())
   const [fullscreen, setFullscreen] = useState(false)
 
-  useEffect(() => {
-    if (!fullscreen) return
-    function onKey(e) { if (e.key === 'Escape') setFullscreen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [fullscreen])
+  useEscapeKey(() => setFullscreen(false), fullscreen)
 
   if (!data || !schema) return null
 
@@ -275,7 +268,7 @@ export default function CatalogueView({ data, schema }) {
     const groupedData = buildGroupedTree(data, meta.grouping)
 
     function toggleGrouped(id) {
-      setExpanded(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+      setExpanded(prev => toggleInSet(prev, id))
     }
     function expandAllGrouped() { setExpanded(new Set(groupedData.map(p => p.id))) }
     function collapseAllGrouped() { setExpanded(new Set()) }
@@ -360,7 +353,7 @@ export default function CatalogueView({ data, schema }) {
   const summary = countSummary(items, schema, data)
 
   function toggleExpanded(id) {
-    setExpanded(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+    setExpanded(prev => toggleInSet(prev, id))
   }
   function expandAll() { setExpanded(new Set(items.map(i => i.id))) }
   function collapseAll() { setExpanded(new Set()) }

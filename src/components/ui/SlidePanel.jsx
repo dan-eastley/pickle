@@ -1,13 +1,8 @@
-import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import useEscapeKey from '../../hooks/useEscapeKey'
 
 export default function SlidePanel({ open, onClose, title, subtitle, children }) {
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e) => { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+  useEscapeKey(onClose, open)
 
   return createPortal(
     <>

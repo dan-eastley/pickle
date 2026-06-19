@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefact, resolveRefArtefactId } from '../../lib/artefacts'
 import { nameWithId } from '../../lib/format'
+import { toggleInSet } from '../../lib/collections'
+import useActiveSection from '../../hooks/useActiveSection'
 import EntityPanel from './EntityPanel'
 
 // ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
@@ -627,10 +629,9 @@ export function DocumentSelector({ artefact, documents, selectedIdx, onSelect })
 
 function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
   const sectionRefs = useRef({})
-  const observerRef = useRef(null)
-  const [activeKey, setActiveKey] = useState(null)
   const [collapsed, setCollapsed] = useState(() => new Set())
   const [entityId, setEntityId] = useState(null)
+  const [activeKey, setActiveKey] = useActiveSection(sectionRefs, [doc, collapsed])
 
   // Build visible structure with stable, schema-derived numbering.
   // A section is either a parent (has `subsections`) or a leaf (has its own `content`).
@@ -654,27 +655,8 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doc])
 
-  // Track the active subsection for the nav.
-  useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect()
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActiveKey(entry.target.dataset.section)
-        }
-      },
-      { rootMargin: '-10% 0px -75% 0px' }
-    )
-    Object.values(sectionRefs.current).forEach(el => { if (el) observerRef.current.observe(el) })
-    return () => observerRef.current?.disconnect()
-  }, [doc, collapsed])
-
   function toggle(key) {
-    setCollapsed(prev => {
-      const next = new Set(prev)
-      next.has(key) ? next.delete(key) : next.add(key)
-      return next
-    })
+    setCollapsed(prev => toggleInSet(prev, key))
   }
   const expandAll = () => setCollapsed(new Set())
   const collapseAll = () => setCollapsed(new Set(allKeys))
@@ -837,27 +819,13 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
 
 function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
   const sectionRefs = useRef({})
-  const observerRef = useRef(null)
-  const [activeSection, setActiveSection] = useState('overview')
+  const [activeSection, setActiveSection] = useActiveSection(sectionRefs, [doc, sections.length])
 
   useEffect(() => {
     setActiveSection('overview')
     window.scrollTo({ top: 0, behavior: 'smooth' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doc])
-
-  useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect()
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActiveSection(entry.target.dataset.section)
-        }
-      },
-      { rootMargin: '-10% 0px -75% 0px' }
-    )
-    Object.values(sectionRefs.current).forEach(el => { if (el) observerRef.current.observe(el) })
-    return () => observerRef.current?.disconnect()
-  }, [doc, sections.length])
 
   function scrollTo(key) {
     sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })

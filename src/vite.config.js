@@ -1,6 +1,5 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
 import { readFileSync, existsSync, statSync, readdirSync } from 'fs'
@@ -135,7 +134,6 @@ export default defineConfig(({ mode }) => {
       architectureApiPlugin(),
       // Data is now served by the /api/content Vercel function (reads from GitHub).
       // Static copy removed — no build needed when architecture data changes.
-      // viteStaticCopy kept as dependency in case it's needed for other assets.
     ],
     server: { port: 3000 },
   }

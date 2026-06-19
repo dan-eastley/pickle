@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefactData, getSchema } from '../../lib/api'
+import { getRootArrayKey } from '../../lib/collections'
 import FormatIcon from '../ui/FormatIcon'
 import { KeyStar, ChevronRight } from '../ui/icons'
 
@@ -34,7 +35,7 @@ function useArtefactCount(clientId, versionId, artefact, rowRef) {
           return
         }
 
-        const rootKey = Object.keys(data).find(k => Array.isArray(data[k]))
+        const rootKey = getRootArrayKey(data)
         if (!rootKey) { setCount(null); return }
         const items = data[rootKey]
         if (!items.length) { setCount(null); return }
