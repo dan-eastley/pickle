@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import TopBar from './TopBar'
 import DomainNav from './DomainNav'
 import Breadcrumb from './Breadcrumb'
 import Footer from './Footer'
+import RouteContent from './RouteContent'
 import Spinner from '../ui/Spinner'
 
 export default function Layout() {
@@ -36,7 +37,7 @@ export default function Layout() {
       <main className="flex-1">
         <div className="max-w-[1400px] mx-auto px-6 pb-12">
           <Breadcrumb />
-          <Outlet />
+          <RouteContent />
         </div>
       </main>
       <Footer />

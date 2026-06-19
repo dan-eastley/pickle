@@ -1,6 +1,7 @@
-import { Outlet, NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import TopBar from './TopBar'
 import Footer from './Footer'
+import RouteContent from './RouteContent'
 import { DOCS_NAV } from '../../lib/docs'
 
 function groupItems(items) {
@@ -66,7 +67,7 @@ export default function DocsLayout() {
         {/* Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="max-w-4xl mx-auto px-8 py-8">
-            <Outlet />
+            <RouteContent />
           </div>
         </main>
       </div>
