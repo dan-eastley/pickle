@@ -117,12 +117,14 @@ export default function DecisionsPage() {
       .catch(() => setLoading(false))
   }, [clientId, versionId])
 
+  const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
   const filtered = decisions.filter(d => {
     if (filterDomain && d.scope?.domain !== filterDomain) return false
     if (filterAbstraction && d.scope?.abstraction !== filterAbstraction) return false
     if (filterArtefact && d.scope?.artefact !== filterArtefact) return false
     return true
   })
+  const hiddenByFilter = decisions.length - filtered.length
 
   const grouped = DECISION_STATUS_ORDER.map(status => ({
     status,
@@ -150,6 +152,21 @@ export default function DecisionsPage() {
       <div className="mb-5 p-4 bg-gray-50 border border-gray-200">
         <ScopeFilter searchParams={searchParams} setSearchParams={setSearchParams} />
       </div>
+
+      {isFiltered && (
+        <div className="mb-5 flex items-center justify-between gap-3 px-4 py-2.5 bg-brand-50 border border-brand-200 text-sm text-brand-800">
+          <span>
+            Showing {filtered.length} of {decisions.length} decision{decisions.length === 1 ? '' : 's'}
+            {hiddenByFilter > 0 && ` — ${hiddenByFilter} hidden by the scope filter`}.
+          </span>
+          <button
+            onClick={() => setSearchParams(new URLSearchParams())}
+            className="flex-shrink-0 font-medium text-brand-700 hover:text-brand-900 transition-colors"
+          >
+            Clear filter
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>

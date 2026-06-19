@@ -77,7 +77,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-xl flex flex-col shadow-xl max-h-[90vh]">
+        <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
           {/* Header */}
           <div className={`flex items-center justify-between px-5 py-4 ${colors.bg} flex-shrink-0`}>
             <div>
