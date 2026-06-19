@@ -178,7 +178,21 @@ jobs:
             exit 0
           fi
           git commit -m "[${ANALYSIS_NAME}] Update ${DECISION_FILE}"
-          git push origin "$BRANCH"
+          # The decisions branch can advance out-of-band while this step runs —
+          # the sync-decisions-branches job merges main into it on every push to
+          # main. Rebase onto the latest remote head and retry so a concurrent
+          # update doesn't fail the analysis step with a non-fast-forward error.
+          for attempt in 1 2 3 4 5; do
+            if git push origin "HEAD:${BRANCH}"; then
+              echo "::notice::Pushed on attempt ${attempt}."
+              exit 0
+            fi
+            echo "::warning::Push rejected (attempt ${attempt}); rebasing onto origin/${BRANCH}."
+            git fetch origin "$BRANCH"
+            git rebase "origin/${BRANCH}"
+          done
+          echo "::error::Failed to push ${DECISION_FILE} to ${BRANCH} after rebasing."
+          exit 1
 
       - name: Finished
         if: always()
