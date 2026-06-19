@@ -7,7 +7,15 @@
             "description": "Logical solution design for the fedc Analytics Portal, covering the platform roles of Oracle Analytics Cloud, Databricks Lakehouse, and the Confluent iPaaS orchestration layer, with a sequence diagram illustrating the end-to-end data flow from CC&B to business user.",
             "status": "approved",
             "scope": "Analytics Portal — the self-service BI surface and underlying data pipeline from Oracle CC&B through Confluent and Databricks to Oracle Analytics Cloud.",
-            "executive-summary": "The Analytics Portal solution is composed of three primary platform components: Oracle Analytics Cloud (PLAT-BI) as the self-service BI and reporting surface; the Databricks Lakehouse (PLAT-DATA-LAKEHOUSE) as the governed data storage and transformation tier; and the Confluent iPaaS (PLAT-EVENT-BROKER) as the event orchestration layer that moves data from Oracle CC&B into the lakehouse in near-real-time. Oracle Analytics Cloud connects to the lakehouse via a Databricks SQL endpoint (JDBC). Unity Catalog enforces row- and column-level security so that operational and commercial users access only datasets appropriate to their role. Scheduled batch ingestion supplements event-driven flows for MDM and ERP source systems.",
+            "executive-summary": {
+                "summary": "The Analytics Portal delivers governed, near-real-time self-service analytics by joining Oracle Analytics Cloud, a Databricks Lakehouse, and a Confluent event backbone over Oracle CC&B operational data.",
+                "points": [
+                    "Oracle Analytics Cloud (PLAT-BI) is the self-service BI and reporting surface, connected to the lakehouse via a Databricks SQL endpoint (JDBC).",
+                    "The Databricks Lakehouse (PLAT-DATA-LAKEHOUSE) is the governed storage and transformation tier; Unity Catalog enforces row- and column-level security per role.",
+                    "The Confluent iPaaS (PLAT-EVENT-BROKER) moves CC&B data into the lakehouse in near-real-time via change-data-capture.",
+                    "Scheduled batch ingestion supplements the event-driven flows for MDM and ERP source systems."
+                ]
+            },
             "context": [
                 {
                     "relationship": "informed-by",
@@ -123,7 +131,14 @@
             "description": "Logical solution design for the integration between Salesforce CRM (PLAT-CRM) and Oracle CC&B (PLAT-CIS), enabling a unified agent desktop with embedded billing context and event-driven proactive outbound communications.",
             "status": "in-review",
             "scope": "CRM-to-CIS integration — synchronisation of account and billing data between Salesforce CRM (PLAT-CRM) and Oracle CC&B (PLAT-CIS), mediated by Oracle Integration Cloud.",
-            "executive-summary": "The CRM Integration solution mediates between Salesforce CRM (the system of record for customer interactions and cases) and Oracle CC&B (the system of record for billing accounts). Oracle Integration Cloud (OIC) is used as the API orchestration layer for synchronous account lookup requests from Salesforce, and as the event consumer for CC&B billing events (via Confluent Kafka) that trigger proactive outbound communications in Salesforce Marketing Cloud. The integration replaces the existing bespoke Java middleware and establishes a governed, observable integration layer.",
+            "executive-summary": {
+                "summary": "The CRM Integration solution mediates between Salesforce CRM and Oracle CC&B through Oracle Integration Cloud, giving agents embedded billing context and triggering proactive customer communications.",
+                "points": [
+                    "OIC provides synchronous API orchestration for agent account-lookup requests from Salesforce into CC&B.",
+                    "OIC consumes CC&B billing events via Confluent Kafka to trigger proactive outbound communications in Salesforce Marketing Cloud.",
+                    "Replaces the existing bespoke Java middleware with a governed, observable integration layer."
+                ]
+            },
             "context": [
                 {
                     "relationship": "informed-by",
