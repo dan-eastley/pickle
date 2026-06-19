@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import useEscapeKey from '../../hooks/useEscapeKey'
 
 export default function JsonPreview({ data, label = 'JSON', docUrl }) {
   const [open, setOpen] = useState(false)
 
-  useEffect(() => {
-    if (!open) return
-    function onKey(e) { if (e.key === 'Escape') setOpen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open])
+  useEscapeKey(() => setOpen(false), open)
 
   if (!data) return null
 

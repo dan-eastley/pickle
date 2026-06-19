@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { CheckSquare, Square, Expand01, Minimize01 } from '@untitled-ui/icons-react'
 import { getArtefact } from '../../lib/artefacts'
 import { getArtefactData } from '../../lib/api'
+import useEscapeKey from '../../hooks/useEscapeKey'
 import EmptyState from '../ui/EmptyState'
 import Spinner from '../ui/Spinner'
 
@@ -34,12 +35,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     })
   }, [clientId, versionId, colArtefact?.id, rowArtefact?.id])
 
-  useEffect(() => {
-    if (!fullscreen) return
-    function onKey(e) { if (e.key === 'Escape') setFullscreen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [fullscreen])
+  useEscapeKey(() => setFullscreen(false), fullscreen)
 
   if (!data) return null
 

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { nameWithId } from '../../lib/format'
+import useEscapeKey from '../../hooks/useEscapeKey'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import { PlusIcon, CloseIcon } from '../ui/icons'
@@ -54,11 +55,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const showDocumentScope =
     artefact.format === 'document' && scopeArtefact === artefact.id && documents.length > 0
 
-  useEffect(() => {
-    function onKey(e) { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onClose])
+  useEscapeKey(onClose)
 
   function handleSave() {
     // TODO: push to repo on new branch
