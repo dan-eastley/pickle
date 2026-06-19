@@ -66,6 +66,38 @@
             "rationale": "Governance is most effective when rules are precise and enforceable. Semantic layers without constraints become maintenance nightmares. A principle that defines the boundary of 'standard' is a design input to the platform team and a deflection mechanism for out-of-scope requests."
         }
     ],
+    "referential-integrity": [
+        {
+            "finding": "**Data Architecture Principles** (`DAT-PRN`) principle references are sound. DAT-PRN-003 and DAT-PRN-002 both exist and are correctly identified in the impact assessment. All principle IDs resolve to defined entities.",
+            "impact": "The decision's citation of existing principles ensures architecture traceability and evidence-based recommendations.",
+            "recommendation": "No action required — all Data Architecture Principles citations resolve correctly.",
+            "rationale": "Referential integrity for principles validates that the decision is grounded in established governance, not inventing new rules."
+        },
+        {
+            "finding": "**Data Architecture Guardrails** (`DAT-GRD`) is referenced in the impact-assessment section with a recommendation to add guardrails for self-service access control, but the current `DAT-GRD` catalogue at `architectures/clients/fedc/1.0.0/domains/data/physical/DAT-GRD.json` contains an empty `guardrails` array. The catalogue structure exists, but no guardrail entities are defined.",
+            "impact": "The absence of defined guardrails means the recommended control ('All self-service query access is role-based...') cannot yet be referenced. Until guardrails are added to the `DAT-GRD` catalogue, downstream teams will lack an authoritative source for mandatory Data domain enforcement rules.",
+            "recommendation": "As part of ADR-013 resolution, add the recommended guardrails to `DAT-GRD`: (1) self-service query access is role-based and linked to business function; (2) denied or anomalous access attempts are logged; (3) role-to-data mappings are reviewed quarterly. Once added, update the impact-assessment section to reference the new guardrail IDs.",
+            "rationale": "Guardrails are enforceable rules, not aspirational statements. Referential integrity requires that every guardrail cited in architecture decisions points to a defined entity in the authoritative catalogue, so platform teams know which rules to implement."
+        },
+        {
+            "finding": "**Business Capabilities** (`BUS-CAP`) references are sound. Capabilities `CAP-001-03` (Manage Customer Insight) and `CAP-009-01` (Manage Finance) both exist at level 2, with valid parent IDs (`CAP-001` and `CAP-009` respectively). All parent references resolve correctly.",
+            "impact": "The decision's identification of consuming business capabilities ensures the self-service analytics capability is explicitly linked to the business functions it enables.",
+            "recommendation": "No action required — all Business Capabilities citations resolve correctly.",
+            "rationale": "Linking architectural decisions to business capabilities ensures decisions are traceable to business outcomes and prevents orphaned capabilities."
+        },
+        {
+            "finding": "**Application Domains & Platforms** (`APP-DAP`) references are sound. Domain `APP-DOM-DATA`, platform `PLAT-BI`, and platform `PLAT-DATA-LAKEHOUSE` all exist with correct domain-id references. All platform-to-domain associations are valid.",
+            "impact": "The decision's identification of the application platforms enables downstream teams to understand the technology scope and evolution path for self-service analytics.",
+            "recommendation": "No action required — all Application Domains & Platforms citations resolve correctly.",
+            "rationale": "Platform references ensure decisions connect architectural decisions to the concrete systems that realise them."
+        },
+        {
+            "finding": "**Integrity summary:** All references to defined entities in `DAT-PRN`, `BUS-CAP`, and `APP-DAP` resolve correctly. The single integrity issue is that `DAT-GRD` (the catalogue where guardrails live) is structurally present but currently empty. The impact-assessment makes a valid recommendation to populate it, which resolves the integrity gap.",
+            "impact": "The decision can proceed with the understanding that the recommended guardrails must be added to `DAT-GRD` during resolution in order for platform teams to have an authoritative reference.",
+            "recommendation": "Treat the addition of guardrails to `DAT-GRD` as part of the ADR-013 resolution workflow. Once guardrails are added, verify their IDs against the impact-assessment recommendations.",
+            "rationale": "Referential integrity is achieved when every reference points to a defined entity and every required entity is defined. This decision's recommendations create the missing entity (guardrails), so integrity will be established during resolution."
+        }
+    ],
     "scope": {
         "domain": "data",
         "abstraction": "logical",
