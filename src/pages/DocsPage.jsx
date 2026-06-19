@@ -105,7 +105,7 @@ function MarkdownComponents(currentPath) {
     },
     blockquote({ children }) {
       return (
-        <blockquote className="my-4 border-l-4 border-brand-300 pl-4 italic text-gray-600 text-sm">
+        <blockquote className="my-4 border-l-4 border-brand-300 pl-4 text-gray-600 text-sm">
           {children}
         </blockquote>
       )

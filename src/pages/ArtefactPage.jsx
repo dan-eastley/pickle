@@ -6,7 +6,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
-import DocumentView from '../components/artefacts/DocumentView'
+import DocumentView, { DocumentSelector } from '../components/artefacts/DocumentView'
 import NewDecisionModal from '../components/decisions/NewDecisionModal'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
@@ -16,7 +16,7 @@ import { KeyStar, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useCollapsed from '../hooks/useCollapsed'
 
-function AdrActionBar({ artefact, clientId, versionId }) {
+function AdrActionBar({ artefact, documents, selectedDocument, clientId, versionId }) {
   const [modalOpen, setModalOpen] = useState(false)
   const colors = DOMAIN_COLORS[artefact.domain]
   const bgClass = colors?.bg ?? 'bg-gray-50'
@@ -54,6 +54,8 @@ function AdrActionBar({ artefact, clientId, versionId }) {
       {modalOpen && (
         <NewDecisionModal
           artefact={artefact}
+          documents={documents}
+          selectedDocument={selectedDocument}
           clientId={clientId}
           versionId={versionId}
           onClose={() => setModalOpen(false)}
@@ -138,8 +140,8 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
                       >
                         <span className="text-gray-400">{relationship}</span>
-                        <span className="font-mono text-gray-400">{related.id}</span>
                         <span className="font-medium">{related.name}</span>
+                        <span className="font-mono text-gray-400">[{related.id}]</span>
                       </Link>
                     )
                   })}
@@ -163,6 +165,7 @@ export default function ArtefactPage() {
   const [schema, setSchema] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [docIdx, setDocIdx] = useState(0)
 
   const artefact = getArtefact(artefactId)
   usePageTitle(artefact?.name ?? null)
@@ -172,6 +175,7 @@ export default function ArtefactPage() {
     setLoading(true)
     setData(undefined)
     setError(null)
+    setDocIdx(0)
 
     const cId = clientId ?? selectedClientId
     const vId = versionId ?? selectedVersionId
@@ -192,10 +196,17 @@ export default function ArtefactPage() {
     return <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
   }
 
+  const isDocument = artefact.format === 'document'
+  const documents = isDocument ? (data?.documents ?? []) : []
+  const selectedDocument = documents[docIdx] ?? null
+
   return (
     <div>
       <ArtefactHeader artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
-      <AdrActionBar artefact={artefact} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+      {isDocument && documents.length > 0 && (
+        <DocumentSelector artefact={artefact} documents={documents} selectedIdx={docIdx} onSelect={setDocIdx} />
+      )}
+      <AdrActionBar artefact={artefact} documents={documents} selectedDocument={selectedDocument} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
 
       {loading && (
         <div className="flex items-center justify-center py-16">
@@ -237,7 +248,7 @@ export default function ArtefactPage() {
             <DiagramView data={data} artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
           {artefact.format === 'document' && (
-            <DocumentView data={data} artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+            <DocumentView data={data} artefact={artefact} schema={schema} selectedIdx={docIdx} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
         </>
       )}

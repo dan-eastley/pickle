@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { getArtefact } from '../../lib/artefacts'
+import { getArtefact, resolveRefArtefactId } from '../../lib/artefacts'
+import { nameWithId } from '../../lib/format'
+import EntityPanel from './EntityPanel'
 
 // ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
 // Used as a fallback for SOL-AVI / SOL-AIN / SOL-SVI / SOL-ISP until their schemas
@@ -79,26 +81,6 @@ const ADHERENCE_STYLES = {
   adheres:   'bg-emerald-50 text-emerald-700',
   partial:   'bg-amber-50 text-amber-700',
   deviation: 'bg-red-50 text-red-600',
-}
-
-// ─── Reference resolution ────────────────────────────────────────────────────
-// Maps an entity ID (e.g. CAP-006, PLAT-BI, INT-IFC-001, SOL-PRN-002) to the
-// artefact type whose catalogue holds it, so references can link through.
-
-function resolveRefArtefactId(entityId) {
-  if (!entityId) return null
-  if (entityId.startsWith('CAP-')) return 'BUS-CAP'
-  if (entityId.startsWith('PLAT-')) return 'APP-DAP'
-  if (entityId.startsWith('INT-IFC')) return 'INT-IFC'
-  const prn = entityId.match(/^([A-Z]+)-PRN/)
-  if (prn) return `${prn[1]}-PRN`
-  return null
-}
-
-// "<Name> [<ID>]" — the canonical way to render a named entity alongside its ID.
-function nameWithId(name, id) {
-  if (name && id) return `${name} [${id}]`
-  return name || id || ''
 }
 
 // ─── Sub-renderers ─────────────────────────────────────────────────────────────
@@ -355,10 +337,9 @@ function DiagramRefs({ refs, clientId, versionId }) {
 // ─── New (schema-driven) content renderers ───────────────────────────────────
 
 // A clickable chip for an entity reference (capability, platform, interface,
-// principle). Links through to the catalogue that holds the entity.
-function EntityRef({ id, note, clientId, versionId }) {
-  const targetId = resolveRefArtefactId(id)
-  const artefact = targetId ? getArtefact(targetId) : null
+// principle). Opens the entity detail panel when the entity is resolvable.
+function EntityRef({ id, note, onOpenEntity }) {
+  const resolvable = !!resolveRefArtefactId(id)
   const chip = (
     <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-700 group-hover:bg-rose-50 group-hover:text-rose-700 transition-colors">
       {id}
@@ -366,14 +347,10 @@ function EntityRef({ id, note, clientId, versionId }) {
   )
   return (
     <div className="border border-gray-200 bg-white px-4 py-2.5 flex items-start gap-3">
-      {artefact ? (
-        <Link
-          to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
-          className="group flex-shrink-0"
-          title={`View in ${nameWithId(artefact.name, artefact.id)}`}
-        >
+      {resolvable ? (
+        <button onClick={() => onOpenEntity?.(id)} className="group flex-shrink-0" title="View details">
           {chip}
-        </Link>
+        </button>
       ) : (
         <span className="flex-shrink-0">{chip}</span>
       )}
@@ -382,11 +359,11 @@ function EntityRef({ id, note, clientId, versionId }) {
   )
 }
 
-function EntityRefList({ items, clientId, versionId }) {
+function EntityRefList({ items, onOpenEntity }) {
   return (
     <div className="space-y-2">
       {items.map((ref, i) => (
-        <EntityRef key={ref['artefact-id'] ?? i} id={ref['artefact-id']} note={ref.note} clientId={clientId} versionId={versionId} />
+        <EntityRef key={ref['artefact-id'] ?? i} id={ref['artefact-id']} note={ref.note} onOpenEntity={onOpenEntity} />
       ))}
     </div>
   )
@@ -466,12 +443,12 @@ function FeatureList({ items }) {
   )
 }
 
-function DomainArchitecture({ value, clientId, versionId }) {
+function DomainArchitecture({ value, clientId, versionId, onOpenEntity }) {
   return (
     <div className="space-y-4">
       {value.description && <ProseSection text={value.description} />}
       {value.references?.length > 0 && (
-        <EntityRefList items={value.references} clientId={clientId} versionId={versionId} />
+        <EntityRefList items={value.references} onOpenEntity={onOpenEntity} />
       )}
       {value.diagrams?.length > 0 && (
         <DiagramRefs refs={value.diagrams} clientId={clientId} versionId={versionId} />
@@ -480,25 +457,20 @@ function DomainArchitecture({ value, clientId, versionId }) {
   )
 }
 
-function PrincipleAdherenceList({ items, clientId, versionId }) {
+function PrincipleAdherenceList({ items, onOpenEntity }) {
   return (
     <div className="space-y-2">
       {items.map((row, i) => {
-        const targetId = resolveRefArtefactId(row['principle-id'])
-        const artefact = targetId ? getArtefact(targetId) : null
+        const resolvable = !!resolveRefArtefactId(row['principle-id'])
         const idChip = (
           <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-700">{row['principle-id']}</span>
         )
         return (
           <div key={i} className="border border-gray-200 bg-white px-4 py-3 flex items-start gap-3">
-            {artefact ? (
-              <Link
-                to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
-                className="flex-shrink-0 hover:opacity-80 transition-opacity"
-                title={`View in ${nameWithId(artefact.name, artefact.id)}`}
-              >
+            {resolvable ? (
+              <button onClick={() => onOpenEntity?.(row['principle-id'])} className="flex-shrink-0 hover:opacity-80 transition-opacity" title="View details">
                 {idChip}
-              </Link>
+              </button>
             ) : (
               <span className="flex-shrink-0">{idChip}</span>
             )}
@@ -562,15 +534,15 @@ function SectionContent({ config, value, clientId, versionId }) {
 }
 
 // Schema-driven dispatcher (meta.sections content types)
-function SchemaContent({ contentType, value, clientId, versionId }) {
+function SchemaContent({ contentType, value, clientId, versionId, onOpenEntity }) {
   switch (contentType) {
     case 'prose':               return <ProseSection text={value} />
     case 'context-links':       return <ContextLinks items={value} clientId={clientId} versionId={versionId} />
-    case 'capability-refs':     return <EntityRefList items={value} clientId={clientId} versionId={versionId} />
+    case 'capability-refs':     return <EntityRefList items={value} onOpenEntity={onOpenEntity} />
     case 'requirements':        return <RequirementList items={value} />
     case 'features':            return <FeatureList items={value} />
-    case 'domain-architecture': return <DomainArchitecture value={value} clientId={clientId} versionId={versionId} />
-    case 'principle-adherence': return <PrincipleAdherenceList items={value} clientId={clientId} versionId={versionId} />
+    case 'domain-architecture': return <DomainArchitecture value={value} clientId={clientId} versionId={versionId} onOpenEntity={onOpenEntity} />
+    case 'principle-adherence': return <PrincipleAdherenceList items={value} onOpenEntity={onOpenEntity} />
     case 'flows':               return <FlowSection items={value} />
     default:                    return <pre className="text-xs text-gray-500">{JSON.stringify(value, null, 2)}</pre>
   }
@@ -622,7 +594,7 @@ function Chevron({ open, className = 'w-3.5 h-3.5' }) {
 
 // ─── Document selector ────────────────────────────────────────────────────────
 
-function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
+export function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
   return (
     <div className="mb-5 px-5 py-4 bg-white border border-gray-200 shadow-sm">
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
@@ -658,6 +630,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
   const observerRef = useRef(null)
   const [activeKey, setActiveKey] = useState(null)
   const [collapsed, setCollapsed] = useState(() => new Set())
+  const [entityId, setEntityId] = useState(null)
 
   // Build visible structure with stable, schema-derived numbering.
   // A section is either a parent (has `subsections`) or a leaf (has its own `content`).
@@ -711,6 +684,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
   }
 
   return (
+    <>
     <div className="flex gap-8 items-start">
       {/* Contents nav — H1 + H2 only, stays on the page background */}
       <aside className="hidden lg:block w-64 flex-shrink-0">
@@ -798,6 +772,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
                     value={section.leafValue}
                     clientId={clientId}
                     versionId={versionId}
+                    onOpenEntity={setEntityId}
                   />
                 </div>
               )}
@@ -833,6 +808,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
                               value={sub.value}
                               clientId={clientId}
                               versionId={versionId}
+                              onOpenEntity={setEntityId}
                             />
                           </div>
                         )}
@@ -846,6 +822,14 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
         })}
       </article>
     </div>
+    <EntityPanel
+      entityId={entityId}
+      clientId={clientId}
+      versionId={versionId}
+      onOpenEntity={setEntityId}
+      onClose={() => setEntityId(null)}
+    />
+    </>
   )
 }
 
@@ -958,11 +942,8 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
 
 // ─── Main DocumentView ─────────────────────────────────────────────────────────
 
-export default function DocumentView({ data, artefact, schema, clientId, versionId }) {
+export default function DocumentView({ data, artefact, schema, clientId, versionId, selectedIdx = 0 }) {
   const documents = data?.documents ?? []
-  const [selectedIdx, setSelectedIdx] = useState(0)
-
-  useEffect(() => { setSelectedIdx(0) }, [artefact?.id])
 
   if (documents.length === 0) {
     return (
@@ -976,20 +957,7 @@ export default function DocumentView({ data, artefact, schema, clientId, version
   const metaSections = schema?.meta?.sections
   const legacySections = (SECTION_CONFIGS[artefact?.id] ?? []).filter(cfg => hasContent(doc?.[cfg.key]))
 
-  return (
-    <div>
-      <DocumentSelector
-        artefact={artefact}
-        documents={documents}
-        selectedIdx={selectedIdx}
-        onSelect={setSelectedIdx}
-      />
-
-      {Array.isArray(metaSections) && metaSections.length > 0 ? (
-        <SchemaDrivenDocument doc={doc} sections={metaSections} clientId={clientId} versionId={versionId} />
-      ) : (
-        <LegacyDocument doc={doc} sections={legacySections} artefact={artefact} clientId={clientId} versionId={versionId} />
-      )}
-    </div>
-  )
+  return Array.isArray(metaSections) && metaSections.length > 0
+    ? <SchemaDrivenDocument doc={doc} sections={metaSections} clientId={clientId} versionId={versionId} />
+    : <LegacyDocument doc={doc} sections={legacySections} artefact={artefact} clientId={clientId} versionId={versionId} />
 }

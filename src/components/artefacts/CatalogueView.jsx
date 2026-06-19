@@ -221,7 +221,7 @@ function GroupedSection({ parent, childColumns, expanded, onToggle, foreignKey }
       ))}
       {isExpanded && childCount === 0 && (
         <tr>
-          <td colSpan={childColumns.length} className="px-10 py-3 text-xs text-gray-400 italic">
+          <td colSpan={childColumns.length} className="px-10 py-3 text-xs text-gray-400">
             No items in this group.
           </td>
         </tr>

@@ -197,8 +197,8 @@ function ArchitectureModel() {
           </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
             Every piece of architecture content in Pickle sits at the intersection of these three axes.
-            Domain answers <em>which part of the organisation</em>, abstraction layer answers <em>how much detail</em>,
-            and format answers <em>what kind of content</em>.
+            Domain answers "which part of the organisation", abstraction layer answers "how much detail",
+            and format answers "what kind of content".
           </p>
         </div>
 
