@@ -174,6 +174,32 @@
             "rationale": "APP-PRN-005 is a non-negotiable quality standard for applications. The semantic layer and query interface are applications; without observability built in from day one, operations teams will be flying blind, increasing the risk of outages and degraded user experience."
         }
     ],
+    "guardrails-alignment": [
+        {
+            "finding": "**Data Guardrails** (`DAT-GRD`) catalogue is **structurally present but currently empty** — the `guardrails` array contains no defined rules. The decision affects data governance (role-based access, semantic layer enforcement, query audit trails) in ways that would materially benefit from guardrail enforcement, but no guardrail entities exist to assess compliance against.",
+            "impact": "Without defined guardrails, the decision lacks an authoritative reference for mandatory enforcement rules. Downstream platform teams will lack concrete guidance on access control, audit logging, and semantic layer governance standards, increasing the risk of discretionary or inconsistent implementation.",
+            "recommendation": "**Populate `DAT-GRD` as part of ADR-013 resolution** with at least the following guardrails: (1) `DAT-GRD-001`: All data access (including self-service queries) must be role-based and enforced at the query engine level. Scope: self-service analytics platforms. Exception process: data security review board. (2) `DAT-GRD-002`: Denied or anomalous access attempts to sensitive data must be logged. Scope: queries accessing PII or restricted classifications. Exception process: no exceptions. (3) `DAT-GRD-003`: Role-to-data mappings must be reviewed quarterly and re-certified. Scope: all systems with data access control. Exception process: no exceptions. Once defined, the decision's platform implementation can reference these guardrail IDs as non-negotiable controls.",
+            "rationale": "Guardrails are non-negotiable constraints that prevent governance failures. A self-service platform that scales access to 150 users without explicit guardrails is a governance risk. Defining these guardrails is essential to make access control and audit compliance non-optional for the platform team."
+        },
+        {
+            "finding": "**Business Guardrails** (`BUS-GRD`) catalogue is **structurally present but currently empty**. The decision affects business operations (displacing spreadsheet-based analysis, retraining 150 analysts) but no guardrail entities exist to enforce consistency or quality standards for the operational transition.",
+            "impact": "Without defined guardrails, the operational change risk is unmitigated. Teams may adopt self-service analytics inconsistently, report quality may drift, and the intended organisational shift away from manual analysis may not occur.",
+            "recommendation": "**Guardrails for BUS-GRD are not critical for ADR-013 approval**, but consider adding in a future ADR: guardrails on analytics SLAs, metric governance attestation, and user training completion rates. For now, ADR-013 can proceed.",
+            "rationale": "Business guardrails typically govern capability operational models and quality standards. While important, they are not blocking for this decision if the Data and Application guardrails (access, audit, observability) are in place."
+        },
+        {
+            "finding": "**Application Guardrails** (`APP-GRD`) catalogue is **structurally present but currently empty**. The decision introduces a new application (semantic layer query interface) but no guardrail entities exist to mandate observability, availability, or change-control requirements.",
+            "impact": "Without defined application guardrails, the semantic layer platform may be built without production-readiness standards. Lack of observability, no SLA enforcement, and no change-control process could result in unplanned outages or silent performance degradation.",
+            "recommendation": "**Populate `APP-GRD` as part of ADR-013 resolution or in parallel** with at least: (1) `APP-GRD-001`: All applications must expose health endpoints and RED metrics (request rate, error rate, duration) before production launch. Scope: new self-service platforms. Exception process: none. (2) `APP-GRD-002`: All production applications must have a documented SLA and escalation procedure. Scope: customer-facing systems. Exception process: CISO and VP Engineering sign-off. Once defined, ensure the semantic layer platform design references these guardrails.",
+            "rationale": "Application guardrails enforce operational standards. A self-service platform serving 150 users without SLA or observability requirements is operationally risky and difficult to scale."
+        },
+        {
+            "finding": "**Integration Guardrails** (`INT-GRD`) and **Solution Guardrails** (`SOL-GRD`) catalogues are **structurally present but currently empty**. The decision does not materially affect integration or solution architecture scope.",
+            "impact": "No impact — these domains are out of scope for ADR-013.",
+            "recommendation": "No action required for INT-GRD or SOL-GRD as part of this decision.",
+            "rationale": "Integration and Solution domains are not in scope for this decision."
+        }
+    ],
     "scope": {
         "domain": "data",
         "abstraction": "logical",
