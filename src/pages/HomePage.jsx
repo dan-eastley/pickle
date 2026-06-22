@@ -128,7 +128,7 @@ function DocumentChain() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {DOCUMENT_CHAIN.map((doc, i) => (
-            <div key={doc.id} className={`relative bg-white border border-gray-200 border-t-2 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col`}>
+            <div key={doc.id} className={`relative bg-white border border-gray-200 border-t-2 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col hover:shadow-md transition-shadow`}>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-mono text-gray-300">{String(i + 1).padStart(2, '0')}</span>
                 <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[doc.layer]}`}>{doc.layer}</span>
@@ -155,10 +155,17 @@ function DocumentChain() {
 
 function Hero() {
   return (
-    <section className="border-b border-gray-200 bg-gray-50 px-6 py-20">
-      <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 items-center">
+    <section className="relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-brand-50 via-white to-gray-50 px-6 py-24">
+      {/* Soft ambient glow for depth */}
+      <div className="pointer-events-none absolute -top-32 -right-24 w-[28rem] h-[28rem] bg-brand-200/30 blur-3xl rounded-full" />
+      <div className="pointer-events-none absolute -bottom-40 -left-24 w-[28rem] h-[28rem] bg-rose-200/20 blur-3xl rounded-full" />
+      <div className="relative z-10 max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 uppercase">Pickle</h1>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/70 backdrop-blur border border-gray-200 text-xs font-medium text-gray-600 mb-5">
+            <span className="w-1.5 h-1.5 bg-brand-500" />
+            Architecture as Code · Agentic
+          </span>
+          <h1 className="text-5xl font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">Pickle</h1>
           <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
           <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Enterprise architecture as structured, version-controlled data — with AI agents that analyse
@@ -178,7 +185,7 @@ function Hero() {
       </div>
 
       {/* Meta-model strip — five domains, three layers */}
-      <div className="mt-16 max-w-2xl mx-auto text-center">
+      <div className="relative z-10 mt-16 max-w-2xl mx-auto text-center">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
           Five architecture domains · Three abstraction layers
         </p>
@@ -202,7 +209,7 @@ function FeatureCards() {
         {FEATURE_CARDS.map(card => {
           const Icon = card.icon
           return (
-            <div key={card.title} className="bg-white border-l-4 border-brand-600 flex flex-col">
+            <div key={card.title} className="bg-white border-l-4 border-brand-600 flex flex-col shadow-sm hover:shadow-xl transition-shadow duration-200">
               {/* Header */}
               <div className="p-6 border-b border-gray-100">
                 <div className="w-10 h-10 bg-brand-50 flex items-center justify-center mb-4">
@@ -279,7 +286,7 @@ function ArchitectureModel() {
             {DOMAINS.map(domain => {
               const colors = DOMAIN_COLORS[domain.id]
               return (
-                <div key={domain.id} className={`border border-gray-200 border-l-4 bg-white p-5 flex flex-col gap-3 ${colors?.accent ?? 'border-l-gray-400'}`}>
+                <div key={domain.id} className={`border border-gray-200 border-l-4 bg-white p-5 flex flex-col gap-3 hover:shadow-md transition-shadow ${colors?.accent ?? 'border-l-gray-400'}`}>
                   <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}>
                     <DomainIcon domain={domain.id} className={`w-4 h-4 ${colors?.text ?? 'text-gray-500'}`} />
                   </div>
@@ -322,7 +329,7 @@ function ArchitectureModel() {
             {FORMATS.map(fmt => {
               const m = FORMAT_META[fmt.id]
               return (
-                <div key={fmt.id} className="border border-gray-200 bg-white p-5 flex flex-col gap-3">
+                <div key={fmt.id} className="border border-gray-200 bg-white p-5 flex flex-col gap-3 hover:shadow-md transition-shadow">
                   <div className="w-8 h-8 flex items-center justify-center bg-brand-50 flex-shrink-0">
                     <FormatIcon format={fmt.id} className="w-4 h-4 text-brand-600" />
                   </div>
@@ -366,7 +373,7 @@ function SevenDimensions() {
         {/* Pipeline cards — numbered, in execution order */}
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {ANALYSIS_DIMENSIONS.map(dim => (
-            <div key={dim.n} className="border border-gray-200 border-t-2 border-t-brand-600 bg-white p-5">
+            <div key={dim.n} className="border border-gray-200 border-t-2 border-t-brand-600 bg-white p-5 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono text-gray-300">{dim.n}</span>
                 {dim.layer && (
