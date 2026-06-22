@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, Navigate, useLocation, Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
@@ -9,6 +9,7 @@ import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
 import { CheckIcon, DecisionIcon, ArrowLeft } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
+import useActiveSection from '../hooks/useActiveSection'
 
 // ── Status progress bar ───────────────────────────────────────────────────────
 
@@ -458,30 +459,43 @@ function HistorySection({ history }) {
   )
 }
 
-// ── Section jump nav ──────────────────────────────────────────────────────────
+// ── Contents nav (document-style, left rail) ──────────────────────────────────
 
-function SectionNav({ decision }) {
-  const sections = [
-    { id: 'section-narrative',    label: 'Narrative' },
-    decision.requirements?.length && { id: 'section-requirements',       label: 'Requirements' },
-    decision['recommendations']?.length && { id: 'section-recommendations', label: 'Recommendations' },
-    { id: 'section-analysis',     label: 'Analysis' },
-    decision['architecture-changes']?.length && { id: 'section-architecture-changes', label: 'Architecture Changes' },
-    decision.history?.length     && { id: 'section-history',             label: 'History' },
+function buildNavSections(decision) {
+  return [
+    { key: 'narrative', label: 'Narrative' },
+    decision.requirements?.length && { key: 'requirements', label: 'Requirements' },
+    decision['recommendations']?.length && { key: 'recommendations', label: 'Recommendations' },
+    { key: 'analysis', label: 'Analysis' },
+    decision['architecture-changes']?.length && { key: 'architecture-changes', label: 'Architecture Changes' },
+    decision.history?.length && { key: 'history', label: 'History' },
   ].filter(Boolean)
+}
 
-  if (sections.length < 3) return null
-
+function ContentsNav({ sections, activeKey, onJump }) {
   return (
-    <div className="flex items-center gap-1 flex-wrap mb-6 pb-4 border-b border-gray-100">
-      <span className="text-xs text-gray-400 mr-1">Jump to:</span>
-      {sections.map(s => (
-        <a key={s.id} href={`#${s.id}`}
-          className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
-          {s.label}
-        </a>
-      ))}
-    </div>
+    <aside className="hidden lg:block w-64 flex-shrink-0">
+      <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Contents</p>
+        <ul className="space-y-0.5">
+          {sections.map((s, i) => (
+            <li key={s.key}>
+              <button
+                onClick={() => onJump(s.key)}
+                className={`w-full text-left text-sm px-3 py-1.5 transition-colors flex gap-2 border-l-2 ${
+                  activeKey === s.key
+                    ? 'bg-rose-50 text-rose-700 border-rose-500 font-medium'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+                }`}
+              >
+                <span className="font-mono text-xs text-gray-400 pt-0.5">{i + 1}</span>
+                <span className="min-w-0">{s.label}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
   )
 }
 
@@ -499,6 +513,11 @@ export default function DecisionDetailPage() {
   const clientName = clientsMetadata[clientId]?.name ?? clientId
 
   usePageTitle(decision?.title ? `${decision.title} — Decisions` : 'Decision')
+
+  const sectionRefs = useRef({})
+  const [activeSection] = useActiveSection(sectionRefs, [decision])
+  const setSectionRef = (key) => (el) => { sectionRefs.current[key] = el }
+  const scrollToSection = (key) => sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   // Use branch-then-main fallback via getDecision helper.
   // Bust CDN cache if we just navigated back from the editor after a save.
@@ -560,100 +579,118 @@ export default function DecisionDetailPage() {
     return <Navigate to={`/clients/${clientId}/${versionId}/decisions`} replace />
   }
 
+  const navSections = buildNavSections(decision)
+
   return (
     <div>
-      {/* Header */}
-      <div className="mb-6 pb-5 border-b border-gray-200">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 bg-gray-100 flex items-center justify-center flex-shrink-0">
-            <DecisionIcon className="w-5 h-5 text-gray-500" />
+      <div className="flex gap-8">
+        {/* Contents nav — document-style left rail */}
+        <ContentsNav sections={navSections} activeKey={activeSection} onJump={scrollToSection} />
+
+        {/* Document surface */}
+        <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-xl px-8 py-7">
+          {/* Header */}
+          <div className="mb-6 pb-5 border-b border-gray-200">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <DecisionIcon className="w-5 h-5 text-gray-500" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
+                {decision.scope && (
+                  <div className="mt-2">
+                    <ScopeChip scope={decision.scope} />
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0 self-start">
+                <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1">
+                  {decision['decision-id']}
+                </span>
+                {decision['rejection-reason'] && (
+                  <span className="text-xs text-gray-400">{decision['rejection-reason']}</span>
+                )}
+                {decision.status === 'draft' && (
+                  <Link
+                    to={`/clients/${clientId}/${versionId}/decisions/${decisionId}/edit`}
+                    className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                      <path d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" strokeLinejoin="miter" />
+                    </svg>
+                    Edit
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
-            {decision.scope && (
-              <div className="mt-2">
-                <ScopeChip scope={decision.scope} />
+
+          <StatusProgress status={decision.status} />
+
+          <div className="space-y-8">
+            <div ref={setSectionRef('narrative')} data-section="narrative" className="scroll-mt-20">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Narrative</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</p>
+            </div>
+
+            {decision.requirements?.length > 0 && (
+              <div ref={setSectionRef('requirements')} data-section="requirements" className="scroll-mt-20">
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Requirements</h3>
+                <div className="border border-gray-200 divide-y divide-gray-100">
+                  {decision.requirements.map((req, i) => {
+                    const title = typeof req === 'string' ? null : req.title
+                    const description = typeof req === 'string' ? req : req.description
+                    const type = typeof req === 'object' ? req.type : null
+                    return (
+                      <div key={i} className="px-4 py-3">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
+                          {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
+                        </div>
+                        <p className="text-sm text-gray-600">{description}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {decision['recommendations']?.length > 0 && (
+              <div ref={setSectionRef('recommendations')} data-section="recommendations" className="scroll-mt-20">
+                <ReviewSection decision={decision} />
+              </div>
+            )}
+
+            {/* Status actions — above analysis */}
+            <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
+            {transitionError && (
+              <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
+                Failed to update: {transitionError}
+              </div>
+            )}
+
+            <hr className="border-gray-200" />
+
+            <div ref={setSectionRef('analysis')} data-section="analysis" className="scroll-mt-20">
+              <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
+            </div>
+
+            {/* Status actions — duplicated below analysis for convenience */}
+            <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
+
+            {decision['architecture-changes']?.length > 0 && (
+              <div ref={setSectionRef('architecture-changes')} data-section="architecture-changes" className="scroll-mt-20">
+                <ArchitectureChanges changes={decision['architecture-changes']} />
+              </div>
+            )}
+
+            {decision.history?.length > 0 && (
+              <div ref={setSectionRef('history')} data-section="history" className="scroll-mt-20">
+                <HistorySection history={decision.history} />
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0 self-start">
-            <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1">
-              {decision['decision-id']}
-            </span>
-            {decision['rejection-reason'] && (
-              <span className="text-xs text-gray-400">{decision['rejection-reason']}</span>
-            )}
-            {decision.status === 'draft' && (
-              <Link
-                to={`/clients/${clientId}/${versionId}/decisions/${decisionId}/edit`}
-                className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-colors"
-              >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                  <path d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" strokeLinejoin="miter" />
-                </svg>
-                Edit
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <StatusProgress status={decision.status} />
-      <SectionNav decision={decision} />
-
-      <div className="space-y-8">
-        <div id="section-narrative">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Narrative</h3>
-          <p className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</p>
-        </div>
-
-        {decision.requirements?.length > 0 && (
-          <div id="section-requirements">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Requirements</h3>
-            <div className="border border-gray-200 divide-y divide-gray-100">
-              {decision.requirements.map((req, i) => {
-                const title = typeof req === 'string' ? null : req.title
-                const description = typeof req === 'string' ? req : req.description
-                const type = typeof req === 'object' ? req.type : null
-                return (
-                  <div key={i} className="px-4 py-3">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
-                      {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
-                    </div>
-                    <p className="text-sm text-gray-600">{description}</p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Recommendations — narrative-validation output, separate from analysis tabs */}
-        <ReviewSection decision={decision} />
-
-        {/* Status actions — above analysis */}
-        <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
-        {transitionError && (
-          <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
-            Failed to update: {transitionError}
-          </div>
-        )}
-
-        {/* Divider before analysis */}
-        <hr className="border-gray-200" />
-
-        {/* Analysis — tabbed (excludes Narrative Review) */}
-        <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
-
-        {/* Status actions — duplicated below analysis for convenience */}
-        <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
-
-        {/* Architecture Changes */}
-        <ArchitectureChanges changes={decision['architecture-changes']} />
-
-        {/* History */}
-        <HistorySection history={decision.history} />
+        </article>
       </div>
 
       <JsonPreview data={decision} label={`${decision['decision-id']}.json`} />
