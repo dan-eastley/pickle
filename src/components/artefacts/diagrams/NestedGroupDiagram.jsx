@@ -95,8 +95,7 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
         return (
           <g key={group.id}>
             <rect x={x} y={y} width={groupWidth} height={height} rx={variant.groupRadius}
-              strokeWidth={groupSelected ? 2 : 1}
-              className={`${colors.groupFill} ${groupSelected ? colors.groupStroke.replace('stroke-', 'stroke-') : colors.groupStroke} ${onItemClick ? 'cursor-pointer' : ''}`}
+              className={`${groupSelected ? colors.itemFill : colors.groupFill} ${onItemClick ? 'cursor-pointer' : ''}`}
               onClick={onItemClick ? () => onItemClick(group.id) : undefined}
             />
             <text x={x + GROUP_PADDING} y={y + 18} className={`text-[9px] font-mono uppercase tracking-wide ${colors.label}`}>
@@ -126,9 +125,9 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
                   onClick={onItemClick ? (e) => { e.stopPropagation(); onItemClick(item.id) } : undefined}>
                   <title>{`${item.id}: ${item.name}`}</title>
                   <rect x={ix} y={iy} width={itemWidth} height={ITEM_HEIGHT} rx={variant.itemRadius}
-                    strokeWidth={itemSelected ? 1.5 : 1}
-                    className={`${itemSelected ? 'fill-brand-50 stroke-brand-400' : `${variant.itemFill} ${colors.itemStroke}`}`} />
-                  <text x={ix + ITEM_PADDING} y={iy + 13} className="text-[8px] font-mono uppercase tracking-wide fill-gray-400">
+                    className={`transition-colors ${itemSelected ? colors.selectedFill : `${colors.itemFill} ${onItemClick ? colors.itemHover : ''}`}`} />
+                  <text x={ix + ITEM_PADDING} y={iy + 13}
+                    className={`text-[8px] font-mono uppercase tracking-wide ${itemSelected ? colors.selectedId : 'fill-gray-400'}`}>
                     {item.id}
                   </text>
                   <WrappedText
@@ -138,7 +137,7 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
                     maxChars={itemMaxChars}
                     maxLines={2}
                     lineHeight={13}
-                    className={`text-[11px] font-medium ${itemSelected ? 'fill-brand-700' : 'fill-gray-700'}`}
+                    className={`text-[11px] font-medium ${itemSelected ? 'fill-white' : colors.itemText}`}
                   />
                 </g>
               )

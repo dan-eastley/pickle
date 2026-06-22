@@ -88,7 +88,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
               <rect x={OUTER_PAD} y={y} width={LABEL_W} height={CHEV_H} fill="transparent" />
               <text
                 x={OUTER_PAD + 4} y={y + 13}
-                className={`text-[9px] font-mono uppercase tracking-wide ${labelSel ? 'fill-violet-700' : colors.label}`}
+                className={`text-[9px] font-mono uppercase tracking-wide ${labelSel ? colors.heading : colors.label}`}
               >
                 {group.id}
               </text>
@@ -96,7 +96,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                 <text
                   key={i}
                   x={OUTER_PAD + 4} y={y + 27 + i * 14}
-                  className={`text-[11px] font-semibold ${labelSel ? 'fill-violet-800' : 'fill-gray-700'}`}
+                  className={`text-[11px] font-semibold ${labelSel ? colors.heading : 'fill-gray-700'}`}
                 >
                   {line}
                 </text>
@@ -130,17 +130,14 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                   {/* Chevron polygon */}
                   <polygon
                     points={chevronPts(cx, y, CHEV_BODY_W, CHEV_H, CHEV_POINT, i)}
-                    strokeWidth={sel ? 1.5 : 1}
-                    className={sel
-                      ? 'fill-violet-600 stroke-violet-700'
-                      : 'fill-white stroke-violet-300'}
+                    className={`transition-colors ${sel ? colors.selectedFill : `${colors.itemFill} ${colors.itemHover}`}`}
                   />
 
                   {/* ID */}
                   <text
                     x={textCX} y={topBaseline}
                     textAnchor="middle"
-                    className={`text-[8px] font-mono uppercase tracking-wide ${sel ? 'fill-violet-200' : colors.label}`}
+                    className={`text-[8px] font-mono uppercase tracking-wide ${sel ? colors.selectedId : colors.label}`}
                   >
                     {item.id}
                   </text>
@@ -151,7 +148,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                       key={li}
                       x={textCX} y={topBaseline + 13 + li * 13}
                       textAnchor="middle"
-                      className={`text-[11px] font-medium ${sel ? 'fill-white' : 'fill-gray-800'}`}
+                      className={`text-[11px] font-medium ${sel ? 'fill-white' : colors.itemText}`}
                     >
                       {line}
                     </text>
