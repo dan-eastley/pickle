@@ -148,5 +148,12 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['./vitest.setup.js'],
+      include: ['**/*.test.{js,jsx}'],
+      exclude: ['node_modules/**', 'dist/**', '.vite/**', 'tests/e2e/**'],
+    },
   }
 })
