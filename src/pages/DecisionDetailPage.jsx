@@ -10,6 +10,15 @@ import JsonPreview from '../components/ui/JsonPreview'
 import { CheckIcon, DecisionIcon, ArrowLeft } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useActiveSection from '../hooks/useActiveSection'
+import { toggleInSet } from '../lib/collections'
+
+function Chevron({ open }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-90' : ''}`}>
+      <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
 
 // ── Status progress bar ───────────────────────────────────────────────────────
 
@@ -288,17 +297,14 @@ function ReviewSection({ decision }) {
   const items = decision['recommendations']
   if (!items?.length) return null
   return (
-    <div id="section-recommendations">
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Recommendations</h3>
-      <ul className="space-y-2">
-        {items.map((item, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-            <CheckIcon className="w-4 h-4 mt-0.5 text-success-600 flex-shrink-0" />
-            <span>{item.recommendation}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className="space-y-2">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+          <CheckIcon className="w-4 h-4 mt-0.5 text-success-600 flex-shrink-0" />
+          <span>{item.recommendation}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -317,9 +323,7 @@ const ANALYSIS_SECTIONS = [
 function ArchitectureChanges({ changes }) {
   if (!changes?.length) return null
   return (
-    <div id="section-architecture-changes">
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Architecture Changes</h3>
-      <div className="border border-gray-200 overflow-x-auto">
+    <div className="border border-gray-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
@@ -346,7 +350,6 @@ function ArchitectureChanges({ changes }) {
             ))}
           </tbody>
         </table>
-      </div>
     </div>
   )
 }
@@ -359,9 +362,7 @@ function AnalysisTabs({ decision, accepted, onAccept, saving }) {
   const hasFindings = activeSections.length > 0
 
   return (
-    <div id="section-analysis">
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Analysis</h3>
-
+    <div>
       {/* Underline tab bar — all sections always shown */}
       <div className="border-b border-gray-200 flex gap-0 flex-wrap">
         {ANALYSIS_SECTIONS.map(section => {
@@ -429,9 +430,7 @@ function formatTs(ts) {
 function HistorySection({ history }) {
   if (!history?.length) return null
   return (
-    <div id="section-history">
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">History</h3>
-      <div className="border border-gray-200 overflow-x-auto">
+    <div className="border border-gray-200 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
@@ -454,7 +453,6 @@ function HistorySection({ history }) {
             ))}
           </tbody>
         </table>
-      </div>
     </div>
   )
 }
@@ -472,11 +470,18 @@ function buildNavSections(decision) {
   ].filter(Boolean)
 }
 
-function ContentsNav({ sections, activeKey, onJump }) {
+function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }) {
   return (
     <aside className="hidden lg:block w-64 flex-shrink-0">
       <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Contents</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Contents</p>
+          <div className="flex items-center gap-2">
+            <button onClick={onExpandAll} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">Expand all</button>
+            <span className="text-gray-300">·</span>
+            <button onClick={onCollapseAll} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">Collapse all</button>
+          </div>
+        </div>
         <ul className="space-y-0.5">
           {sections.map((s, i) => (
             <li key={s.key}>
@@ -516,8 +521,13 @@ export default function DecisionDetailPage() {
 
   const sectionRefs = useRef({})
   const [activeSection] = useActiveSection(sectionRefs, [decision])
+  const [collapsed, setCollapsed] = useState(() => new Set())
   const setSectionRef = (key) => (el) => { sectionRefs.current[key] = el }
-  const scrollToSection = (key) => sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const toggleSection = (key) => setCollapsed(prev => toggleInSet(prev, key))
+  const scrollToSection = (key) => {
+    setCollapsed(prev => { if (!prev.has(key)) return prev; const n = new Set(prev); n.delete(key); return n })
+    requestAnimationFrame(() => sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
 
   // Use branch-then-main fallback via getDecision helper.
   // Bust CDN cache if we just navigated back from the editor after a save.
@@ -580,12 +590,31 @@ export default function DecisionDetailPage() {
   }
 
   const navSections = buildNavSections(decision)
+  const sectionNumber = Object.fromEntries(navSections.map((s, i) => [s.key, i + 1]))
+  const expandAll = () => setCollapsed(new Set())
+  const collapseAll = () => setCollapsed(new Set(navSections.map(s => s.key)))
+
+  const renderSection = (key, children) => {
+    const isCollapsed = collapsed.has(key)
+    const label = navSections.find(s => s.key === key)?.label ?? key
+    return (
+      <section ref={setSectionRef(key)} data-section={key} className="scroll-mt-20">
+        <button onClick={() => toggleSection(key)} className="w-full flex items-start gap-2 text-left group">
+          <span className="text-gray-300 group-hover:text-gray-500 mt-1.5"><Chevron open={!isCollapsed} /></span>
+          <h2 className="text-xl font-bold text-gray-900">
+            <span className="text-gray-400 font-mono text-base mr-2">{sectionNumber[key]}</span>{label}
+          </h2>
+        </button>
+        {!isCollapsed && <div className="mt-4 ml-6">{children}</div>}
+      </section>
+    )
+  }
 
   return (
     <div>
       <div className="flex gap-8">
         {/* Contents nav — document-style left rail */}
-        <ContentsNav sections={navSections} activeKey={activeSection} onJump={scrollToSection} />
+        <ContentsNav sections={navSections} activeKey={activeSection} onJump={scrollToSection} onExpandAll={expandAll} onCollapseAll={collapseAll} />
 
         {/* Document surface */}
         <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-xl px-8 py-7">
@@ -627,68 +656,60 @@ export default function DecisionDetailPage() {
 
           <StatusProgress status={decision.status} />
 
-          <div className="space-y-8">
-            <div ref={setSectionRef('narrative')} data-section="narrative" className="scroll-mt-20">
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Narrative</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</p>
-            </div>
-
-            {decision.requirements?.length > 0 && (
-              <div ref={setSectionRef('requirements')} data-section="requirements" className="scroll-mt-20">
-                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Requirements</h3>
-                <div className="border border-gray-200 divide-y divide-gray-100">
-                  {decision.requirements.map((req, i) => {
-                    const title = typeof req === 'string' ? null : req.title
-                    const description = typeof req === 'string' ? req : req.description
-                    const type = typeof req === 'object' ? req.type : null
-                    return (
-                      <div key={i} className="px-4 py-3">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
-                          {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
-                        </div>
-                        <p className="text-sm text-gray-600">{description}</p>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {decision['recommendations']?.length > 0 && (
-              <div ref={setSectionRef('recommendations')} data-section="recommendations" className="scroll-mt-20">
-                <ReviewSection decision={decision} />
-              </div>
-            )}
-
-            {/* Status actions — above analysis */}
+          {/* Status actions + any error — above the sections */}
+          <div className="mb-2">
             <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
             {transitionError && (
               <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
                 Failed to update: {transitionError}
               </div>
             )}
+          </div>
 
-            <hr className="border-gray-200" />
+          <div className="space-y-8">
+            {renderSection('narrative',
+              <p className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</p>
+            )}
 
-            <div ref={setSectionRef('analysis')} data-section="analysis" className="scroll-mt-20">
+            {decision.requirements?.length > 0 && renderSection('requirements',
+              <div className="border border-gray-200 divide-y divide-gray-100">
+                {decision.requirements.map((req, i) => {
+                  const title = typeof req === 'string' ? null : req.title
+                  const description = typeof req === 'string' ? req : req.description
+                  const type = typeof req === 'object' ? req.type : null
+                  return (
+                    <div key={i} className="px-4 py-3">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
+                        {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
+                      </div>
+                      <p className="text-sm text-gray-600">{description}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {decision['recommendations']?.length > 0 && renderSection('recommendations',
+              <ReviewSection decision={decision} />
+            )}
+
+            {renderSection('analysis',
               <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
-            </div>
+            )}
 
-            {/* Status actions — duplicated below analysis for convenience */}
+            {decision['architecture-changes']?.length > 0 && renderSection('architecture-changes',
+              <ArchitectureChanges changes={decision['architecture-changes']} />
+            )}
+
+            {decision.history?.length > 0 && renderSection('history',
+              <HistorySection history={decision.history} />
+            )}
+          </div>
+
+          {/* Status actions — repeated below the sections for convenience */}
+          <div className="mt-8">
             <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
-
-            {decision['architecture-changes']?.length > 0 && (
-              <div ref={setSectionRef('architecture-changes')} data-section="architecture-changes" className="scroll-mt-20">
-                <ArchitectureChanges changes={decision['architecture-changes']} />
-              </div>
-            )}
-
-            {decision.history?.length > 0 && (
-              <div ref={setSectionRef('history')} data-section="history" className="scroll-mt-20">
-                <HistorySection history={decision.history} />
-              </div>
-            )}
           </div>
         </article>
       </div>
