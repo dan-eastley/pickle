@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Expand01, Minimize01 } from '@untitled-ui/icons-react'
 import Badge from '../ui/Badge'
 import EmptyState from '../ui/EmptyState'
+import FullscreenToggle from '../ui/FullscreenToggle'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import { toggleInSet, getRootArrayKey } from '../../lib/collections'
 
@@ -238,19 +238,7 @@ export default function CatalogueView({ data, schema }) {
           <span className="text-gray-300">·</span>
           <button onClick={collapseAllGrouped} className="text-xs text-brand-600 hover:text-brand-700">Collapse all</button>
         </div>
-        <div className="ml-auto flex items-center gap-1">
-          {fullscreen ? (
-            <button onClick={() => setFullscreen(false)} title="Exit full screen (Esc)"
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
-              <Minimize01 className="w-3.5 h-3.5" />Exit full screen
-            </button>
-          ) : (
-            <button onClick={() => setFullscreen(true)} title="Full screen"
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
-              <Expand01 className="w-3.5 h-3.5" />Full screen
-            </button>
-          )}
-        </div>
+        <FullscreenToggle fullscreen={fullscreen} onToggle={() => setFullscreen(f => !f)} />
       </div>
     )
 
@@ -323,19 +311,7 @@ export default function CatalogueView({ data, schema }) {
           <button onClick={collapseAll} className="text-xs text-brand-600 hover:text-brand-700">Collapse all</button>
         </div>
       )}
-      <div className="ml-auto flex items-center gap-1">
-        {fullscreen ? (
-          <button onClick={() => setFullscreen(false)} title="Exit full screen (Esc)"
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
-            <Minimize01 className="w-3.5 h-3.5" />Exit full screen
-          </button>
-        ) : (
-          <button onClick={() => setFullscreen(true)} title="Full screen"
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors">
-            <Expand01 className="w-3.5 h-3.5" />Full screen
-          </button>
-        )}
-      </div>
+      <FullscreenToggle fullscreen={fullscreen} onToggle={() => setFullscreen(f => !f)} />
     </div>
   )
 

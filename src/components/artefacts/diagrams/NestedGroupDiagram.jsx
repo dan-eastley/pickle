@@ -1,4 +1,4 @@
-import { getDiagramColors, IMPORTANCE_COLORS, DIAGRAM_VARIANTS } from '../../../lib/diagramTheme'
+import { getDiagramColors, IMPORTANCE_COLORS, DIAGRAM_VARIANTS, wrapText } from '../../../lib/diagramTheme'
 
 const VIEW_WIDTH = 1200
 const OUTER_PADDING = 20
@@ -9,30 +9,6 @@ const ITEM_GAP = 8
 const ITEM_HEIGHT = 48
 const ITEM_MIN_WIDTH = 110
 const ITEM_PADDING = 8
-
-function wrapText(text, maxChars, maxLines = 2) {
-  const words = String(text ?? '').split(/\s+/).filter(Boolean)
-  const lines = []
-  let current = ''
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word
-    if (candidate.length > maxChars && current) {
-      lines.push(current)
-      current = word
-    } else {
-      current = candidate
-    }
-  }
-  if (current) lines.push(current)
-  if (lines.length > maxLines) {
-    const truncated = lines.slice(0, maxLines)
-    let last = truncated[maxLines - 1]
-    if (last.length > maxChars - 1) last = last.slice(0, maxChars - 1)
-    truncated[maxLines - 1] = last.replace(/\s+$/, '') + '…'
-    return truncated
-  }
-  return lines
-}
 
 function WrappedText({ text, x, y, maxChars, maxLines, lineHeight, className }) {
   const lines = wrapText(text, maxChars, maxLines)

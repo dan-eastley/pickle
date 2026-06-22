@@ -33,3 +33,30 @@ export const DIAGRAM_VARIANTS = {
   'card-based':   { groupRadius: 0, itemRadius: 0 },
   'entity-based': { groupRadius: 0, itemRadius: 0 },
 }
+
+// Greedy word-wrap into at most `maxLines` lines of roughly `maxChars` each,
+// truncating the last line with an ellipsis. Shared by the SVG diagram
+// components so their label wrapping stays consistent.
+export function wrapText(text, maxChars, maxLines = 2) {
+  const words = String(text ?? '').split(/\s+/).filter(Boolean)
+  const lines = []
+  let current = ''
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word
+    if (candidate.length > maxChars && current) {
+      lines.push(current)
+      current = word
+    } else {
+      current = candidate
+    }
+  }
+  if (current) lines.push(current)
+  if (lines.length > maxLines) {
+    const truncated = lines.slice(0, maxLines)
+    let last = truncated[maxLines - 1]
+    if (last.length > maxChars - 1) last = last.slice(0, maxChars - 1)
+    truncated[maxLines - 1] = last.replace(/\s+$/, '') + '…'
+    return truncated
+  }
+  return lines
+}

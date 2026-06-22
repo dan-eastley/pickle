@@ -1,4 +1,4 @@
-import { getDiagramColors } from '../../../lib/diagramTheme'
+import { getDiagramColors, wrapText } from '../../../lib/diagramTheme'
 
 const VIEW_W = 1200
 const OUTER_PAD = 16
@@ -10,30 +10,6 @@ const CHEV_POINT = 22
 const STEP = CHEV_BODY_W   // chevrons overlap: next starts CHEV_BODY_W from prev
 const ROW_GAP = 8
 const CHEV_X0 = OUTER_PAD + LABEL_W + LABEL_GAP
-
-function wrapText(text, maxChars, maxLines = 2) {
-  const words = String(text ?? '').split(/\s+/).filter(Boolean)
-  const lines = []
-  let current = ''
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word
-    if (candidate.length > maxChars && current) {
-      lines.push(current)
-      current = word
-    } else {
-      current = candidate
-    }
-  }
-  if (current) lines.push(current)
-  if (lines.length > maxLines) {
-    const truncated = lines.slice(0, maxLines)
-    let last = truncated[maxLines - 1]
-    if (last.length > maxChars - 1) last = last.slice(0, maxChars - 2)
-    truncated[maxLines - 1] = last.trimEnd() + '…'
-    return truncated
-  }
-  return lines
-}
 
 // Build absolute SVG polygon points for one chevron
 function chevronPts(cx, y, w, h, pt, index) {
