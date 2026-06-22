@@ -5,6 +5,7 @@ import { getArtefactData } from '../../lib/api'
 import { nameWithId } from '../../lib/format'
 import { toggleInSet } from '../../lib/collections'
 import useActiveSection from '../../hooks/useActiveSection'
+import usePersistedSet from '../../hooks/usePersistedSet'
 import EntityPanel from './EntityPanel'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 
@@ -692,7 +693,7 @@ function Chevron({ open, className = 'w-3.5 h-3.5' }) {
 
 export function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
   return (
-    <div className="mb-5 px-5 py-4 bg-white border border-gray-200 shadow-xl">
+    <div className="mb-5 px-5 py-4 bg-white shadow-xl">
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
         {nameWithId(artefact?.name, artefact?.id)}
       </p>
@@ -721,9 +722,9 @@ export function DocumentSelector({ artefact, documents, selectedIdx, onSelect })
 
 // ─── Schema-driven document body ──────────────────────────────────────────────
 
-function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
+function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }) {
   const sectionRefs = useRef({})
-  const [collapsed, setCollapsed] = useState(() => new Set())
+  const [collapsed, setCollapsed] = usePersistedSet(storageKey)
   const [entityId, setEntityId] = useState(null)
   const [activeKey, setActiveKey] = useActiveSection(sectionRefs, [doc, collapsed])
 
@@ -742,9 +743,9 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
 
   const allKeys = visible.flatMap(s => [s.key, ...s.subs.map(ss => ss.key)])
 
-  // Reset state when the document changes.
+  // Reset the active section when the document changes (collapse state is
+  // persisted per document by usePersistedSet).
   useEffect(() => {
-    setCollapsed(new Set())
     setActiveKey(visible[0]?.subs[0]?.key ?? visible[0]?.key ?? null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doc])
@@ -826,7 +827,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId }) {
       </aside>
 
       {/* Document body — white box with drop shadow, the 'document' surface */}
-      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-xl px-8 py-7">
+      <article className="flex-1 min-w-0 bg-white shadow-xl px-8 py-7">
         {/* Document title (H0) */}
         <header className="mb-8 pb-5 border-b border-gray-200">
           <h1 className="text-2xl font-bold text-gray-900">{nameWithId(doc.title, doc.id)}</h1>
@@ -976,7 +977,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
         </nav>
       </aside>
 
-      <article className="flex-1 min-w-0 bg-white border border-gray-200 shadow-xl px-8 py-7">
+      <article className="flex-1 min-w-0 bg-white shadow-xl px-8 py-7">
         <div
           ref={el => { sectionRefs.current['overview'] = el }}
           data-section="overview"
@@ -1035,6 +1036,6 @@ export default function DocumentView({ data, artefact, schema, clientId, version
   const legacySections = (SECTION_CONFIGS[artefact?.id] ?? []).filter(cfg => hasContent(doc?.[cfg.key]))
 
   return Array.isArray(metaSections) && metaSections.length > 0
-    ? <SchemaDrivenDocument doc={doc} sections={metaSections} clientId={clientId} versionId={versionId} />
+    ? <SchemaDrivenDocument doc={doc} sections={metaSections} clientId={clientId} versionId={versionId} storageKey={`doc-collapsed:${artefact?.id}:${doc?.id}`} />
     : <LegacyDocument doc={doc} sections={legacySections} artefact={artefact} clientId={clientId} versionId={versionId} />
 }

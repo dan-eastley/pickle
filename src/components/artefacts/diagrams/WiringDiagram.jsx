@@ -231,7 +231,7 @@ export default function WiringDiagram({ clientId, versionId }) {
       : ''
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+    <div className="bg-white overflow-hidden shadow-xl">
       <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center gap-3 text-xs text-gray-500">
         <span>{Object.keys(platformsById).length} platforms</span>
         <span>·</span>

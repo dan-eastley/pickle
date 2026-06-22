@@ -119,7 +119,7 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
   if (PROCESS_FLOW_TYPES.has(diagramType) && Array.isArray(groups)) {
     return (
       <>
-        <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+        <div className="bg-white overflow-hidden shadow-xl">
           <div className="p-4 overflow-x-auto">
             <ProcessFlowDiagram
               groups={groups}
@@ -147,7 +147,7 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
   if (NESTED_GROUP_TYPES.has(diagramType) && Array.isArray(groups)) {
     return (
       <>
-        <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+        <div className="bg-white overflow-hidden shadow-xl">
           <div className="p-4 overflow-x-auto">
             <NestedGroupDiagram
               groups={groups}
@@ -174,7 +174,7 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
   }
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+    <div className="bg-white overflow-hidden shadow-xl">
       <EmptyState
         illustration="diagram"
         title={`${artefact?.name ?? 'Diagram'} not yet available`}

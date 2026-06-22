@@ -266,7 +266,7 @@ export default function CatalogueView({ data, schema }) {
     }
 
     return (
-      <div className="border border-gray-200 bg-white overflow-hidden flex flex-col shadow-xl">
+      <div className="bg-white overflow-hidden flex flex-col shadow-xl">
         {toolbar}
         <div className="overflow-x-auto">{groupedTable}</div>
         <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
@@ -281,7 +281,7 @@ export default function CatalogueView({ data, schema }) {
   const items = data[rootKey]
   if (!items || items.length === 0) {
     return (
-      <div className="border border-gray-200 bg-white shadow-xl">
+      <div className="bg-white shadow-xl">
         <EmptyState
           illustration="catalogue"
           title="Nothing here yet"
@@ -343,7 +343,7 @@ export default function CatalogueView({ data, schema }) {
   }
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden flex flex-col shadow-xl">
+    <div className="bg-white overflow-hidden flex flex-col shadow-xl">
       {toolbar}
       <div className="overflow-x-auto">
         <table className="w-full min-w-max">

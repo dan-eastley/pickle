@@ -42,7 +42,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
 
   if (!matrixMeta || !colArtefact || !rowArtefact) {
     return (
-      <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+      <div className="bg-white overflow-hidden shadow-xl">
         <EmptyState
           illustration="matrix"
           title="Matrix view"
@@ -54,7 +54,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
 
   if (columnData === undefined || rowData === undefined) {
     return (
-      <div className="border border-gray-200 bg-white flex items-center justify-center py-16 shadow-xl">
+      <div className="bg-white flex items-center justify-center py-16 shadow-xl">
         <Spinner />
       </div>
     )
@@ -72,7 +72,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
   if (columnItems.length === 0 || rowItems.length === 0) {
     const emptySide = columnItems.length === 0 ? columns.artefact : rows.artefact
     return (
-      <div className="border border-gray-200 bg-white overflow-hidden shadow-xl">
+      <div className="bg-white overflow-hidden shadow-xl">
         <EmptyState
           illustration="matrix"
           title="Nothing to map yet"
@@ -176,7 +176,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
   }
 
   return (
-    <div className="border border-gray-200 bg-white overflow-hidden flex flex-col shadow-xl">
+    <div className="bg-white overflow-hidden flex flex-col shadow-xl">
       {toolbar}
       {table}
       <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
