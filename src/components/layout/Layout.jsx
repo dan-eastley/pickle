@@ -34,8 +34,10 @@ export default function Layout() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <TopBar />
       <DomainNav />
-      <main className="flex-1">
-        <div className="max-w-[1400px] mx-auto px-6 pb-12">
+      <main className="relative flex-1">
+        {/* Soft brand wash echoing the homepage hero */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-brand-50 to-transparent" />
+        <div className="relative max-w-[1400px] mx-auto px-6 pb-12">
           <Breadcrumb />
           <RouteContent />
         </div>

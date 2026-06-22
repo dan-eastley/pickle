@@ -28,8 +28,11 @@ export default function PublicLayout() {
           Docs
         </NavLink>
       </header>
-      <main className="flex-1">
-        <RouteContent />
+      <main className="relative flex-1 bg-gray-50">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-brand-50 to-transparent" />
+        <div className="relative">
+          <RouteContent />
+        </div>
       </main>
       <Footer />
     </div>
