@@ -2,27 +2,49 @@
 
 **Domain:** Solution · **Layer:** Conceptual · **Format:** Document
 
-Structured records of architecture direction before formal ADRs are raised. Captures context, options considered, and the recommended direction. Multiple instances — one per domain or capability area.
+A conceptual-level architecture intent, one instance per programme or decision area. Organised into **numbered sections** that record the chosen architecture direction — the options weighed and the reasoning — before solution-level design.
+
+## Section structure
+
+Defined in the schema under `meta.sections` and rendered with derived numbering. Section 1 (Overview) carries the Executive Summary and Context shared by every document.
+
+| # | Section / Subsection | Content type | Backing property |
+|---|---|---|---|
+| **1** | **Overview** | | |
+| 1.1 | Executive Summary | exec-summary | `executive-summary` |
+| 1.2 | Context | context-links | `context` |
+| **2** | **Intent & Drivers** | | |
+| 2.1 | Intent Statement | highlight | `intent-statement` |
+| 2.2 | Background | prose | `background` |
+| 2.3 | Drivers | drivers | `drivers` |
+| **3** | **Options & Direction** | | |
+| 3.1 | Options Considered | options | `options-considered` |
+| 3.2 | Recommended Direction | prose | `recommended-direction` |
+| **4** | **Principles & Guardrails** | | |
+| 4.1 | Architecture Principles | tags | `architecture-principles` |
+| 4.2 | Guardrails | tags | `guardrails` |
+| **5** | **Open Questions** | open-questions | `open-questions` |
 
 ## Document properties
 
 | Property | Type | Required | Description |
 |---|---|---|---|
-| `id` | string | yes | Unique instance ID (e.g. `SOL-AIN-001`) |
-| `title` | string | yes | Title identifying this intent (e.g. "Analytical Platform Architecture Intent") |
+| `id` | string | yes | Unique instance ID (e.g. `AIN-001`) |
+| `title` | string | yes | Title (e.g. "Analytical Platform Architecture Intent") |
 | `description` | string | yes | One-paragraph summary |
-| `status` | enum | no | `draft` · `in-review` · `approved` · `superseded` |
-| `scope` | string | no | Domain, capability, or initiative this intent covers |
-| `intent-statement` | string | no | Core intent — one clear paragraph. Rendered highlighted. |
-| `context` | string | no | Background context — rendered as prose |
-| `drivers` | array | no | Drivers as in SOL-AVI — `id`, `description`, `type` |
-| `options-considered` | array | no | Each option: `id`, `name`, `description`, `pros` (string[]), `cons` (string[]) |
-| `recommended-direction` | string | no | Recommended approach — rendered as prose |
-| `architecture-principles` | array | no | Principle IDs from SOL-PRN, BUS-PRN, etc. |
-| `guardrails` | array | no | Guardrail IDs from SOL-GRD, BUS-GRD, etc. |
-| `open-questions` | array | no | `id`, `question`, `raised-by` |
-| `diagrams` | array | no | Embedded diagram references |
+| `status` | enum | yes | `draft` · `in-review` · `approved` · `superseded` |
+| `scope` | string | no | Programme, initiative, or domain this intent covers |
+| `executive-summary` | object | yes | §1.1 — `summary` (opening paragraph) + `points` (bullets) |
+| `context` | array | no | §1.2 — links to related documents (`informed-by` the Vision, `informs` the Solution Vision) |
+| `intent-statement` | string | yes | §2.1 — the chosen direction in one paragraph |
+| `background` | string | no | §2.2 — the current situation and the need |
+| `drivers` | array | no | §2.3 — `id`, `description`, `type` (business/technology/regulatory/market) |
+| `options-considered` | array | no | §3.1 — `id`, `name`, `description`, `pros`, `cons` |
+| `recommended-direction` | string | no | §3.2 — the recommended option and rationale |
+| `architecture-principles` | array | no | §4.1 — principle IDs that underpin this intent |
+| `guardrails` | array | no | §4.2 — guardrail IDs that apply |
+| `open-questions` | array | no | §5 — `id`, `question`, `raised-by` |
 
 ## Usage
 
-Informs Solution Visions (`SOL-SVI`) and Architecture Decision Records. Derived from Architecture Visions (`SOL-AVI`). Typically one intent per domain or major capability area.
+Derived from Architecture Visions (`SOL-AVI`) and informs Solution Visions (`SOL-SVI`) — captured per instance in the §1.2 Context links.
