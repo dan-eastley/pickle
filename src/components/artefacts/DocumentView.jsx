@@ -326,35 +326,34 @@ function DiagramRefs({ refs, clientId, versionId }) {
 
 // ─── New (schema-driven) content renderers ───────────────────────────────────
 
-// A clickable chip for an entity reference (capability, platform, interface,
-// principle). Opens the entity detail panel when the entity is resolvable.
-function EntityRef({ id, note, onOpenEntity }) {
-  const resolvable = !!resolveRefArtefactId(id)
-  const chip = (
-    <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-700 group-hover:bg-rose-50 group-hover:text-rose-700 transition-colors">
-      {id}
-    </span>
-  )
-  return (
-    <div className="border border-gray-200 bg-white px-4 py-2.5 flex items-start gap-3">
-      {resolvable ? (
-        <button onClick={() => onOpenEntity?.(id)} className="group flex-shrink-0" title="View details">
-          {chip}
-        </button>
-      ) : (
-        <span className="flex-shrink-0">{chip}</span>
-      )}
-      {note && <p className="text-sm text-gray-600 min-w-0">{note}</p>}
-    </div>
-  )
-}
-
+// A compact, table-like list of entity references (capabilities, processes,
+// platforms, strategies). Each row is clickable when the entity resolves and
+// darkens on hover to signal it opens the entity detail panel.
 function EntityRefList({ items, onOpenEntity }) {
   return (
-    <div className="space-y-2">
-      {items.map((ref, i) => (
-        <EntityRef key={ref['artefact-id'] ?? i} id={ref['artefact-id']} note={ref.note} onOpenEntity={onOpenEntity} />
-      ))}
+    <div className="border border-gray-200 divide-y divide-gray-100">
+      {items.map((ref, i) => {
+        const id = ref['artefact-id']
+        const resolvable = !!resolveRefArtefactId(id)
+        const inner = (
+          <>
+            <span className="font-mono text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 flex-shrink-0">{id}</span>
+            {ref.note && <span className="text-sm text-gray-600 min-w-0 truncate">{ref.note}</span>}
+          </>
+        )
+        return resolvable ? (
+          <button
+            key={id ?? i}
+            onClick={() => onOpenEntity?.(id)}
+            title="View details"
+            className="w-full text-left flex items-center gap-3 px-3 py-1.5 hover:bg-gray-100 transition-colors cursor-pointer"
+          >
+            {inner}
+          </button>
+        ) : (
+          <div key={id ?? i} className="flex items-center gap-3 px-3 py-1.5">{inner}</div>
+        )
+      })}
     </div>
   )
 }
