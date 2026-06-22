@@ -5,6 +5,10 @@ import FormatIcon from '../components/ui/FormatIcon'
 import Button from '../components/ui/Button'
 import Illustration from '../components/ui/Illustration'
 import { ArrowRight, CheckIcon } from '../components/ui/icons'
+import capabilityShot from '../assets/screenshots/capability-model.png'
+import documentShot from '../assets/screenshots/vision-document.png'
+import decisionShot from '../assets/screenshots/decision.png'
+import catalogueShot from '../assets/screenshots/catalogue.png'
 
 const FEATURE_CARDS = [
   {
@@ -181,7 +185,10 @@ function Hero() {
             </Button>
           </div>
         </div>
-        <Illustration name="version-control" className="hidden lg:block w-full max-w-md mx-auto" />
+        {/* Real product window */}
+        <div className="hidden lg:block border border-gray-200 shadow-2xl bg-white overflow-hidden">
+          <img src={capabilityShot} alt="Pickle — the business capability model rendered as a diagram" className="w-full h-auto" loading="eager" />
+        </div>
       </div>
 
       {/* Meta-model strip — five domains, three layers */}
@@ -417,6 +424,40 @@ function SevenDimensions() {
   )
 }
 
+const SHOWCASE = [
+  { src: documentShot,  title: 'Architecture as documents',  desc: 'Visions, intents, and designs render as structured, navigable documents — straight from the repository.' },
+  { src: decisionShot,  title: 'Every change, AI-analysed',  desc: 'A decision runs a seven-step analysis pipeline before a human accepts or declines it.' },
+  { src: catalogueShot, title: 'Models as structured data',  desc: 'Capabilities, processes, and platforms are schema-validated catalogues you can query and diff.' },
+]
+
+function Showcase() {
+  return (
+    <section className="border-b border-gray-200 bg-gray-50">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-3xl mb-10">
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">See it in action</p>
+          <h2 className="text-2xl font-bold text-gray-900">A working architecture repository, not slideware</h2>
+          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+            Every artefact is live, structured, and rendered directly from the Git repository — diagrams,
+            documents, catalogues, and AI-analysed decisions.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {SHOWCASE.map(s => (
+            <div key={s.title} className="flex flex-col">
+              <div className="border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow overflow-hidden bg-white">
+                <img src={s.src} alt={s.title} className="w-full h-auto" loading="lazy" />
+              </div>
+              <h3 className="mt-4 text-sm font-bold text-gray-900">{s.title}</h3>
+              <p className="mt-1 text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ClosingCta() {
   return (
     <section className="px-6 py-16 text-center">
@@ -445,6 +486,7 @@ export default function HomePage() {
       <ArchitectureModel />
       <DocumentChain />
       <SevenDimensions />
+      <Showcase />
       <ClosingCta />
     </div>
   )
