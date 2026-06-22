@@ -98,9 +98,11 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                 >
                   <title>{`${item.id}: ${item.name}`}</title>
 
-                  {/* White mask to hide the previous chevron's point from showing through the notch */}
+                  {/* Mask the previous chevron's point in this chevron's own
+                      fill, so the whole arrow reads as one solid colour. */}
                   {i > 0 && (
-                    <polygon points={notchMaskPts(cx, y, CHEV_H, CHEV_POINT)} fill="white" />
+                    <polygon points={notchMaskPts(cx, y, CHEV_H, CHEV_POINT)}
+                      className={sel ? colors.selectedFill : colors.itemFill} />
                   )}
 
                   {/* Chevron polygon */}

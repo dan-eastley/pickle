@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefact, resolveRefArtefactId } from '../../lib/artefacts'
+import { getArtefactData } from '../../lib/api'
 import { nameWithId } from '../../lib/format'
 import { toggleInSet } from '../../lib/collections'
 import useActiveSection from '../../hooks/useActiveSection'
 import EntityPanel from './EntityPanel'
+import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 
 // ─── Legacy section configuration (doc types not yet migrated to meta.sections) ──
 // Fallback for SOL-ISP until its schema carries a meta.sections block.
@@ -358,6 +360,86 @@ function EntityRefList({ items, onOpenEntity }) {
   )
 }
 
+// Every array-valued property across the loaded catalogues, flattened.
+function flattenCatalogues(catalogues) {
+  const out = []
+  for (const data of Object.values(catalogues)) {
+    if (!data) continue
+    for (const v of Object.values(data)) if (Array.isArray(v)) out.push(...v)
+  }
+  return out
+}
+
+// True when `child` sits one level under `parent` — by parent-id, domain-id, or
+// id-prefix nesting (e.g. PROC-001-01 under PROC-001).
+function isChildOf(child, parent) {
+  if (child.id === parent.id) return false
+  if (child['parent-id'] === parent.id) return true
+  if (child['domain-id'] === parent.id) return true
+  return child.id.startsWith(parent.id + '-') &&
+    child.id.split('-').length === parent.id.split('-').length + 1
+}
+
+// Build NestedGroupDiagram groups from the referenced entities only, nesting a
+// referenced child under a referenced parent where that relationship exists.
+function buildDiagramGroups(refs, catalogues) {
+  const all = flattenCatalogues(catalogues)
+  const entities = refs
+    .map(r => all.find(e => e && e.id === r['artefact-id']))
+    .filter(Boolean)
+  const parentOf = (e) => entities.find(p => isChildOf(e, p))
+  return entities
+    .filter(e => !parentOf(e))
+    .map(e => ({
+      id: e.id,
+      name: e.name ?? e.id,
+      meta: { importance: e.importance },
+      items: entities.filter(c => parentOf(c)?.id === e.id).map(c => ({ id: c.id, name: c.name ?? c.id })),
+    }))
+}
+
+// A small card diagram of the referenced entities, loaded from their
+// catalogue(s). Rendered only when every reference maps to a single domain
+// (so the diagram has one coherent palette); mixed-domain lists show no diagram.
+function EntityRefDiagram({ items, clientId, versionId, onOpenEntity }) {
+  const [catalogues, setCatalogues] = useState(null)
+
+  const typeIds = [...new Set(items.map(r => resolveRefArtefactId(r['artefact-id'])).filter(Boolean))]
+  const artefacts = typeIds.map(getArtefact).filter(Boolean)
+  const domains = [...new Set(artefacts.map(a => a.domain))]
+  const renderable = domains.length === 1 && artefacts.length > 0
+
+  useEffect(() => {
+    if (!renderable) { setCatalogues(null); return }
+    let cancelled = false
+    Promise.all(
+      artefacts.map(a => getArtefactData(clientId, versionId, a.domain, a.abstraction, a.id).then(d => [a.id, d]))
+    ).then(entries => { if (!cancelled) setCatalogues(Object.fromEntries(entries)) })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(items.map(r => r['artefact-id'])), clientId, versionId])
+
+  if (!renderable || !catalogues) return null
+  const groups = buildDiagramGroups(items, catalogues)
+  if (groups.length === 0) return null
+
+  return (
+    <div className="border border-gray-200 bg-white p-3">
+      <NestedGroupDiagram groups={groups} domain={domains[0]} diagramType="card-based" onItemClick={onOpenEntity} />
+    </div>
+  )
+}
+
+// Entity references rendered as a mini card-diagram plus a compact detail list.
+function EntityRefsBlock({ items, clientId, versionId, onOpenEntity }) {
+  return (
+    <div className="space-y-3">
+      <EntityRefDiagram items={items} clientId={clientId} versionId={versionId} onOpenEntity={onOpenEntity} />
+      <EntityRefList items={items} onOpenEntity={onOpenEntity} />
+    </div>
+  )
+}
+
 function ContextLinks({ items, clientId, versionId }) {
   const REL_LABEL = { 'informed-by': 'Informed by', 'informs': 'Informs', 'related': 'Related' }
   return (
@@ -450,7 +532,7 @@ function DomainArchitecture({ value, clientId, versionId, onOpenEntity }) {
     <div className="space-y-4">
       {value.description && <ProseSection text={value.description} />}
       {value.references?.length > 0 && (
-        <EntityRefList items={value.references} onOpenEntity={onOpenEntity} />
+        <EntityRefsBlock items={value.references} clientId={clientId} versionId={versionId} onOpenEntity={onOpenEntity} />
       )}
       {value.diagrams?.length > 0 && (
         <DiagramRefs refs={value.diagrams} clientId={clientId} versionId={versionId} />
@@ -543,7 +625,7 @@ function SchemaContent({ contentType, value, clientId, versionId, onOpenEntity }
     case 'highlight':           return <HighlightSection text={value} />
     case 'context-links':       return <ContextLinks items={value} clientId={clientId} versionId={versionId} />
     case 'capability-refs':
-    case 'entity-refs':         return <EntityRefList items={value} onOpenEntity={onOpenEntity} />
+    case 'entity-refs':         return <EntityRefsBlock items={value} clientId={clientId} versionId={versionId} onOpenEntity={onOpenEntity} />
     case 'tags':                return <TagList items={value} />
     case 'requirements':        return <RequirementList items={value} />
     case 'features':            return <FeatureList items={value} />
