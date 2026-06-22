@@ -65,8 +65,9 @@ export default function DocsLayout() {
           ))}
         </nav>
         {/* Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto px-8 py-8">
+        <main className="relative flex-1 overflow-y-auto">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-brand-50 to-transparent" />
+          <div className="relative max-w-4xl mx-auto px-8 py-8">
             <RouteContent />
           </div>
         </main>
