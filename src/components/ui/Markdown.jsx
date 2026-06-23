@@ -10,6 +10,8 @@ const COMPONENTS = {
   ol:     ({ node, ...p }) => <ol className="list-decimal pl-5 mb-2 last:mb-0 space-y-0.5" {...p} />,
   strong: ({ node, ...p }) => <strong className="font-semibold text-gray-900" {...p} />,
   code:   ({ node, ...p }) => <code className="font-mono text-[0.85em] bg-gray-100 px-1 py-0.5" {...p} />,
+  // Link content is supplied by react-markdown at runtime via {...p}.
+  // eslint-disable-next-line jsx-a11y/anchor-has-content
   a:      ({ node, ...p }) => <a className="text-brand-600 hover:underline" target="_blank" rel="noopener noreferrer" {...p} />,
 }
 

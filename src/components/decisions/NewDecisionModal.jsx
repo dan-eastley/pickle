@@ -72,7 +72,8 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
   return createPortal(
     <>
-      {/* Backdrop */}
+      {/* Backdrop: click dismisses; keyboard users dismiss with Escape (useEscapeKey). */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div className="fixed inset-0 bg-black/30 z-[150]" onClick={onClose} />
 
       {/* Modal */}

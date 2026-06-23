@@ -171,7 +171,7 @@ async function updateDecision({ clientId, versionId, decisionId, updates }, toke
         const { content: current, sha } = await readFile(dPath, BASE, token, owner, repo)
         const updated = { ...current, ...updates }
         await writeFile(dPath, updated, `Commit ${decisionId}`, sha, BASE, token, owner, repo)
-      } catch {}
+      } catch { /* best-effort post-merge status update */ }
     }
     return { ok: true, decisionId, status: 'committed' }
   }

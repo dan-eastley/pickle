@@ -7,6 +7,9 @@ export default function SlidePanel({ open, onClose, title, subtitle, children })
   return createPortal(
     <>
       {open && (
+        // Backdrop: clicking dismisses the panel; keyboard users dismiss with
+        // Escape (see useEscapeKey above).
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
         <div
           className="fixed inset-0 z-[150] bg-black/10"
           onClick={onClose}
