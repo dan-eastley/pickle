@@ -71,6 +71,10 @@ const STATUS_TOOLTIPS = {
   rejected:  'This decision has been rejected and will not proceed.',
 }
 
+// Blue → red gradient across the five steps (matches the AI/Claude colourway),
+// interpolated from #2563eb to #dc2626.
+const STEP_COLORS = ['#2563eb', '#5354ba', '#814589', '#ae3557', '#dc2626']
+
 function StatusProgress({ status }) {
   const isTerminal = status in STATUS_TERMINAL
   const activeStep = STATUS_STEPS.indexOf(status)
@@ -80,23 +84,31 @@ function StatusProgress({ status }) {
       {STATUS_STEPS.map((step, i) => {
         const isPast = !isTerminal && i < activeStep
         const isCurrent = !isTerminal && i === activeStep
+        const reached = isPast || isCurrent
 
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
-              <div className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default
-                ${isPast ? 'bg-brand-600 text-white' : ''}
-                ${isCurrent ? 'bg-brand-600 text-white ring-2 ring-brand-200' : ''}
-                ${!isPast && !isCurrent ? 'bg-gray-100 text-gray-400' : ''}
-              `}>
+              <div
+                className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
+                  reached ? '' : 'bg-gray-100 !text-gray-400'
+                } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
+                style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
+              >
                 {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
               </div>
-              <span className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold text-brand-700' : 'text-gray-400'}`}>
+              <span
+                className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
+                style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
+              >
                 {step}
               </span>
             </div>
             {i < STATUS_STEPS.length - 1 && (
-              <div className={`flex-1 h-px mx-2 mb-4 ${isPast ? 'bg-brand-600' : 'bg-gray-200'}`} />
+              <div
+                className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
+                style={i < activeStep && !isTerminal ? { backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})` } : undefined}
+              />
             )}
           </div>
         )
