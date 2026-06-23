@@ -1,3 +1,5 @@
+// Deploy marker: 2026-06-23 — redeploy to pick up the 2026-06 batch (decisions,
+// TOGAF/SAFe, activity history, Discovery, i18n).
 import { lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
