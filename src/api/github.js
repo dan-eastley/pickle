@@ -259,6 +259,11 @@ async function editDecision({ clientId, versionId, decisionId, title, context, p
   }
   // Compose a legacy narrative for downstream workflows that still read it.
   updated.narrative = composeNarrative(updated)
+  // Append an activity entry for the edit.
+  updated.activity = [
+    ...(current.activity ?? []),
+    { timestamp: new Date().toISOString(), action: 'Updated', who: 'Joe Bloggs' },
+  ]
   if (scope !== undefined) {
     if (scope) updated.scope = scope
     else delete updated.scope

@@ -12,6 +12,7 @@ import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
+import ActivityHistory from '../components/common/ActivityHistory'
 import { KeyStar, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useCollapsed from '../hooks/useCollapsed'
@@ -250,6 +251,7 @@ export default function ArtefactPage() {
           {artefact.format === 'document' && (
             <DocumentView data={data} artefact={artefact} schema={schema} selectedIdx={docIdx} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
           )}
+          <ActivityHistory activity={data.activity} />
         </>
       )}
     </div>

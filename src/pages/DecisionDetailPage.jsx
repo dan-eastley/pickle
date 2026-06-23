@@ -8,6 +8,7 @@ import Markdown from '../components/ui/Markdown'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
+import ActivityHistory from '../components/common/ActivityHistory'
 import { CheckIcon, DecisionIcon, ArrowLeft } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useActiveSection from '../hooks/useActiveSection'
@@ -802,6 +803,8 @@ export default function DecisionDetailPage() {
           <div className="mt-8">
             <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
           </div>
+
+          <ActivityHistory activity={decision.activity} />
         </article>
       </div>
 
