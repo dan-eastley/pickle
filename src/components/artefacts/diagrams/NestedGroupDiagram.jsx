@@ -97,6 +97,7 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
               const itemSelected = selectedId === item.id
               return (
                 <g key={item.id}
+                  className="group"
                   style={{ cursor: onItemClick ? 'pointer' : 'default' }}
                   onClick={onItemClick ? (e) => { e.stopPropagation(); onItemClick(item.id) } : undefined}>
                   <title>{`${item.id}: ${item.name}`}</title>

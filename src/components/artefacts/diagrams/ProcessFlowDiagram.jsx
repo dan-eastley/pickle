@@ -93,6 +93,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
               return (
                 <g
                   key={item.id}
+                  className="group"
                   onClick={() => onItemClick?.(item.id === selectedId ? null : item.id)}
                   style={{ cursor: 'pointer' }}
                 >
@@ -102,7 +103,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                       fill, so the whole arrow reads as one solid colour. */}
                   {i > 0 && (
                     <polygon points={notchMaskPts(cx, y, CHEV_H, CHEV_POINT)}
-                      className={sel ? colors.selectedFill : colors.itemFill} />
+                      className={`transition-colors ${sel ? colors.selectedFill : `${colors.itemFill} ${colors.itemHover}`}`} />
                   )}
 
                   {/* Chevron polygon */}
