@@ -107,6 +107,18 @@ async function getNextId({ clientId, versionId }, token, owner, repo) {
   return { nextId: `ADR-${String(max + 1).padStart(3, '0')}` }
 }
 
+// Compose a single narrative string from the Context / Problem / Proposal
+// fields. Retained for downstream workflows and prompts that still read the
+// legacy `narrative` field.
+function composeNarrative({ context, problem, proposal, narrative }) {
+  const parts = [
+    context  && `## Context\n\n${context}`,
+    problem  && `## Problem\n\n${problem}`,
+    proposal && `## Proposal\n\n${proposal}`,
+  ].filter(Boolean)
+  return parts.length ? parts.join('\n\n') : (narrative ?? '')
+}
+
 // ── Action: create-decision ───────────────────────────────────────────────────
 
 async function createDecision({ clientId, versionId, decision }, token, owner, repo) {
@@ -226,7 +238,7 @@ async function updateFinding({ clientId, versionId, decisionId, sectionKey, find
 // Updates the editable fields of a DRAFT decision on its branch and
 // re-dispatches narrative review so findings are refreshed.
 
-async function editDecision({ clientId, versionId, decisionId, title, narrative, requirements, scope }, token, owner, repo) {
+async function editDecision({ clientId, versionId, decisionId, title, context, problem, proposal, requirements, scope }, token, owner, repo) {
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath  = decisionPath(clientId, versionId, decisionId)
 
@@ -240,9 +252,13 @@ async function editDecision({ clientId, versionId, decisionId, title, narrative,
   const updated = {
     ...current,
     title:        title        ?? current.title,
-    narrative:    narrative    ?? current.narrative,
+    context:      context      ?? current.context,
+    problem:      problem      ?? current.problem,
+    proposal:     proposal     ?? current.proposal,
     requirements: requirements ?? current.requirements,
   }
+  // Compose a legacy narrative for downstream workflows that still read it.
+  updated.narrative = composeNarrative(updated)
   if (scope !== undefined) {
     if (scope) updated.scope = scope
     else delete updated.scope

@@ -8,7 +8,9 @@
         "decision-id",
         "title",
         "status",
-        "narrative"
+        "context",
+        "problem",
+        "proposal"
     ],
     "properties": {
         "decision-id": {
@@ -37,9 +39,21 @@
             "type": "string",
             "description": "GitHub PR URL opened at STAGED."
         },
+        "context": {
+            "type": "string",
+            "description": "The current situation — what is happening that prompts this decision. Written for a business audience."
+        },
+        "problem": {
+            "type": "string",
+            "description": "What needs to be fixed or addressed — the gap or pain in the current situation."
+        },
+        "proposal": {
+            "type": "string",
+            "description": "How we propose to solve it — the direction, at a business level."
+        },
         "narrative": {
             "type": "string",
-            "description": "Author's narrative of the proposed change. Explains context, problem, and proposed approach. Written for a business audience. Read by all downstream workflows."
+            "description": "Deprecated. Composed from context/problem/proposal for downstream workflows; retained for backward compatibility."
         },
         "requirements": {
             "type": "array",
@@ -193,11 +207,7 @@
                 },
                 "description": {
                     "type": "string",
-                    "description": "Plain-language description of the change. e.g. 'Add capability: Project and Programme Management at level 1'"
-                },
-                "detail": {
-                    "type": "string",
-                    "description": "Optional additional detail for the implementor."
+                    "description": "Plain-language description of the change, including any implementor detail. e.g. 'Add capability: Project and Programme Management at level 1'"
                 }
             },
             "additionalProperties": false
