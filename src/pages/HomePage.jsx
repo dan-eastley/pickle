@@ -458,6 +458,82 @@ function Showcase() {
   )
 }
 
+const SUPPORT_STYLES = {
+  Supported: 'bg-emerald-50 text-emerald-700',
+  Partial: 'bg-amber-50 text-amber-700',
+  Roadmap: 'bg-gray-100 text-gray-500',
+}
+
+const TOGAF_ROWS = [
+  ['Architecture Repository — as code', 'Supported'],
+  ['Business · Data · Application domains', 'Supported'],
+  ['Architecture Decisions (ADRs) & change management', 'Supported'],
+  ['ADM phases — Vision → Definition → Governance', 'Partial'],
+  ['Building blocks (ABB / SBB) via abstraction layers', 'Partial'],
+  ['Technology architecture (Phase D)', 'Roadmap'],
+  ['Roadmap & Transition Architectures', 'Roadmap'],
+]
+
+const SAFE_ROWS = [
+  ['Solution Intent — the solution document chain', 'Supported'],
+  ['Architectural enablers via Decision Records', 'Supported'],
+  ['Capabilities & Features', 'Supported'],
+  ['PI / release baselines — versions', 'Supported'],
+  ['Architectural Runway — physical layer readiness', 'Partial'],
+  ['WSJF prioritisation', 'Roadmap'],
+  ['Value Streams', 'Roadmap'],
+]
+
+function FrameworkTable({ name, blurb, rows }) {
+  return (
+    <div className="bg-white border-l-4 border-brand-600 shadow-sm p-6 flex flex-col">
+      <h3 className="text-base font-bold text-gray-900">{name}</h3>
+      <p className="mt-1 text-sm text-gray-500 leading-relaxed">{blurb}</p>
+      <ul className="mt-4 divide-y divide-gray-100">
+        {rows.map(([label, status]) => (
+          <li key={label} className="flex items-center gap-3 py-2">
+            <span className="text-sm text-gray-700 flex-1">{label}</span>
+            <span className={`text-xs font-medium px-2 py-0.5 flex-shrink-0 ${SUPPORT_STYLES[status]}`}>{status}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function FrameworkSupport() {
+  return (
+    <section className="border-b border-gray-200 bg-white">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-3xl mb-10">
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+            Works with your framework
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Built to slot into TOGAF and SAFe
+          </h2>
+          <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+            Pickle is a TOGAF-shaped architecture repository and a SAFe Solution Intent store — as code.
+            Here's what maps today, and what's on the roadmap.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <FrameworkTable
+            name="TOGAF"
+            blurb="The Architecture Repository, domains, and ADR-driven governance, expressed as versioned data."
+            rows={TOGAF_ROWS}
+          />
+          <FrameworkTable
+            name="SAFe"
+            blurb="Solution Intent and an architectural runway, with enablers raised as Decision Records."
+            rows={SAFE_ROWS}
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ClosingCta() {
   return (
     <section className="px-6 py-16 text-center">
@@ -486,6 +562,7 @@ export default function HomePage() {
       <ArchitectureModel />
       <DocumentChain />
       <SevenDimensions />
+      <FrameworkSupport />
       <Showcase />
       <ClosingCta />
     </div>
