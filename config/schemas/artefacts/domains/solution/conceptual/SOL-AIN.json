@@ -21,6 +21,8 @@
             "exec-summary": "An opening paragraph followed by key statements / bullets.",
             "context-links": "Links to related documents earlier and later in the document chain.",
             "highlight": "A single emphasised statement.",
+            "stakeholders": "The stakeholders involved in the intent and the concerns each holds.",
+            "concerns": "The architecture concerns this intent must address (TOGAF Phase A).",
             "prose": "A single block of prose.",
             "drivers": "A list of drivers behind the intent.",
             "options": "The options considered, with pros and cons.",
@@ -44,6 +46,25 @@
                         "title": "Context",
                         "description": "Where this intent sits in the document chain — the Architecture Vision it elaborates and the Solution Vision(s) it informs.",
                         "content": "context-links"
+                    }
+                ]
+            },
+            {
+                "key": "stakeholders-and-concerns",
+                "title": "Stakeholders & Concerns",
+                "description": "The stakeholders this intent serves and the architecture concerns they hold — carried forward from the Architecture Vision (TOGAF Phase A).",
+                "subsections": [
+                    {
+                        "key": "stakeholders",
+                        "title": "Stakeholders",
+                        "description": "The individuals, roles, and groups with an interest in this architecture direction, and the concerns each holds.",
+                        "content": "stakeholders"
+                    },
+                    {
+                        "key": "concerns",
+                        "title": "Concerns",
+                        "description": "The architecture concerns this intent must address, traceable to the stakeholders who raised them.",
+                        "content": "concerns"
                     }
                 ]
             },
@@ -149,6 +170,14 @@
                     "type": "array",
                     "items": { "$ref": "#/$defs/context-link" }
                 },
+                "stakeholders": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/stakeholder" }
+                },
+                "concerns": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/concern" }
+                },
                 "intent-statement": { "type": "string" },
                 "background": { "type": "string" },
                 "drivers": {
@@ -199,6 +228,31 @@
                 "artefact-id": { "type": "string" },
                 "document-id": { "type": "string" },
                 "title": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "stakeholder": {
+            "type": "object",
+            "required": ["id", "name"],
+            "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string", "description": "Stakeholder name, role title, or group" },
+                "role": { "type": "string", "description": "Their role or relationship to the architecture" },
+                "concerns": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "IDs of the concerns this stakeholder holds"
+                }
+            },
+            "additionalProperties": false
+        },
+        "concern": {
+            "type": "object",
+            "required": ["id", "description"],
+            "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "type": { "type": "string", "enum": ["business", "technical", "regulatory", "operational", "security", "cost"] }
             },
             "additionalProperties": false
         },

@@ -91,19 +91,19 @@ export const ABSTRACTIONS = [
     id: 'conceptual',
     name: 'Conceptual',
     label: 'What & Why',
-    description: 'Sets the direction — what the architecture needs to achieve and why, independent of any technology choices.',
+    description: 'Sets the direction — what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs).',
   },
   {
     id: 'logical',
     name: 'Logical',
     label: 'How',
-    description: 'The rules and principles that guide design decisions, without committing to any specific tool or product.',
+    description: 'The rules and principles that guide design decisions, without committing to any specific tool or product. In TOGAF terms, logical artefacts are Architecture Building Blocks (ABBs).',
   },
   {
     id: 'physical',
     name: 'Physical',
     label: 'Where & With What',
-    description: 'The concrete standards and technology decisions that govern how the architecture is built and operated.',
+    description: 'The concrete standards and technology decisions that govern how the architecture is built and operated. In TOGAF terms, physical artefacts are Solution Building Blocks (SBBs).',
   },
 ]
 
@@ -201,15 +201,15 @@ export const ARTEFACTS = [
   { id: 'SOL-PRN-GRD', domain: 'solution', abstraction: 'physical', format: 'matrix', key: false, name: 'Solution Architecture Principles ↔ Guardrails', description: 'Maps Solution Architecture Principles to the Guardrails that make them concrete and enforceable.',
     relatedTo: [{ artefactId: 'SOL-PRN', relationship: 'derived-from' }, { artefactId: 'SOL-GRD', relationship: 'derived-from' }] },
   // Solution — Documents
-  { id: 'SOL-AVI', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Vision(s)',    description: 'One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain. Multiple instances — one per initiative.',
+  { id: 'SOL-AVI', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Vision(s)',    description: 'TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain — together with the stakeholders involved and the concerns they hold. Multiple instances — one per initiative.',
     relatedTo: [{ artefactId: 'BUS-CAP', relationship: 'informs' }, { artefactId: 'SOL-AIN', relationship: 'informs' }] },
-  { id: 'SOL-AIN', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Intent(s)',   description: 'Structured records of architecture direction before formal ADRs — capturing context, options considered, and the recommended direction. Multiple instances — one per domain or capability area.',
+  { id: 'SOL-AIN', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Intent(s)',   description: 'TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs — capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances — one per domain or capability area.',
     relatedTo: [{ artefactId: 'SOL-AVI', relationship: 'derived-from' }, { artefactId: 'SOL-SVI', relationship: 'informs' }] },
-  { id: 'SOL-SVI', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Vision(s)',       description: 'High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative.',
+  { id: 'SOL-SVI', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Intent(s)',       description: 'TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative.',
     relatedTo: [{ artefactId: 'SOL-AIN', relationship: 'derived-from' }, { artefactId: 'SOL-SDE', relationship: 'informs' }, { artefactId: 'APP-DAP', relationship: 'informs' }] },
-  { id: 'SOL-SDE', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Design(s)',       description: 'Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area.',
+  { id: 'SOL-SDE', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Design(s)',       description: 'TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area.',
     relatedTo: [{ artefactId: 'SOL-SVI', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'informs' }, { artefactId: 'SOL-ISP', relationship: 'informs' }] },
-  { id: 'SOL-ISP', domain: 'solution', abstraction: 'physical',   format: 'document', key: false, name: 'Interface Specification(s)', description: 'Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface.',
+  { id: 'SOL-ISP', domain: 'solution', abstraction: 'physical',   format: 'document', key: false, name: 'Interface Specification(s)', description: 'TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface.',
     relatedTo: [{ artefactId: 'SOL-SDE', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'derived-from' }] },
 ]
 

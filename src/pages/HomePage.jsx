@@ -101,7 +101,7 @@ const LAYER_BADGES = {
 const DOCUMENT_CHAIN = [
   { id: 'SOL-AVI', name: 'Architecture Vision',        layer: 'Conceptual', audience: 'Executive & leadership', adds: 'Strategic direction and the high-level target architecture.' },
   { id: 'SOL-AIN', name: 'Architecture Intent',        layer: 'Conceptual', audience: 'Architecture board',     adds: 'The decided direction — options weighed and rationale recorded.' },
-  { id: 'SOL-SVI', name: 'Solution Vision',            layer: 'Logical',    audience: 'Solution architects',    adds: 'Per-initiative problem, approach, capabilities and platforms.' },
+  { id: 'SOL-SVI', name: 'Solution Intent',            layer: 'Logical',    audience: 'Solution architects',    adds: 'Per-initiative problem, approach, capabilities and platforms — fixed and variable intent.' },
   { id: 'SOL-SDE', name: 'Solution Design',            layer: 'Logical',    audience: 'Designers & tech leads', adds: 'Logical design across the four domains, NFRs and flows.' },
   { id: 'SOL-ISP', name: 'Interface Spec & LLD',       layer: 'Physical',   audience: 'Engineers',              adds: 'Concrete protocols, endpoints and contracts to build against.' },
 ]
@@ -172,8 +172,9 @@ function Hero() {
           <h1 className="text-5xl font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">Pickle</h1>
           <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
           <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-            Enterprise architecture as structured, version-controlled data — with AI agents that analyse
-            every proposed change and a decision-record workflow that keeps humans in charge.
+            Your TOGAF Architecture Repository — as code. Enterprise architecture as structured,
+            version-controlled data, with AI agents that analyse every proposed change and a
+            decision-record workflow that keeps humans in charge.
           </p>
           <div className="mt-8 flex items-center justify-center lg:justify-start gap-3">
             <Button to="/clients" size="lg">
@@ -484,11 +485,28 @@ const SAFE_ROWS = [
   ['Value Streams', 'Roadmap'],
 ]
 
+// Text-based framework wordmark badges (not the trademarked logo artwork).
+const FRAMEWORK_WORDMARK = {
+  TOGAF: { text: 'TOGAF', sub: 'ADM', className: 'bg-sky-700 text-white' },
+  SAFe:  { text: 'SAFe', sub: '6.0', className: 'bg-indigo-700 text-white' },
+}
+
+function FrameworkWordmark({ name }) {
+  const mark = FRAMEWORK_WORDMARK[name] ?? { text: name, className: 'bg-gray-800 text-white' }
+  return (
+    <span className={`inline-flex items-baseline gap-1 px-2.5 py-1 text-sm font-bold tracking-tight ${mark.className}`}>
+      {mark.text}
+      {mark.sub && <span className="text-[10px] font-semibold opacity-70 tracking-wider">{mark.sub}</span>}
+      <span className="text-[10px] font-normal opacity-70 align-super">®</span>
+    </span>
+  )
+}
+
 function FrameworkTable({ name, blurb, rows }) {
   return (
     <div className="bg-white border-l-4 border-brand-600 shadow-sm p-6 flex flex-col">
-      <h3 className="text-base font-bold text-gray-900">{name}</h3>
-      <p className="mt-1 text-sm text-gray-500 leading-relaxed">{blurb}</p>
+      <FrameworkWordmark name={name} />
+      <p className="mt-3 text-sm text-gray-500 leading-relaxed">{blurb}</p>
       <ul className="mt-4 divide-y divide-gray-100">
         {rows.map(([label, status]) => (
           <li key={label} className="flex items-center gap-3 py-2">

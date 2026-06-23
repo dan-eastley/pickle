@@ -1,8 +1,8 @@
-# SOL-SVI — Solution Vision
+# SOL-SVI — Solution Intent
 
 **Domain:** Solution · **Layer:** Logical · **Format:** Document
 
-A logical-level solution vision, one instance per epic, feature, or initiative. Organised into **numbered sections** that elaborate an Architecture Intent into a solution outline before detailed design.
+A logical-level Solution Intent, one instance per epic, feature, or initiative. Aligns to the SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed) from variable intent (under exploration). Organised into **numbered sections** that elaborate an Architecture Intent into a solution outline before detailed design.
 
 ## Section structure
 

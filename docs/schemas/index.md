@@ -134,6 +134,6 @@ Document artefacts contain a `documents` array — each element is a named insta
 |---|---|---|
 | [SOL-AVI.md](artefacts/domains/solution/conceptual/SOL-AVI.md) | Architecture Vision(s) | Solution / Conceptual |
 | [SOL-AIN.md](artefacts/domains/solution/conceptual/SOL-AIN.md) | Architecture Intent(s) | Solution / Conceptual |
-| [SOL-SVI.md](artefacts/domains/solution/logical/SOL-SVI.md) | Solution Vision(s) | Solution / Logical |
+| [SOL-SVI.md](artefacts/domains/solution/logical/SOL-SVI.md) | Solution Intent(s) | Solution / Logical |
 | [SOL-SDE.md](artefacts/domains/solution/logical/SOL-SDE.md) | Solution Design(s) | Solution / Logical |
 | [SOL-ISP.md](artefacts/domains/solution/physical/SOL-ISP.md) | Interface Specification(s) | Solution / Physical |

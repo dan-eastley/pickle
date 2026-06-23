@@ -633,6 +633,8 @@ function SchemaContent({ contentType, value, clientId, versionId, onOpenEntity }
     case 'objectives':          return <CardList items={value} config={{ titleField: 'objective', linksField: 'linked-capabilities' }} />
     case 'drivers':
     case 'constraints':         return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
+    case 'stakeholders':        return <CardList items={value} config={{ titleField: 'name', metaField: 'role', linksField: 'concerns' }} />
+    case 'concerns':            return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
     case 'options':             return <OptionList items={value} />
     case 'assumptions':         return <CardList items={value} config={{ titleField: 'description' }} />
     case 'risks':               return <RiskList items={value} />
