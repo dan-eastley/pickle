@@ -17,7 +17,6 @@ import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 
 const SECTION_CONFIGS = {
   'SOL-ISP': [
-    { key: 'overview',                label: 'Overview',                 type: 'prose' },
     { key: 'endpoints',               label: 'Endpoints',                type: 'endpoints' },
     { key: 'data-model',              label: 'Data Model',               type: 'code' },
     { key: 'error-handling',          label: 'Error Handling',           type: 'prose' },
@@ -634,6 +633,8 @@ function SchemaContent({ contentType, value, clientId, versionId, onOpenEntity }
     case 'objectives':          return <CardList items={value} config={{ titleField: 'objective', linksField: 'linked-capabilities' }} />
     case 'drivers':
     case 'constraints':         return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
+    case 'stakeholders':        return <CardList items={value} config={{ titleField: 'name', metaField: 'role', linksField: 'concerns' }} />
+    case 'concerns':            return <CardList items={value} config={{ titleField: 'description', tagField: 'type' }} />
     case 'options':             return <OptionList items={value} />
     case 'assumptions':         return <CardList items={value} config={{ titleField: 'description' }} />
     case 'risks':               return <RiskList items={value} />
@@ -996,6 +997,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{doc.title}</h2>
           {doc.description && <p className="text-gray-600 leading-relaxed">{doc.description}</p>}
+          {doc.overview && <p className="mt-3 text-gray-700 leading-relaxed whitespace-pre-line">{doc.overview}</p>}
 
           {artefact?.id === 'SOL-ISP' && (
             <div className="mt-5"><IspMetaTable doc={doc} /></div>

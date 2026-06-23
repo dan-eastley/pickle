@@ -8,6 +8,7 @@ import Markdown from '../components/ui/Markdown'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
+import ActivityHistory from '../components/common/ActivityHistory'
 import { CheckIcon, DecisionIcon, ArrowLeft } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useActiveSection from '../hooks/useActiveSection'
@@ -71,6 +72,10 @@ const STATUS_TOOLTIPS = {
   rejected:  'This decision has been rejected and will not proceed.',
 }
 
+// Blue → red gradient across the five steps (matches the AI/Claude colourway),
+// interpolated from #2563eb to #dc2626.
+const STEP_COLORS = ['#2563eb', '#5354ba', '#814589', '#ae3557', '#dc2626']
+
 function StatusProgress({ status }) {
   const isTerminal = status in STATUS_TERMINAL
   const activeStep = STATUS_STEPS.indexOf(status)
@@ -80,23 +85,31 @@ function StatusProgress({ status }) {
       {STATUS_STEPS.map((step, i) => {
         const isPast = !isTerminal && i < activeStep
         const isCurrent = !isTerminal && i === activeStep
+        const reached = isPast || isCurrent
 
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
-              <div className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default
-                ${isPast ? 'bg-brand-600 text-white' : ''}
-                ${isCurrent ? 'bg-brand-600 text-white ring-2 ring-brand-200' : ''}
-                ${!isPast && !isCurrent ? 'bg-gray-100 text-gray-400' : ''}
-              `}>
+              <div
+                className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
+                  reached ? '' : 'bg-gray-100 !text-gray-400'
+                } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
+                style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
+              >
                 {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
               </div>
-              <span className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold text-brand-700' : 'text-gray-400'}`}>
+              <span
+                className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
+                style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
+              >
                 {step}
               </span>
             </div>
             {i < STATUS_STEPS.length - 1 && (
-              <div className={`flex-1 h-px mx-2 mb-4 ${isPast ? 'bg-brand-600' : 'bg-gray-200'}`} />
+              <div
+                className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
+                style={i < activeStep && !isTerminal ? { backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})` } : undefined}
+              />
             )}
           </div>
         )
@@ -364,7 +377,7 @@ function ArchitectureChanges({ changes }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
-              {['Artefact', 'Change', 'Description', 'Detail'].map(h => (
+              {['Artefact', 'Change', 'Description'].map(h => (
                 <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
               ))}
             </tr>
@@ -382,7 +395,6 @@ function ArchitectureChanges({ changes }) {
                   </span>
                 </td>
                 <td className="px-3 py-2.5 text-gray-700">{c.description ? <Markdown>{c.description}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-400 text-xs">{c.detail ? <Markdown>{c.detail}</Markdown> : '—'}</td>
               </tr>
             ))}
           </tbody>
@@ -391,69 +403,7 @@ function ArchitectureChanges({ changes }) {
   )
 }
 
-function AnalysisTabs({ decision, accepted, onAccept, saving }) {
-  // Always show all tabs — never filter by whether data exists
-  const [activeTab, setActiveTab] = useState(ANALYSIS_SECTIONS[0]?.key ?? null)
-
-  const activeSections = decision[activeTab] ?? []
-  const hasFindings = activeSections.length > 0
-
-  return (
-    <div>
-      {/* Underline tab bar — all sections always shown */}
-      <div className="border-b border-gray-200 flex gap-0 flex-wrap">
-        {ANALYSIS_SECTIONS.map(section => {
-          const count = decision[section.key]?.length ?? 0
-          const isActive = section.key === activeTab
-          return (
-            <button
-              key={section.key}
-              onClick={() => setActiveTab(section.key)}
-              className={`flex items-center gap-1.5 px-2.5 py-2 text-xs font-medium border-b-2 -mb-px transition-colors ${
-                isActive
-                  ? 'border-brand-600 text-brand-700'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <span className="leading-tight text-center">
-                {section.label.split(' ').map((word, i) => (
-                  <span key={i} className="block">{word}</span>
-                ))}
-              </span>
-              <span className={`text-xs px-1.5 py-0.5 font-medium tabular-nums ${
-                isActive ? 'bg-brand-100 text-brand-700' : count > 0 ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-300'
-              }`}>
-                {count}
-              </span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* Tab content */}
-      <div className="pt-4">
-        {hasFindings ? (
-          <AnalysisTable
-            rows={activeSections}
-            sectionKey={activeTab ?? ''}
-            accepted={accepted}
-            onAccept={onAccept}
-            saving={saving}
-          />
-        ) : (
-          <div className="border border-dashed border-gray-200 bg-gray-50">
-            <EmptyState
-              size="sm"
-              illustration="findings"
-              title="No findings yet"
-              description="This section is populated when the analysis workflow runs. Workflows can take a few minutes — check back shortly."
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
+const ANALYSIS_KEYS = ANALYSIS_SECTIONS.map(s => s.key)
 
 // ── History section ───────────────────────────────────────────────────────────
 
@@ -497,14 +447,42 @@ function HistorySection({ history }) {
 // ── Contents nav (document-style, left rail) ──────────────────────────────────
 
 function buildNavSections(decision) {
+  // Narrative split: Context / Problem / Proposal. Fall back to legacy single
+  // narrative for decisions authored before the split.
+  const hasSplit = decision.context || decision.problem || decision.proposal
+  const narrativeSections = hasSplit
+    ? [
+        decision.context && { key: 'context', label: 'Context' },
+        decision.problem && { key: 'problem', label: 'Problem' },
+        decision.proposal && { key: 'proposal', label: 'Proposal' },
+      ].filter(Boolean)
+    : [{ key: 'narrative', label: 'Narrative' }]
+
+  const analysisTotal = ANALYSIS_SECTIONS.reduce((n, s) => n + (decision[s.key]?.length ?? 0), 0)
+
   return [
-    { key: 'narrative', label: 'Narrative' },
-    decision.requirements?.length && { key: 'requirements', label: 'Requirements' },
-    decision['recommendations']?.length && { key: 'recommendations', label: 'Recommendations' },
-    { key: 'analysis', label: 'Analysis' },
-    decision['architecture-changes']?.length && { key: 'architecture-changes', label: 'Architecture Changes' },
-    decision.history?.length && { key: 'history', label: 'History' },
+    ...narrativeSections,
+    decision.requirements?.length && { key: 'requirements', label: 'Requirements', count: decision.requirements.length },
+    decision['recommendations']?.length && { key: 'recommendations', label: 'Recommendations', count: decision['recommendations'].length },
+    {
+      key: 'analysis',
+      label: 'Analysis',
+      count: analysisTotal,
+      subs: ANALYSIS_SECTIONS.map(s => ({ key: s.key, label: s.label, count: decision[s.key]?.length ?? 0 })),
+    },
+    decision['architecture-changes']?.length && { key: 'architecture-changes', label: 'Architecture Changes', count: decision['architecture-changes'].length },
+    decision.history?.length && { key: 'history', label: 'History', count: decision.history.length },
   ].filter(Boolean)
+}
+
+function NavCount({ n, active }) {
+  return (
+    <span className={`text-xs px-1.5 py-0.5 font-medium tabular-nums flex-shrink-0 ${
+      active ? 'bg-rose-100 text-rose-700' : n > 0 ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-300'
+    }`}>
+      {n}
+    </span>
+  )
 }
 
 function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }) {
@@ -531,9 +509,29 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
                 }`}
               >
                 <span className="font-mono text-xs text-gray-400">{i + 1}</span>
-                <span className="min-w-0">{s.label}</span>
-                {AI_SECTIONS.has(s.key) && <AiRobotIcon className="w-4 h-4 ml-auto flex-shrink-0" />}
+                <span className="min-w-0 flex-1 truncate">{s.label}</span>
+                {typeof s.count === 'number' && <NavCount n={s.count} active={activeKey === s.key} />}
+                {AI_SECTIONS.has(s.key) && <AiRobotIcon className="w-4 h-4 flex-shrink-0" />}
               </button>
+              {s.subs && (
+                <ul className="mt-0.5 space-y-0.5">
+                  {s.subs.map(sub => (
+                    <li key={sub.key}>
+                      <button
+                        onClick={() => onJump(sub.key)}
+                        className={`w-full text-left text-xs pl-9 pr-3 py-1 transition-colors flex items-center gap-2 border-l-2 ${
+                          activeKey === sub.key
+                            ? 'bg-rose-50 text-rose-700 border-rose-500 font-medium'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+                        }`}
+                      >
+                        <span className="min-w-0 flex-1 truncate">{sub.label}</span>
+                        <NavCount n={sub.count} active={activeKey === sub.key} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -563,8 +561,16 @@ export default function DecisionDetailPage() {
   const setSectionRef = (key) => (el) => { sectionRefs.current[key] = el }
   const toggleSection = (key) => setCollapsed(prev => toggleInSet(prev, key))
   const scrollToSection = (key) => {
-    setCollapsed(prev => { if (!prev.has(key)) return prev; const n = new Set(prev); n.delete(key); return n })
-    requestAnimationFrame(() => sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    setCollapsed(prev => {
+      const n = new Set(prev)
+      n.delete(key)
+      // Analysis sub-sections live under the collapsible 'analysis' parent
+      if (ANALYSIS_KEYS.includes(key)) n.delete('analysis')
+      return n
+    })
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    ))
   }
 
   // Use branch-then-main fallback via getDecision helper.
@@ -634,7 +640,9 @@ export default function DecisionDetailPage() {
 
   const renderSection = (key, children) => {
     const isCollapsed = collapsed.has(key)
-    const label = navSections.find(s => s.key === key)?.label ?? key
+    const navItem = navSections.find(s => s.key === key)
+    const label = navItem?.label ?? key
+    const count = navItem?.count
     return (
       <section ref={setSectionRef(key)} data-section={key} className="scroll-mt-20">
         <button onClick={() => toggleSection(key)} className="w-full flex items-start gap-2 text-left group">
@@ -643,10 +651,37 @@ export default function DecisionDetailPage() {
             <span>
               <span className="text-gray-400 font-mono text-base mr-2">{sectionNumber[key]}</span>{label}
             </span>
+            {typeof count === 'number' && (
+              <span className="text-sm px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{count}</span>
+            )}
             {AI_SECTIONS.has(key) && <AiBadge />}
           </h2>
         </button>
         {!isCollapsed && <div className="mt-4 ml-6">{children}</div>}
+      </section>
+    )
+  }
+
+  const renderAnalysisSub = (s) => {
+    const rows = decision[s.key] ?? []
+    return (
+      <section key={s.key} ref={setSectionRef(s.key)} data-section={s.key} className="scroll-mt-20">
+        <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2 mb-3">
+          {s.label}
+          <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{rows.length}</span>
+        </h3>
+        {rows.length > 0 ? (
+          <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} />
+        ) : (
+          <div className="border border-dashed border-gray-200 bg-gray-50">
+            <EmptyState
+              size="sm"
+              illustration="findings"
+              title="No findings yet"
+              description="This section is populated when the analysis workflow runs. Workflows can take a few minutes — check back shortly."
+            />
+          </div>
+        )}
       </section>
     )
   }
@@ -708,8 +743,22 @@ export default function DecisionDetailPage() {
           </div>
 
           <div className="space-y-8">
-            {renderSection('narrative',
-              <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</Markdown>
+            {(decision.context || decision.problem || decision.proposal) ? (
+              <>
+                {decision.context && renderSection('context',
+                  <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.context}</Markdown>
+                )}
+                {decision.problem && renderSection('problem',
+                  <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.problem}</Markdown>
+                )}
+                {decision.proposal && renderSection('proposal',
+                  <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.proposal}</Markdown>
+                )}
+              </>
+            ) : (
+              renderSection('narrative',
+                <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</Markdown>
+              )
             )}
 
             {decision.requirements?.length > 0 && renderSection('requirements',
@@ -736,7 +785,9 @@ export default function DecisionDetailPage() {
             )}
 
             {renderSection('analysis',
-              <AnalysisTabs decision={decision} accepted={accepted} onAccept={handleAccept} saving={saving} />
+              <div className="space-y-8">
+                {ANALYSIS_SECTIONS.map(renderAnalysisSub)}
+              </div>
             )}
 
             {decision['architecture-changes']?.length > 0 && renderSection('architecture-changes',
@@ -752,6 +803,8 @@ export default function DecisionDetailPage() {
           <div className="mt-8">
             <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
           </div>
+
+          <ActivityHistory activity={decision.activity} />
         </article>
       </div>
 

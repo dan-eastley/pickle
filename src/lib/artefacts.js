@@ -1,7 +1,12 @@
+// User-facing names and descriptions are sourced from config/i18n/<locale>.json
+// via the i18n layer and overlaid onto the structural definitions below. The
+// inline English strings act as a fallback when a locale omits an entry.
+import { tr } from '../i18n'
+
 // Authoritative list of permitted artefact format types.
 // Any artefact added to ARTEFACTS must use one of these IDs.
 // The same enum should be reflected in config/schemas/artefacts/*/meta.format.
-export const FORMATS = [
+const FORMATS_BASE = [
   {
     id: 'catalogue',
     label: 'Catalogues',
@@ -23,10 +28,11 @@ export const FORMATS = [
     description: 'Grids mapping relationships between entity sets, spanning abstraction layers or domains.',
   },
 ]
+export const FORMATS = FORMATS_BASE.map(f => ({ ...f, ...tr('formats', f.id) }))
 
 // Diagram sub-types — stored in meta.diagramType on diagram artefacts and schemas.
 // Card-based and flow-based are the primary current types; the others are recommended additions.
-export const DIAGRAM_TYPES = [
+const DIAGRAM_TYPES_BASE = [
   { id: 'card-based',    label: 'Card Based',    description: 'Hierarchical nested cards (e.g. Business Capability Model).' },
   { id: 'process-flow', label: 'Process Flow',  description: 'Sequential chevron flow by level (e.g. Business Process Model).' },
   { id: 'entity-based', label: 'Entity Based',  description: 'Entity-relationship style (e.g. Conceptual Data Model).' },
@@ -34,6 +40,7 @@ export const DIAGRAM_TYPES = [
   { id: 'network',      label: 'Network',       description: 'Node-and-edge topology (e.g. infrastructure, integration landscape).' },
   { id: 'timeline',     label: 'Timeline',      description: 'Roadmap or change over time (e.g. capability evolution plan).' },
 ]
+export const DIAGRAM_TYPES = DIAGRAM_TYPES_BASE.map(t => ({ ...t, ...tr('diagramTypes', t.id) }))
 
 export const getDiagramType = (id) => DIAGRAM_TYPES.find(t => t.id === id)
 
@@ -48,7 +55,7 @@ export const FORMAT_ORDER = ['catalogue', 'diagram', 'document', 'matrix']
 
 export const getFormat = (id) => FORMATS.find(f => f.id === id)
 
-export const DOMAINS = [
+const DOMAINS_BASE = [
   {
     id: 'business',
     name: 'Business',
@@ -85,31 +92,33 @@ export const DOMAINS = [
     color: 'rose',
   },
 ]
+export const DOMAINS = DOMAINS_BASE.map(d => ({ ...d, ...tr('domains', d.id) }))
 
-export const ABSTRACTIONS = [
+const ABSTRACTIONS_BASE = [
   {
     id: 'conceptual',
     name: 'Conceptual',
     label: 'What & Why',
-    description: 'Sets the direction — what the architecture needs to achieve and why, independent of any technology choices.',
+    description: 'Sets the direction — what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs).',
   },
   {
     id: 'logical',
     name: 'Logical',
     label: 'How',
-    description: 'The rules and principles that guide design decisions, without committing to any specific tool or product.',
+    description: 'The rules and principles that guide design decisions, without committing to any specific tool or product. In TOGAF terms, logical artefacts are Architecture Building Blocks (ABBs).',
   },
   {
     id: 'physical',
     name: 'Physical',
     label: 'Where & With What',
-    description: 'The concrete standards and technology decisions that govern how the architecture is built and operated.',
+    description: 'The concrete standards and technology decisions that govern how the architecture is built and operated. In TOGAF terms, physical artefacts are Solution Building Blocks (SBBs).',
   },
 ]
+export const ABSTRACTIONS = ABSTRACTIONS_BASE.map(a => ({ ...a, ...tr('abstractions', a.id) }))
 
 // key: true marks STR/PRN/GRD as the three foundational artefacts per domain.
 // They are pinned to the top of menus and visually highlighted throughout the UI.
-export const ARTEFACTS = [
+const ARTEFACTS_BASE = [
   // Business
   { id: 'BUS-STR', domain: 'business', abstraction: 'conceptual', format: 'catalogue', key: true,  name: 'Business Architecture Strategy',               description: 'A catalogue of strategic goals and direction for the Business domain — the outcomes the organisation is trying to achieve and why.',
     relatedTo: [{ artefactId: 'BUS-CAP', relationship: 'informs' }, { artefactId: 'BUS-PRO', relationship: 'informs' }, { artefactId: 'BUS-STR-PRN', relationship: 'informs' }] },
@@ -201,17 +210,18 @@ export const ARTEFACTS = [
   { id: 'SOL-PRN-GRD', domain: 'solution', abstraction: 'physical', format: 'matrix', key: false, name: 'Solution Architecture Principles ↔ Guardrails', description: 'Maps Solution Architecture Principles to the Guardrails that make them concrete and enforceable.',
     relatedTo: [{ artefactId: 'SOL-PRN', relationship: 'derived-from' }, { artefactId: 'SOL-GRD', relationship: 'derived-from' }] },
   // Solution — Documents
-  { id: 'SOL-AVI', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Vision(s)',    description: 'One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain. Multiple instances — one per initiative.',
+  { id: 'SOL-AVI', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Vision(s)',    description: 'TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain — together with the stakeholders involved and the concerns they hold. Multiple instances — one per initiative.',
     relatedTo: [{ artefactId: 'BUS-CAP', relationship: 'informs' }, { artefactId: 'SOL-AIN', relationship: 'informs' }] },
-  { id: 'SOL-AIN', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Intent(s)',   description: 'Structured records of architecture direction before formal ADRs — capturing context, options considered, and the recommended direction. Multiple instances — one per domain or capability area.',
+  { id: 'SOL-AIN', domain: 'solution', abstraction: 'conceptual', format: 'document', key: false, name: 'Architecture Intent(s)',   description: 'TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs — capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances — one per domain or capability area.',
     relatedTo: [{ artefactId: 'SOL-AVI', relationship: 'derived-from' }, { artefactId: 'SOL-SVI', relationship: 'informs' }] },
-  { id: 'SOL-SVI', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Vision(s)',       description: 'High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative.',
+  { id: 'SOL-SVI', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Intent(s)',       description: 'TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative.',
     relatedTo: [{ artefactId: 'SOL-AIN', relationship: 'derived-from' }, { artefactId: 'SOL-SDE', relationship: 'informs' }, { artefactId: 'APP-DAP', relationship: 'informs' }] },
-  { id: 'SOL-SDE', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Design(s)',       description: 'Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area.',
+  { id: 'SOL-SDE', domain: 'solution', abstraction: 'logical',    format: 'document', key: false, name: 'Solution Design(s)',       description: 'TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area.',
     relatedTo: [{ artefactId: 'SOL-SVI', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'informs' }, { artefactId: 'SOL-ISP', relationship: 'informs' }] },
-  { id: 'SOL-ISP', domain: 'solution', abstraction: 'physical',   format: 'document', key: false, name: 'Interface Specification(s)', description: 'Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface.',
+  { id: 'SOL-ISP', domain: 'solution', abstraction: 'physical',   format: 'document', key: false, name: 'Interface Specification(s)', description: 'TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface.',
     relatedTo: [{ artefactId: 'SOL-SDE', relationship: 'derived-from' }, { artefactId: 'INT-IFC', relationship: 'derived-from' }] },
 ]
+export const ARTEFACTS = ARTEFACTS_BASE.map(a => ({ ...a, ...tr('artefacts', a.id) }))
 
 // Maps an entity instance ID (e.g. CAP-006, PLAT-BI, INT-IFC-001, SOL-PRN-002)
 // to the artefact type whose catalogue holds it, so references in documents can

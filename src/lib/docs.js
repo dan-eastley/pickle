@@ -62,7 +62,7 @@ export const DOCS_NAV = [
       { title: 'SOL-AIN — Architecture Intent(s)',          path: 'schemas/artefacts/domains/solution/conceptual/SOL-AIN',        group: 'Solution' },
       { title: 'SOL-PRN — Principles',                      path: 'schemas/artefacts/domains/solution/logical/SOL-PRN',           group: 'Solution' },
       { title: 'SOL-STR-PRN — Strategy ↔ Principles',      path: 'schemas/artefacts/domains/solution/logical/SOL-STR-PRN',       group: 'Solution' },
-      { title: 'SOL-SVI — Solution Vision(s)',              path: 'schemas/artefacts/domains/solution/logical/SOL-SVI',           group: 'Solution' },
+      { title: 'SOL-SVI — Solution Intent(s)',              path: 'schemas/artefacts/domains/solution/logical/SOL-SVI',           group: 'Solution' },
       { title: 'SOL-SDE — Solution Design(s)',              path: 'schemas/artefacts/domains/solution/logical/SOL-SDE',           group: 'Solution' },
       { title: 'SOL-GRD — Guardrails',                      path: 'schemas/artefacts/domains/solution/physical/SOL-GRD',          group: 'Solution' },
       { title: 'SOL-PRN-GRD — Principles ↔ Guardrails',    path: 'schemas/artefacts/domains/solution/physical/SOL-PRN-GRD',      group: 'Solution' },

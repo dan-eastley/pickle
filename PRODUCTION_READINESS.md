@@ -19,6 +19,7 @@ they surface without blocking, and are burned down below.
 ## Workstreams
 
 ### 1. Lint warnings → zero
+**Status (2026-06):** 0 errors, ~46 warnings (up from 37 — the Discovery and decision-form work added more `jsx-a11y/label-has-associated-control` and `no-autofocus` warnings). Still to be driven to zero.
 - `no-unused-vars` (unused map indices, dead imports) — remove or prefix `_`.
 - `react-hooks/exhaustive-deps` — audit each effect; add deps or document why
   the dep array is intentionally narrow.

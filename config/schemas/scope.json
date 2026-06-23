@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:scope",
+    "title": "Scope",
+    "description": "A reusable scope constraint narrowing a decision, discovery, or analysis to a specific architecture domain, abstraction layer, or artefact type. Shared by decision and discovery records.",
+    "type": "object",
+    "properties": {
+        "domain": {
+            "type": "string",
+            "enum": ["business", "data", "integration", "application", "solution"]
+        },
+        "abstraction": {
+            "type": "string",
+            "enum": ["conceptual", "logical", "physical"]
+        },
+        "artefact": {
+            "type": "string",
+            "enum": [
+                "BUS-STR", "BUS-CAP", "BUS-BCM", "BUS-PRO", "BUS-BPM", "BUS-PRN", "BUS-GRD",
+                "DAT-STR", "DAT-DAC", "DAT-CDM", "DAT-PRN", "DAT-GRD",
+                "INT-STR", "INT-PRN", "INT-GRD",
+                "APP-STR", "APP-DAP", "APP-DPM", "APP-PRN", "APP-GRD",
+                "SOL-STR", "SOL-PRN", "SOL-GRD"
+            ]
+        },
+        "document": {
+            "type": "string",
+            "description": "Optional document instance ID when the scoped artefact is a document."
+        }
+    },
+    "additionalProperties": false
+}

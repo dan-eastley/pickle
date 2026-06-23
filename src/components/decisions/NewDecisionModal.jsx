@@ -5,43 +5,12 @@ import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
-import { PlusIcon, CloseIcon } from '../ui/icons'
-
-function RequirementsList({ requirements, onChange }) {
-  const add = () => onChange([...requirements, ''])
-  const update = (i, val) => onChange(requirements.map((r, j) => j === i ? val : r))
-  const remove = (i) => onChange(requirements.filter((_, j) => j !== i))
-
-  return (
-    <div className="space-y-2">
-      {requirements.map((req, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <input
-            type="text"
-            value={req}
-            onChange={e => update(i, e.target.value)}
-            placeholder={`Requirement ${i + 1}`}
-            className="flex-1 px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
-          <button onClick={() => remove(i)} className="p-1 text-gray-400 hover:text-error-600 transition-colors">
-            <CloseIcon className="w-4 h-4" />
-          </button>
-        </div>
-      ))}
-      <button
-        onClick={add}
-        className="flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 transition-colors"
-      >
-        <PlusIcon className="w-4 h-4" />
-        Add requirement
-      </button>
-    </div>
-  )
-}
 
 export default function NewDecisionModal({ artefact, documents = [], selectedDocument, clientId, versionId, onClose }) {
-  const [narrative, setNarrative] = useState('')
-  const [requirements, setRequirements] = useState([])
+  const [title, setTitle] = useState('')
+  const [context, setContext] = useState('')
+  const [problem, setProblem] = useState('')
+  const [proposal, setProposal] = useState('')
   const [scopeDomain, setScopeDomain] = useState(artefact.domain)
   const [scopeAbstraction, setScopeAbstraction] = useState(artefact.abstraction)
   const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
@@ -56,6 +25,8 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
     artefact.format === 'document' && scopeArtefact === artefact.id && documents.length > 0
 
   useEscapeKey(onClose)
+
+  const canSave = title.trim() && context.trim() && problem.trim() && proposal.trim()
 
   function handleSave() {
     // TODO: push to repo on new branch
@@ -106,8 +77,74 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               </div>
             ) : (
               <>
-                {/* Scope */}
+                {/* Title */}
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Title <span className="text-error-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    placeholder="Short, human-readable summary of the decision"
+                    className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+                    autoFocus
+                  />
+                </div>
+
+                {/* Context */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Context <span className="text-error-500">*</span>
+                  </label>
+                  <p className="text-xs text-gray-400 mb-1.5">
+                    The current situation — what is happening that prompts this decision. Written for a business audience.
+                  </p>
+                  <textarea
+                    value={context}
+                    onChange={e => setContext(e.target.value)}
+                    rows={3}
+                    placeholder="Today we..."
+                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+                  />
+                </div>
+
+                {/* Problem */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Problem <span className="text-error-500">*</span>
+                  </label>
+                  <p className="text-xs text-gray-400 mb-1.5">
+                    What needs to be fixed or addressed — the gap or pain in the current situation.
+                  </p>
+                  <textarea
+                    value={problem}
+                    onChange={e => setProblem(e.target.value)}
+                    rows={3}
+                    placeholder="This is a problem because..."
+                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+                  />
+                </div>
+
+                {/* Proposal */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Proposal <span className="text-error-500">*</span>
+                  </label>
+                  <p className="text-xs text-gray-400 mb-1.5">
+                    How we propose to solve it — the direction, at a business level.
+                  </p>
+                  <textarea
+                    value={proposal}
+                    onChange={e => setProposal(e.target.value)}
+                    rows={3}
+                    placeholder="We propose to..."
+                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+                  />
+                </div>
+
+                {/* Scope */}
+                <div className="pt-2 border-t border-gray-100">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
                   <ScopeSelector
                     domain={scopeDomain}
@@ -137,33 +174,6 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                     </div>
                   )}
                 </div>
-
-                {/* Narrative */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Narrative <span className="text-error-500">*</span>
-                  </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
-                    State the business context, the problem being solved, and the proposed direction. Be specific — name the artefacts, capabilities, or systems affected, and explain why the change is needed now.
-                  </p>
-                  <textarea
-                    value={narrative}
-                    onChange={e => setNarrative(e.target.value)}
-                    rows={5}
-                    placeholder="We require... This is based on... The proposed approach is..."
-                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
-                    autoFocus
-                  />
-                </div>
-
-                {/* Requirements */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
-                  <p className="text-xs text-gray-400 mb-2">
-                    List the specific things this decision must achieve. Each requirement should be testable, free of implementation detail, and state the "what" not the "how".
-                  </p>
-                  <RequirementsList requirements={requirements} onChange={setRequirements} />
-                </div>
               </>
             )}
           </div>
@@ -183,7 +193,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                 </button>
                 <button
                   onClick={handleSave}
-                  disabled={!narrative.trim()}
+                  disabled={!canSave}
                   className={`px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                     colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
                   }`}

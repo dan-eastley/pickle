@@ -30,6 +30,19 @@
                     "title": "Integration Platform Architecture Intent"
                 }
             ],
+            "stakeholders": [
+                { "id": "STK-001", "name": "Chief Data Officer", "role": "Programme sponsor and accountable owner for the data platform", "concerns": ["CON-001", "CON-002"] },
+                { "id": "STK-002", "name": "Operational Leads", "role": "Consumers of operational analytics across metering and collections", "concerns": ["CON-003"] },
+                { "id": "STK-003", "name": "Data Protection Officer", "role": "Accountable for regulatory and privacy compliance", "concerns": ["CON-002", "CON-004"] },
+                { "id": "STK-004", "name": "Enterprise Architecture", "role": "Custodians of architecture principles and platform standards", "concerns": ["CON-001", "CON-005"] }
+            ],
+            "concerns": [
+                { "id": "CON-001", "description": "Insight is fragmented across Oracle CC&B, MDM, and ERP with no single governed source of truth.", "type": "business" },
+                { "id": "CON-002", "description": "Customer and consumption data must remain compliant with GDPR and Ofgem data-handling obligations.", "type": "regulatory" },
+                { "id": "CON-003", "description": "Operational decisions are delayed by 24-hour batch reporting cycles.", "type": "operational" },
+                { "id": "CON-004", "description": "Self-service access must not expose personally identifiable information to unauthorised users.", "type": "security" },
+                { "id": "CON-005", "description": "The platform must avoid lock-in and run within the agreed cloud cost envelope.", "type": "cost" }
+            ],
             "vision-statement": "Every operational and commercial decision at fedc is informed by trusted, timely, self-service analytics drawn from a single governed data platform.",
             "drivers": [
                 {

@@ -32,13 +32,12 @@ Write a JSON **array** to the decision JSON's `architecture-changes` property. E
 | `artefact-id` | string | yes | Artefact type ID, e.g. `BUS-CAP` |
 | `artefact-name` | string | yes | Full artefact type name, e.g. `Business Capabilities` |
 | `change-type` | string | yes | One of: `create`, `update`, `delete`, `rename`, `move` |
-| `description` | string | yes | Precise instruction for what to change. E.g. `Add capability: Project & Programme Management at level 1 under CAP-006`. Include the target array key, parent ID, and any required field values. |
-| `detail` | string | no | Supplementary context for the implementor — why this change, relevant schema constraints, or linked finding. |
+| `description` | string | yes | Precise instruction for what to change, including any implementor detail. E.g. `Add capability: Project & Programme Management at level 1 under CAP-006`. Include the target array key, parent ID, any required field values, and relevant schema constraints or the linked finding where it aids the implementor. |
 
 ## Constraints
 
 - Only emit changes for findings where `review` is `"accepted"` (or absent). Never derive changes from `"declined"` findings.
 - Each change must name a real artefact type (check `docs/artefacts.md`) and reference an existing or clearly new entry by its ID.
-- If the decision scope does not support a finding's implied change (e.g., the artefact doesn't exist for this version), flag it in `detail` rather than inventing a target.
+- If the decision scope does not support a finding's implied change (e.g., the artefact doesn't exist for this version), flag it in the `description` rather than inventing a target.
 - Do not include AI/Claude attribution in any field.
 - Write the result to the `architecture-changes` property of the decision JSON file using the Edit or Write tool. Do not leave the file unchanged.

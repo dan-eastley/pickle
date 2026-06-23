@@ -135,7 +135,9 @@ export default defineConfig(({ mode }) => {
       // Data is now served by the /api/content Vercel function (reads from GitHub).
       // Static copy removed — no build needed when architecture data changes.
     ],
-    server: { port: 3000 },
+    // Allow importing localisation + shared config JSON from the repo's config/
+    // directory, which sits one level above the Vite root (src/).
+    server: { port: 3000, fs: { allow: [REPO_ROOT] } },
     build: {
       rollupOptions: {
         output: {

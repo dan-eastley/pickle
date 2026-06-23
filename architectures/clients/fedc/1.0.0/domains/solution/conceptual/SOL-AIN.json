@@ -29,6 +29,17 @@
                     "title": "Self-Service Analytics Solution Vision"
                 }
             ],
+            "stakeholders": [
+                { "id": "STK-001", "name": "Chief Data Officer", "role": "Accountable owner for the analytical platform direction", "concerns": ["CON-001", "CON-003"] },
+                { "id": "STK-002", "name": "Analytics & BI Team", "role": "Owners of the OAC consumption layer and semantic models", "concerns": ["CON-002"] },
+                { "id": "STK-003", "name": "Enterprise Architecture", "role": "Custodians of platform standards and principle adherence", "concerns": ["CON-001", "CON-004"] }
+            ],
+            "concerns": [
+                { "id": "CON-001", "description": "The chosen direction must avoid stranding the existing Oracle Analytics Cloud investment.", "type": "business" },
+                { "id": "CON-002", "description": "The platform must serve both BI and ML workloads from a single governed tier.", "type": "technical" },
+                { "id": "CON-003", "description": "Ingestion latency must meet sub-15-minute operational targets.", "type": "operational" },
+                { "id": "CON-004", "description": "Data governance must be enforced centrally via Unity Catalog.", "type": "regulatory" }
+            ],
             "intent-statement": "fedc will adopt a lakehouse architecture on Databricks as its enterprise data platform, with Oracle Analytics Cloud (OAC) retained as the self-service consumption layer. Data will be ingested from Oracle CC&B, MDM, and ERP via event-driven pipelines through the Confluent event broker. This approach avoids replacing OAC (preserving existing user investment and training), while providing a modern, scalable storage and transformation tier that can serve both BI and ML workloads.",
             "background": "fedc's current analytical landscape is fragmented: operational reports are generated directly from Oracle CC&B via custom OBIEE dashboards, commercial teams extract data to Excel for modelling, and there is no governed enterprise data store. The Oracle Analytics Cloud (OAC) licence is underutilised — it is connected only to CC&B and lacks a governed semantic layer. ADR-013 has been raised to address this fragmentation. The architecture intent decision centres on how to modernise the platform: whether to invest in OAC natively, adopt a fully cloud-native SaaS alternative, or introduce a lakehouse tier beneath OAC.",
             "drivers": [

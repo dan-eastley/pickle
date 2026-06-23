@@ -70,7 +70,9 @@ export default function DecisionEditorPage() {
 
   const [loadingExisting, setLoadingExisting] = useState(isEdit)
   const [title, setTitle] = useState('')
-  const [narrative, setNarrative] = useState('')
+  const [context, setContext] = useState('')
+  const [problem, setProblem] = useState('')
+  const [proposal, setProposal] = useState('')
   const [requirements, setRequirements] = useState([])
   const [scopeDomain, setScopeDomain] = useState(searchParams.get('domain') ?? '')
   const [scopeAbstraction, setScopeAbstraction] = useState(searchParams.get('abstraction') ?? '')
@@ -85,7 +87,10 @@ export default function DecisionEditorPage() {
       .then(d => {
         if (!d) return
         setTitle(d.title ?? '')
-        setNarrative(d.narrative ?? '')
+        // Prefer the split fields; fall back to legacy narrative → Context
+        setContext(d.context ?? d.narrative ?? '')
+        setProblem(d.problem ?? '')
+        setProposal(d.proposal ?? '')
         setRequirements(d.requirements ?? [])
         setScopeDomain(d.scope?.domain ?? '')
         setScopeAbstraction(d.scope?.abstraction ?? '')
@@ -112,7 +117,7 @@ export default function DecisionEditorPage() {
           body: JSON.stringify({
             action: 'edit-decision',
             clientId, versionId, decisionId,
-            title, narrative,
+            title, context, problem, proposal,
             requirements: requirements.filter(r => r.description?.trim()),
             scope,
           }),
@@ -130,7 +135,17 @@ export default function DecisionEditorPage() {
           'decision-id': nextId,
           title,
           status: 'draft',
-          narrative,
+          context,
+          problem,
+          proposal,
+          narrative: [
+            context  && `## Context\n\n${context}`,
+            problem  && `## Problem\n\n${problem}`,
+            proposal && `## Proposal\n\n${proposal}`,
+          ].filter(Boolean).join('\n\n'),
+          activity: [
+            { timestamp: new Date().toISOString(), action: 'Created', who: 'Joe Bloggs' },
+          ],
           ...(requirements.filter(r => r.description?.trim()).length > 0 && {
             requirements: requirements.filter(r => r.description?.trim()),
           }),
@@ -177,7 +192,7 @@ export default function DecisionEditorPage() {
           )}
           <button
             onClick={handleSave}
-            disabled={!title.trim() || !narrative.trim() || saving}
+            disabled={!title.trim() || !context.trim() || !problem.trim() || !proposal.trim() || saving}
             className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {saving
@@ -228,19 +243,53 @@ export default function DecisionEditorPage() {
           />
         </div>
 
-        {/* Narrative */}
+        {/* Context */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Narrative <span className="text-error-500">*</span>
+            Context <span className="text-error-500">*</span>
           </label>
           <p className="text-xs text-gray-400 mb-1.5">
-            State the business context, the problem being solved, and the proposed direction. Be specific — name the artefacts, capabilities, or systems affected, and explain why the change is needed now.
+            The current situation — what is happening that prompts this decision. Written for a business audience.
           </p>
           <textarea
-            value={narrative}
-            onChange={e => setNarrative(e.target.value)}
-            rows={8}
-            placeholder="We require... This is based on... The proposed approach is..."
+            value={context}
+            onChange={e => setContext(e.target.value)}
+            rows={4}
+            placeholder="Today we..."
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+          />
+        </div>
+
+        {/* Problem */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Problem <span className="text-error-500">*</span>
+          </label>
+          <p className="text-xs text-gray-400 mb-1.5">
+            What needs to be fixed or addressed — the gap or pain in the current situation.
+          </p>
+          <textarea
+            value={problem}
+            onChange={e => setProblem(e.target.value)}
+            rows={4}
+            placeholder="This is a problem because..."
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+          />
+        </div>
+
+        {/* Proposal */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Proposal <span className="text-error-500">*</span>
+          </label>
+          <p className="text-xs text-gray-400 mb-1.5">
+            How we propose to solve it — the direction, at a business level.
+          </p>
+          <textarea
+            value={proposal}
+            onChange={e => setProposal(e.target.value)}
+            rows={4}
+            placeholder="We propose to..."
             className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
           />
         </div>

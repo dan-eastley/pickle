@@ -68,11 +68,13 @@ Tracked improvements, known gaps, and ideas for future development. Items are ad
 ---
 
 ## Move artefact registry constants into config
+**Status (2026-06): mostly done.** User-facing strings (name/description for every domain, abstraction, format, diagram type, and artefact type) now live in [`config/i18n/en.json`](config/i18n/en.json), loaded via [`src/i18n`](src/i18n/index.js) and overlaid onto the structural registry in [`src/lib/artefacts.js`](src/lib/artefacts.js). Localisation is drop-in (add `config/i18n/<locale>.json` + a `LOCALES` entry).
+
 **Context:** [`src/lib/artefacts.js`](src/lib/artefacts.js) hardcodes the artefact-type registry, abstraction-layer labels, domain labels, and diagram-type metadata (`ARTEFACTS`, `ABSTRACTIONS`, `DOMAINS`, `DIAGRAM_TYPES`, etc.) as JS constants.
 
 **Gap:** These are display strings tightly coupled to source code. If the project ever needs localisation, or per-client terminology overrides, they'd need to live in data/config rather than JS.
 
-**Proposed fix:** Move these registries into config (e.g. alongside `config/schemas/artefacts.json`), loaded by the UI at build/runtime.
+**Remaining:** The structural arrays still carry the inline English as a fallback — these duplicate `en.json` and could be pruned. Per-client terminology overrides (a second overlay) are not yet supported.
 
 ---
 
@@ -89,8 +91,12 @@ Tracked improvements, known gaps, and ideas for future development. Items are ad
 
 A top-to-bottom pass over the live app. Ordered roughly by impact.
 
+**Shipped in the 2026-06 pass:** decision narrative split into required Context/Problem/Proposal (modal trimmed to Title + the three + Scope-at-bottom; Requirements full-form only); Analysis tabs reworked into jumpable h3 sub-sections with per-step counts in the contents nav and headings; counts on Recommendations and Architecture Changes; architecture-change Description and Detail merged; activity/change-history table on artefact and decision pages (auto-seeded on decision create/edit); the **Discovery** Virtual-Architect-Agent scaffold (page, form, schema, storage, homepage); the SVG hover-over-text and SOL-ISP duplicate-Overview bugs; gradient PICKLE wordmark and blue→red decision stepper.
+
+**Still open from the list below:** the items in High/Medium/Lower remain except where noted inline.
+
 ### High impact
-- **"New Decision" modal Save is a stub.** [`NewDecisionModal`](src/components/decisions/NewDecisionModal.jsx) `handleSave` just sets `saved = true` with a `// TODO: push to repo on new branch`. Raising a decision from an artefact page does nothing durable; only the full editor (`DecisionEditorPage` → `/api/github` `create-decision`) actually creates one. Either wire the modal to `create-decision` or make it route to the editor with the scope pre-filled.
+- **"New Decision" modal Save is still a stub.** [`NewDecisionModal`](src/components/decisions/NewDecisionModal.jsx) now collects the right fields (Title + Context/Problem/Proposal + Scope) but `handleSave` still just sets `saved = true` with a `// TODO: push to repo on new branch`. Raising a decision from an artefact page does nothing durable; only the full editor (`DecisionEditorPage` → `/api/github` `create-decision`) actually creates one. Either wire the modal to `create-decision` or make it route to the editor with the fields pre-filled.
 - **Decision transitions don't work in local dev.** Status changes call `/api/github`, which is a Vercel serverless function — the Vite dev middleware only serves `/api/arch` and `/api/schemas|docs`. Add a dev shim (or document that transitions are deploy-only) so the pipeline can be exercised locally.
 - **No global search / command palette.** Navigation is entirely via the domain tabs; there's no way to jump to a capability/process/platform/decision by name or ID. This is the single biggest usability gap (and is designed for in `proposed-design/shell.html`).
 - **Decision status vs. analysis content.** The analysis workflows write findings/changes to `decision.json` but never advance `status`; status is UI-driven. After a green pipeline a decision can read `proposed` while carrying `accepted`-stage `architecture-changes`. Make the workflow (or the API on dispatch) own the status transition, or surface "analysis complete, awaiting human" explicitly.
@@ -124,6 +130,8 @@ Pickle already implements several TOGAF ideas natively; a few terminology and st
 | **Architecture Roadmap / Transition Architectures** | AVI `transformation-themes` | Add explicit **Roadmap** and **Transition State** artefact types (Phase E/F) — these were intentionally removed from SDE earlier; they belong at the vision/portfolio level |
 | **Principles / Decisions / Stakeholders / Concerns / Viewpoints** | Per-domain Strategy/Principles/Guardrails; ADRs | Already strong. Add **stakeholder** and **concern** fields to visions/intents to complete the TOGAF/ArchiMate vocabulary |
 
+**Status (2026-06): partially done.** ADM-phase labelling applied to the solution document descriptions (AVI/AIN = Phase A; SVI/SDE/ISP = Phases B–D); ABB/SBB language added to the abstraction-layer descriptions; "your TOGAF Architecture Repository, as code" framing on the homepage; **stakeholder** and **concern** fields added to AVI/AIN (schema, renderer, sample data); homepage TOGAF support table shipped. **Remaining:** a dedicated Technology domain, explicit Roadmap/Transition-Architecture artefact types, and a cross-cutting Requirements repository.
+
 **Net:** Pickle is a TOGAF-shaped tool that codifies the Architecture Repository and ADRs. The gaps are a Technology domain, explicit Roadmap/Transition artefacts, and ADM-phase labelling.
 
 ---
@@ -142,6 +150,8 @@ SAFe is delivery-flow oriented; Pickle's strongest SAFe fit is **Solution Intent
 | **Program Increment (PI) / releases** | Per-client **versions** (`1.0.0` …) | Map versions to PIs/releases; allow a version to carry a PI label and dates |
 | **Value Streams** | `BUS-PRO` (business processes) partially | Add an operational/development **Value Stream** business artefact |
 | **Continuous Delivery Pipeline** | The decisions + GitHub Actions pipeline | Already a real CD-style governance pipeline — surface it as such |
+
+**Status (2026-06): partially done.** Solution Vision renamed to **Solution Intent** (registry, SVI schema, docs, homepage chain), with SAFe *fixed vs variable intent* framing in the descriptions; homepage SAFe support table shipped. **Remaining:** Architectural Runway view, an Enabler decision/change type, WSJF scoring, PI/release labels on versions, Value Stream artefact, and backlog-tool links.
 
 **Net:** Pickle can position itself as a **Solution Intent + Architectural Runway** repository for SAFe, with enablers driven by ADRs. The gaps are enabler/WSJF fields, runway views, and backlog-tool links.
 

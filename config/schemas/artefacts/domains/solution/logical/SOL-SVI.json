@@ -1,21 +1,22 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SVI",
-    "title": "Solution Vision",
-    "description": "A logical-level solution vision document scoped to a specific epic, feature, or initiative. Structured into numbered sections covering the problem, the proposed solution, the capabilities and platforms involved, and the risks, assumptions, and open questions to resolve before detailed design.",
+    "title": "Solution Intent",
+    "description": "A logical-level Solution Intent document scoped to a specific epic, feature, or initiative. Aligns to the SAFe Solution Intent — the single source of truth for what is being built and why — distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). Structured into numbered sections covering the problem, the proposed solution, the capabilities and platforms involved, and the risks, assumptions, and open questions to resolve before detailed design.",
     "meta": {
         "domain": "solution",
         "abstraction": "logical",
         "format": "document",
-        "description": "Solution Vision documents elaborate an Architecture Intent into a logical, initiative-level solution outline — bridging conceptual intent and detailed Solution Design.",
+        "description": "Solution Intent documents elaborate an Architecture Intent into a logical, initiative-level solution outline — bridging conceptual intent and detailed Solution Design. They embody the SAFe Solution Intent, separating fixed intent (committed) from variable intent (under exploration).",
         "purpose": [
             "Elaborate an Architecture Intent [SOL-AIN] into a logical solution outline for a specific initiative",
+            "Capture the SAFe Solution Intent — distinguishing fixed (committed) from variable (exploratory) intent",
             "Define the problem, proposed approach, capabilities, and platforms before detailed design",
             "Inform the Solution Design [SOL-SDE] that follows"
         ],
         "countLabels": {
-            "singular": "Solution Vision",
-            "plural": "Solution Visions"
+            "singular": "Solution Intent",
+            "plural": "Solution Intents"
         },
         "sectionContentTypes": {
             "exec-summary": "An opening paragraph followed by key statements / bullets.",
