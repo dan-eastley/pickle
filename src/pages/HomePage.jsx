@@ -4,7 +4,7 @@ import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
 import Button from '../components/ui/Button'
 import Illustration from '../components/ui/Illustration'
-import { ArrowRight, CheckIcon } from '../components/ui/icons'
+import { ArrowRight, CheckIcon, RobotIcon } from '../components/ui/icons'
 import capabilityShot from '../assets/screenshots/capability-model.png'
 import documentShot from '../assets/screenshots/vision-document.png'
 import decisionShot from '../assets/screenshots/decision.png'
@@ -307,6 +307,24 @@ function ArchitectureModel() {
               )
             })}
           </div>
+
+          {/* Architecture Discovery CTA — the Virtual Architect Agent */}
+          <div className="mt-4 border border-gray-200 border-l-4 border-l-blue-600 bg-gradient-to-r from-blue-50/60 to-rose-50/40 p-5 flex items-center gap-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
+              <RobotIcon className="w-5 h-5 text-white" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-bold text-gray-900">Architecture Discovery</div>
+              <div className="text-xs font-medium text-blue-700">Virtual Architect Agent</div>
+              <p className="mt-1 text-xs text-gray-500 leading-relaxed">
+                Ask a question and have the agent interrogate the architecture to produce a point-in-time view.
+              </p>
+            </div>
+            <Button to="/clients" variant="secondary" className="flex-shrink-0">
+              Explore
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Abstraction Layers */}
@@ -572,6 +590,47 @@ function ClosingCta() {
   )
 }
 
+const AGENT_BULLETS = [
+  'Ask questions in plain language — the agent reads the architecture as structured data, not screenshots.',
+  'Produces point-in-time views: dependency traces, impact maps, and gap analyses scoped to a domain or artefact.',
+  'Every discovery is captured as a record — title, context, and request — so the question and its answer are versioned.',
+  'Active and archived pots keep live investigations separate from historical ones.',
+]
+
+function VirtualArchitectAgent() {
+  return (
+    <section className="border-y border-gray-200 bg-gradient-to-br from-blue-50/50 via-white to-rose-50/40">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="flex items-start justify-between gap-10">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-2">
+              Virtual Architect Agent
+            </p>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Architecture Discovery — interrogate your architecture
+            </h2>
+            <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+              Discovery turns the repository into something you can question. Raise a discovery, and the
+              Virtual Architect Agent reads the model to answer it — producing a view you can keep.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {AGENT_BULLETS.map(b => (
+                <li key={b} className="flex items-start gap-2 text-sm text-gray-700">
+                  <CheckIcon className="w-4 h-4 mt-0.5 text-blue-600 flex-shrink-0" />
+                  <span className="min-w-0">{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="hidden xl:flex w-40 h-40 flex-shrink-0 self-center bg-gradient-to-br from-blue-600 to-red-600 items-center justify-center">
+            <RobotIcon className="w-20 h-20 text-white" />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function HomePage() {
   return (
     <div>
@@ -581,6 +640,7 @@ export default function HomePage() {
       <DocumentChain />
       <SevenDimensions />
       <FrameworkSupport />
+      <VirtualArchitectAgent />
       <Showcase />
       <ClosingCta />
     </div>

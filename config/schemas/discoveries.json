@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:discoveries",
+    "title": "Discoveries Index",
+    "description": "Index of Architecture Discovery records for a client version. Lives at architectures/clients/<client>/<version>/discovery/discovery.json. Holds a lightweight summary per discovery; the full record lives in <id>/discovery.json.",
+    "type": "object",
+    "required": ["discoveries"],
+    "properties": {
+        "discoveries": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["discovery-id", "title", "status"],
+                "properties": {
+                    "discovery-id": { "type": "string" },
+                    "title": { "type": "string" },
+                    "status": { "type": "string", "enum": ["active", "archived"] },
+                    "scope": { "$ref": "urn:pickle:schemas:scope" }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

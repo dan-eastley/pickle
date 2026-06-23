@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:discovery",
+    "title": "Discovery Record",
+    "description": "A machine-readable Architecture Discovery — a question put to the Virtual Architect Agent, which interrogates the architecture state and produces a point-in-time view in answer. Stored at architectures/clients/<client>/<version>/discovery/<id>/discovery.json. SCAFFOLD: the discovery workflow is not yet implemented.",
+    "type": "object",
+    "required": ["discovery-id", "title", "status", "context", "request"],
+    "properties": {
+        "discovery-id": {
+            "type": "string",
+            "description": "Unique identifier in the form DSC-NNN (three-digit number, uppercase). Must match the parent folder name."
+        },
+        "title": {
+            "type": "string",
+            "description": "Short human-readable title of the discovery."
+        },
+        "status": {
+            "type": "string",
+            "enum": ["active", "archived"],
+            "description": "Active discoveries are live; archived discoveries are retained for reference."
+        },
+        "context": {
+            "type": "string",
+            "description": "The situation or background framing the discovery — what the architecture currently looks like and why the question is being asked."
+        },
+        "request": {
+            "type": "string",
+            "description": "The question or analysis requested of the Virtual Architect Agent."
+        },
+        "scope": { "$ref": "urn:pickle:schemas:scope" },
+        "findings": {
+            "type": "string",
+            "description": "The point-in-time view produced by the Virtual Architect Agent. Populated by the discovery workflow (not yet implemented)."
+        },
+        "activity": {
+            "type": "array",
+            "description": "Chronological activity / change-history log (Created, Updated, …).",
+            "items": { "$ref": "#/$defs/activity-entry" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "activity-entry": {
+            "type": "object",
+            "required": ["timestamp", "action", "who"],
+            "properties": {
+                "timestamp": { "type": "string", "description": "ISO 8601 datetime." },
+                "action": { "type": "string", "description": "e.g. Created, Updated, Reviewed, Archived." },
+                "who": { "type": "string", "description": "Display name of the person or agent." },
+                "notes": { "type": "string" }
+            },
+            "additionalProperties": false
+        }
+    }
+}

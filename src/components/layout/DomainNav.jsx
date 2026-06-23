@@ -6,7 +6,7 @@ import {
 } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
-import { ChevronDown, ChevronRight, KeyStar, DecisionIcon } from '../ui/icons'
+import { ChevronDown, ChevronRight, KeyStar, DecisionIcon, RobotIcon } from '../ui/icons'
 
 function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose }) {
   const fmt = getFormat(format)
@@ -120,6 +120,8 @@ export default function DomainNav() {
 
   const decisionsMatch = useMatch('/clients/:clientId/:versionId/decisions/*')
   const onDecisionsPage = !!decisionsMatch
+  const discoveryMatch = useMatch('/clients/:clientId/:versionId/discovery/*')
+  const onDiscoveryPage = !!discoveryMatch
 
   useEffect(() => {
     function handleClick(e) {
@@ -179,7 +181,7 @@ export default function DomainNav() {
             )
           })}
 
-          {/* Decisions — right-aligned */}
+          {/* Decisions + Discovery — right-aligned */}
           <div className="flex-1" />
           <Link
             to={`${base}/decisions`}
@@ -192,6 +194,18 @@ export default function DomainNav() {
           >
             <DecisionIcon className="w-3.5 h-3.5" />
             Decisions
+          </Link>
+          <Link
+            to={`${base}/discovery`}
+            onClick={() => setActiveDropdown(null)}
+            className={`flex items-center gap-1.5 px-4 text-sm font-medium border-b-2 transition-colors ${
+              onDiscoveryPage
+                ? 'border-gray-400 text-gray-700 bg-gray-100'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            <RobotIcon className="w-3.5 h-3.5" />
+            Discovery
           </Link>
         </div>
       </div>

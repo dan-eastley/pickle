@@ -17,6 +17,9 @@ const VersionsPage = lazy(() => import('./pages/VersionsPage'))
 const DecisionsPage = lazy(() => import('./pages/DecisionsPage'))
 const DecisionEditorPage = lazy(() => import('./pages/DecisionEditorPage'))
 const DecisionDetailPage = lazy(() => import('./pages/DecisionDetailPage'))
+const DiscoveryPage = lazy(() => import('./pages/DiscoveryPage'))
+const DiscoveryEditorPage = lazy(() => import('./pages/DiscoveryEditorPage'))
+const DiscoveryDetailPage = lazy(() => import('./pages/DiscoveryDetailPage'))
 const DomainsPage = lazy(() => import('./pages/DomainsPage'))
 const DomainPage = lazy(() => import('./pages/DomainPage'))
 const AbstractionPage = lazy(() => import('./pages/AbstractionPage'))
@@ -67,6 +70,9 @@ function AppRoutes() {
         <Route path="decisions/new" element={<DecisionEditorPage />} />
         <Route path="decisions/:decisionId/edit" element={<DecisionEditorPage />} />
         <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
+        <Route path="discovery" element={<DiscoveryPage />} />
+        <Route path="discovery/new" element={<DiscoveryEditorPage />} />
+        <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
       </Route>
 
       {/* Docs */}

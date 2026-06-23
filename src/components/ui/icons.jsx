@@ -75,3 +75,14 @@ export function DecisionIcon({ className = 'w-4 h-4' }) {
     </svg>
   )
 }
+
+// Robot / AI agent icon — used for the Architecture Discovery (Virtual Architect Agent).
+export function RobotIcon({ className = 'w-4 h-4' }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none">
+      <rect x="3" y="5" width="10" height="8" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
+      <path d="M8 2v3M5.5 9h.01M10.5 9h.01M1.5 8v2M14.5 8v2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+      <circle cx="8" cy="2" r="0.9" fill="currentColor" />
+    </svg>
+  )
+}
