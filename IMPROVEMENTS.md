@@ -82,3 +82,95 @@ Tracked improvements, known gaps, and ideas for future development. Items are ad
 **Gap:** Docs don't reflect the full DRAFT → PROPOSED → ACCEPTED → STAGED → COMMITTED (or REJECTED) lifecycle or the workflows that drive it.
 
 **Proposed fix:** Rewrite `docs/schemas/decision.md` to cover every schema field and the full lifecycle; add `docs/workflows/` entries (and pages, if warranted) for the two undocumented workflows.
+
+---
+
+## End-to-end functionality review (2026-06)
+
+A top-to-bottom pass over the live app. Ordered roughly by impact.
+
+### High impact
+- **"New Decision" modal Save is a stub.** [`NewDecisionModal`](src/components/decisions/NewDecisionModal.jsx) `handleSave` just sets `saved = true` with a `// TODO: push to repo on new branch`. Raising a decision from an artefact page does nothing durable; only the full editor (`DecisionEditorPage` → `/api/github` `create-decision`) actually creates one. Either wire the modal to `create-decision` or make it route to the editor with the scope pre-filled.
+- **Decision transitions don't work in local dev.** Status changes call `/api/github`, which is a Vercel serverless function — the Vite dev middleware only serves `/api/arch` and `/api/schemas|docs`. Add a dev shim (or document that transitions are deploy-only) so the pipeline can be exercised locally.
+- **No global search / command palette.** Navigation is entirely via the domain tabs; there's no way to jump to a capability/process/platform/decision by name or ID. This is the single biggest usability gap (and is designed for in `proposed-design/shell.html`).
+- **Decision status vs. analysis content.** The analysis workflows write findings/changes to `decision.json` but never advance `status`; status is UI-driven. After a green pipeline a decision can read `proposed` while carrying `accepted`-stage `architecture-changes`. Make the workflow (or the API on dispatch) own the status transition, or surface "analysis complete, awaiting human" explicitly.
+
+### Medium impact
+- **Footer mis-reports config.** The footer shows "GITHUB_OWNER / GITHUB_REPO not configured" in dev because it checks build-time `import.meta.env` vars that aren't set, even though data loads fine. Fix the check or remove the banner.
+- **Validation workflows are disabled.** `validate-schema`, `validate-structure`, `validate-context` all carry `if: false`. Re-enable JSON-Schema validation of architecture instances and the change-surface checks as PR gates (the new `test.yml` shows the pattern).
+- **Cross-reference integrity isn't checked.** Document refs (e.g. `PLAT-MDM`, context `document-id`s) aren't validated against the catalogues/instances they point at. Add a referential-integrity check (mirrors the decision pipeline's `referential-integrity` step, but for committed data).
+- **Diagram export/download** — see backlog item above; recurring user need.
+- **Staged-changes preview** — see backlog item above (`?ref=<branch>`).
+
+### Lower impact / polish
+- **Accessibility:** form labels in the decision editor/modal aren't associated with controls; modals and the slide panel don't trap focus or restore it on close. (Tracked in `PRODUCTION_READINESS.md`.)
+- **Responsiveness:** the document/decision two-column layout hides the contents nav below `lg`; catalogue/matrix tables rely on horizontal scroll. The product is desktop-first — a deliberate mobile pass would help.
+- **Loading states:** some routes flash a bare spinner; skeletons would feel faster.
+- **Entity deep-linking:** the entity detail panel has no shareable URL.
+
+---
+
+## Framework alignment — TOGAF
+
+Pickle already implements several TOGAF ideas natively; a few terminology and structural tweaks would make the alignment explicit and marketable.
+
+| TOGAF concept | Pickle today | Tweak to align |
+|---|---|---|
+| **ADM phases A–H** | The document chain AVI → AIN → SVI → SDE → ISP loosely tracks Vision → Definition → Governance | Label each document type with its ADM phase (AVI = *Phase A: Architecture Vision*; SDE = *Architecture Definition*; decisions = *Phase G/H Governance & Change Management*) |
+| **Architecture domains (Business / Data / Application / Technology)** | Business, Data, Integration, Application, Solution | Add a **Technology** domain (infrastructure, networks, hosting — TOGAF Phase D); position **Integration** as a cross-cutting concern. Currently only `APP-DAP` physical hints at technology |
+| **Architecture Repository** | The Git repo *is* the repository | Surface this framing in docs/home — "your TOGAF Architecture Repository, as code" |
+| **ABB → SBB (building blocks)** | Conceptual → Logical → Physical layers | Adopt ABB/SBB language: conceptual/logical = Architecture Building Blocks, physical = Solution Building Blocks |
+| **Architecture Definition Document / Requirements Specification** | SDE document + decision requirements + SDE NFRs | Group these as the "Architecture Definition" and a cross-cutting **Requirements** repository (TOGAF Requirements Management sits at the centre of the ADM) |
+| **Architecture Roadmap / Transition Architectures** | AVI `transformation-themes` | Add explicit **Roadmap** and **Transition State** artefact types (Phase E/F) — these were intentionally removed from SDE earlier; they belong at the vision/portfolio level |
+| **Principles / Decisions / Stakeholders / Concerns / Viewpoints** | Per-domain Strategy/Principles/Guardrails; ADRs | Already strong. Add **stakeholder** and **concern** fields to visions/intents to complete the TOGAF/ArchiMate vocabulary |
+
+**Net:** Pickle is a TOGAF-shaped tool that codifies the Architecture Repository and ADRs. The gaps are a Technology domain, explicit Roadmap/Transition artefacts, and ADM-phase labelling.
+
+---
+
+## Framework alignment — SAFe
+
+SAFe is delivery-flow oriented; Pickle's strongest SAFe fit is **Solution Intent** and the **Architectural Runway**.
+
+| SAFe concept | Pickle today | Tweak to align |
+|---|---|---|
+| **Solution Intent** (single source of truth for current & future solution behaviour) | The Solution document set (SVI/SDE/ISP) + the repository | Brand the solution document set as **Solution Intent**; distinguish *fixed* vs *variable* intent (decided vs. options-open) — Pickle's `status` + decision options already model this |
+| **Architectural Runway** (existing components/infra enabling near-term features) | Physical-layer catalogues (`APP-CAT`, platforms) + guardrails | Add a **Runway** view that reads the physical layer and shows what's "ready" vs "needs an enabler" |
+| **Enabler / Enabler Epic** (architectural work) | ADR-driven architecture changes | Add an **Enabler** decision/change type; link enablers to the capabilities/features they unblock |
+| **Epics → Capabilities → Features → Stories** | `BUS-CAP` (enterprise capabilities), SDE `features` | Clarify enterprise-capability vs SAFe-Capability; add optional links from decisions/features to external backlog IDs (Jira/ADO Epic/Feature) |
+| **Lean Portfolio Management / Lean Business Case** | AVI drivers/objectives/benefits | Map AVI to a portfolio **Epic hypothesis / Lean Business Case**; add WSJF (Cost of Delay ÷ size) scoring to decisions for prioritisation |
+| **Program Increment (PI) / releases** | Per-client **versions** (`1.0.0` …) | Map versions to PIs/releases; allow a version to carry a PI label and dates |
+| **Value Streams** | `BUS-PRO` (business processes) partially | Add an operational/development **Value Stream** business artefact |
+| **Continuous Delivery Pipeline** | The decisions + GitHub Actions pipeline | Already a real CD-style governance pipeline — surface it as such |
+
+**Net:** Pickle can position itself as a **Solution Intent + Architectural Runway** repository for SAFe, with enablers driven by ADRs. The gaps are enabler/WSJF fields, runway views, and backlog-tool links.
+
+> **Homepage:** add a "Works with your framework" section with a TOGAF and a SAFe support table summarising the rows above (what's supported today vs. on the roadmap).
+
+---
+
+## Authentication, access control & storage
+
+The app is currently **unauthenticated** — anyone with the URL can view everything and drive decision transitions (the server holds the only GitHub token). Fine for a demo, not for production. Proposed setup, to be fleshed out then built.
+
+### Authentication
+- **Primary: GitHub OAuth** (via Auth.js / NextAuth-style flow on Vercel). Natural fit — the architecture lives in GitHub, so a user's GitHub identity can map to repository permissions.
+- **Enterprise SSO:** OIDC/SAML (Okta, Entra ID) for client orgs that don't use GitHub identities.
+- Sessions in secure, HTTP-only cookies; server-side session validation on every mutating call.
+
+### Authorization (RBAC + ACL)
+- **Roles:** `Viewer` (read), `Contributor` (raise decisions/edit drafts), `Approver/Architect` (accept / reject / stage / commit), `Admin` (manage clients, users, config).
+- **Scoping:** roles assigned **per client** (optionally per version/domain). A user holds `{ clientId, role }` grants.
+- **Enforcement:** add an authz layer to `/api/github` — every `create-decision` / `update-decision` / `commit-decision` checks the session's role for the target client. Today these are unprotected.
+- **Optional GitHub mapping:** when using per-client repos, derive roles from the user's repo permission (push → Contributor, admin → Approver).
+- **Audit:** log every transition (who, when, from→to) for governance.
+
+### Storage for non-GitHub state
+Keep architecture-as-code in GitHub (source of truth); add an operational tier:
+- **Relational DB** (Vercel Postgres / Neon / Supabase): users, role/ACL grants, per-client repo + model + encrypted API-key config, audit log, comments/annotations on decisions and artefacts, WSJF/prioritisation scores, external backlog links (Jira/ADO), sessions.
+- **Blob storage** (Vercel Blob / S3): binary artefacts — uploaded/exported diagrams (PNG/PDF), client logos (currently read from the repo), decision attachments, generated reports.
+
+### Phased rollout
+1. **Login gate** — GitHub OAuth + a single `Admin` allowlist; everyone else read-only.
+2. **RBAC in DB** — per-client role grants; enforce on the mutating API; audit log.
+3. **Per-client repos + blob** — multi-repo config in DB, GitHub-permission mapping, blob for binaries, enterprise SSO.
