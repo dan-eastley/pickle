@@ -1,0 +1,267 @@
+{
+  "domains": {
+    "business": {
+      "name": "Business",
+      "description": "The organisation's capabilities, processes, and operating model — what the business does and why. This domain sets the context that all others serve."
+    },
+    "data": {
+      "name": "Data",
+      "description": "The data assets, structures, and governance that support business operations — ensuring data is well-defined, trusted, and available where it is needed."
+    },
+    "integration": {
+      "name": "Integration",
+      "description": "How systems and services connect and communicate — covering APIs, events, messaging, and the rules that govern how information flows between them."
+    },
+    "application": {
+      "name": "Application",
+      "description": "The software applications and platforms that deliver business capabilities — what exists, how it is organised, and how it relates to business needs."
+    },
+    "solution": {
+      "name": "Solution",
+      "description": "Joined-up designs that span multiple domains to address a specific business need or initiative — bringing together business, data, integration, and application concerns."
+    }
+  },
+  "abstractions": {
+    "conceptual": {
+      "name": "Conceptual",
+      "label": "What & Why",
+      "description": "Sets the direction — what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs)."
+    },
+    "logical": {
+      "name": "Logical",
+      "label": "How",
+      "description": "The rules and principles that guide design decisions, without committing to any specific tool or product. In TOGAF terms, logical artefacts are Architecture Building Blocks (ABBs)."
+    },
+    "physical": {
+      "name": "Physical",
+      "label": "Where & With What",
+      "description": "The concrete standards and technology decisions that govern how the architecture is built and operated. In TOGAF terms, physical artefacts are Solution Building Blocks (SBBs)."
+    }
+  },
+  "formats": {
+    "catalogue": {
+      "label": "Catalogues",
+      "description": "Structured lists of architecture entities, validated by JSON Schema."
+    },
+    "diagram": {
+      "label": "Diagrams",
+      "description": "Visual representations of architecture entities and their relationships."
+    },
+    "document": {
+      "label": "Documents",
+      "description": "Free-form narrative content authored in Markdown, used for contextual or explanatory artefacts."
+    },
+    "matrix": {
+      "label": "Matrices",
+      "description": "Grids mapping relationships between entity sets, spanning abstraction layers or domains."
+    }
+  },
+  "diagramTypes": {
+    "card-based": {
+      "label": "Card Based",
+      "description": "Hierarchical nested cards (e.g. Business Capability Model)."
+    },
+    "process-flow": {
+      "label": "Process Flow",
+      "description": "Sequential chevron flow by level (e.g. Business Process Model)."
+    },
+    "entity-based": {
+      "label": "Entity Based",
+      "description": "Entity-relationship style (e.g. Conceptual Data Model)."
+    },
+    "sequence": {
+      "label": "Sequence",
+      "description": "Ordered message / event flow between actors or systems."
+    },
+    "network": {
+      "label": "Network",
+      "description": "Node-and-edge topology (e.g. infrastructure, integration landscape)."
+    },
+    "timeline": {
+      "label": "Timeline",
+      "description": "Roadmap or change over time (e.g. capability evolution plan)."
+    }
+  },
+  "artefacts": {
+    "BUS-STR": {
+      "name": "Business Architecture Strategy",
+      "description": "A catalogue of strategic goals and direction for the Business domain — the outcomes the organisation is trying to achieve and why."
+    },
+    "BUS-CAP": {
+      "name": "Business Capabilities",
+      "description": "A hierarchical catalogue of what the organisation does, structured by capability area and sub-capability."
+    },
+    "BUS-BCM": {
+      "name": "Business Capability Model",
+      "description": "A visual map of the organisation's capabilities, arranged as a nested hierarchy."
+    },
+    "BUS-PRO": {
+      "name": "Business Processes",
+      "description": "A catalogue of the key processes the organisation runs to deliver business value, structured by type and level."
+    },
+    "BUS-BPM": {
+      "name": "Business Process Model",
+      "description": "A sequential chevron flow of the organisation's processes at Level 1 and 2, with per-L1 drill-downs to Level 3."
+    },
+    "BUS-CAP-PRO": {
+      "name": "Business Capabilities ↔ Business Processes",
+      "description": "Maps business capabilities to the processes that realise them at Level 1 and Level 2."
+    },
+    "BUS-PRN": {
+      "name": "Business Architecture Principles",
+      "description": "The guiding principles that shape how Business architecture decisions are made."
+    },
+    "BUS-STR-PRN": {
+      "name": "Business Architecture Strategy ↔ Principles",
+      "description": "Maps Business Architecture Strategy statements to the Architecture Principles that operationalise them."
+    },
+    "BUS-GRD": {
+      "name": "Business Architecture Guardrails",
+      "description": "Rules and minimum standards that must be followed in Business Architecture."
+    },
+    "BUS-PRN-GRD": {
+      "name": "Business Architecture Principles ↔ Guardrails",
+      "description": "Maps Business Architecture Principles to the Guardrails that make them concrete and enforceable."
+    },
+    "DAT-STR": {
+      "name": "Data Architecture Strategy",
+      "description": "A catalogue of strategic goals and direction for the Data domain."
+    },
+    "DAT-DAC": {
+      "name": "Data Domains & Concepts",
+      "description": "The organisation's key data subject areas and the conceptual data entities within each."
+    },
+    "DAT-CDM": {
+      "name": "Conceptual Data Model",
+      "description": "A visual map of the organisation's key data concepts and how they relate."
+    },
+    "DAT-PRN": {
+      "name": "Data Architecture Principles",
+      "description": "The guiding principles that shape how Data architecture decisions are made."
+    },
+    "DAT-STR-PRN": {
+      "name": "Data Architecture Strategy ↔ Principles",
+      "description": "Maps Data Architecture Strategy statements to the Architecture Principles that operationalise them."
+    },
+    "DAT-GRD": {
+      "name": "Data Architecture Guardrails",
+      "description": "Rules and minimum standards that must be followed in Data Architecture."
+    },
+    "DAT-PRN-GRD": {
+      "name": "Data Architecture Principles ↔ Guardrails",
+      "description": "Maps Data Architecture Principles to the Guardrails that make them concrete and enforceable."
+    },
+    "INT-STR": {
+      "name": "Integration Architecture Strategy",
+      "description": "A catalogue of strategic goals and direction for the Integration domain."
+    },
+    "INT-IFC": {
+      "name": "Interface Catalogue",
+      "description": "The logical interfaces that connect platforms across the application landscape, and the direction of data flow between them."
+    },
+    "INT-WRD": {
+      "name": "Interface Wiring Diagram",
+      "description": "Visual map of the integration landscape — platform-to-platform connections with flow counts and per-pair interface drill-down."
+    },
+    "INT-DAC-IFC": {
+      "name": "Data Domains & Concepts ↔ Interface Catalogue",
+      "description": "Maps each interface in the Interface Catalogue to the conceptual data entities that flow across it."
+    },
+    "INT-PRN": {
+      "name": "Integration Architecture Principles",
+      "description": "The guiding principles that shape how Integration architecture decisions are made."
+    },
+    "INT-STR-PRN": {
+      "name": "Integration Architecture Strategy ↔ Principles",
+      "description": "Maps Integration Architecture Strategy statements to the Architecture Principles that operationalise them."
+    },
+    "INT-GRD": {
+      "name": "Integration Architecture Guardrails",
+      "description": "Rules and minimum standards that must be followed in Integration Architecture."
+    },
+    "INT-PRN-GRD": {
+      "name": "Integration Architecture Principles ↔ Guardrails",
+      "description": "Maps Integration Architecture Principles to the Guardrails that make them concrete and enforceable."
+    },
+    "APP-STR": {
+      "name": "Application Architecture Strategy",
+      "description": "A catalogue of strategic goals and direction for the Application domain."
+    },
+    "APP-DAP": {
+      "name": "Application Domains & Platforms",
+      "description": "The organisation's application landscape, grouped by business domain and the platforms within each."
+    },
+    "APP-DPM": {
+      "name": "Domains & Platforms Model",
+      "description": "A visual map of the organisation's application landscape."
+    },
+    "APP-CAP-DAP": {
+      "name": "Business Capabilities ↔ Application Domains & Platforms",
+      "description": "Maps each APP-DAP platform to the Level 2 business capabilities it supports."
+    },
+    "APP-PRN": {
+      "name": "Application Architecture Principles",
+      "description": "The guiding principles that shape how Application architecture decisions are made."
+    },
+    "APP-STR-PRN": {
+      "name": "Application Architecture Strategy ↔ Principles",
+      "description": "Maps Application Architecture Strategy statements to the Architecture Principles that operationalise them."
+    },
+    "APP-GRD": {
+      "name": "Application Architecture Guardrails",
+      "description": "Rules and minimum standards that must be followed in Application Architecture."
+    },
+    "APP-PRN-GRD": {
+      "name": "Application Architecture Principles ↔ Guardrails",
+      "description": "Maps Application Architecture Principles to the Guardrails that make them concrete and enforceable."
+    },
+    "APP-CAT": {
+      "name": "Application Catalogue",
+      "description": "The physical applications (vendor products) deployed across the organisation, with their lifecycle status and TIME classification."
+    },
+    "APP-DAP-CAT": {
+      "name": "Application Domains & Platforms ↔ Application Catalogue",
+      "description": "Maps each APP-DAP platform to the physical application(s) in APP-CAT that implement it."
+    },
+    "SOL-STR": {
+      "name": "Solution Architecture Strategy",
+      "description": "A catalogue of strategic goals and direction for the Solution domain."
+    },
+    "SOL-PRN": {
+      "name": "Solution Architecture Principles",
+      "description": "The guiding principles that shape how Solution architecture decisions are made."
+    },
+    "SOL-STR-PRN": {
+      "name": "Solution Architecture Strategy ↔ Principles",
+      "description": "Maps Solution Architecture Strategy statements to the Architecture Principles that operationalise them."
+    },
+    "SOL-GRD": {
+      "name": "Solution Architecture Guardrails",
+      "description": "Rules and minimum standards that must be followed in Solution Architecture."
+    },
+    "SOL-PRN-GRD": {
+      "name": "Solution Architecture Principles ↔ Guardrails",
+      "description": "Maps Solution Architecture Principles to the Guardrails that make them concrete and enforceable."
+    },
+    "SOL-AVI": {
+      "name": "Architecture Vision(s)",
+      "description": "TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain — together with the stakeholders involved and the concerns they hold. Multiple instances — one per initiative."
+    },
+    "SOL-AIN": {
+      "name": "Architecture Intent(s)",
+      "description": "TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs — capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances — one per domain or capability area."
+    },
+    "SOL-SVI": {
+      "name": "Solution Intent(s)",
+      "description": "TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative."
+    },
+    "SOL-SDE": {
+      "name": "Solution Design(s)",
+      "description": "TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area."
+    },
+    "SOL-ISP": {
+      "name": "Interface Specification(s)",
+      "description": "TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface."
+    }
+  }
+}
