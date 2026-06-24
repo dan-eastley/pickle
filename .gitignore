@@ -30,3 +30,6 @@ dist/
 test-results/
 playwright-report/
 coverage/
+
+# Stray output file dropped by the claude-code-base-action in CI
+output.txt
