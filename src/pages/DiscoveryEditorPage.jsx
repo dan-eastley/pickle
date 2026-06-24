@@ -4,6 +4,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
+import FormHelp from '../components/ui/FormHelp'
 import { RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -56,70 +57,74 @@ export default function DiscoveryEditorPage() {
         </div>
       )}
 
-      <div className="max-w-3xl space-y-5">
-        {/* Title */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title <span className="text-error-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="e.g. Which capabilities depend on Oracle CC&B?"
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex-1 max-w-2xl space-y-5">
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Title <span className="text-error-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="e.g. Which capabilities depend on Oracle CC&B?"
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Context */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Context <span className="text-error-500">*</span>
+            </label>
+            <AutoGrowTextarea
+              value={context}
+              onChange={e => setContext(e.target.value)}
+              placeholder="Today we..."
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Request */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Request <span className="text-error-500">*</span>
+            </label>
+            <AutoGrowTextarea
+              value={request}
+              onChange={e => setRequest(e.target.value)}
+              placeholder="List the..."
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Scope */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+            <ScopeSelector
+              domain={scopeDomain}
+              abstraction={scopeAbstraction}
+              artefact={scopeArtefact}
+              onChange={({ domain, abstraction, artefact }) => {
+                setScopeDomain(domain)
+                setScopeAbstraction(abstraction)
+                setScopeArtefact(artefact)
+              }}
+            />
+          </div>
         </div>
 
-        {/* Context */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Context <span className="text-error-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1.5">
-            The situation framing the question — what the architecture currently looks like and why you are asking.
-          </p>
-          <AutoGrowTextarea
-            value={context}
-            onChange={e => setContext(e.target.value)}
-            placeholder="Today we..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
-        </div>
-
-        {/* Request */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Request <span className="text-error-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1.5">
-            The question or analysis you want the Virtual Architect Agent to perform against the architecture.
-          </p>
-          <AutoGrowTextarea
-            value={request}
-            onChange={e => setRequest(e.target.value)}
-            placeholder="List the..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
-        </div>
-
-        {/* Scope */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
-          <p className="text-xs text-gray-400 mb-2">
-            Optional. Constrain the discovery to a specific domain, abstraction layer, or artefact type.
-          </p>
-          <ScopeSelector
-            domain={scopeDomain}
-            abstraction={scopeAbstraction}
-            artefact={scopeArtefact}
-            onChange={({ domain, abstraction, artefact }) => {
-              setScopeDomain(domain)
-              setScopeAbstraction(abstraction)
-              setScopeArtefact(artefact)
-            }}
-          />
-        </div>
+        <FormHelp
+          title="Asking a good question"
+          tips={[
+            ['Title', 'The question in a nutshell — short and scannable.'],
+            ['Context', 'Why are you asking now, and what does the architecture look like today?'],
+            ['Request', 'Exactly what you want the agent to find, trace, or compare across the model.'],
+            ['Scope', 'Optional. Narrow it to a domain, layer, or artefact to focus the answer.'],
+          ]}
+          footer="The Virtual Architect Agent reads the architecture as data and produces a point-in-time view you can keep."
+        />
       </div>
     </div>
   )

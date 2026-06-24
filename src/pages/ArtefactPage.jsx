@@ -8,17 +8,19 @@ import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
 import DocumentView, { DocumentSelector } from '../components/artefacts/DocumentView'
 import NewDecisionModal from '../components/decisions/NewDecisionModal'
+import NewDiscoveryModal from '../components/decisions/NewDiscoveryModal'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
-import { KeyStar, PlusIcon } from '../components/ui/icons'
+import { KeyStar, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useCollapsed from '../hooks/useCollapsed'
 
 function AdrActionBar({ artefact, documents, selectedDocument, clientId, versionId }) {
-  const [modalOpen, setModalOpen] = useState(false)
+  const [decisionOpen, setDecisionOpen] = useState(false)
+  const [discoveryOpen, setDiscoveryOpen] = useState(false)
   const colors = DOMAIN_COLORS[artefact.domain]
   const bgClass = colors?.bg ?? 'bg-gray-50'
   const btnClass = colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
@@ -28,9 +30,6 @@ function AdrActionBar({ artefact, documents, selectedDocument, clientId, version
     <>
       <div className={`mb-5 flex items-center justify-between gap-4 px-5 py-3 ${bgClass}`}>
         <div className="flex items-center gap-2 min-w-0">
-          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
-            <path d="M8 1v6M5 4l3-3 3 3M3 10h10M3 13h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
           <span className="text-sm text-gray-600">
             Changes to this artefact must go through a Decision Record.
           </span>
@@ -44,22 +43,37 @@ function AdrActionBar({ artefact, documents, selectedDocument, clientId, version
           </Link>
           <button
             className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
-            onClick={() => setModalOpen(true)}
+            onClick={() => setDecisionOpen(true)}
           >
-            <PlusIcon className="w-3.5 h-3.5" />
+            <DecisionIcon className="w-3.5 h-3.5" />
             New Decision
+          </button>
+          <button
+            className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 transition-opacity"
+            onClick={() => setDiscoveryOpen(true)}
+          >
+            <RobotIcon className="w-3.5 h-3.5" />
+            New Discovery
           </button>
         </div>
       </div>
 
-      {modalOpen && (
+      {decisionOpen && (
         <NewDecisionModal
           artefact={artefact}
           documents={documents}
           selectedDocument={selectedDocument}
           clientId={clientId}
           versionId={versionId}
-          onClose={() => setModalOpen(false)}
+          onClose={() => setDecisionOpen(false)}
+        />
+      )}
+      {discoveryOpen && (
+        <NewDiscoveryModal
+          artefact={artefact}
+          clientId={clientId}
+          versionId={versionId}
+          onClose={() => setDiscoveryOpen(false)}
         />
       )}
     </>

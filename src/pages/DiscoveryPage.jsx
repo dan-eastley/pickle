@@ -1,29 +1,28 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeChip from '../components/decisions/ScopeChip'
+import ScopeFilter from '../components/decisions/ScopeFilter'
 import Button from '../components/ui/Button'
 import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
+import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
 import { ChevronRight, ChevronDown, RobotIcon, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-import useCollapsed from '../hooks/useCollapsed'
 
 const POTS = [
   { status: 'active', label: 'Active', badge: 'bg-emerald-50 text-emerald-700' },
   { status: 'archived', label: 'Archived', badge: 'bg-gray-100 text-gray-500' },
 ]
 
-function DiscoveryGroup({ pot, discoveries, clientId, versionId }) {
-  const defaultCollapsed = pot.status !== 'active' && discoveries.length === 0
-  const [collapsed, toggleCollapsed] = useCollapsed(`discovery-group-${pot.status}-collapsed`, defaultCollapsed)
+function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onToggle }) {
   const open = !collapsed
 
   return (
     <div className="border border-gray-200 bg-white">
       <button
-        onClick={toggleCollapsed}
+        onClick={onToggle}
         className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-200"
       >
         <div className="flex items-center gap-3">
@@ -68,9 +67,15 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId }) {
 
 export default function DiscoveryPage() {
   const { clientId, versionId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
   const [discoveries, setDiscoveries] = useState([])
+  const [collapsedOverride, setCollapsedOverride] = useState(null)
+
+  const filterDomain      = searchParams.get('domain')      ?? ''
+  const filterAbstraction = searchParams.get('abstraction') ?? ''
+  const filterArtefact    = searchParams.get('artefact')    ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Discovery`)
@@ -82,10 +87,30 @@ export default function DiscoveryPage() {
       .catch(() => setLoading(false))
   }, [clientId, versionId])
 
+  const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
+  const filtered = discoveries.filter(d => {
+    if (filterDomain && d.scope?.domain !== filterDomain) return false
+    if (filterAbstraction && d.scope?.abstraction !== filterAbstraction) return false
+    if (filterArtefact && d.scope?.artefact !== filterArtefact) return false
+    return true
+  })
+  const hiddenByFilter = discoveries.length - filtered.length
+
   const grouped = POTS.map(pot => ({
     pot,
-    discoveries: discoveries.filter(d => (d.status ?? 'active') === pot.status),
+    discoveries: filtered.filter(d => (d.status ?? 'active') === pot.status),
   }))
+
+  const isCollapsed = (status, count) =>
+    collapsedOverride ? collapsedOverride.has(status) : (status !== 'active' && count === 0)
+  const toggleGroup = (status) =>
+    setCollapsedOverride(prev => {
+      const next = new Set(prev ?? grouped.filter(g => isCollapsed(g.pot.status, g.discoveries.length)).map(g => g.pot.status))
+      next.has(status) ? next.delete(status) : next.add(status)
+      return next
+    })
+  const expandAll   = () => setCollapsedOverride(new Set())
+  const collapseAll = () => setCollapsedOverride(new Set(POTS.map(p => p.status)))
 
   return (
     <div>
@@ -109,6 +134,25 @@ export default function DiscoveryPage() {
         questions is not yet wired up — this is the framework for it.
       </div>
 
+      <div className="mb-5 p-4 bg-gray-50 border border-gray-200">
+        <ScopeFilter searchParams={searchParams} setSearchParams={setSearchParams} />
+      </div>
+
+      {isFiltered && (
+        <div className="mb-5 flex items-center justify-between gap-3 px-4 py-2.5 bg-brand-50 border border-brand-200 text-sm text-brand-800">
+          <span>
+            Showing {filtered.length} of {discoveries.length} discover{discoveries.length === 1 ? 'y' : 'ies'}
+            {hiddenByFilter > 0 && ` — ${hiddenByFilter} hidden by the scope filter`}.
+          </span>
+          <button
+            onClick={() => setSearchParams(new URLSearchParams())}
+            className="flex-shrink-0 font-medium text-brand-700 hover:text-brand-900 transition-colors"
+          >
+            Clear filter
+          </button>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
       ) : discoveries.length === 0 ? (
@@ -120,11 +164,24 @@ export default function DiscoveryPage() {
           />
         </div>
       ) : (
-        <div className="space-y-3">
-          {grouped.map(({ pot, discoveries: group }) => (
-            <DiscoveryGroup key={pot.status} pot={pot} discoveries={group} clientId={clientId} versionId={versionId} />
-          ))}
-        </div>
+        <>
+          <div className="mb-2 flex justify-end">
+            <ExpandCollapseAll onExpandAll={expandAll} onCollapseAll={collapseAll} />
+          </div>
+          <div className="space-y-3">
+            {grouped.map(({ pot, discoveries: group }) => (
+              <DiscoveryGroup
+                key={pot.status}
+                pot={pot}
+                discoveries={group}
+                clientId={clientId}
+                versionId={versionId}
+                collapsed={isCollapsed(pot.status, group.length)}
+                onToggle={() => toggleGroup(pot.status)}
+              />
+            ))}
+          </div>
+        </>
       )}
 
       <JsonPreview data={{ discoveries }} label="discovery.json" />

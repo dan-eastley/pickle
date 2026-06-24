@@ -3,25 +3,23 @@ import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { DECISION_STATUS_ORDER, decisionStatusBadge, decisionStatusLabel } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
-import ScopeSelector from '../components/decisions/ScopeSelector'
+import ScopeFilter from '../components/decisions/ScopeFilter'
 import Button from '../components/ui/Button'
 import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
+import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
 import { ChevronRight, ChevronDown, DecisionIcon, PlusIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-import useCollapsed from '../hooks/useCollapsed'
 
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
 
-function DecisionGroup({ status, decisions, clientId, versionId }) {
-  const defaultCollapsed = decisions.length === 0 || !STATUS_DEFAULT_OPEN.has(status)
-  const [collapsed, toggleCollapsed] = useCollapsed(`decision-group-${status}-collapsed`, defaultCollapsed)
+function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onToggle }) {
   const open = !collapsed
 
   return (
     <div className="border border-gray-200 bg-white">
       <button
-        onClick={toggleCollapsed}
+        onClick={onToggle}
         className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-200"
       >
         <div className="flex items-center gap-3">
@@ -76,32 +74,15 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
   )
 }
 
-// Thin adapter: ScopeSelector drives the URL search params so filters are
-// shareable / bookmarkable.
-function ScopeFilter({ searchParams, setSearchParams }) {
-  const scope = {
-    domain:      searchParams.get('domain')      ?? '',
-    abstraction: searchParams.get('abstraction') ?? '',
-    artefact:    searchParams.get('artefact')    ?? '',
-  }
-
-  function handleChange({ domain, abstraction, artefact }) {
-    const next = new URLSearchParams()
-    if (domain)      next.set('domain', domain)
-    if (abstraction) next.set('abstraction', abstraction)
-    if (artefact)    next.set('artefact', artefact)
-    setSearchParams(next)
-  }
-
-  return <ScopeSelector {...scope} onChange={handleChange} />
-}
-
 export default function DecisionsPage() {
   const { clientId, versionId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
   const [decisions, setDecisions] = useState([])
+  // Collapsed group keys. null = "use the default" (open draft/proposed + any
+  // non-empty group); Expand/Collapse all replaces it with an explicit set.
+  const [collapsedOverride, setCollapsedOverride] = useState(null)
 
   const filterDomain      = searchParams.get('domain')      ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
@@ -133,6 +114,19 @@ export default function DecisionsPage() {
   const knownStatuses = new Set(DECISION_STATUS_ORDER)
   const unknown = filtered.filter(d => !knownStatuses.has(d.status ?? 'draft'))
   if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
+
+  const isCollapsed = (status, count) =>
+    collapsedOverride
+      ? collapsedOverride.has(status)
+      : (count === 0 || !STATUS_DEFAULT_OPEN.has(status))
+  const toggleGroup = (status, count) =>
+    setCollapsedOverride(prev => {
+      const next = new Set(prev ?? grouped.filter(g => isCollapsed(g.status, g.decisions.length)).map(g => g.status))
+      next.has(status) ? next.delete(status) : next.add(status)
+      return next
+    })
+  const expandAll   = () => setCollapsedOverride(new Set())
+  const collapseAll = () => setCollapsedOverride(new Set(grouped.map(g => g.status)))
 
   return (
     <div>
@@ -171,11 +165,24 @@ export default function DecisionsPage() {
       {loading ? (
         <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
       ) : (
-        <div className="space-y-3">
-          {grouped.map(({ status, decisions: group }) => (
-            <DecisionGroup key={status} status={status} decisions={group} clientId={clientId} versionId={versionId} />
-          ))}
-        </div>
+        <>
+          <div className="mb-2 flex justify-end">
+            <ExpandCollapseAll onExpandAll={expandAll} onCollapseAll={collapseAll} />
+          </div>
+          <div className="space-y-3">
+            {grouped.map(({ status, decisions: group }) => (
+              <DecisionGroup
+                key={status}
+                status={status}
+                decisions={group}
+                clientId={clientId}
+                versionId={versionId}
+                collapsed={isCollapsed(status, group.length)}
+                onToggle={() => toggleGroup(status, group.length)}
+              />
+            ))}
+          </div>
+        </>
       )}
 
       {/* JSON preview of decisions.json index — for debugging */}

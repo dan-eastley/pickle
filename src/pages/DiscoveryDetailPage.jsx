@@ -84,8 +84,10 @@ export default function DiscoveryDetailPage() {
           )}
         </Section>
 
-        <ActivityHistory activity={discovery.activity} />
       </article>
+
+      {/* Activity sits outside the document surface (no white box / shadow) */}
+      <ActivityHistory activity={discovery.activity} />
 
       <JsonPreview data={discovery} label={`${discovery['discovery-id']}.json`} />
     </div>
