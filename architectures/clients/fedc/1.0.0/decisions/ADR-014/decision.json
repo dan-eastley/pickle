@@ -1,0 +1,19 @@
+{
+    "decision-id": "ADR-014",
+    "title": "Offboarding Customers",
+    "status": "draft",
+    "context": "We get a number of customers who don't pay us",
+    "problem": "We need to be able to instigate offboarding customers when we choose",
+    "proposal": "We need the capabilities and processes for offboarding customers",
+    "narrative": "## Context\n\nWe get a number of customers who don't pay us\n\n## Problem\n\nWe need to be able to instigate offboarding customers when we choose\n\n## Proposal\n\nWe need the capabilities and processes for offboarding customers",
+    "activity": [
+        {
+            "timestamp": "2026-06-24T15:13:21.418Z",
+            "action": "Created",
+            "who": "Joe Bloggs"
+        }
+    ],
+    "scope": {
+        "domain": "business"
+    }
+}
