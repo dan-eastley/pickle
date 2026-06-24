@@ -16,6 +16,38 @@
     "scope": {
         "domain": "business"
     },
+    "impact-assessment": [
+        {
+            "finding": "**Customer Management** (`CAP-001`) currently covers acquire, serve, and retain — but lacks explicit sub-capabilities for offboarding. The decision proposes a new capability lifecycle phase: exit/offboarding.",
+            "impact": "BUS-CAP must be expanded to include offboarding as a new Level 2 capability under Customer Management. Without this update, the architecture will lack visibility into offboarding work and cannot track its relationship to other business capabilities.",
+            "recommendation": "Add a new Level 2 capability `CAP-001-05: Offboard Customer` to BUS-CAP, with Level 3 sub-capabilities for: notification, account closure, data handling, refund processing (if applicable), and regulatory notification. Reference the relevant processes below.",
+            "rationale": "Offboarding is a distinct, material business activity that transitions customers out of the portfolio — as important to manage as onboarding. Capturing it explicitly in BUS-CAP ensures it is planned, resourced, and measured alongside other customer management activities."
+        },
+        {
+            "finding": "**Customer Lifecycle Management** (PROC-001) includes onboarding and retention but no offboarding process. The decision calls for 'capabilities and processes' but the process layer is undefined.",
+            "impact": "BUS-PRO must be updated to define a Level 2 process for offboarding, including steps for notification, data disposition, settlement, and compliance. Without this, teams will lack a standardized workflow and may apply inconsistent practices.",
+            "recommendation": "Add a new Level 2 process `PROC-001-06: Offboard Customers` with Level 3 sub-processes covering: identify candidates (non-payment), issue notice, suspend/close account, handle data requests/deletion per regulations (e.g., GDPR), process final settlement, and notify compliance/legal.",
+            "rationale": "Business processes are the operational realization of capabilities. Defining the offboarding process ensures the capability is executable, auditable, and compliant with regulatory obligations around customer data and financial settlement."
+        },
+        {
+            "finding": "The decision does not reference **Data Domains & Concepts** (DAT-DAC) or data handling, yet offboarding involves sensitive customer data (contact, usage, payment history). Data architecture implications are not yet identified.",
+            "impact": "The impact on data architecture—which customer data must be retained, deleted, or archived during offboarding—is unknown. Decisions about data retention and deletion must align with regulatory (GDPR, CCPA) and business requirements.",
+            "recommendation": "Flag for later review: confirm whether ADR-014 includes data retention/deletion policies or if a separate data architecture decision is needed. If in scope, document which DAT-DAC concepts are affected (e.g., customer personal data, usage records, billing history).",
+            "rationale": "Offboarding carries data governance risks. Clarifying scope early avoids downstream conflicts between operational requirements and data protection regulations."
+        },
+        {
+            "finding": "**Business Architecture Principles** (BUS-PRN) and **Guardrails** (BUS-GRD) may need updates to address fairness, transparency, and compliance in customer offboarding. No principles or guardrails currently exist for exit scenarios.",
+            "impact": "Without explicit guardrails, offboarding may be executed inconsistently, exposing the organization to regulatory breach, customer disputes, or reputational harm. Principles should mandate transparency, timeliness, and fair treatment.",
+            "recommendation": "Review BUS-PRN and BUS-GRD; add or update guardrails to require: (1) compliance with all applicable regulations (payment, data, notice); (2) audit trail of all offboarding actions; (3) timeliness targets (e.g., data deletion within 30 days); (4) escalation for disputed accounts.",
+            "rationale": "Guardrails codify non-negotiable standards. In a regulated business, offboarding must be governed by explicit rules to minimize legal risk and ensure consistent, fair treatment of departing customers."
+        },
+        {
+            "finding": "The requirements field in the decision JSON is empty. The narrative does not specify measurable acceptance criteria (e.g., time to offboard, data retention periods, regulatory compliance scope).",
+            "impact": "Without clear requirements, the downstream architecture and delivery teams lack concrete acceptance criteria, leading to ambiguity about scope, completeness, and success.",
+            "recommendation": "Add a `requirements` array with functional and non-functional requirements. Examples: *Functional:* \"Support offboarding of non-paying customers within 24 hours of decision\"; *Non-Functional:* \"Maintain immutable audit trail of all customer data handled during offboarding\"; *Regulatory:* \"Comply with [relevant regulation] data deletion timelines.\"",
+            "rationale": "Requirements drive the design of capabilities and processes. Clear, measurable criteria ensure alignment with business intent and provide acceptance gates for implementation."
+        }
+    ],
     "recommendations": [
         {
             "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
