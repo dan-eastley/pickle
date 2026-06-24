@@ -4,7 +4,7 @@ import {
   ABSTRACTION_COLORS, FORMAT_ORDER, getFormat,
 } from '../lib/artefacts'
 import FormatIcon from '../components/ui/FormatIcon'
-import TextLink from '../components/ui/TextLink'
+import Button from '../components/ui/Button'
 import ArtefactRow from '../components/artefacts/ArtefactRow'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -52,9 +52,11 @@ export default function AbstractionPage() {
         </div>
         <h1 className="text-xl font-semibold text-gray-900">{abstractionData.name}</h1>
         <p className="mt-1 text-sm text-gray-500 max-w-3xl">{abstractionData.description}</p>
-        <TextLink to={`${base}/decisions?domain=${domain}&abstraction=${abstraction}`} className="inline-flex items-center gap-1 mt-2 text-xs">
-          View decisions for this domain and abstraction →
-        </TextLink>
+        <div className="mt-3 flex items-center gap-2 flex-wrap">
+          <span className="text-xs text-gray-400">View for this domain &amp; abstraction</span>
+          <Button to={`${base}/decisions?domain=${domain}&abstraction=${abstraction}`} variant="secondary" size="sm">Decisions</Button>
+          <Button to={`${base}/discovery?domain=${domain}&abstraction=${abstraction}`} variant="secondary" size="sm">Discovery</Button>
+        </div>
       </div>
 
       <div className="border border-gray-200 bg-white">
