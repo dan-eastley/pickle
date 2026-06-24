@@ -1,10 +1,10 @@
 name: Decisions — Apply Changes
 
 # Fires when a decision moves from ACCEPTED to STAGED.
-# Reads the architecture-changes list and applies them to the actual artefact
-# files on the decisions branch, then opens a PR to main.
-#
-# STUB MODE: changes are logged but not applied.
+# Reads the architecture-changes list and applies the *accepted* ones to the
+# actual artefact files on the decisions branch via Claude, then opens (or
+# reuses) a PR to main and writes the PR number/url back onto the decision so
+# the UI can link to it and commit it.
 
 on:
   workflow_dispatch:
@@ -18,6 +18,11 @@ on:
       decision-id:
         required: true
         type: string
+      model:
+        description: "Claude model to apply the changes with"
+        required: false
+        type: string
+        default: claude-haiku-4-5-20251001
 
 permissions:
   contents: write
@@ -27,11 +32,17 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     env:
-      CLIENT_ID:   ${{ inputs.client-id }}
-      VERSION_ID:  ${{ inputs.version-id }}
-      DECISION_ID: ${{ inputs.decision-id }}
-      GH_TOKEN:    ${{ secrets.GITHUB_TOKEN }}
+      CLIENT_ID:     ${{ inputs.client-id }}
+      VERSION_ID:    ${{ inputs.version-id }}
+      DECISION_ID:   ${{ inputs.decision-id }}
+      GH_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+      DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
+      APPLY_PROMPT:  config/prompts/decisions/apply-changes.md
     steps:
+      - name: Started
+        run: |
+          echo "::notice::Started Decisions Apply Changes for ${DECISION_ID}"
+
       - name: Checkout decisions branch
         uses: actions/checkout@v5
         with:
@@ -49,53 +60,105 @@ jobs:
           git fetch origin main
           git merge origin/main --no-edit || true
 
-      # ── STUB ─────────────────────────────────────────────────────────────────
-      - name: Apply architecture changes (stub)
+      - name: Apply architecture changes with Claude
+        id: claude
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: ${{ inputs.model }}
+          allowed_tools: "Read,Edit,Write,Grep,Glob"
+          prompt: |
+            You are the "Apply Changes" step of the Pickle decisions workflow.
+
+            Decision file: ${{ env.DECISION_FILE }}
+            Apply prompt:  ${{ env.APPLY_PROMPT }}
+
+            Steps:
+              1. Read the instructions at ${{ env.APPLY_PROMPT }}.
+              2. Read the decision JSON at ${{ env.DECISION_FILE }} and its `architecture-changes`.
+              3. Apply every change whose `review` is "accepted" or absent (skip "declined")
+                 to the artefact files under
+                 architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
+                 keeping each file valid against its schema in config/schemas/.
+              4. Do not edit the decision JSON. Do not commit or push.
+
+      - name: Report Claude outcome
+        if: always()
         run: |
-          python3 - "$CLIENT_ID" "$VERSION_ID" "$DECISION_ID" <<'PYEOF'
-          import sys, json, pathlib
+          echo "::notice::Claude conclusion ${{ steps.claude.outputs.conclusion }}"
 
-          client_id, version_id, decision_id = sys.argv[1:]
-          # Read architecture-changes from main (already merged in)
-          decision_path = pathlib.Path(
-              f"architectures/clients/{client_id}/{version_id}/decisions/{decision_id}/decision.json"
-          )
-          with open(decision_path) as f:
-              decision = json.load(f)
-
-          changes = decision.get("architecture-changes", [])
-          print(f"::notice::STUB — would apply {len(changes)} architecture change(s):")
-          for c in changes:
-              print(f"  {c['change-type'].upper()} {c['artefact-id']}: {c['description']}")
-
-          # STUB: In production, Claude would read each change and edit the artefact files.
-          # For now, create a placeholder stub file to make the commit non-empty.
-          stub = pathlib.Path(f"architectures/clients/{client_id}/{version_id}/decisions/{decision_id}/.staged")
-          stub.write_text(f"Staged for {decision_id}\n")
-          print("::notice::Stub created .staged placeholder file")
-          PYEOF
-
-      - name: Commit changes to branch
+      - name: Commit artefact changes to branch
         run: |
           git add -A
           if git diff --cached --quiet; then
-            echo "::notice::No changes to commit."
+            echo "::notice::No artefact changes to commit."
           else
-            git commit -m "[Apply] Stage architecture changes for ${DECISION_ID}"
+            git commit -m "[Apply] Architecture changes for ${DECISION_ID}"
             git push origin "decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
           fi
 
-      - name: Open PR to main
+      - name: Open (or reuse) PR to main
+        id: pr
         run: |
           BRANCH="decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
-          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number // empty')
-          if [ -n "$EXISTING" ]; then
-            echo "::notice::PR #$EXISTING already exists for $BRANCH"
-          else
+          NUMBER=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number // empty')
+          if [ -z "$NUMBER" ]; then
             gh pr create \
               --head "$BRANCH" \
               --base main \
               --title "[${DECISION_ID}] Architecture changes ready to commit" \
               --body "Architecture changes generated from ${DECISION_ID} are ready to be merged into main."
-            echo "::notice::PR opened for $BRANCH"
+            NUMBER=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number // empty')
           fi
+          URL=$(gh pr view "$NUMBER" --json url --jq '.url')
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "::notice::PR #$NUMBER — $URL"
+
+      - name: Write PR metadata back onto the decision
+        env:
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_URL:    ${{ steps.pr.outputs.url }}
+        run: |
+          BRANCH="decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
+          python3 << 'PYEOF'
+          import json, os
+          path = os.environ['DECISION_FILE']
+          with open(path) as f:
+              d = json.load(f)
+          if os.environ.get('PR_NUMBER'):
+              d['pr-number'] = int(os.environ['PR_NUMBER'])
+          if os.environ.get('PR_URL'):
+              d['pr-url'] = os.environ['PR_URL']
+          with open(path, 'w') as f:
+              json.dump(d, f, indent=4)
+          print(f"Wrote pr-number={d.get('pr-number')} pr-url={d.get('pr-url')}")
+          PYEOF
+          git add "$DECISION_FILE"
+          if git diff --cached --quiet; then
+            echo "::notice::PR metadata already present."
+          else
+            git commit -m "[Apply] Record PR #${PR_NUMBER} on ${DECISION_ID}"
+            for attempt in 1 2 3; do
+              git push origin "HEAD:${BRANCH}" && break
+              git fetch origin "$BRANCH" && git rebase "origin/${BRANCH}"
+            done
+          fi
+
+      - name: Write summary
+        if: always()
+        run: |
+          {
+            echo "## Decisions — Apply Changes"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Decision | \`${DECISION_ID}\` |"
+            echo "| PR | #${{ steps.pr.outputs.number }} |"
+            echo "| Claude | \`${{ steps.claude.outputs.conclusion }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished Decisions Apply Changes for ${DECISION_ID}"

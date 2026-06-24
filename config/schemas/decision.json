@@ -224,6 +224,11 @@
                 "description": {
                     "type": "string",
                     "description": "Plain-language description of the change, including any implementor detail. e.g. 'Add capability: Project and Programme Management at level 1'"
+                },
+                "review": {
+                    "type": "string",
+                    "enum": ["accepted", "declined"],
+                    "description": "Author review decision, set via the UI while the decision is ACCEPTED. Declined changes are skipped when the Apply Changes workflow stages the PR."
                 }
             },
             "additionalProperties": false
