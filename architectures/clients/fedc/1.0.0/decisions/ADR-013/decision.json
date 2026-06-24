@@ -22,16 +22,16 @@
     ],
     "recommendations": [
         {
-            "recommendation": "The first requirement uses the phrase **'standard query patterns'** without defining what qualifies. Consider clarifying whether this means predefined report templates, drag-and-drop UI builders, or a specific set of query types — this will help downstream design work."
+            "recommendation": "**'Semantic layer'** is technical jargon unfamiliar to business stakeholders. Replace with plain language: *'A business-friendly metrics layer that translates technical database names into familiar business terms (e.g., \"monthly revenue\", \"customer count\").'* This clarifies the business value without requiring technical expertise to understand."
         },
         {
-            "recommendation": "**'Semantic layer'** is technical jargon. Consider rephrasing to emphasise the business benefit: e.g., *'A business-friendly metrics layer that lets teams use familiar terminology (e.g., \"monthly revenue\", \"customer count\") rather than technical database field names'* — this makes the intent clearer for non-technical stakeholders."
+            "recommendation": "The phrase **'standard query patterns'** in the first requirement is undefined. Clarify: Do you mean predefined report templates? Drag-and-drop filters? A specific set of aggregation types (e.g., filtered summaries over 3 dimensions)? Downstream design work needs precision here to scope the platform correctly."
         },
         {
-            "recommendation": "The narrative mentions **role-based access** as a key control, but no explicit requirement captures access enforcement. Consider adding a requirement that access controls must be enforced and that unauthorised data access attempts are logged or prevented — this ensures the governance intent is measurable."
+            "recommendation": "The narrative emphasises **role-based access** as a governance control, but no requirement explicitly captures this. Add a Non-Functional requirement: 'Access to data must be restricted by role based on business function, and all access attempts must be logged for audit purposes.' This makes governance intent measurable."
         },
         {
-            "recommendation": "Strong overall narrative — clear problem statement, business impact, and scope. The requirement set is testable and well-classified. Minor addition: consider mentioning whether the role-based access model should prevent analysts from accessing certain metrics or only limit row-level data visibility — this distinction will matter for downstream design."
+            "recommendation": "The narrative and requirements are well-structured, clear on the business problem and measurable outcomes. They are ready for downstream architecture analysis. Consider clarifying scope: Does role-based access prevent access to *metrics* (which metrics a role can query) or to *data rows* (filters on results), or both? This distinction drives the semantic layer design."
         }
     ],
     "impact-assessment": [
