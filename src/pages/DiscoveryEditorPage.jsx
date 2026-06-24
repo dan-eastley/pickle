@@ -3,6 +3,8 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
+import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
+import { RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 export default function DiscoveryEditorPage() {
@@ -16,7 +18,6 @@ export default function DiscoveryEditorPage() {
   const [title, setTitle] = useState('')
   const [context, setContext] = useState('')
   const [request, setRequest] = useState('')
-  const [status, setStatus] = useState('active')
   const [scopeDomain, setScopeDomain] = useState(searchParams.get('domain') ?? '')
   const [scopeAbstraction, setScopeAbstraction] = useState(searchParams.get('abstraction') ?? '')
   const [scopeArtefact, setScopeArtefact] = useState(searchParams.get('artefact') ?? '')
@@ -33,15 +34,16 @@ export default function DiscoveryEditorPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">New Discovery</h1>
+          <h1 className="text-xl font-semibold text-gray-900">New Architecture Discovery</h1>
           <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
         </div>
         <button
           onClick={handleSave}
           disabled={!canSave || saved}
-          className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
         >
-          Raise Discovery
+          <RobotIcon className="w-4 h-4" />
+          New Architecture Discovery
         </button>
       </div>
 
@@ -77,12 +79,11 @@ export default function DiscoveryEditorPage() {
           <p className="text-xs text-gray-400 mb-1.5">
             The situation framing the question — what the architecture currently looks like and why you are asking.
           </p>
-          <textarea
+          <AutoGrowTextarea
             value={context}
             onChange={e => setContext(e.target.value)}
-            rows={4}
             placeholder="Today we..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
         </div>
 
@@ -94,26 +95,12 @@ export default function DiscoveryEditorPage() {
           <p className="text-xs text-gray-400 mb-1.5">
             The question or analysis you want the Virtual Architect Agent to perform against the architecture.
           </p>
-          <textarea
+          <AutoGrowTextarea
             value={request}
             onChange={e => setRequest(e.target.value)}
-            rows={4}
             placeholder="List the..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <select
-            value={status}
-            onChange={e => setStatus(e.target.value)}
-            className="px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          >
-            <option value="active">Active</option>
-            <option value="archived">Archived</option>
-          </select>
         </div>
 
         {/* Scope */}

@@ -28,7 +28,7 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId }) {
       >
         <div className="flex items-center gap-3">
           <span className={`text-xs font-semibold px-2 py-0.5 ${pot.badge}`}>{pot.label}</span>
-          <span className="text-xs text-gray-400">{discoveries.length} {discoveries.length === 1 ? 'discovery' : 'discoveries'}</span>
+          <span className="text-xs text-gray-400">{discoveries.length} {discoveries.length === 1 ? 'Discovery' : 'Discoveries'}</span>
         </div>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
       </button>
@@ -95,7 +95,7 @@ export default function DiscoveryPage() {
             Architecture Discovery
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            {clientName} · v{versionId} · interrogate the architecture with the Virtual Architect Agent
+            {clientName} · v{versionId}
           </p>
         </div>
         <Button to={`/clients/${clientId}/${versionId}/discovery/new`} size="lg">

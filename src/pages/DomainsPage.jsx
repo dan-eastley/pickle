@@ -2,7 +2,8 @@ import { Link, useParams } from 'react-router-dom'
 import { DOMAINS, DOMAIN_COLORS, getArtefactsForDomain } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
-import { ChevronRight } from '../components/ui/icons'
+import Button from '../components/ui/Button'
+import { ChevronRight, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function DomainCard({ domain, base }) {
@@ -70,6 +71,18 @@ export default function DomainsPage() {
         {DOMAINS.map(domain => (
           <DomainCard key={domain.id} domain={domain} base={base} />
         ))}
+      </div>
+
+      {/* Cross-cutting calls to action */}
+      <div className="mt-5 flex items-center gap-3 flex-wrap">
+        <Button to={`${base}/decisions/new`} variant="primary">
+          <DecisionIcon className="w-4 h-4" />
+          New Architecture Decision
+        </Button>
+        <Button to={`${base}/discovery/new`} variant="custom" className="bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 text-white px-4 py-1.5">
+          <RobotIcon className="w-4 h-4" />
+          New Architecture Discovery
+        </Button>
       </div>
     </div>
   )

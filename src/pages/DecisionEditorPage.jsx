@@ -4,8 +4,9 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
+import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import Spinner from '../components/ui/Spinner'
-import { PlusIcon, CloseIcon } from '../components/ui/icons'
+import { PlusIcon, CloseIcon, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
@@ -177,7 +178,7 @@ export default function DecisionEditorPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">
-            {isEdit ? `Edit ${decisionId}` : 'New Decision'}
+            {isEdit ? `Edit ${decisionId}` : 'New Architecture Decision'}
           </h1>
           <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
         </div>
@@ -193,11 +194,12 @@ export default function DecisionEditorPage() {
           <button
             onClick={handleSave}
             disabled={!title.trim() || !context.trim() || !problem.trim() || !proposal.trim() || saving}
-            className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
+            <DecisionIcon className="w-4 h-4" />
             {saving
               ? (isEdit ? 'Saving…' : 'Creating…')
-              : (isEdit ? 'Save Changes' : 'Create Decision')}
+              : (isEdit ? 'Save Changes' : 'New Architecture Decision')}
           </button>
         </div>
       </div>
@@ -251,12 +253,11 @@ export default function DecisionEditorPage() {
           <p className="text-xs text-gray-400 mb-1.5">
             The current situation — what is happening that prompts this decision. Written for a business audience.
           </p>
-          <textarea
+          <AutoGrowTextarea
             value={context}
             onChange={e => setContext(e.target.value)}
-            rows={4}
             placeholder="Today we..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
         </div>
 
@@ -268,12 +269,11 @@ export default function DecisionEditorPage() {
           <p className="text-xs text-gray-400 mb-1.5">
             What needs to be fixed or addressed — the gap or pain in the current situation.
           </p>
-          <textarea
+          <AutoGrowTextarea
             value={problem}
             onChange={e => setProblem(e.target.value)}
-            rows={4}
             placeholder="This is a problem because..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
         </div>
 
@@ -285,12 +285,11 @@ export default function DecisionEditorPage() {
           <p className="text-xs text-gray-400 mb-1.5">
             How we propose to solve it — the direction, at a business level.
           </p>
-          <textarea
+          <AutoGrowTextarea
             value={proposal}
             onChange={e => setProposal(e.target.value)}
-            rows={4}
             placeholder="We propose to..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
           />
         </div>
 
