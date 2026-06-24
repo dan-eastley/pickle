@@ -74,6 +74,38 @@
             "rationale": "Guardrails translate principles into enforceable rules. In regulated industries, offboarding is a high-risk activity; explicit guardrails mitigate legal and reputational exposure and provide clear boundaries for the team executing the process."
         }
     ],
+    "principles-alignment": [
+        {
+            "finding": "The decision **adheres** to *Capabilities reflect what the business does, not how it is organised* (**Business Principles** `BUS-PRN-001`). Offboarding is framed as a customer-facing outcome (exit/lifecycle closure), independent of organizational structure.",
+            "impact": "This adherence is positive — the capability will remain stable even if org structures change. No risk here.",
+            "recommendation": "No action required. Continue to define offboarding as a capability outcome (not tied to a team or department).",
+            "rationale": "Defining capabilities by business outcomes, not org units, creates a durable architecture that survives reorganization and enables objective investment decisions across the business."
+        },
+        {
+            "finding": "The decision is **silent** on *Outcome over output* (**Business Principles** `BUS-PRN-002`). The narrative proposes \"capabilities and processes for offboarding\" but does not define outcome targets (e.g., offboarding time, cost, customer satisfaction, or compliance compliance-breach rate).",
+            "impact": "Without outcome measures, teams will optimize for output (e.g., 'process completeness') rather than business results (e.g., 'speed, fairness, regulatory compliance'). Success will be ambiguous and teams may deliver a technically complete but operationally ineffective process.",
+            "recommendation": "Add outcome-focused requirements to the decision: e.g., 'Offboard non-paying customers within 24 hours of decision,' 'Maintain 100% audit trail of customer data handling,' 'Zero regulatory breach incidents in offboarding.' Frame success by outcomes, not process steps.",
+            "rationale": "Outcome measures focus effort on what the business needs (fast, compliant, fair offboarding) rather than internal deliverables (a documented process). This alignment ensures teams remain accountable to business results."
+        },
+        {
+            "finding": "The decision is **silent** on *Continuous discovery over big design up front* (**Business Principles** `BUS-PRN-004`). The narrative asserts 'We need the capabilities and processes for offboarding customers' without citing evidence of scope, volume, or regulatory drivers.",
+            "impact": "The decision reads as a big design up front (full capability, full process definition) without evidence-based shaping. If the actual volume of offboarding is small, or if regulatory requirements are narrower than assumed, resources may be over-invested. Teams may discover mid-implementation that assumptions were wrong.",
+            "recommendation": "Strengthen the **Context** section to cite data: 'We currently process [X] offboardings per quarter, experiencing [Y] days average cycle time; [regulation] requires data deletion within [Z] days; customer dispute rate is [W]%. These drivers justify the capability investment.' Alternatively, reframe as a discovery phase: 'Conduct a 4-week discovery to define the offboarding capability, validate assumptions about volume and regulatory scope, then propose a phased implementation roadmap.'",
+            "rationale": "Validating assumptions cheaply before full commitment reduces the risk of over-engineering or misaligned designs. Evidence-based decisions are more likely to gain stakeholder buy-in and align resources to the actual problem."
+        },
+        {
+            "finding": "The decision is **silent** on *Customer journey as the unit of design* (**Business Principles** `BUS-PRN-005`). The proposal frames offboarding as an internal capability/process ('we offboard customers') rather than as a customer journey the customer experiences.",
+            "impact": "Without a customer journey perspective, the offboarding process risks being designed from the inside out (what's easy for us) rather than the outside in (what's fair and clear for the customer). This can lead to poor customer communication, surprises during offboarding, and reputational harm.",
+            "recommendation": "Reframe the proposal to name an offboarding journey owner (a role spanning Finance, Compliance, Customer Service, and Data teams) and define offboarding as a customer-centric journey: 'Develop the Customer Offboarding journey: notification, transition period, data handling, final settlement, and closure confirmation. Map internal processes to customer touchpoints.' This ensures the customer's experience drives the design.",
+            "rationale": "Customers experience the seams between departments. A customer-centric design prevents the organization from handing customers over to the next internal step without clear communication or care, which erodes trust and increases dispute risk."
+        },
+        {
+            "finding": "The decision is **silent** on *Process digital by default* (**Business Principles** `BUS-PRN-006`). The narrative proposes offboarding capabilities and processes but does not specify whether execution will be automated, manual, or hybrid.",
+            "impact": "If offboarding remains manual (spreadsheets, email, phone calls), it will be slow, error-prone, and audit-heavy. This contradicts the principle's requirement that core processes be fully digital unless a documented constraint exists. Offboarding is not exempt from digitization.",
+            "recommendation": "Add to the **Proposal**: 'The offboarding process will be designed digital by default, automating: (1) customer notification, (2) account suspension/system access removal, (3) data deletion workflow, and (4) compliance logging. Manual review gates are reserved for exceptions (e.g., disputed non-payment, refund escalations).' Document any manual steps and their justification.",
+            "rationale": "Digital execution is faster (lower customer frustration), auditable (compliance evidence), measurable (KPIs, timelines), and repeatable (no human variance). This is a prerequisite for achieving the 24-hour offboarding target and regulatory compliance."
+        }
+    ],
     "strategy-alignment": [
         {
             "finding": "The decision proposal is **silent** against **Business Strategy** (`BUS-STR`) statement *'Operate as a customer-centric organisation, organised around end-to-end customer outcomes'* (`BUS-STR-001`). While offboarding is a customer-facing process, the narrative does not address how transparent, fair, or respectful offboarding will be — nor how it will contribute to Net Promoter Score or customer trust.",
