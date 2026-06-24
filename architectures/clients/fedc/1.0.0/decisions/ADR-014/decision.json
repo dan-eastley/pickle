@@ -15,5 +15,22 @@
     ],
     "scope": {
         "domain": "business"
-    }
+    },
+    "recommendations": [
+        {
+            "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
+        },
+        {
+            "recommendation": "Define what **offboarding** means in your organization. Does it include: account suspension? data deletion? contract termination? notification to customer? refund processing? legal/compliance steps? Currently, 'offboarding' is ambiguous and could mean different things to different readers."
+        },
+        {
+            "recommendation": "In the **Proposal** section, clarify *what capabilities and processes* are needed. Rather than \"capabilities and processes for offboarding,\" specify: \"Define an offboarding workflow including notification, data handling, and account closure steps\" or similar. This helps downstream analysis teams know what scope to assume."
+        },
+        {
+            "recommendation": "Add a **Scope** / **Out of Scope** subsection to the narrative. For example, clearly state whether you are designing the offboarding process itself, updating systems to support it, or both. Are legal/compliance steps in or out of scope for this decision?"
+        },
+        {
+            "recommendation": "Add a `requirements` array to the decision JSON. Currently there are no measurable requirements. Examples might include: *Functional:* \"Support offboarding of customers in < 24 hours\"; *Non-Functional:* \"Preserve audit trail of all customer data deleted during offboarding.\" This gives the downstream architecture team concrete acceptance criteria."
+        }
+    ]
 }
