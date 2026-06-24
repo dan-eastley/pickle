@@ -9,6 +9,7 @@ Your edits will be committed to the decision branch and opened as a PR against `
 - The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read its `architecture-changes` array.
 - The architecture instance files under `architectures/clients/<client>/<version>/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json`.
 - The matching JSON Schemas under `config/schemas/artefacts/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json` — every edit must keep the instance valid against its schema (which it references via `$schema`).
+- **`config/artefact-relationships.json`** — the derivation map. For each artefact it lists the artefacts in its `derives` array that are built *from* it (e.g. `BUS-BPM` is derived from `BUS-PRO`; `BUS-BCM` from `BUS-CAP`; matrices from their two source catalogues).
 
 ## Task
 
@@ -23,6 +24,16 @@ For each entry in `architecture-changes`:
    - `rename` / `move` → adjust the name / parent as described.
 4. Keep the file valid against its schema — required fields present, IDs unique and well-formed, parent references intact.
 5. If a change cannot be applied safely (e.g. the target artefact file does not exist for this version, or the description is ambiguous), **do not invent data** — leave that artefact unchanged and note it in your final message.
+
+## Cascade to derived artefacts
+
+After applying a change to a source artefact, look it up in `config/artefact-relationships.json` and **regenerate every artefact in its `derives` list** so the views stay in sync — in the same PR.
+
+- A **diagram** derivative (e.g. `BUS-BPM` ← `BUS-PRO`, `BUS-BCM` ← `BUS-CAP`, `DAT-CDM` ← `DAT-DAC`) is generated directly from its source catalogue. Rebuild it from the updated source so new/renamed/removed entries are reflected.
+- A **matrix** derivative (e.g. `BUS-CAP-PRO` ← `BUS-CAP` + `BUS-PRO`) maps two source catalogues. Add/remove the rows or columns for any entries you created or deleted, leaving existing mappings intact.
+- For a derivative that is itself another **catalogue**, only update it if the change clearly affects it; otherwise note it and leave it unchanged rather than guessing.
+
+If a listed derivative file does not exist for this version, skip it and note it.
 
 Do not edit the decision JSON itself. Do not commit or push — the workflow handles that.
 
