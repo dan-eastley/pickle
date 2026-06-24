@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   generate-changes:
-    uses: ./.github/workflows/decisions-claude-step.yml
+    uses: ./.github/workflows/claude-step.yml
     with:
       analysis-name: "Architecture Changes"
       prompt-file:   config/prompts/decisions/architecture-changes.md

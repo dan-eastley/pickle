@@ -1,13 +1,16 @@
-name: Decisions — Claude Step (Reusable)
+name: Claude Step (Reusable)
 
-# Reusable workflow — runs one Claude-driven step and writes its output
-# to the decision.json on the decisions branch (in-flight decisions live
-# on their branch, not main). Invoked by decisions-to-draft.yml,
-# decisions-to-proposed.yml, and decisions-to-accepted.yml.
+# Reusable workflow — runs one Claude-driven step against a record's JSON and
+# commits the result back. Shared by:
+#   - Decisions workflows — write to decision.json on the decision's branch
+#     (the defaults below reproduce this exactly: ref = the decisions branch,
+#     record-file = the decision.json path, record-id = decision-id).
+#   - Discovery workflow — pass ref=main, record-file=<discovery.json path>,
+#     record-id=<DSC-id> to run a prompt against a discovery on main.
 #
-# The prompt file is responsible for defining the output format and what
-# to write to `section-key`. This step provides the runtime scaffold:
-# checkout, Claude invocation, commit, and push.
+# The prompt file defines the output format and what to write to `section-key`.
+# This step provides the runtime scaffold: checkout, Claude invocation, commit,
+# and push (with rebase-retry).
 
 on:
   workflow_call:
@@ -17,11 +20,11 @@ on:
         required: true
         type: string
       prompt-file:
-        description: "Path to the prompt markdown file (e.g. config/prompts/decisions/architecture-changes.md)"
+        description: "Path to the prompt markdown file"
         required: true
         type: string
       section-key:
-        description: "Decision JSON property to write results to (e.g. architecture-changes)"
+        description: "Record JSON property to write results to (e.g. architecture-changes, findings)"
         required: true
         type: string
       client-id:
@@ -33,9 +36,25 @@ on:
         required: true
         type: string
       decision-id:
-        description: "Decision ID (e.g. ADR-018)"
-        required: true
+        description: "Decision ID (e.g. ADR-018). Used as the record id when record-id is not given."
+        required: false
         type: string
+        default: ""
+      ref:
+        description: "Git ref to check out and push to. Defaults to the decision's branch."
+        required: false
+        type: string
+        default: ""
+      record-file:
+        description: "Path to the record JSON. Defaults to the decision.json path."
+        required: false
+        type: string
+        default: ""
+      record-id:
+        description: "Record id for messaging. Defaults to decision-id."
+        required: false
+        type: string
+        default: ""
       model:
         description: "Claude model to run this step with"
         required: false
@@ -57,8 +76,9 @@ jobs:
       ANALYSIS_NAME: ${{ inputs.analysis-name }}
       CLIENT_ID:     ${{ inputs.client-id }}
       VERSION_ID:    ${{ inputs.version-id }}
-      DECISION_ID:   ${{ inputs.decision-id }}
-      DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
+      REF:           ${{ inputs.ref != '' && inputs.ref || format('decisions/{0}/{1}/{2}', inputs.client-id, inputs.version-id, inputs.decision-id) }}
+      RECORD_FILE:   ${{ inputs.record-file != '' && inputs.record-file || format('architectures/clients/{0}/{1}/decisions/{2}/decision.json', inputs.client-id, inputs.version-id, inputs.decision-id) }}
+      RECORD_ID:     ${{ inputs.record-id != '' && inputs.record-id || inputs.decision-id }}
     steps:
       - name: Started
         run: |
@@ -74,10 +94,10 @@ jobs:
           fi
           echo "::notice::ANTHROPIC_API_KEY is present (${#API_KEY} chars)"
 
-      - name: Checkout decisions branch
+      - name: Checkout
         uses: actions/checkout@v5
         with:
-          ref: decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
+          ref: ${{ env.REF }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -94,20 +114,20 @@ jobs:
           model: ${{ inputs.model }}
           allowed_tools: "Read,Edit,Write,Grep,Glob"
           prompt: |
-            You are running the "${{ env.ANALYSIS_NAME }}" step of the Pickle decisions workflow.
+            You are running the "${{ env.ANALYSIS_NAME }}" step of a Pickle workflow.
 
-            Decision file: ${{ env.DECISION_FILE }}
-            Prompt file:   ${{ env.PROMPT_FILE }}
-            Section key:   ${{ env.SECTION_KEY }}
+            Record file: ${{ env.RECORD_FILE }}
+            Prompt file: ${{ env.PROMPT_FILE }}
+            Section key: ${{ env.SECTION_KEY }}
 
             Steps:
               1. Read the prompt instructions at ${{ env.PROMPT_FILE }}.
-              2. Read the decision JSON at ${{ env.DECISION_FILE }}.
+              2. Read the record JSON at ${{ env.RECORD_FILE }}.
               3. Read any other inputs the prompt asks for — architecture data
                  lives under architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
                  schemas under config/schemas/.
               4. Follow the prompt's task exactly, including the output format it specifies.
-              5. Write your result into the decision JSON's `${{ env.SECTION_KEY }}` property
+              5. Write your result into the record JSON's `${{ env.SECTION_KEY }}` property
                  using the Edit or Write tool.
 
             Do not commit or push — the workflow handles that.
@@ -128,7 +148,7 @@ jobs:
         run: |
           COUNT=$(python3 -c "
           import json, os, sys
-          path = os.environ.get('DECISION_FILE', '')
+          path = os.environ.get('RECORD_FILE', '')
           key  = os.environ.get('SECTION_KEY', '')
           if not path or not key:
               print('?'); sys.exit()
@@ -137,9 +157,7 @@ jobs:
               section = data.get(key)
               if section is None:
                   print('0')
-              elif isinstance(section, list):
-                  print(len(section))
-              elif isinstance(section, dict):
+              elif isinstance(section, (list, dict)):
                   print(len(section))
               else:
                   print('1')
@@ -153,7 +171,7 @@ jobs:
             echo ""
             echo "| Field | Value |"
             echo "|---|---|"
-            echo "| Decision | \`${DECISION_ID}\` |"
+            echo "| Record | \`${RECORD_ID}\` |"
             echo "| Model | \`${{ inputs.model }}\` |"
             echo "| Section | \`${SECTION_KEY}\` |"
             echo "| Conclusion | \`${CONCLUSION}\` |"
@@ -168,30 +186,28 @@ jobs:
           path: ${{ steps.claude.outputs.execution_file }}
           retention-days: 30
 
-      - name: Commit and push to decisions branch
+      - name: Commit and push
         run: |
           set -euo pipefail
-          BRANCH="decisions/${CLIENT_ID}/${VERSION_ID}/${DECISION_ID}"
-          git add "$DECISION_FILE"
+          git add "$RECORD_FILE"
           if git diff --cached --quiet; then
             echo "::notice::No changes to commit."
             exit 0
           fi
-          git commit -m "[${ANALYSIS_NAME}] Update ${DECISION_FILE}"
-          # The decisions branch can advance out-of-band while this step runs —
-          # the sync-decisions-branches job merges main into it on every push to
-          # main. Rebase onto the latest remote head and retry so a concurrent
-          # update doesn't fail the analysis step with a non-fast-forward error.
+          git commit -m "[${ANALYSIS_NAME}] Update ${RECORD_FILE}"
+          # The ref can advance out-of-band while this step runs — rebase onto the
+          # latest remote head and retry so a concurrent update doesn't fail the
+          # push with a non-fast-forward error.
           for attempt in 1 2 3 4 5; do
-            if git push origin "HEAD:${BRANCH}"; then
+            if git push origin "HEAD:${REF}"; then
               echo "::notice::Pushed on attempt ${attempt}."
               exit 0
             fi
-            echo "::warning::Push rejected (attempt ${attempt}); rebasing onto origin/${BRANCH}."
-            git fetch origin "$BRANCH"
-            git rebase "origin/${BRANCH}"
+            echo "::warning::Push rejected (attempt ${attempt}); rebasing onto origin/${REF}."
+            git fetch origin "$REF"
+            git rebase "origin/${REF}"
           done
-          echo "::error::Failed to push ${DECISION_FILE} to ${BRANCH} after rebasing."
+          echo "::error::Failed to push ${RECORD_FILE} to ${REF} after rebasing."
           exit 1
 
       - name: Finished

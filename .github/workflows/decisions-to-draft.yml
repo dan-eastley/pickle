@@ -77,7 +77,7 @@ jobs:
 
   narrative-review:
     needs: parse
-    uses: ./.github/workflows/decisions-claude-step.yml
+    uses: ./.github/workflows/claude-step.yml
     with:
       analysis-name: "Narrative Review"
       prompt-file:   config/prompts/decisions/narrative-validation.md

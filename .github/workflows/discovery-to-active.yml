@@ -1,0 +1,48 @@
+name: Discovery — To Active
+
+# Fires when an architecture discovery is created (status Active). Runs the
+# Virtual Architect Agent over the discovery's context + request and writes a
+# point-in-time view into the discovery's `findings`.
+#
+# Discovery records live on main (no per-record branch), so this passes ref=main
+# and the discovery.json path to the shared Claude step.
+#
+# Triggered via workflow_dispatch from the Pickle API on discovery creation.
+
+on:
+  workflow_dispatch:
+    inputs:
+      client-id:
+        description: "Client ID (e.g. fedc)"
+        required: true
+        type: string
+      version-id:
+        description: "Version ID (e.g. 1.0.0)"
+        required: true
+        type: string
+      discovery-id:
+        description: "Discovery ID (e.g. DSC-001)"
+        required: true
+        type: string
+      model:
+        description: "Claude model to run the discovery with"
+        required: false
+        type: string
+        default: claude-haiku-4-5-20251001
+
+jobs:
+  discover:
+    uses: ./.github/workflows/claude-step.yml
+    with:
+      analysis-name: "Architecture Discovery"
+      prompt-file:   config/prompts/discovery/architecture-discovery.md
+      section-key:   findings
+      client-id:     ${{ inputs.client-id }}
+      version-id:    ${{ inputs.version-id }}
+      decision-id:   ${{ inputs.discovery-id }}
+      record-id:     ${{ inputs.discovery-id }}
+      ref:           main
+      record-file:   architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/discovery/${{ inputs.discovery-id }}/discovery.json
+      model:         ${{ inputs.model }}
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
