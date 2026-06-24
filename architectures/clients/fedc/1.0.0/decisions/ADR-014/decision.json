@@ -74,6 +74,26 @@
             "rationale": "Guardrails translate principles into enforceable rules. In regulated industries, offboarding is a high-risk activity; explicit guardrails mitigate legal and reputational exposure and provide clear boundaries for the team executing the process."
         }
     ],
+    "strategy-alignment": [
+        {
+            "finding": "The decision proposal is **silent** against **Business Strategy** (`BUS-STR`) statement *'Operate as a customer-centric organisation, organised around end-to-end customer outcomes'* (`BUS-STR-001`). While offboarding is a customer-facing process, the narrative does not address how transparent, fair, or respectful offboarding will be — nor how it will contribute to Net Promoter Score or customer trust.",
+            "impact": "Offboarding, handled poorly, can damage customer relationships and reputation. The decision as drafted focuses on operational mechanics (capability, process) but lacks explicit guardrails or measures to ensure offboarding reflects the customer-centric values and NPS top-quartile target in `BUS-STR-001`.",
+            "recommendation": "Strengthen the narrative by explicitly addressing customer experience during offboarding: e.g., *'Offboarding will be transparent, timely, and fair, with clear communication of next steps and respect for customer data.'* Add non-functional requirements for offboarding clarity and fairness (e.g., 'All offboarding communications shall be clear and timely'; 'Disputed accounts shall escalate to a human reviewer within 48 hours').",
+            "rationale": "A customer-centric organization must own the entire lifecycle — including exit. If offboarding is seen as extractive (one-way data deletion, no communication) rather than respectful (clear notice, fair handling), it undermines NPS and customer trust, directly contradicting `BUS-STR-001`'s target outcome."
+        },
+        {
+            "finding": "The decision is **silent** against **Business Strategy** (`BUS-STR`) statement *'Build digital-by-default operations'* (`BUS-STR-005`), targeting 'Top 20 business processes fully digital end-to-end by 2026.' Offboarding is a material business process (affects customer retention/exit), but the proposal does not specify whether it will be automated or manual.",
+            "impact": "If offboarding is manual (spreadsheets, email, phone calls), it will likely remain a low-velocity, error-prone process and may consume resources that could be applied to other top-20 digitization targets. Conversely, if it is designed for digital-by-default from the start, it could become a test case for process automation.",
+            "recommendation": "In the Proposal section, add a clause: *'The offboarding process will be designed digital-by-default, automating notification, account suspension, and data deletion workflow where possible, with human review gated to exceptions (e.g., disputed accounts, refund escalations).'* This signals alignment with `BUS-STR-005` and sets a clear expectation for downstream design.",
+            "rationale": "Manual, bespoke offboarding processes are both costly (manual handling) and risky (inconsistency). Designing for digital-by-default from inception ensures the process is repeatable, auditable, and scalable — and positions offboarding as a candidate for the top-20 digitization roadmap."
+        },
+        {
+            "finding": "The decision is **silent** against **Business Strategy** (`BUS-STR`) statement *'Decide with data — every material business decision must cite the evidence that supports it'* (`BUS-STR-003`). The decision narrative does not cite evidence (e.g., volume of non-paying customers, financial impact, regulatory risk drivers) for why offboarding is becoming a priority now.",
+            "impact": "Without evidence, stakeholders cannot assess whether offboarding is a response to a growing problem, a one-off edge case, or a forward-looking regulatory requirement. This limits confidence in prioritization and resource allocation decisions downstream.",
+            "recommendation": "Expand the **Context** section to cite data: e.g., *'We currently have [X] non-paying customers, representing [Y]% of revenue; offboarding velocity is currently [Z days] manual process; [regulatory/compliance] requirements mandate [specific deletion timeline].'* Add a `requirements` array with measurable acceptance criteria (e.g., 'Offboard non-paying customers within 24 hours of decision').",
+            "rationale": "Material business decisions — especially those involving process change and potential regulatory exposure — must be grounded in evidence. Citing data strengthens the business case, enables objective trade-offs, and aligns with `BUS-STR-003`'s expectation that decisions are defensible and auditable."
+        }
+    ],
     "recommendations": [
         {
             "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
