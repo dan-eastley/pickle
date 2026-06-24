@@ -923,10 +923,11 @@ export default function DecisionDetailPage() {
           <div className="mt-8">
             <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
           </div>
-
-          <ActivityHistory activity={decision.activity} />
         </article>
       </div>
+
+      {/* Activity sits outside the document surface (no white box / shadow) */}
+      <ActivityHistory activity={decision.activity} />
 
       <JsonPreview
         data={decision}
