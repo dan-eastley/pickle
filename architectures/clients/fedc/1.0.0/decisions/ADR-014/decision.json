@@ -211,19 +211,19 @@
     ],
     "recommendations": [
         {
-            "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
+            "recommendation": "**Narrative clarity improvement**: The narrative currently reads as a problem statement without grounding. Strengthen the **Context** section by citing evidence: e.g., 'We currently process [X] non-paying customers per quarter' or 'Recent [regulation] compliance audit identified offboarding as a control gap.' This helps readers understand *why* this capability is becoming a priority — is it a growing problem, or a known gap we're finally addressing?"
         },
         {
-            "recommendation": "Define what **offboarding** means in your organization. Does it include: account suspension? data deletion? contract termination? notification to customer? refund processing? legal/compliance steps? Currently, 'offboarding' is ambiguous and could mean different things to different readers."
+            "recommendation": "**Define scope concretely**: 'Offboarding customers' is broad and could mean different things to different readers. Define what your organization means: does it include account suspension, data deletion, refund processing, legal notification, or all of these? Add a **Scope / Out of Scope** subsection clarifying which steps are in scope for this decision and which may be addressed separately."
         },
         {
-            "recommendation": "In the **Proposal** section, clarify *what capabilities and processes* are needed. Rather than \"capabilities and processes for offboarding,\" specify: \"Define an offboarding workflow including notification, data handling, and account closure steps\" or similar. This helps downstream analysis teams know what scope to assume."
+            "recommendation": "**Make the proposal specific**: Rather than 'capabilities and processes for offboarding,' specify the concrete workflow: e.g., 'Define a Customer Offboarding capability and process comprising: (1) identification of offboarding candidates, (2) customer notification, (3) account suspension, (4) data deletion per compliance requirements, (5) final settlement.' This removes ambiguity for downstream teams."
         },
         {
-            "recommendation": "Add a **Scope** / **Out of Scope** subsection to the narrative. For example, clearly state whether you are designing the offboarding process itself, updating systems to support it, or both. Are legal/compliance steps in or out of scope for this decision?"
+            "recommendation": "**Add measurable requirements**: The `requirements` array is empty. Add functional requirements (e.g., 'Offboard non-paying customers within 24 hours of decision') and non-functional requirements (e.g., 'Maintain immutable audit trail of all customer data handled during offboarding'; 'Comply with GDPR data deletion timelines'). These give the architecture team concrete acceptance criteria."
         },
         {
-            "recommendation": "Add a `requirements` array to the decision JSON. Currently there are no measurable requirements. Examples might include: *Functional:* \"Support offboarding of customers in < 24 hours\"; *Non-Functional:* \"Preserve audit trail of all customer data deleted during offboarding.\" This gives the downstream architecture team concrete acceptance criteria."
+            "recommendation": "**Acknowledge regulatory context**: The narrative does not mention compliance obligations (GDPR, CCPA, payment settlement regulations). Given the scale of the impact assessment, offboarding is clearly a compliance-sensitive activity. Explicitly call out regulatory drivers in the Context and add them to the requirements — this frames the decision as a risk-mitigation measure, not just a process optimization."
         }
     ]
 }
