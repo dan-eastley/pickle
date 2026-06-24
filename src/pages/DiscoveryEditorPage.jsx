@@ -4,6 +4,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
+import { RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 export default function DiscoveryEditorPage() {
@@ -33,15 +34,16 @@ export default function DiscoveryEditorPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">New Discovery</h1>
+          <h1 className="text-xl font-semibold text-gray-900">New Architecture Discovery</h1>
           <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
         </div>
         <button
           onClick={handleSave}
           disabled={!canSave || saved}
-          className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
         >
-          Raise Discovery
+          <RobotIcon className="w-4 h-4" />
+          New Architecture Discovery
         </button>
       </div>
 

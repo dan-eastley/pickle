@@ -6,6 +6,7 @@ import useEscapeKey from '../../hooks/useEscapeKey'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
+import { DecisionIcon } from '../ui/icons'
 
 export default function NewDecisionModal({ artefact, documents = [], selectedDocument, clientId, versionId, onClose }) {
   const [title, setTitle] = useState('')
@@ -25,7 +26,14 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const showDocumentScope =
     artefact.format === 'document' && scopeArtefact === artefact.id && documents.length > 0
 
-  useEscapeKey(onClose)
+  // Confirm before discarding in-progress input.
+  const isDirty = !!(title || context || problem || proposal)
+  const requestClose = () => {
+    if (!saved && isDirty && !window.confirm('Discard this decision? Your changes will be lost.')) return
+    onClose()
+  }
+
+  useEscapeKey(requestClose)
 
   const canSave = title.trim() && context.trim() && problem.trim() && proposal.trim()
 
@@ -46,7 +54,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
     <>
       {/* Backdrop: click dismisses; keyboard users dismiss with Escape (useEscapeKey). */}
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
-      <div className="fixed inset-0 bg-black/30 z-[150]" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/30 z-[150]" onClick={requestClose} />
 
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
@@ -57,7 +65,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
             </div>
             <button
-              onClick={onClose}
+              onClick={requestClose}
               className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors"
               title="Close (Esc)"
             >
@@ -184,7 +192,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               </TextLink>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={onClose}
+                  onClick={requestClose}
                   className="px-4 py-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Cancel
@@ -192,11 +200,12 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                 <button
                   onClick={handleSave}
                   disabled={!canSave}
-                  className={`px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                     colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
                   }`}
                 >
-                  Save
+                  <DecisionIcon className="w-4 h-4" />
+                  New Architecture Decision
                 </button>
               </div>
             </div>

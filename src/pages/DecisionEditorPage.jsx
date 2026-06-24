@@ -6,7 +6,7 @@ import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import Spinner from '../components/ui/Spinner'
-import { PlusIcon, CloseIcon } from '../components/ui/icons'
+import { PlusIcon, CloseIcon, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
@@ -178,7 +178,7 @@ export default function DecisionEditorPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">
-            {isEdit ? `Edit ${decisionId}` : 'New Decision'}
+            {isEdit ? `Edit ${decisionId}` : 'New Architecture Decision'}
           </h1>
           <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
         </div>
@@ -194,11 +194,12 @@ export default function DecisionEditorPage() {
           <button
             onClick={handleSave}
             disabled={!title.trim() || !context.trim() || !problem.trim() || !proposal.trim() || saving}
-            className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
+            <DecisionIcon className="w-4 h-4" />
             {saving
               ? (isEdit ? 'Saving…' : 'Creating…')
-              : (isEdit ? 'Save Changes' : 'Create Decision')}
+              : (isEdit ? 'Save Changes' : 'New Architecture Decision')}
           </button>
         </div>
       </div>
