@@ -48,6 +48,32 @@
             "rationale": "Requirements drive the design of capabilities and processes. Clear, measurable criteria ensure alignment with business intent and provide acceptance gates for implementation."
         }
     ],
+    "referential-integrity": [
+        {
+            "finding": "**Business Capabilities** (`BUS-CAP`): The impact assessment proposes adding `CAP-001-05: Offboard Customer` as a new Level 2 capability under `CAP-001` (Customer Management). This capability does not currently exist in the catalogue. Level 2 children of `CAP-001` currently range from `CAP-001-01` through `CAP-001-04`.",
+            "impact": "If the proposed `CAP-001-05` reference is used downstream (e.g., in process-to-capability mappings, application portfolios, or roadmaps) before the capability is created, those references will break because the parent ID will not resolve. Architecture diagrams and queries that traverse the capability tree will also be incomplete.",
+            "recommendation": "This is expected during the impact-assessment phase. When the ADR moves to approval and implementation, add the new `CAP-001-05` entry to `BUS-CAP` with `level: 2` and `parent-id: \"CAP-001\"`. Populate sub-capabilities (`CAP-001-05-01`, etc.) as detailed in the narrative.",
+            "rationale": "Referential integrity requires that every `parent-id` reference points to an entity that exists in the same catalogue. During planning, forward references to proposed entities are noted; they must be resolved before the ADR is marked complete."
+        },
+        {
+            "finding": "**Business Processes** (`BUS-PRO`): The impact assessment proposes adding `PROC-001-06: Offboard Customers` as a new Level 2 process under `PROC-001` (Customer Lifecycle Management). This process does not currently exist in the catalogue. Level 2 children of `PROC-001` currently range from `PROC-001-01` through `PROC-001-05`.",
+            "impact": "Similar to capabilities: any forward-looking mappings from systems, data, or organizational roles to `PROC-001-06` will fail to resolve. Process diagrams, swim lanes, and controls frameworks referencing this process will show gaps until the process is formally added.",
+            "recommendation": "When the ADR is approved for implementation, add the new `PROC-001-06` entry to `BUS-PRO` with `level: 2` and `parent-id: \"PROC-001\"`. Include the `owner`, `trigger`, and `outcome` fields, and populate Level 3 sub-processes (e.g., `PROC-001-06-01` through `PROC-001-06-05`) for the sub-steps outlined in the narrative (notification, data handling, account closure, settlement, compliance).",
+            "rationale": "As with capabilities, process foreign-key references must resolve. The proposed structure (Level 2 with multiple Level 3 children) is consistent with other PROC-001 sub-processes and should be maintained."
+        },
+        {
+            "finding": "**Data Architecture** (`DAT-DAC`): The impact assessment identifies data domain concepts (customer personal data, usage records, billing history) that may require updates but notes that no specific review has been conducted. `DAT-DAC` may contain customer-related concepts that should be cross-referenced in the offboarding process definition.",
+            "impact": "The decision lacks explicit data-handling guardrails. Without reviewing and updating `DAT-DAC`, the offboarding process risk breaching data protection regulations (GDPR, CCPA) if data concepts (e.g., retention periods, deletion scope) are not aligned with the business process.",
+            "recommendation": "Before finalizing the offboarding process design, review `DAT-DAC` and identify concepts related to customer data lifecycle (e.g., personal data, transaction history, usage metrics). If new concepts are needed (e.g., 'Offboarding Data Deletion Request'), add them to `DAT-DAC`. Document the mapping between `PROC-001-06` sub-processes and affected `DAT-DAC` concepts.",
+            "rationale": "Data governance is inseparable from process design. Explicit cross-references between process and data architecture prevent inconsistencies and ensure that data handling obligations (deletion timelines, consent withdrawal, audit trails) are baked into the process from the start."
+        },
+        {
+            "finding": "**Business Guardrails** (`BUS-GRD`): The impact assessment recommends updating `BUS-GRD` to add guardrails for fairness, transparency, and compliance in customer offboarding. However, `BUS-GRD` is currently empty (no guardrails defined).",
+            "impact": "Without defined guardrails, the offboarding process has no explicit constraints on behavior. The organization risks inconsistent execution, regulatory breach (around notice periods, audit trails, dispute escalation), and reputational harm if customers perceive unfair or opaque treatment.",
+            "recommendation": "When implementing the offboarding capability and process, define at least four guardrails in `BUS-GRD`: (1) **Compliance with Regulations** — offboarding must comply with all applicable data protection, payment settlement, and consumer protection laws; (2) **Audit Trail** — all offboarding actions (notification, account closure, data deletion) must be immutably logged; (3) **Timeliness** — customer data must be deleted within 30 days of offboarding (or as mandated by regulation); (4) **Dispute Escalation** — disputed accounts must escalate to a supervisor within 48 hours.",
+            "rationale": "Guardrails translate principles into enforceable rules. In regulated industries, offboarding is a high-risk activity; explicit guardrails mitigate legal and reputational exposure and provide clear boundaries for the team executing the process."
+        }
+    ],
     "recommendations": [
         {
             "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
