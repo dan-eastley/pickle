@@ -133,6 +133,16 @@
       "owner": "Customer Analytics"
     },
     {
+      "id": "PROC-001-06",
+      "name": "Offboard Customers",
+      "type": "core",
+      "level": 2,
+      "parent-id": "PROC-001",
+      "trigger": "Non-payment decision made",
+      "outcome": "Customer offboarded",
+      "owner": "Customer Operations"
+    },
+    {
       "id": "PROC-002-01",
       "name": "Plan Generation Capacity",
       "type": "supporting",
@@ -596,6 +606,46 @@
       "type": "supporting",
       "level": 3,
       "parent-id": "PROC-001-05"
+    },
+    {
+      "id": "PROC-001-06-01",
+      "name": "Identify Offboarding Candidates",
+      "type": "core",
+      "level": 3,
+      "parent-id": "PROC-001-06",
+      "description": "Identify non-paying customers and initiate offboarding workflow."
+    },
+    {
+      "id": "PROC-001-06-02",
+      "name": "Issue Customer Notice",
+      "type": "core",
+      "level": 3,
+      "parent-id": "PROC-001-06",
+      "description": "Notify customer of impending account suspension, including timeline and next steps."
+    },
+    {
+      "id": "PROC-001-06-03",
+      "name": "Process Data Requests & Deletion",
+      "type": "core",
+      "level": 3,
+      "parent-id": "PROC-001-06",
+      "description": "Handle GDPR/CCPA data deletion requests and execute data retention/deletion per regulatory requirements."
+    },
+    {
+      "id": "PROC-001-06-04",
+      "name": "Close Account & Settle Payment",
+      "type": "core",
+      "level": 3,
+      "parent-id": "PROC-001-06",
+      "description": "Close account in core systems, suspend supply/access, and process final payment settlement."
+    },
+    {
+      "id": "PROC-001-06-05",
+      "name": "Notify Compliance & Audit",
+      "type": "core",
+      "level": 3,
+      "parent-id": "PROC-001-06",
+      "description": "Notify compliance, legal, and audit of offboarding completion, including audit trail logging."
     },
     {
       "id": "PROC-002-01-01",

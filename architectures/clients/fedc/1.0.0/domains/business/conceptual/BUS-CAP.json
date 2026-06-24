@@ -93,6 +93,13 @@
             "description": "Renew, save, and grow value with existing customers."
         },
         {
+            "id": "CAP-001-05",
+            "name": "Offboard Customer",
+            "level": 2,
+            "parent-id": "CAP-001",
+            "description": "Manage the departure of customers, ensuring fair, transparent, and compliant exit from the portfolio."
+        },
+        {
             "id": "CAP-002-01",
             "name": "Plan Generation Capacity",
             "level": 2,
@@ -364,6 +371,41 @@
             "level": 3,
             "parent-id": "CAP-001-01",
             "description": "Provision service, switch supply, and orient the customer."
+        },
+        {
+            "id": "CAP-001-05-01",
+            "name": "Notify Customer",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Notify customer of account suspension and offboarding timeline."
+        },
+        {
+            "id": "CAP-001-05-02",
+            "name": "Handle Data Requests",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Process data deletion and data access requests per GDPR/CCPA regulations."
+        },
+        {
+            "id": "CAP-001-05-03",
+            "name": "Close Account",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Close account and remove system access."
+        },
+        {
+            "id": "CAP-001-05-04",
+            "name": "Process Settlement",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Process final payment settlement and financial reconciliation."
+        },
+        {
+            "id": "CAP-001-05-05",
+            "name": "Notify Compliance & Legal",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Notify compliance, legal, and audit teams of customer offboarding."
         },
         {
             "id": "CAP-002-02-01",
