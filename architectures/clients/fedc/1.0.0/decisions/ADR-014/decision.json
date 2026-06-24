@@ -126,6 +126,26 @@
             "rationale": "Material business decisions — especially those involving process change and potential regulatory exposure — must be grounded in evidence. Citing data strengthens the business case, enables objective trade-offs, and aligns with `BUS-STR-003`'s expectation that decisions are defensible and auditable."
         }
     ],
+    "guardrails-alignment": [
+        {
+            "finding": "**Business Guardrails** (`BUS-GRD`) catalogue is currently **empty** — no guardrails are defined for the Business domain. This is a critical blocker for guardrail compliance assessment.",
+            "impact": "Without defined guardrails, the offboarding decision cannot be assessed against mandatory constraints. The organization lacks explicit rules to govern fairness, transparency, compliance, audit trails, and regulatory adherence in customer offboarding — creating governance and compliance risk.",
+            "recommendation": "Before finalizing this ADR, populate **Business Guardrails** (`BUS-GRD`) with at minimum four rules governing offboarding: (1) *Regulatory Compliance* — offboarding must comply with all applicable regulations (payment, data protection, consumer protection); (2) *Audit Trail* — all offboarding actions (notification, suspension, data deletion) must be immutably logged; (3) *Timeliness* — customer data must be deleted within 30 days of offboarding (or as mandated by regulation); (4) *Dispute Escalation* — disputed accounts must escalate to a supervisor within 48 hours. Once guardrails are defined, reassess this decision against them.",
+            "rationale": "Guardrails are the enforcement layer of principles — they translate soft values into hard, verifiable rules. In regulated industries, customer offboarding is a high-risk activity that must be governed by explicit guardrails to minimize legal risk, ensure consistent execution, and protect the organization from reputational harm."
+        },
+        {
+            "finding": "**Data Guardrails** (`DAT-GRD`) catalogue is currently **empty** — no guardrails are defined for data handling. Since offboarding involves sensitive customer data (contact, usage, payment history) and must comply with GDPR/CCPA, this is a material gap.",
+            "impact": "Without data guardrails, the offboarding process design lacks explicit constraints on data retention, deletion timelines, consent withdrawal, and audit logging. This creates regulatory compliance risk and data protection exposure if offboarding is not aligned with mandatory data handling requirements.",
+            "recommendation": "Populate **Data Guardrails** (`DAT-GRD`) with rules governing customer data handling during offboarding: (1) *Data Deletion Timelines* — personal data must be deleted within 30 days of offboarding (or as mandated by GDPR/CCPA); (2) *Consent & Deletion Rights* — customers must be able to request data deletion and revoke consent for future use; (3) *Audit Logging* — all data access, deletion, and retention decisions must be immutably logged; (4) *Retention Exceptions* — data required for legal, tax, or regulatory obligations must be identified and preserved; (5) *Anonymization* — usage/analytics data may be retained only in anonymized form. Once defined, review the offboarding process against these guardrails.",
+            "rationale": "Data is a regulated asset. Offboarding cannot be executed safely without explicit guardrails governing how personal data is handled, when it must be deleted, and how those decisions are audited. GDPR and CCPA are non-negotiable; guardrails make compliance explicit and verifiable."
+        },
+        {
+            "finding": "The decision is **not applicable** to guardrails in **Integration** (`INT-GRD`), **Application** (`APP-GRD`), or **Solution** (`SOL-GRD`) domains — these are out of scope per the decision's `scope.domain: \"business\"` property.",
+            "impact": "None for this assessment. No compliance or breach risk in out-of-scope domains.",
+            "recommendation": "No action required. The decision remains scoped to Business domain guardrails assessment only.",
+            "rationale": "Scope controls the guardrails assessment. Only guardrails in the affected domain(s) are assessed; others are noted as out-of-scope."
+        }
+    ],
     "recommendations": [
         {
             "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
