@@ -3,7 +3,7 @@
         {
             "decision-id": "ADR-013",
             "title": "Implement Self-Service Analytics for Operational and Commercial Teams",
-            "status": "staged",
+            "status": "committed",
             "scope": {
                 "domain": "data",
                 "abstraction": "logical",
