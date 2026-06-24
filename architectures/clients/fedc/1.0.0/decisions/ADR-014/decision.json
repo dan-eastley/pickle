@@ -225,5 +225,79 @@
         {
             "recommendation": "**Acknowledge regulatory context**: The narrative does not mention compliance obligations (GDPR, CCPA, payment settlement regulations). Given the scale of the impact assessment, offboarding is clearly a compliance-sensitive activity. Explicitly call out regulatory drivers in the Context and add them to the requirements — this frames the decision as a risk-mitigation measure, not just a process optimization."
         }
+    ],
+    "architecture-changes": [
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add Level 2 capability CAP-001-05: Offboard Customer under parent CAP-001 (Customer Management). The capability completes the customer lifecycle by covering exit/offboarding phase currently missing from the model. Reference: impact-assessment finding 1, referential-integrity finding 1."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add Level 3 sub-capability CAP-001-05-01: Notify Customer under parent CAP-001-05 (Offboard Customer). This sub-capability covers notification of account suspension and offboarding timeline."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add Level 3 sub-capability CAP-001-05-02: Handle Data Requests under parent CAP-001-05 (Offboard Customer). This sub-capability covers data deletion and data access request processing per GDPR/CCPA regulations."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add Level 3 sub-capability CAP-001-05-03: Close Account under parent CAP-001-05 (Offboard Customer). This sub-capability covers account closure and system access removal."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add Level 3 sub-capability CAP-001-05-04: Process Settlement under parent CAP-001-05 (Offboard Customer). This sub-capability covers final payment settlement and financial reconciliation."
+        },
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "create",
+            "description": "Add Level 3 sub-capability CAP-001-05-05: Notify Compliance & Legal under parent CAP-001-05 (Offboard Customer). This sub-capability covers notification to compliance, legal, and audit teams of customer offboarding."
+        },
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add Level 2 process PROC-001-06: Offboard Customers under parent PROC-001 (Customer Lifecycle Management). The process operationalizes the offboarding capability with defined trigger ('Non-payment decision made'), outcome ('Customer offboarded'), and owner. Reference: impact-assessment finding 2, referential-integrity finding 2."
+        },
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add Level 3 sub-process PROC-001-06-01: Identify Offboarding Candidates under parent PROC-001-06 (Offboard Customers). This sub-process covers identifying non-paying customers and initiating offboarding workflow."
+        },
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add Level 3 sub-process PROC-001-06-02: Issue Customer Notice under parent PROC-001-06 (Offboard Customers). This sub-process covers notification to customer of impending account suspension, including timeline and next steps."
+        },
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add Level 3 sub-process PROC-001-06-03: Process Data Requests & Deletion under parent PROC-001-06 (Offboard Customers). This sub-process covers handling GDPR/CCPA data deletion requests and executing data retention/deletion per regulatory requirements."
+        },
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add Level 3 sub-process PROC-001-06-04: Close Account & Settle Payment under parent PROC-001-06 (Offboard Customers). This sub-process covers account closure in core systems, suspension of supply/access, and processing final payment settlement."
+        },
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add Level 3 sub-process PROC-001-06-05: Notify Compliance & Audit under parent PROC-001-06 (Offboard Customers). This sub-process covers notification to compliance, legal, and audit of offboarding completion, including audit trail logging."
+        }
     ]
 }
