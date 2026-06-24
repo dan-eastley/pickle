@@ -15,13 +15,24 @@
             "Communicate integration complexity and coupling to stakeholders and architects."
         ],
         "diagramType": "wiring",
-        "derivedFrom": ["INT-IFC", "APP-DAP"]
+        "derivedFrom": [
+            "INT-IFC",
+            "APP-DAP"
+        ]
     },
     "type": "object",
     "properties": {
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
         }
     },
     "additionalProperties": false

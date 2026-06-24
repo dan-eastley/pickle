@@ -1,0 +1,37 @@
+{
+    "$schema": "urn:pickle:schemas:roles",
+    "description": "Canonical list of roles used across the architecture model — as artefact audience and author, and (later) for login, access control, and tailored UI. Grouped by category. Names are validated against config/schemas/roles.json. Drawn from TOGAF/ArchiMate stakeholder vocabulary and the Scaled Agile Framework (SAFe).",
+    "roles": [
+        { "id": "enterprise-architect", "name": "Enterprise Architect", "category": "architecture", "description": "Owns the enterprise-wide architecture vision, principles, and roadmap across all domains." },
+        { "id": "business-architect", "name": "Business Architect", "category": "architecture", "description": "Owns business capabilities, processes, and the operating model." },
+        { "id": "data-architect", "name": "Data Architect", "category": "architecture", "description": "Owns data domains, models, and governance." },
+        { "id": "application-architect", "name": "Application Architect", "category": "architecture", "description": "Owns the application landscape, platforms, and application standards." },
+        { "id": "integration-architect", "name": "Integration Architect", "category": "architecture", "description": "Owns interfaces, APIs, events, and integration patterns." },
+        { "id": "solution-architect", "name": "Solution Architect", "category": "architecture", "description": "Owns end-to-end solution designs spanning multiple domains for a specific initiative." },
+        { "id": "security-architect", "name": "Security Architect", "category": "architecture", "description": "Owns security architecture, controls, and assurance." },
+        { "id": "infrastructure-architect", "name": "Infrastructure Architect", "category": "architecture", "description": "Owns infrastructure, hosting, networks, and the technology architecture (TOGAF Phase D)." },
+        { "id": "technical-architect", "name": "Technical Architect", "category": "architecture", "description": "Owns low-level technical design and implementation standards for a delivery team." },
+
+        { "id": "business-analyst", "name": "Business Analyst", "category": "analysis", "description": "Elicits and documents business requirements and processes." },
+        { "id": "process-analyst", "name": "Process Analyst", "category": "analysis", "description": "Models and analyses business processes and operational flows." },
+        { "id": "data-analyst", "name": "Data Analyst", "category": "analysis", "description": "Analyses data to produce insight and validate data models." },
+        { "id": "systems-analyst", "name": "Systems Analyst", "category": "analysis", "description": "Bridges business requirements and system/application design." },
+
+        { "id": "product-manager", "name": "Product Manager", "category": "product", "description": "Owns the product vision, roadmap, and value (SAFe Product Management)." },
+        { "id": "product-owner", "name": "Product Owner", "category": "product", "description": "Owns the team backlog and accepts work (SAFe Product Owner)." },
+        { "id": "epic-owner", "name": "Epic Owner", "category": "product", "description": "Shepherds significant initiatives through the portfolio (SAFe Epic Owner)." },
+
+        { "id": "programme-director", "name": "Programme Director", "category": "leadership", "description": "Accountable for delivery of a programme of work and its outcomes." },
+        { "id": "delivery-manager", "name": "Delivery Manager", "category": "leadership", "description": "Manages delivery, dependencies, and team health." },
+        { "id": "release-train-engineer", "name": "Release Train Engineer", "category": "leadership", "description": "Facilitates the Agile Release Train and programme execution (SAFe RTE)." },
+        { "id": "engineering-lead", "name": "Engineering Lead", "category": "leadership", "description": "Leads an engineering team and its technical practices." },
+        { "id": "architecture-review-board", "name": "Architecture Review Board", "category": "governance", "description": "Governs architecture decisions, principles, and exceptions (TOGAF Architecture Board)." },
+
+        { "id": "chief-information-officer", "name": "Chief Information Officer", "category": "executive", "description": "Executive accountable for information technology and systems." },
+        { "id": "chief-technology-officer", "name": "Chief Technology Officer", "category": "executive", "description": "Executive accountable for technology strategy and engineering." },
+        { "id": "chief-data-officer", "name": "Chief Data Officer", "category": "executive", "description": "Executive accountable for data strategy, governance, and value." },
+        { "id": "chief-information-security-officer", "name": "Chief Information Security Officer", "category": "executive", "description": "Executive accountable for information security and risk." },
+        { "id": "chief-operating-officer", "name": "Chief Operating Officer", "category": "executive", "description": "Executive accountable for business operations." },
+        { "id": "chief-digital-officer", "name": "Chief Digital Officer", "category": "executive", "description": "Executive accountable for digital strategy and transformation." }
+    ]
+}

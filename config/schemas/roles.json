@@ -1,0 +1,48 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:roles",
+    "title": "Roles",
+    "description": "Reusable role enumeration. Artefact audience and author fields reference this so every role used in the model is one of the canonical roles in config/roles.json.",
+    "$defs": {
+        "role": {
+            "type": "string",
+            "enum": [
+                "Enterprise Architect",
+                "Business Architect",
+                "Data Architect",
+                "Application Architect",
+                "Integration Architect",
+                "Solution Architect",
+                "Security Architect",
+                "Infrastructure Architect",
+                "Technical Architect",
+                "Business Analyst",
+                "Process Analyst",
+                "Data Analyst",
+                "Systems Analyst",
+                "Product Manager",
+                "Product Owner",
+                "Epic Owner",
+                "Programme Director",
+                "Delivery Manager",
+                "Release Train Engineer",
+                "Engineering Lead",
+                "Architecture Review Board",
+                "Chief Information Officer",
+                "Chief Technology Officer",
+                "Chief Data Officer",
+                "Chief Information Security Officer",
+                "Chief Operating Officer",
+                "Chief Digital Officer"
+            ]
+        },
+        "role-list": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/role"
+            },
+            "minItems": 1,
+            "description": "One or more canonical roles."
+        }
+    }
+}

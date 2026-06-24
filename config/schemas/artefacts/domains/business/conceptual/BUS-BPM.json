@@ -22,55 +22,102 @@
         }
     },
     "type": "object",
-    "required": ["groups"],
+    "required": [
+        "groups"
+    ],
     "properties": {
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "groups": {
             "type": "array",
             "description": "Level 1 processes, each containing its Level 2 sub-processes.",
-            "items": { "$ref": "#/$defs/group" }
+            "items": {
+                "$ref": "#/$defs/group"
+            }
         }
     },
     "additionalProperties": false,
     "$defs": {
         "group": {
             "type": "object",
-            "required": ["id", "name", "items"],
+            "required": [
+                "id",
+                "name",
+                "items"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "meta": { "type": "object", "additionalProperties": true },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
                 "items": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/item" }
+                    "items": {
+                        "$ref": "#/$defs/item"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "item": {
             "type": "object",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "meta": { "type": "object", "additionalProperties": true },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
                 "items": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/subitem" }
+                    "items": {
+                        "$ref": "#/$defs/subitem"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "subitem": {
             "type": "object",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "meta": { "type": "object", "additionalProperties": true }
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
             },
             "additionalProperties": false
         }

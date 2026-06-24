@@ -9,7 +9,7 @@
         "format": "catalogue",
         "description": "Rules and minimum standards that must be followed in Data Architecture.",
         "purpose": [
-            "Codifies data compliance requirements \u2014 privacy, classification, and retention \u2014 in the architecture",
+            "Codifies data compliance requirements — privacy, classification, and retention — in the architecture",
             "Prevents data decisions that create regulatory or security risk",
             "Provides clear enforcement criteria for data architecture review",
             "Makes data quality standards enforceable rather than aspirational",
@@ -28,6 +28,14 @@
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
         },
         "guardrails": {
             "type": "array",
@@ -54,7 +62,7 @@
                     },
                     "rationale": {
                         "type": "string",
-                        "description": "Why this is mandatory \u2014 often references a principle or compliance requirement"
+                        "description": "Why this is mandatory — often references a principle or compliance requirement"
                     },
                     "enforcement": {
                         "type": "string",

@@ -20,16 +20,28 @@
         }
     },
     "type": "object",
-    "required": ["groups"],
+    "required": [
+        "groups"
+    ],
     "properties": {
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "groups": {
             "type": "array",
             "description": "Data domains, each containing its conceptual data entities.",
-            "items": { "$ref": "#/$defs/group" }
+            "items": {
+                "$ref": "#/$defs/group"
+            }
         }
     },
     "additionalProperties": false,
@@ -37,7 +49,11 @@
         "group": {
             "type": "object",
             "description": "A data domain and its conceptual data entities, matching the corresponding entries in DAT-DAC.",
-            "required": ["id", "name", "items"],
+            "required": [
+                "id",
+                "name",
+                "items"
+            ],
             "properties": {
                 "id": {
                     "type": "string",
@@ -55,7 +71,9 @@
                 "items": {
                     "type": "array",
                     "description": "Conceptual data entities belonging to this domain.",
-                    "items": { "$ref": "#/$defs/item" }
+                    "items": {
+                        "$ref": "#/$defs/item"
+                    }
                 }
             },
             "additionalProperties": false
@@ -63,7 +81,10 @@
         "item": {
             "type": "object",
             "description": "A conceptual data entity, matching the corresponding entry in DAT-DAC.",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
                 "id": {
                     "type": "string",

@@ -21,7 +21,13 @@
                 "idField": "id",
                 "labelField": "name",
                 "tooltipField": "description",
-                "filter": { "field": "level", "in": [1, 2] }
+                "filter": {
+                    "field": "level",
+                    "in": [
+                        1,
+                        2
+                    ]
+                }
             },
             "rows": {
                 "artefact": "BUS-PRO",
@@ -29,26 +35,53 @@
                 "idField": "id",
                 "labelField": "name",
                 "tooltipField": "description",
-                "filter": { "field": "level", "in": [1, 2] }
+                "filter": {
+                    "field": "level",
+                    "in": [
+                        1,
+                        2
+                    ]
+                }
             }
         }
     },
     "type": "object",
-    "required": ["relationships"],
+    "required": [
+        "relationships"
+    ],
     "properties": {
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "relationships": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["column-id", "row-id"],
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
                 "properties": {
-                    "column-id": { "type": "string", "description": "BUS-CAP capability ID" },
-                    "row-id": { "type": "string", "description": "BUS-PRO process ID" },
-                    "rationale": { "type": "string" }
+                    "column-id": {
+                        "type": "string",
+                        "description": "BUS-CAP capability ID"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "BUS-PRO process ID"
+                    },
+                    "rationale": {
+                        "type": "string"
+                    }
                 },
                 "additionalProperties": false
             }

@@ -205,86 +205,203 @@
         ]
     },
     "type": "object",
-    "required": ["documents"],
+    "required": [
+        "documents"
+    ],
     "properties": {
-        "$schema": { "type": "string" },
+        "$schema": {
+            "type": "string"
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "documents": {
             "type": "array",
-            "items": { "$ref": "#/$defs/document" }
+            "items": {
+                "$ref": "#/$defs/document"
+            }
         }
     },
     "additionalProperties": false,
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "executive-summary"],
+            "required": [
+                "id",
+                "title",
+                "description",
+                "status",
+                "executive-summary"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string",
-                    "enum": ["draft", "in-review", "approved", "superseded"]
+                    "enum": [
+                        "draft",
+                        "in-review",
+                        "approved",
+                        "superseded"
+                    ]
                 },
                 "scope": {
                     "type": "string",
                     "description": "The solution or initiative this design covers"
                 },
-
-                "executive-summary": { "$ref": "#/$defs/exec-summary" },
+                "executive-summary": {
+                    "$ref": "#/$defs/exec-summary"
+                },
                 "context": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/context-link" }
+                    "items": {
+                        "$ref": "#/$defs/context-link"
+                    }
                 },
-
                 "capabilities": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "functional-requirements": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/requirement" }
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
                 },
                 "features": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/feature" }
+                    "items": {
+                        "$ref": "#/$defs/feature"
+                    }
                 },
-
-                "nfr-business-continuity": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-environment-hosting": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-security-control": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-support-slas": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-user-access": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-data-classification": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-audit-logging": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-accessibility": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-data-retention": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-                "nfr-performance": { "type": "array", "items": { "$ref": "#/$defs/requirement" } },
-
-                "arch-business": { "$ref": "#/$defs/domain-architecture" },
-                "arch-data": { "$ref": "#/$defs/domain-architecture" },
-                "arch-integration": { "$ref": "#/$defs/domain-architecture" },
-                "arch-application": { "$ref": "#/$defs/domain-architecture" },
-
+                "nfr-business-continuity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-environment-hosting": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-security-control": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-support-slas": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-user-access": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-data-classification": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-audit-logging": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-accessibility": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-data-retention": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "nfr-performance": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/requirement"
+                    }
+                },
+                "arch-business": {
+                    "$ref": "#/$defs/domain-architecture"
+                },
+                "arch-data": {
+                    "$ref": "#/$defs/domain-architecture"
+                },
+                "arch-integration": {
+                    "$ref": "#/$defs/domain-architecture"
+                },
+                "arch-application": {
+                    "$ref": "#/$defs/domain-architecture"
+                },
                 "principles-adherence": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/principle-adherence" }
+                    "items": {
+                        "$ref": "#/$defs/principle-adherence"
+                    }
                 },
-
-                "flows-user": { "type": "array", "items": { "$ref": "#/$defs/flow" } },
-                "flows-information": { "type": "array", "items": { "$ref": "#/$defs/flow" } },
-                "flows-system": { "type": "array", "items": { "$ref": "#/$defs/flow" } }
+                "flows-user": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/flow"
+                    }
+                },
+                "flows-information": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/flow"
+                    }
+                },
+                "flows-system": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/flow"
+                    }
+                }
             },
             "additionalProperties": false
         },
         "exec-summary": {
             "type": "object",
-            "required": ["summary"],
+            "required": [
+                "summary"
+            ],
             "properties": {
-                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "summary": {
+                    "type": "string",
+                    "description": "Opening paragraph (1-2 sentences)"
+                },
                 "points": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "Key statements / bullets"
                 }
             },
@@ -292,11 +409,19 @@
         },
         "context-link": {
             "type": "object",
-            "required": ["relationship", "artefact-id", "document-id"],
+            "required": [
+                "relationship",
+                "artefact-id",
+                "document-id"
+            ],
             "properties": {
                 "relationship": {
                     "type": "string",
-                    "enum": ["informed-by", "informs", "related"],
+                    "enum": [
+                        "informed-by",
+                        "informs",
+                        "related"
+                    ],
                     "description": "How the linked document relates to this one"
                 },
                 "artefact-id": {
@@ -307,43 +432,72 @@
                     "type": "string",
                     "description": "ID of the specific linked document instance (e.g. SVI-001)"
                 },
-                "title": { "type": "string" }
+                "title": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "artefact-ref": {
             "type": "object",
-            "required": ["artefact-id"],
+            "required": [
+                "artefact-id"
+            ],
             "properties": {
                 "artefact-id": {
                     "type": "string",
                     "description": "Artefact or entity ID being referenced (e.g. BUS-CAP id)"
                 },
-                "note": { "type": "string" }
+                "note": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "requirement": {
             "type": "object",
-            "required": ["id", "requirement"],
+            "required": [
+                "id",
+                "requirement"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "requirement": { "type": "string" },
-                "rationale": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "requirement": {
+                    "type": "string"
+                },
+                "rationale": {
+                    "type": "string"
+                },
                 "priority": {
                     "type": "string",
-                    "enum": ["must", "should", "could", "wont"]
+                    "enum": [
+                        "must",
+                        "should",
+                        "could",
+                        "wont"
+                    ]
                 }
             },
             "additionalProperties": false
         },
         "feature": {
             "type": "object",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "description": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
@@ -356,19 +510,26 @@
                 },
                 "references": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" },
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    },
                     "description": "Artefacts from this domain that the design calls out"
                 },
                 "diagrams": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/diagram-ref" }
+                    "items": {
+                        "$ref": "#/$defs/diagram-ref"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "principle-adherence": {
             "type": "object",
-            "required": ["principle-id", "adherence"],
+            "required": [
+                "principle-id",
+                "adherence"
+            ],
             "properties": {
                 "principle-id": {
                     "type": "string",
@@ -376,7 +537,11 @@
                 },
                 "adherence": {
                     "type": "string",
-                    "enum": ["adheres", "partial", "deviation"]
+                    "enum": [
+                        "adheres",
+                        "partial",
+                        "deviation"
+                    ]
                 },
                 "statement": {
                     "type": "string",
@@ -387,14 +552,26 @@
         },
         "flow": {
             "type": "object",
-            "required": ["title"],
+            "required": [
+                "title"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "format": {
                     "type": "string",
-                    "enum": ["mermaid", "plantuml", "url"],
+                    "enum": [
+                        "mermaid",
+                        "plantuml",
+                        "url"
+                    ],
                     "description": "Diagram format, when the flow is expressed as a diagram"
                 },
                 "content": {
@@ -403,7 +580,9 @@
                 },
                 "steps": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "Ordered steps, when the flow is expressed as a step sequence"
                 }
             },
@@ -411,14 +590,20 @@
         },
         "diagram-ref": {
             "type": "object",
-            "required": ["artefact-id"],
+            "required": [
+                "artefact-id"
+            ],
             "properties": {
                 "artefact-id": {
                     "type": "string",
                     "description": "Artefact ID to render inline (e.g. INT-WRD)"
                 },
-                "title": { "type": "string" },
-                "caption": { "type": "string" }
+                "title": {
+                    "type": "string"
+                },
+                "caption": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         }

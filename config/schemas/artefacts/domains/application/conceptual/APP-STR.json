@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:artefacts:domains:application:conceptual:APP-STR",
     "title": "Application Architecture Strategy Catalogue",
-    "description": "Catalogue of strategic statements for the Application architecture domain \u2014 the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
+    "description": "Catalogue of strategic statements for the Application architecture domain — the what and why at the highest level (outcomes, drivers, target states). Aligned to TOGAF Architecture Vision concepts with OKR-style target outcomes.",
     "meta": {
         "domain": "application",
         "abstraction": "conceptual",
@@ -29,6 +29,14 @@
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "strategies": {
             "type": "array",
             "items": {
@@ -44,7 +52,7 @@
                     },
                     "statement": {
                         "type": "string",
-                        "description": "Strategic statement \u2014 outcome-oriented, time-bound where appropriate"
+                        "description": "Strategic statement — outcome-oriented, time-bound where appropriate"
                     },
                     "driver": {
                         "type": "string",

@@ -39,6 +39,14 @@
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "relationships": {
             "type": "array",
             "description": "Sparse list of required mappings between BUS-PRN (columns) and BUS-GRD (rows). Presence of an entry means the guardrail is required to enforce the principle; absence means no required relationship.",

@@ -113,69 +113,125 @@
         ]
     },
     "type": "object",
-    "required": ["documents"],
+    "required": [
+        "documents"
+    ],
     "properties": {
-        "$schema": { "type": "string" },
+        "$schema": {
+            "type": "string"
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "documents": {
             "type": "array",
-            "items": { "$ref": "#/$defs/document" }
+            "items": {
+                "$ref": "#/$defs/document"
+            }
         }
     },
     "additionalProperties": false,
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "executive-summary"],
+            "required": [
+                "id",
+                "title",
+                "description",
+                "status",
+                "executive-summary"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string",
-                    "enum": ["draft", "in-review", "approved", "superseded"]
+                    "enum": [
+                        "draft",
+                        "in-review",
+                        "approved",
+                        "superseded"
+                    ]
                 },
                 "scope": {
                     "type": "string",
                     "description": "The epic, feature, or initiative this vision covers"
                 },
-                "executive-summary": { "$ref": "#/$defs/exec-summary" },
+                "executive-summary": {
+                    "$ref": "#/$defs/exec-summary"
+                },
                 "context": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/context-link" }
+                    "items": {
+                        "$ref": "#/$defs/context-link"
+                    }
                 },
-                "problem-statement": { "type": "string" },
-                "solution-overview": { "type": "string" },
+                "problem-statement": {
+                    "type": "string"
+                },
+                "solution-overview": {
+                    "type": "string"
+                },
                 "key-capabilities": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "platforms-involved": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "assumptions": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/assumption" }
+                    "items": {
+                        "$ref": "#/$defs/assumption"
+                    }
                 },
                 "risks": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/risk" }
+                    "items": {
+                        "$ref": "#/$defs/risk"
+                    }
                 },
                 "open-questions": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/open-question" }
+                    "items": {
+                        "$ref": "#/$defs/open-question"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "exec-summary": {
             "type": "object",
-            "required": ["summary"],
+            "required": [
+                "summary"
+            ],
             "properties": {
-                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "summary": {
+                    "type": "string",
+                    "description": "Opening paragraph (1-2 sentences)"
+                },
                 "points": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "Key statements / bullets"
                 }
             },
@@ -183,55 +239,114 @@
         },
         "context-link": {
             "type": "object",
-            "required": ["relationship", "artefact-id", "document-id"],
+            "required": [
+                "relationship",
+                "artefact-id",
+                "document-id"
+            ],
             "properties": {
                 "relationship": {
                     "type": "string",
-                    "enum": ["informed-by", "informs", "related"]
+                    "enum": [
+                        "informed-by",
+                        "informs",
+                        "related"
+                    ]
                 },
-                "artefact-id": { "type": "string" },
-                "document-id": { "type": "string" },
-                "title": { "type": "string" }
+                "artefact-id": {
+                    "type": "string"
+                },
+                "document-id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "artefact-ref": {
             "type": "object",
-            "required": ["artefact-id"],
+            "required": [
+                "artefact-id"
+            ],
             "properties": {
-                "artefact-id": { "type": "string" },
-                "note": { "type": "string" }
+                "artefact-id": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "assumption": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "risk": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "likelihood": { "type": "string", "enum": ["low", "medium", "high"] },
-                "impact": { "type": "string", "enum": ["low", "medium", "high"] },
-                "mitigation": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "likelihood": {
+                    "type": "string",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high"
+                    ]
+                },
+                "impact": {
+                    "type": "string",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high"
+                    ]
+                },
+                "mitigation": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "open-question": {
             "type": "object",
-            "required": ["id", "question"],
+            "required": [
+                "id",
+                "question"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "question": { "type": "string" },
-                "raised-by": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "raised-by": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         }
