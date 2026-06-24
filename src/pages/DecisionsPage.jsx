@@ -5,10 +5,11 @@ import { DECISION_STATUS_ORDER, decisionStatusBadge, decisionStatusLabel } from 
 import ScopeChip from '../components/decisions/ScopeChip'
 import ScopeFilter from '../components/decisions/ScopeFilter'
 import Button from '../components/ui/Button'
+import ActionBar from '../components/ui/ActionBar'
 import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
-import { ChevronRight, ChevronDown, DecisionIcon, PlusIcon } from '../components/ui/icons'
+import { ChevronRight, ChevronDown, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
@@ -130,18 +131,17 @@ export default function DecisionsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">Architecture Decisions</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {clientName} · v{versionId}
-          </p>
-        </div>
-        <Button to={`/clients/${clientId}/${versionId}/decisions/new`} size="lg">
-          <PlusIcon className="w-4 h-4" />
-          New Decision
-        </Button>
-      </div>
+      <ActionBar
+        className="mb-6"
+        title="Architecture Decisions"
+        strapline={`${clientName} · v${versionId}`}
+        primary={
+          <Button to={`/clients/${clientId}/${versionId}/decisions/new`} size="lg">
+            <DecisionIcon className="w-4 h-4" />
+            New Architecture Decision
+          </Button>
+        }
+      />
 
       <div className="mb-5 p-4 bg-gray-50 border border-gray-200">
         <ScopeFilter searchParams={searchParams} setSearchParams={setSearchParams} />

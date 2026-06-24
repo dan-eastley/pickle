@@ -4,11 +4,12 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeChip from '../components/decisions/ScopeChip'
 import ScopeFilter from '../components/decisions/ScopeFilter'
 import Button from '../components/ui/Button'
+import ActionBar from '../components/ui/ActionBar'
 import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
-import { ChevronRight, ChevronDown, RobotIcon, PlusIcon } from '../components/ui/icons'
+import { ChevronRight, ChevronDown, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 const POTS = [
@@ -114,20 +115,22 @@ export default function DiscoveryPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-            Architecture Discovery
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {clientName} · v{versionId}
-          </p>
-        </div>
-        <Button to={`/clients/${clientId}/${versionId}/discovery/new`} size="lg">
-          <PlusIcon className="w-4 h-4" />
-          New Discovery
-        </Button>
-      </div>
+      <ActionBar
+        className="mb-6"
+        title="Architecture Discovery"
+        strapline={`${clientName} · v${versionId}`}
+        primary={
+          <Button
+            to={`/clients/${clientId}/${versionId}/discovery/new`}
+            size="lg"
+            variant="custom"
+            className="bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 text-white"
+          >
+            <RobotIcon className="w-4 h-4" />
+            New Architecture Discovery
+          </Button>
+        }
+      />
 
       <div className="mb-5 px-4 py-3 bg-blue-50 border border-blue-200 text-sm text-blue-800">
         Discovery is a preview. The Virtual Architect Agent that produces point-in-time views from your
