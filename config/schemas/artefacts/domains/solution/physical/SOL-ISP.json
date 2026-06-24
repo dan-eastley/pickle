@@ -18,26 +18,64 @@
         }
     },
     "type": "object",
-    "required": ["documents"],
+    "required": [
+        "documents"
+    ],
     "properties": {
-        "$schema": { "type": "string" },
+        "$schema": {
+            "type": "string"
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "documents": {
             "type": "array",
-            "items": { "$ref": "#/$defs/document" }
+            "items": {
+                "$ref": "#/$defs/document"
+            }
         }
     },
     "additionalProperties": false,
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "interface-id", "overview", "source-system", "target-system", "technical-protocol", "authentication", "data-format", "trigger"],
+            "required": [
+                "id",
+                "title",
+                "description",
+                "status",
+                "interface-id",
+                "overview",
+                "source-system",
+                "target-system",
+                "technical-protocol",
+                "authentication",
+                "data-format",
+                "trigger"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string",
-                    "enum": ["draft", "in-review", "approved", "superseded"]
+                    "enum": [
+                        "draft",
+                        "in-review",
+                        "approved",
+                        "superseded"
+                    ]
                 },
                 "interface-id": {
                     "type": "string",
@@ -57,23 +95,53 @@
                 },
                 "technical-protocol": {
                     "type": "string",
-                    "enum": ["REST", "SOAP", "GraphQL", "gRPC", "event-stream", "batch-file", "database-link"]
+                    "enum": [
+                        "REST",
+                        "SOAP",
+                        "GraphQL",
+                        "gRPC",
+                        "event-stream",
+                        "batch-file",
+                        "database-link"
+                    ]
                 },
                 "authentication": {
                     "type": "string",
-                    "enum": ["OAuth2", "API-key", "mTLS", "service-account", "none"]
+                    "enum": [
+                        "OAuth2",
+                        "API-key",
+                        "mTLS",
+                        "service-account",
+                        "none"
+                    ]
                 },
                 "data-format": {
                     "type": "string",
-                    "enum": ["JSON", "XML", "CSV", "Parquet", "Avro", "Protobuf", "EDI", "binary"]
+                    "enum": [
+                        "JSON",
+                        "XML",
+                        "CSV",
+                        "Parquet",
+                        "Avro",
+                        "Protobuf",
+                        "EDI",
+                        "binary"
+                    ]
                 },
                 "trigger": {
                     "type": "string",
-                    "enum": ["real-time", "scheduled", "event-driven", "on-demand"]
+                    "enum": [
+                        "real-time",
+                        "scheduled",
+                        "event-driven",
+                        "on-demand"
+                    ]
                 },
                 "endpoints": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/endpoint" }
+                    "items": {
+                        "$ref": "#/$defs/endpoint"
+                    }
                 },
                 "data-model": {
                     "type": "string",
@@ -83,123 +151,224 @@
                     "type": "string",
                     "description": "Description of error handling, retry, and dead-letter strategy"
                 },
-                "sla": { "$ref": "#/$defs/sla" },
+                "sla": {
+                    "$ref": "#/$defs/sla"
+                },
                 "test-scenarios": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/test-scenario" }
+                    "items": {
+                        "$ref": "#/$defs/test-scenario"
+                    }
                 },
                 "diagrams": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/diagram-ref" }
+                    "items": {
+                        "$ref": "#/$defs/diagram-ref"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "endpoint": {
             "type": "object",
-            "required": ["path", "method", "description"],
+            "required": [
+                "path",
+                "method",
+                "description"
+            ],
             "properties": {
-                "path": { "type": "string" },
+                "path": {
+                    "type": "string"
+                },
                 "method": {
                     "type": "string",
-                    "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "SUBSCRIBE", "PUBLISH"]
+                    "enum": [
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "PATCH",
+                        "SUBSCRIBE",
+                        "PUBLISH"
+                    ]
                 },
-                "description": { "type": "string" }
+                "description": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "sla": {
             "type": "object",
             "properties": {
-                "latency-p99-ms": { "type": "integer" },
-                "throughput-tps": { "type": "integer" },
-                "availability-percent": { "type": "number" }
+                "latency-p99-ms": {
+                    "type": "integer"
+                },
+                "throughput-tps": {
+                    "type": "integer"
+                },
+                "availability-percent": {
+                    "type": "number"
+                }
             },
             "additionalProperties": false
         },
         "test-scenario": {
             "type": "object",
-            "required": ["id", "description", "expected-outcome"],
+            "required": [
+                "id",
+                "description",
+                "expected-outcome"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "expected-outcome": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "expected-outcome": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "driver": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string",
-                    "enum": ["business", "technology", "regulatory", "market"]
+                    "enum": [
+                        "business",
+                        "technology",
+                        "regulatory",
+                        "market"
+                    ]
                 }
             },
             "additionalProperties": false
         },
         "constraint": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string",
-                    "enum": ["technical", "business", "regulatory", "resource"]
+                    "enum": [
+                        "technical",
+                        "business",
+                        "regulatory",
+                        "resource"
+                    ]
                 }
             },
             "additionalProperties": false
         },
         "assumption": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "risk": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "likelihood": {
                     "type": "string",
-                    "enum": ["low", "medium", "high"]
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high"
+                    ]
                 },
                 "impact": {
                     "type": "string",
-                    "enum": ["low", "medium", "high"]
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high"
+                    ]
                 },
-                "mitigation": { "type": "string" }
+                "mitigation": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "open-question": {
             "type": "object",
-            "required": ["id", "question"],
+            "required": [
+                "id",
+                "question"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "question": { "type": "string" },
-                "raised-by": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "raised-by": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "diagram-ref": {
             "type": "object",
-            "required": ["artefact-id"],
+            "required": [
+                "artefact-id"
+            ],
             "properties": {
                 "artefact-id": {
                     "type": "string",
                     "description": "Artefact ID to render inline (e.g. BUS-BCM)"
                 },
-                "title": { "type": "string" },
-                "caption": { "type": "string" }
+                "title": {
+                    "type": "string"
+                },
+                "caption": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         }

@@ -140,78 +140,141 @@
         ]
     },
     "type": "object",
-    "required": ["documents"],
+    "required": [
+        "documents"
+    ],
     "properties": {
-        "$schema": { "type": "string" },
+        "$schema": {
+            "type": "string"
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "documents": {
             "type": "array",
-            "items": { "$ref": "#/$defs/document" }
+            "items": {
+                "$ref": "#/$defs/document"
+            }
         }
     },
     "additionalProperties": false,
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "executive-summary", "intent-statement"],
+            "required": [
+                "id",
+                "title",
+                "description",
+                "status",
+                "executive-summary",
+                "intent-statement"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string",
-                    "enum": ["draft", "in-review", "approved", "superseded"]
+                    "enum": [
+                        "draft",
+                        "in-review",
+                        "approved",
+                        "superseded"
+                    ]
                 },
                 "scope": {
                     "type": "string",
                     "description": "The programme, initiative, or domain this intent covers"
                 },
-                "executive-summary": { "$ref": "#/$defs/exec-summary" },
+                "executive-summary": {
+                    "$ref": "#/$defs/exec-summary"
+                },
                 "context": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/context-link" }
+                    "items": {
+                        "$ref": "#/$defs/context-link"
+                    }
                 },
                 "stakeholders": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/stakeholder" }
+                    "items": {
+                        "$ref": "#/$defs/stakeholder"
+                    }
                 },
                 "concerns": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/concern" }
+                    "items": {
+                        "$ref": "#/$defs/concern"
+                    }
                 },
-                "intent-statement": { "type": "string" },
-                "background": { "type": "string" },
+                "intent-statement": {
+                    "type": "string"
+                },
+                "background": {
+                    "type": "string"
+                },
                 "drivers": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/driver" }
+                    "items": {
+                        "$ref": "#/$defs/driver"
+                    }
                 },
                 "options-considered": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/option" }
+                    "items": {
+                        "$ref": "#/$defs/option"
+                    }
                 },
-                "recommended-direction": { "type": "string" },
+                "recommended-direction": {
+                    "type": "string"
+                },
                 "architecture-principles": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "guardrails": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "open-questions": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/open-question" }
+                    "items": {
+                        "$ref": "#/$defs/open-question"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "exec-summary": {
             "type": "object",
-            "required": ["summary"],
+            "required": [
+                "summary"
+            ],
             "properties": {
-                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "summary": {
+                    "type": "string",
+                    "description": "Opening paragraph (1-2 sentences)"
+                },
                 "points": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "Key statements / bullets"
                 }
             },
@@ -219,28 +282,55 @@
         },
         "context-link": {
             "type": "object",
-            "required": ["relationship", "artefact-id", "document-id"],
+            "required": [
+                "relationship",
+                "artefact-id",
+                "document-id"
+            ],
             "properties": {
                 "relationship": {
                     "type": "string",
-                    "enum": ["informed-by", "informs", "related"]
+                    "enum": [
+                        "informed-by",
+                        "informs",
+                        "related"
+                    ]
                 },
-                "artefact-id": { "type": "string" },
-                "document-id": { "type": "string" },
-                "title": { "type": "string" }
+                "artefact-id": {
+                    "type": "string"
+                },
+                "document-id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "stakeholder": {
             "type": "object",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string", "description": "Stakeholder name, role title, or group" },
-                "role": { "type": "string", "description": "Their role or relationship to the architecture" },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Stakeholder name, role title, or group"
+                },
+                "role": {
+                    "type": "string",
+                    "description": "Their role or relationship to the architecture"
+                },
                 "concerns": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "IDs of the concerns this stakeholder holds"
                 }
             },
@@ -248,46 +338,104 @@
         },
         "concern": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "type": { "type": "string", "enum": ["business", "technical", "regulatory", "operational", "security", "cost"] }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "business",
+                        "technical",
+                        "regulatory",
+                        "operational",
+                        "security",
+                        "cost"
+                    ]
+                }
             },
             "additionalProperties": false
         },
         "driver": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string",
-                    "enum": ["business", "technology", "regulatory", "market"]
+                    "enum": [
+                        "business",
+                        "technology",
+                        "regulatory",
+                        "market"
+                    ]
                 }
             },
             "additionalProperties": false
         },
         "option": {
             "type": "object",
-            "required": ["id", "name", "description"],
+            "required": [
+                "id",
+                "name",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "description": { "type": "string" },
-                "pros": { "type": "array", "items": { "type": "string" } },
-                "cons": { "type": "array", "items": { "type": "string" } }
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "pros": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "cons": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
             },
             "additionalProperties": false
         },
         "open-question": {
             "type": "object",
-            "required": ["id", "question"],
+            "required": [
+                "id",
+                "question"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "question": { "type": "string" },
-                "raised-by": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "raised-by": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         }

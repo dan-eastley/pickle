@@ -10,7 +10,7 @@
         "description": "A hierarchical catalogue of what the organisation does, structured by capability area and sub-capability.",
         "purpose": [
             "Provides a stable, technology-independent view of the business that survives reorganisations",
-            "Enables capability-based planning \u2014 investment follows what the business does, not how it is structured",
+            "Enables capability-based planning — investment follows what the business does, not how it is structured",
             "Serves as the mapping anchor between business intent and application and data architecture",
             "Supports maturity assessment to identify where to invest and where to improve",
             "Reduces duplication by making overlapping capabilities visible"
@@ -28,6 +28,14 @@
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
         },
         "capabilities": {
             "type": "array",
@@ -53,7 +61,7 @@
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 3,
-                        "description": "Capability level \u2014 1 (highest, e.g. Manage Customer) to 3 (most granular)"
+                        "description": "Capability level — 1 (highest, e.g. Manage Customer) to 3 (most granular)"
                     },
                     "parent-id": {
                         "type": "string",
@@ -70,7 +78,7 @@
                             "differentiating",
                             "foundational"
                         ],
-                        "description": "Strategic importance \u2014 strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
+                        "description": "Strategic importance — strategic (drives competitive advantage), differentiating (improves how the business competes), foundational (commodity / table stakes)"
                     },
                     "maturity-current": {
                         "$ref": "#/$defs/maturity",
@@ -87,7 +95,9 @@
         "activity": {
             "type": "array",
             "description": "Chronological change-history log for this artefact. Auto-populated by the decision process and workflows.",
-            "items": { "$ref": "#/$defs/activity-entry" }
+            "items": {
+                "$ref": "#/$defs/activity-entry"
+            }
         }
     },
     "additionalProperties": false,
@@ -104,12 +114,27 @@
         },
         "activity-entry": {
             "type": "object",
-            "required": ["timestamp", "action", "who"],
+            "required": [
+                "timestamp",
+                "action",
+                "who"
+            ],
             "properties": {
-                "timestamp": { "type": "string", "description": "ISO 8601 datetime." },
-                "action": { "type": "string", "description": "e.g. Created, Updated, Reviewed, Archived." },
-                "who": { "type": "string", "description": "Display name of the person or agent." },
-                "notes": { "type": "string" }
+                "timestamp": {
+                    "type": "string",
+                    "description": "ISO 8601 datetime."
+                },
+                "action": {
+                    "type": "string",
+                    "description": "e.g. Created, Updated, Reviewed, Archived."
+                },
+                "who": {
+                    "type": "string",
+                    "description": "Display name of the person or agent."
+                },
+                "notes": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         }

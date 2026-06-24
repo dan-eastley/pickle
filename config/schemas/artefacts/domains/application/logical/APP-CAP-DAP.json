@@ -43,6 +43,14 @@
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "relationships": {
             "type": "array",
             "description": "Sparse list of mappings between BUS-CAP Level 2 capabilities (columns) and APP-DAP platforms (rows). An entry's presence means the platform supports the capability; absence means no mapping.",

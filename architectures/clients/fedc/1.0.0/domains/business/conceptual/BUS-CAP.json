@@ -1,5 +1,7 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-CAP",
+    "audience": ["Enterprise Architect", "Business Architect", "Chief Operating Officer"],
+    "author": ["Business Architect", "Business Analyst"],
     "capabilities": [
         {
             "id": "CAP-001",

@@ -174,100 +174,171 @@
         ]
     },
     "type": "object",
-    "required": ["documents"],
+    "required": [
+        "documents"
+    ],
     "properties": {
-        "$schema": { "type": "string" },
+        "$schema": {
+            "type": "string"
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "documents": {
             "type": "array",
-            "items": { "$ref": "#/$defs/document" }
+            "items": {
+                "$ref": "#/$defs/document"
+            }
         }
     },
     "additionalProperties": false,
     "$defs": {
         "document": {
             "type": "object",
-            "required": ["id", "title", "description", "status", "executive-summary", "vision-statement"],
+            "required": [
+                "id",
+                "title",
+                "description",
+                "status",
+                "executive-summary",
+                "vision-statement"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "description": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string",
-                    "enum": ["draft", "in-review", "approved", "superseded"]
+                    "enum": [
+                        "draft",
+                        "in-review",
+                        "approved",
+                        "superseded"
+                    ]
                 },
                 "scope": {
                     "type": "string",
                     "description": "The programme or initiative this vision covers"
                 },
-                "executive-summary": { "$ref": "#/$defs/exec-summary" },
+                "executive-summary": {
+                    "$ref": "#/$defs/exec-summary"
+                },
                 "context": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/context-link" }
+                    "items": {
+                        "$ref": "#/$defs/context-link"
+                    }
                 },
                 "stakeholders": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/stakeholder" }
+                    "items": {
+                        "$ref": "#/$defs/stakeholder"
+                    }
                 },
                 "concerns": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/concern" }
+                    "items": {
+                        "$ref": "#/$defs/concern"
+                    }
                 },
-                "vision-statement": { "type": "string" },
+                "vision-statement": {
+                    "type": "string"
+                },
                 "drivers": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/driver" }
+                    "items": {
+                        "$ref": "#/$defs/driver"
+                    }
                 },
                 "strategic-objectives": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/objective" }
+                    "items": {
+                        "$ref": "#/$defs/objective"
+                    }
                 },
                 "business-capabilities": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "business-processes": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "application-landscape": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "cross-domain-strategies": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/artefact-ref" }
+                    "items": {
+                        "$ref": "#/$defs/artefact-ref"
+                    }
                 },
                 "guiding-principles": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "constraints": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/constraint" }
+                    "items": {
+                        "$ref": "#/$defs/constraint"
+                    }
                 },
                 "assumptions": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/assumption" }
+                    "items": {
+                        "$ref": "#/$defs/assumption"
+                    }
                 },
                 "transformation-themes": {
                     "type": "array",
-                    "items": { "$ref": "#/$defs/theme" }
+                    "items": {
+                        "$ref": "#/$defs/theme"
+                    }
                 },
                 "expected-benefits": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {
+                        "type": "string"
+                    }
                 }
             },
             "additionalProperties": false
         },
         "exec-summary": {
             "type": "object",
-            "required": ["summary"],
+            "required": [
+                "summary"
+            ],
             "properties": {
-                "summary": { "type": "string", "description": "Opening paragraph (1-2 sentences)" },
+                "summary": {
+                    "type": "string",
+                    "description": "Opening paragraph (1-2 sentences)"
+                },
                 "points": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "Key statements / bullets"
                 }
             },
@@ -275,28 +346,55 @@
         },
         "context-link": {
             "type": "object",
-            "required": ["relationship", "artefact-id", "document-id"],
+            "required": [
+                "relationship",
+                "artefact-id",
+                "document-id"
+            ],
             "properties": {
                 "relationship": {
                     "type": "string",
-                    "enum": ["informed-by", "informs", "related"]
+                    "enum": [
+                        "informed-by",
+                        "informs",
+                        "related"
+                    ]
                 },
-                "artefact-id": { "type": "string" },
-                "document-id": { "type": "string" },
-                "title": { "type": "string" }
+                "artefact-id": {
+                    "type": "string"
+                },
+                "document-id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "stakeholder": {
             "type": "object",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string", "description": "Stakeholder name, role title, or group" },
-                "role": { "type": "string", "description": "Their role or relationship to the architecture" },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Stakeholder name, role title, or group"
+                },
+                "role": {
+                    "type": "string",
+                    "description": "Their role or relationship to the architecture"
+                },
                 "concerns": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "IDs of the concerns this stakeholder holds"
                 }
             },
@@ -304,33 +402,74 @@
         },
         "concern": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "type": { "type": "string", "enum": ["business", "technical", "regulatory", "operational", "security", "cost"] }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "business",
+                        "technical",
+                        "regulatory",
+                        "operational",
+                        "security",
+                        "cost"
+                    ]
+                }
             },
             "additionalProperties": false
         },
         "driver": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "type": { "type": "string", "enum": ["business", "technology", "regulatory", "market"] }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "business",
+                        "technology",
+                        "regulatory",
+                        "market"
+                    ]
+                }
             },
             "additionalProperties": false
         },
         "objective": {
             "type": "object",
-            "required": ["id", "objective"],
+            "required": [
+                "id",
+                "objective"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "objective": { "type": "string" },
+                "id": {
+                    "type": "string"
+                },
+                "objective": {
+                    "type": "string"
+                },
                 "linked-capabilities": {
                     "type": "array",
-                    "items": { "type": "string" },
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "BUS-CAP IDs this objective advances"
                 }
             },
@@ -338,39 +477,76 @@
         },
         "artefact-ref": {
             "type": "object",
-            "required": ["artefact-id"],
+            "required": [
+                "artefact-id"
+            ],
             "properties": {
-                "artefact-id": { "type": "string" },
-                "note": { "type": "string" }
+                "artefact-id": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "constraint": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" },
-                "type": { "type": "string", "enum": ["technical", "business", "regulatory", "resource"] }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "technical",
+                        "business",
+                        "regulatory",
+                        "resource"
+                    ]
+                }
             },
             "additionalProperties": false
         },
         "assumption": {
             "type": "object",
-            "required": ["id", "description"],
+            "required": [
+                "id",
+                "description"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "description": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "theme": {
             "type": "object",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "description": { "type": "string" }
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         }

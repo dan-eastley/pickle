@@ -22,16 +22,28 @@
         }
     },
     "type": "object",
-    "required": ["groups"],
+    "required": [
+        "groups"
+    ],
     "properties": {
         "$schema": {
             "type": "string",
             "description": "URN of the schema this instance conforms to (this file's $id)."
         },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
         "groups": {
             "type": "array",
             "description": "Level 1 capabilities, each containing its Level 2 sub-capabilities.",
-            "items": { "$ref": "#/$defs/group" }
+            "items": {
+                "$ref": "#/$defs/group"
+            }
         }
     },
     "additionalProperties": false,
@@ -39,7 +51,11 @@
         "group": {
             "type": "object",
             "description": "A Level 1 capability and its Level 2 sub-capabilities, matching the corresponding entries in BUS-CAP.",
-            "required": ["id", "name", "items"],
+            "required": [
+                "id",
+                "name",
+                "items"
+            ],
             "properties": {
                 "id": {
                     "type": "string",
@@ -55,7 +71,11 @@
                     "properties": {
                         "importance": {
                             "type": "string",
-                            "enum": ["strategic", "differentiating", "foundational"],
+                            "enum": [
+                                "strategic",
+                                "differentiating",
+                                "foundational"
+                            ],
                             "description": "Strategic importance, matching BUS-CAP. Rendered as a badge on the card."
                         }
                     },
@@ -64,7 +84,9 @@
                 "items": {
                     "type": "array",
                     "description": "Level 2 sub-capabilities belonging to this capability.",
-                    "items": { "$ref": "#/$defs/item" }
+                    "items": {
+                        "$ref": "#/$defs/item"
+                    }
                 }
             },
             "additionalProperties": false
@@ -72,7 +94,10 @@
         "item": {
             "type": "object",
             "description": "A Level 2 sub-capability, matching the corresponding entry in BUS-CAP. May contain its Level 3 capabilities as nested items, rendered in the per-Level-1 drill-down diagrams.",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
                 "id": {
                     "type": "string",
@@ -90,7 +115,9 @@
                 "items": {
                     "type": "array",
                     "description": "Level 3 capabilities belonging to this Level 2 sub-capability, matching BUS-CAP. Optional — omit when there are none.",
-                    "items": { "$ref": "#/$defs/subitem" }
+                    "items": {
+                        "$ref": "#/$defs/subitem"
+                    }
                 }
             },
             "additionalProperties": false
@@ -98,7 +125,10 @@
         "subitem": {
             "type": "object",
             "description": "A Level 3 capability, matching the corresponding entry in BUS-CAP.",
-            "required": ["id", "name"],
+            "required": [
+                "id",
+                "name"
+            ],
             "properties": {
                 "id": {
                     "type": "string",
