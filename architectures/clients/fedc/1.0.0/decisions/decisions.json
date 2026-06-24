@@ -13,7 +13,7 @@
         {
             "decision-id": "ADR-014",
             "title": "Offboarding Customers",
-            "status": "draft",
+            "status": "proposed",
             "scope": {
                 "domain": "business"
             }
