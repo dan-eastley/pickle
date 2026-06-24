@@ -22,16 +22,22 @@
     ],
     "recommendations": [
         {
-            "recommendation": "**'Semantic layer'** is technical jargon unfamiliar to business stakeholders. Replace with plain language: *'A business-friendly metrics layer that translates technical database names into familiar business terms (e.g., \"monthly revenue\", \"customer count\").'* This clarifies the business value without requiring technical expertise to understand."
+            "recommendation": "**Narrative and requirements quality**: The narrative is well-written and clearly articulates the business problem (centralised data team bottleneck), proposed solution (self-service analytics on a semantic layer), and measurable outcomes (real-time query execution vs. 2-week SLA). The requirements are atomic and testable. The document is ready for downstream architecture analysis with targeted refinement."
         },
         {
-            "recommendation": "The phrase **'standard query patterns'** in the first requirement is undefined. Clarify: Do you mean predefined report templates? Drag-and-drop filters? A specific set of aggregation types (e.g., filtered summaries over 3 dimensions)? Downstream design work needs precision here to scope the platform correctly."
+            "recommendation": "**Replace jargon with business language**: Replace **'Semantic layer'** (a technical term that may confuse business stakeholders) with plain language in the narrative and requirements: *'Business-friendly metrics layer that translates database terms into familiar business language (e.g., \"monthly revenue\", \"customer count\").'* This clarifies value without requiring technical expertise."
         },
         {
-            "recommendation": "The narrative emphasises **role-based access** as a governance control, but no requirement explicitly captures this. Add a Non-Functional requirement: 'Access to data must be restricted by role based on business function, and all access attempts must be logged for audit purposes.' This makes governance intent measurable."
+            "recommendation": "**Define 'standard query patterns' precisely**: The first requirement mentions 'standard query patterns' but does not define what qualifies as standard. Clarify with examples: Do you mean pre-defined reports? Filtered aggregations (e.g., revenue by region and product)? Time-series comparisons? Avoid freeform exploratory SQL? Precision here is essential — it directly affects the semantic layer scope and the achievability of the 30-second query SLA."
         },
         {
-            "recommendation": "The narrative and requirements are well-structured, clear on the business problem and measurable outcomes. They are ready for downstream architecture analysis. Consider clarifying scope: Does role-based access prevent access to *metrics* (which metrics a role can query) or to *data rows* (filters on results), or both? This distinction drives the semantic layer design."
+            "recommendation": "**Add explicit role-based access requirement**: The narrative emphasises role-based access control for governance, but no requirement explicitly captures this. Add a Non-Functional requirement: **'Access Control and Audit Logging'** — 'All data access via self-service must be role-based (restricted by business function), and all access attempts must be logged for audit and compliance purposes.' This makes governance intent measurable and testable."
+        },
+        {
+            "recommendation": "**Clarify role-based access scope**: Does role-based access control restrict which *metrics a role can query* or which *data rows a role can see*, or both? This distinction is fundamental to semantic layer design: it determines whether access control is enforced at the metric level (e.g., Finance role sees Finance metrics) or the row level (e.g., Finance role sees only their cost centre's data). Specify this explicitly in the design brief."
+        },
+        {
+            "recommendation": "**Add privacy-by-design requirement**: The narrative does not address privacy, yet the decision scales data access from a small data team to 150 operational and commercial analysts. Add a Non-Functional requirement: **'Privacy and Data Protection'** — 'Personal-data fields must be classified in the semantic layer; consent-linked masking or filtering must be applied at query time; all access to personal data must be audited with full traceability (user, query, timestamp, data accessed).' This is essential given FEDC's regulatory environment and the expanded user base."
         }
     ],
     "impact-assessment": [
