@@ -218,9 +218,14 @@ export default function DecisionEditorPage() {
       )}
       {saveResult?.ok && !isEdit && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
-          <span className="font-semibold">{saveResult.decisionId}</span> created.{' '}
-          <TextLink href={saveResult.prUrl} target="_blank" rel="noreferrer" className="font-medium">
-            View PR #{saveResult.prNumber} on GitHub →
+          <span className="font-semibold">{saveResult.decisionId}</span> created as a draft.
+          Narrative Review is running to suggest improvements.{' '}
+          <TextLink
+            to={`/clients/${clientId}/${versionId}/decisions/${saveResult.decisionId}`}
+            state={{ cacheBust: true }}
+            className="font-medium"
+          >
+            Open {saveResult.decisionId} →
           </TextLink>
         </div>
       )}

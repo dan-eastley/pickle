@@ -293,7 +293,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
 
 // ── Analysis table ────────────────────────────────────────────────────────────
 
-function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving }) {
+function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving, locked }) {
   if (!rows?.length) return <p className="text-sm text-gray-400">No findings recorded.</p>
   return (
     <div className="border border-gray-200 overflow-x-auto">
@@ -321,9 +321,10 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving }) {
                 <td className="px-3 py-2.5 w-32">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted')}
-                      disabled={isSaving}
-                      className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center transition-colors disabled:opacity-50 focus:outline-none ${isAccepted ? 'bg-success-500' : 'bg-gray-300'}`}
+                      onClick={() => !locked && onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted')}
+                      disabled={isSaving || locked}
+                      className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none ${isAccepted ? 'bg-success-500' : 'bg-gray-300'}`}
+                      title={locked ? 'Analysis is locked once the decision is Accepted' : ''}
                     >
                       <span className={`inline-block h-4 w-4 bg-white transition-transform ${isAccepted ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
                     </button>
@@ -370,21 +371,37 @@ const ANALYSIS_SECTIONS = [
   { key: 'challenger-analysis',   label: 'Challenger Analysis' },
 ]
 
-function ArchitectureChanges({ changes }) {
-  if (!changes?.length) return null
+// Architecture-change artefact IDs are prefixed by domain (BUS-, DAT-, …).
+const CHANGE_DOMAINS = [
+  { prefix: 'BUS', label: 'Business Architecture Changes' },
+  { prefix: 'DAT', label: 'Data Architecture Changes' },
+  { prefix: 'INT', label: 'Integration Architecture Changes' },
+  { prefix: 'APP', label: 'Application Architecture Changes' },
+  { prefix: 'SOL', label: 'Solution Architecture Changes' },
+]
+const changeDomainPrefix = (c) => (c['artefact-id'] ?? '').split('-')[0]
+
+function ArchitectureChangeTable({ changes, indices, accepted, onAccept, saving, canReview }) {
   return (
     <div className="border border-gray-200 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              {['Artefact', 'Change', 'Description'].map(h => (
-                <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {changes.map((c, i) => (
-              <tr key={i} className="align-top">
+      <table className="w-full text-sm table-fixed">
+        <thead>
+          <tr className="bg-gray-50 border-b border-gray-200">
+            <th className="w-1/4 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Artefact</th>
+            <th className="w-1/6 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Change</th>
+            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Description</th>
+            <th className="w-32 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Review</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {changes.map((c, j) => {
+            const i = indices[j]
+            const key = `architecture-changes-${i}`
+            const state = accepted[key] ?? c.review ?? 'accepted'
+            const isAccepted = state === 'accepted'
+            const isSaving = saving === key
+            return (
+              <tr key={i} className={`align-top ${isAccepted ? 'bg-success-50' : 'bg-error-50'}`}>
                 <td className="px-3 py-2.5">
                   <span className="font-mono text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5">{c['artefact-id']}</span>
                   <span className="text-xs text-gray-500 ml-1.5">{c['artefact-name']}</span>
@@ -395,10 +412,60 @@ function ArchitectureChanges({ changes }) {
                   </span>
                 </td>
                 <td className="px-3 py-2.5 text-gray-700">{c.description ? <Markdown>{c.description}</Markdown> : '—'}</td>
+                <td className="px-3 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => canReview && onAccept('architecture-changes', i, isAccepted ? 'declined' : 'accepted')}
+                      disabled={isSaving || !canReview}
+                      className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none ${isAccepted ? 'bg-success-500' : 'bg-gray-300'}`}
+                      title={canReview ? '' : 'Accept/decline is only available while the decision is Accepted'}
+                    >
+                      <span className={`inline-block h-4 w-4 bg-white transition-transform ${isAccepted ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
+                    </button>
+                    <span className={`text-xs font-medium whitespace-nowrap ${isAccepted ? 'text-success-700' : 'text-error-700'}`}>
+                      {isSaving ? <Spinner size="sm" /> : isAccepted ? 'Accepted' : 'Declined'}
+                    </span>
+                  </div>
+                </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function ArchitectureChanges({ changes, accepted, onAccept, saving, canReview }) {
+  if (!changes?.length) return null
+  // Keep original indices so review writes target the right array element.
+  const withIndex = changes.map((c, i) => ({ c, i }))
+  const groups = CHANGE_DOMAINS
+    .map(d => ({ ...d, items: withIndex.filter(({ c }) => changeDomainPrefix(c) === d.prefix) }))
+    .filter(d => d.items.length)
+  // Anything that doesn't match a known prefix falls into an "Other" group.
+  const known = new Set(CHANGE_DOMAINS.map(d => d.prefix))
+  const other = withIndex.filter(({ c }) => !known.has(changeDomainPrefix(c)))
+  if (other.length) groups.push({ prefix: 'OTHER', label: 'Other Changes', items: other })
+
+  return (
+    <div className="space-y-6">
+      {groups.map(g => (
+        <div key={g.prefix}>
+          <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2 mb-3">
+            {g.label}
+            <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{g.items.length}</span>
+          </h3>
+          <ArchitectureChangeTable
+            changes={g.items.map(x => x.c)}
+            indices={g.items.map(x => x.i)}
+            accepted={accepted}
+            onAccept={onAccept}
+            saving={saving}
+            canReview={canReview}
+          />
+        </div>
+      ))}
     </div>
   )
 }
@@ -551,7 +618,16 @@ export default function DecisionDetailPage() {
   const [saving, setSaving] = useState(null)       // key of the finding being saved, e.g. 'impact-assessment-0'
   const [transitioning, setTransitioning] = useState(false)
   const [transitionError, setTransitionError] = useState(null)
+  const [pendingWorkflow, setPendingWorkflow] = useState(null) // { label } while a workflow populates the next section
+  const [repoSlug, setRepoSlug] = useState(null)   // owner/repo, for building a PR URL from pr-number
   const clientName = clientsMetadata[clientId]?.name ?? clientId
+
+  useEffect(() => {
+    fetch('/api/github?action=config')
+      .then(r => r.ok ? r.json() : null)
+      .then(c => { if (c?.owner && c?.repo) setRepoSlug(`${c.owner}/${c.repo}`) })
+      .catch(() => {})
+  }, [])
 
   usePageTitle(decision?.title ? `${decision.title} — Decisions` : 'Decision')
 
@@ -617,6 +693,14 @@ export default function DecisionDetailPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Update failed')
+      // These transitions dispatch a workflow that populates the next section
+      // asynchronously — flag it so the UI shows a "working" banner.
+      const WORKFLOW_LABELS = {
+        proposed: 'running the seven analysis streams over your decision',
+        accepted: 'working out the architecture changes',
+        staged:   'applying the accepted changes and opening the pull request',
+      }
+      if (WORKFLOW_LABELS[newStatus]) setPendingWorkflow({ label: WORKFLOW_LABELS[newStatus] })
       // Re-fetch busting CDN cache so the new status is immediately visible
       getDecision(clientId, versionId, decisionId, newStatus, { bust: true }).then(setDecision).catch(() => {})
     } catch (err) {
@@ -662,6 +746,12 @@ export default function DecisionDetailPage() {
     )
   }
 
+  // Analysis findings can only be accepted/declined while PROPOSED. Once the
+  // decision is ACCEPTED (or later) the analysis is locked; architecture-change
+  // review then opens up, and closes again once the decision leaves ACCEPTED.
+  const analysisLocked = ['accepted', 'staged', 'committed', 'rejected'].includes(decision.status)
+  const canReviewChanges = decision.status === 'accepted'
+
   const renderAnalysisSub = (s) => {
     const rows = decision[s.key] ?? []
     return (
@@ -671,7 +761,7 @@ export default function DecisionDetailPage() {
           <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{rows.length}</span>
         </h3>
         {rows.length > 0 ? (
-          <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} />
+          <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} locked={analysisLocked} />
         ) : (
           <div className="border border-dashed border-gray-200 bg-gray-50">
             <EmptyState
@@ -742,6 +832,30 @@ export default function DecisionDetailPage() {
             )}
           </div>
 
+          {/* Workflow-running banner — shown after a transition while the
+              background workflow populates the next section. */}
+          {pendingWorkflow && (
+            <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-rose-50 border border-blue-200 text-sm text-gray-700">
+              <Spinner size="sm" />
+              <span className="flex-1 min-w-0">
+                🤖 The agents are {pendingWorkflow.label}. This usually takes a couple of minutes — grab a coffee, then check back.
+              </span>
+              <button
+                onClick={() => getDecision(clientId, versionId, decisionId, undefined, { bust: true }).then(setDecision).catch(() => {})}
+                className="flex-shrink-0 px-3 py-1 text-xs font-medium text-blue-700 bg-white border border-blue-200 hover:bg-blue-50 transition-colors"
+              >
+                Check for updates
+              </button>
+              <button
+                onClick={() => setPendingWorkflow(null)}
+                className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
+                title="Dismiss"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              </button>
+            </div>
+          )}
+
           <div className="space-y-8">
             {(decision.context || decision.problem || decision.proposal) ? (
               <>
@@ -791,7 +905,13 @@ export default function DecisionDetailPage() {
             )}
 
             {decision['architecture-changes']?.length > 0 && renderSection('architecture-changes',
-              <ArchitectureChanges changes={decision['architecture-changes']} />
+              <ArchitectureChanges
+                changes={decision['architecture-changes']}
+                accepted={accepted}
+                onAccept={handleAccept}
+                saving={saving}
+                canReview={canReviewChanges}
+              />
             )}
 
             {decision.history?.length > 0 && renderSection('history',
@@ -808,7 +928,11 @@ export default function DecisionDetailPage() {
         </article>
       </div>
 
-      <JsonPreview data={decision} label={`${decision['decision-id']}.json`} />
+      <JsonPreview
+        data={decision}
+        label={`${decision['decision-id']}.json`}
+        prUrl={decision['pr-url'] ?? (decision['pr-number'] ? `https://github.com/${repoSlug ?? ''}/pull/${decision['pr-number']}` : null)}
+      />
     </div>
   )
 }
