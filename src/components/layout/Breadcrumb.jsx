@@ -25,24 +25,39 @@ function Crumbs({ crumbs }) {
   )
 }
 
-function useDecisionTitle(clientId, versionId, decisionId) {
+// Reads a single field (e.g. title) from a decision/discovery record for the
+// breadcrumb leaf label.
+function useRecordTitle(url, id) {
   const [title, setTitle] = useState(null)
   useEffect(() => {
-    if (!decisionId) return
-    fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`)
+    if (!id) return
+    fetch(url)
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d?.title) setTitle(d.title) })
       .catch(() => {})
-  }, [clientId, versionId, decisionId])
+  }, [url, id])
   return title
 }
 
 export default function Breadcrumb() {
-  const { clientId, versionId, domain, abstraction, artefactId, decisionId } = useParams()
+  const { clientId, versionId, domain, abstraction, artefactId, decisionId, discoveryId } = useParams()
   const { pathname } = useLocation()
   const base = `/clients/${clientId}/${versionId}`
 
-  const decisionTitle = useDecisionTitle(clientId, versionId, decisionId)
+  const decisionTitle = useRecordTitle(`/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`, decisionId)
+  const discoveryTitle = useRecordTitle(`/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`, discoveryId)
+
+  // ── Discovery routes ──────────────────────────────────────────────────────
+  if (pathname.includes('/discovery')) {
+    const discoveryBase = `${base}/discovery`
+    const isNew = pathname.endsWith('/new')
+
+    const crumbs = [{ label: 'Discovery', to: discoveryId || isNew ? discoveryBase : null }]
+    if (isNew)       crumbs.push({ label: 'New Discovery', to: null })
+    if (discoveryId) crumbs.push({ label: discoveryTitle ?? discoveryId, to: null })
+
+    return <Crumbs crumbs={crumbs} />
+  }
 
   // ── Decisions routes ──────────────────────────────────────────────────────
   if (pathname.includes('/decisions')) {

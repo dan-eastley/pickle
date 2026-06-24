@@ -5,7 +5,7 @@ import {
 } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
-import TextLink from '../components/ui/TextLink'
+import Button from '../components/ui/Button'
 import ArtefactRow from '../components/artefacts/ArtefactRow'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
@@ -96,9 +96,11 @@ export default function DomainPage() {
         <div>
           <h1 className="text-xl font-semibold text-gray-900">{domainData.name} Architecture</h1>
           <p className="mt-1 text-sm text-gray-500 max-w-3xl">{domainData.description}</p>
-          <TextLink to={`${base}/decisions?domain=${domain}`} className="inline-flex items-center gap-1 mt-2 text-xs">
-            View decisions for this domain →
-          </TextLink>
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-gray-400">View for this domain</span>
+            <Button to={`${base}/decisions?domain=${domain}`} variant="secondary" size="sm">Decisions</Button>
+            <Button to={`${base}/discovery?domain=${domain}`} variant="secondary" size="sm">Discovery</Button>
+          </div>
         </div>
       </div>
 

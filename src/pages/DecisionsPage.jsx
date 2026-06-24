@@ -28,7 +28,7 @@ function DecisionGroup({ status, decisions, clientId, versionId }) {
           <span className={`text-xs font-semibold px-2 py-0.5 ${decisionStatusBadge(status)}`}>
             {decisionStatusLabel(status)}
           </span>
-          <span className="text-xs text-gray-400">{decisions.length} {decisions.length === 1 ? 'record' : 'records'}</span>
+          <span className="text-xs text-gray-400">{decisions.length} {decisions.length === 1 ? 'Decision' : 'Decisions'}</span>
         </div>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
       </button>
