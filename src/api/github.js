@@ -296,6 +296,11 @@ async function commitDecision({ clientId, versionId, decisionId, prNumber }, tok
   }
   // PR merge brings decision.json to main — update its status and sync index
   await updateDecision({ clientId, versionId, decisionId, updates: { status: 'committed' } }, token, owner, repo)
+  // The PR is merged (and closed); remove the now-redundant decision branch.
+  if (prNumber) {
+    await deleteBranch(decisionBranch(clientId, versionId, decisionId), token, owner, repo)
+      .catch(() => { /* branch may already be gone if delete-on-merge is enabled */ })
+  }
   return { ok: true, decisionId, status: 'committed' }
 }
 
