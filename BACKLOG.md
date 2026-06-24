@@ -81,10 +81,10 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** Inline English fallbacks still duplicate the locale; per-client terminology overrides aren't supported.
 **Proposed fix:** Prune the inline fallbacks; add a per-client overlay.
 
-### ⬜ Derived-artefact cascade on apply · High
-**Context:** Apply Changes edits the source catalogue (e.g. `BUS-PRO`, `BUS-CAP`) from a decision's architecture changes.
-**Gap:** Derived artefacts (e.g. `BUS-BPM` ← `BUS-PRO`, `BUS-BCM` ← `BUS-CAP`; `derived-from` in the registry) are **not** regenerated in the same PR, so they drift out of sync.
-**Proposed fix:** Emit the artefact-relationship map (from `relatedTo`) to a config file the apply prompt references, and instruct Claude to cascade edits into derived artefacts in the same PR. *(Scheduled next.)*
+### 🟡 Derived-artefact cascade on apply · High
+**Context:** `config/artefact-relationships.json` (generated from the registry's `relatedTo` graph) maps each artefact to the artefacts `derived` from it. The Apply Changes prompt now reads it and instructs Claude to regenerate diagram/matrix derivatives (e.g. `BUS-BPM` ← `BUS-PRO`, `BUS-BCM` ← `BUS-CAP`) in the same PR when a source catalogue changes.
+**Gap:** Not yet exercised on a live run; catalogue→catalogue derivatives are left to Claude's judgement.
+**Proposed fix:** Verify on a live STAGED run that derivatives are regenerated; tighten the prompt if needed.
 
 ### ⬜ Technology domain + Roadmap/Transition artefacts · Medium
 **Context:** Five domains today; only `APP-DAP` physical hints at technology.
