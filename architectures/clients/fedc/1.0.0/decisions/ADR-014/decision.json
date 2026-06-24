@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-014",
     "title": "Offboarding Customers",
-    "status": "accepted",
+    "status": "staged",
     "context": "We get a number of customers who don't pay us",
     "problem": "We need to be able to instigate offboarding customers when we choose",
     "proposal": "We need the capabilities and processes for offboarding customers",
