@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
 
-export default function JsonPreview({ data, label = 'JSON', docUrl }) {
+export default function JsonPreview({ data, label = 'JSON', docUrl, prUrl }) {
   const [open, setOpen] = useState(false)
 
   useEscapeKey(() => setOpen(false), open)
@@ -13,6 +13,23 @@ export default function JsonPreview({ data, label = 'JSON', docUrl }) {
     <>
       {/* Floating toolbar — fixed bottom-right */}
       <div className="fixed bottom-4 right-4 z-[50] flex items-center gap-2">
+        {prUrl && (
+          <a
+            href={prUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700 text-gray-200 text-xs font-mono hover:bg-gray-600 transition-colors shadow-lg"
+            title="Open the pull request on GitHub"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none">
+              <path d="M4 3.5v9M4 3.5a1.5 1.5 0 100-.001zM4 12.5a1.5 1.5 0 100 .001zM12 7.5v-2a2 2 0 00-2-2H8m4 4a1.5 1.5 0 100 .001z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            View PR
+            <svg className="w-2.5 h-2.5 opacity-60" viewBox="0 0 10 10" fill="none">
+              <path d="M2 8L8 2M4 2h4v4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" />
+            </svg>
+          </a>
+        )}
         {docUrl && (
           <a
             href={docUrl}
