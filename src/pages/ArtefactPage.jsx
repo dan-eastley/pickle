@@ -14,6 +14,7 @@ import Spinner from '../components/ui/Spinner'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
+import ActionBar from '../components/ui/ActionBar'
 import { KeyStar, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useCollapsed from '../hooks/useCollapsed'
@@ -28,35 +29,37 @@ function AdrActionBar({ artefact, documents, selectedDocument, clientId, version
 
   return (
     <>
-      <div className={`mb-5 flex items-center justify-between gap-4 px-5 py-3 ${bgClass}`}>
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-sm text-gray-600">
-            Changes to this artefact must go through a Decision Record.
-          </span>
-        </div>
-        <div className="flex-shrink-0 flex items-center gap-2">
+      <ActionBar
+        className="mb-5"
+        tint={bgClass}
+        strapline="Changes to this artefact must go through a Decision Record."
+        secondary={
           <Link
             to={viewDecisionsUrl}
             className="px-4 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors"
           >
             View Decisions
           </Link>
-          <button
-            className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
-            onClick={() => setDecisionOpen(true)}
-          >
-            <DecisionIcon className="w-3.5 h-3.5" />
-            New Decision
-          </button>
-          <button
-            className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 transition-opacity"
-            onClick={() => setDiscoveryOpen(true)}
-          >
-            <RobotIcon className="w-3.5 h-3.5" />
-            New Discovery
-          </button>
-        </div>
-      </div>
+        }
+        primary={
+          <>
+            <button
+              className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
+              onClick={() => setDecisionOpen(true)}
+            >
+              <DecisionIcon className="w-3.5 h-3.5" />
+              New Decision
+            </button>
+            <button
+              className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 transition-opacity"
+              onClick={() => setDiscoveryOpen(true)}
+            >
+              <RobotIcon className="w-3.5 h-3.5" />
+              New Discovery
+            </button>
+          </>
+        }
+      />
 
       {decisionOpen && (
         <NewDecisionModal

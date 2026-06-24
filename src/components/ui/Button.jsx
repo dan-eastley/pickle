@@ -8,6 +8,7 @@ const BASE = 'inline-flex items-center justify-center gap-2 text-sm font-medium 
 const VARIANTS = {
   primary:   'bg-brand-600 hover:bg-brand-700 text-white',
   secondary: 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-600',
+  tertiary:  'text-brand-600 hover:text-brand-700 underline underline-offset-2 !px-0',
   danger:    'bg-error-50 border border-error-300 hover:bg-error-100 text-error-700',
   ghost:     'text-gray-500 hover:text-gray-900 hover:bg-gray-100',
   custom:    '',

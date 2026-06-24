@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
+import Button from '../components/ui/Button'
+import ActionBar from '../components/ui/ActionBar'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import FormHelp from '../components/ui/FormHelp'
 import Spinner from '../components/ui/Spinner'
@@ -176,22 +178,16 @@ export default function DecisionEditorPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">
-            {isEdit ? `Edit ${decisionId}` : 'New Architecture Decision'}
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {isEdit && (
-            <Link
-              to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
-              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
-            >
-              Cancel
-            </Link>
-          )}
+      <ActionBar
+        className="mb-6"
+        title={isEdit ? `Edit ${decisionId}` : 'New Architecture Decision'}
+        strapline={`${clientName} · v${versionId}`}
+        secondary={isEdit && (
+          <Button to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`} variant="secondary" size="lg">
+            Cancel
+          </Button>
+        )}
+        primary={
           <button
             onClick={handleSave}
             disabled={!title.trim() || !context.trim() || !problem.trim() || !proposal.trim() || saving}
@@ -202,8 +198,8 @@ export default function DecisionEditorPage() {
               ? (isEdit ? 'Saving…' : 'Creating…')
               : (isEdit ? 'Save Changes' : 'New Architecture Decision')}
           </button>
-        </div>
-      </div>
+        }
+      />
 
       {saveResult?.ok && isEdit && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">

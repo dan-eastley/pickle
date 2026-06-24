@@ -5,6 +5,7 @@ import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import FormHelp from '../components/ui/FormHelp'
+import ActionBar from '../components/ui/ActionBar'
 import { RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -33,20 +34,21 @@ export default function DiscoveryEditorPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">New Architecture Discovery</h1>
-          <p className="mt-1 text-sm text-gray-500">{clientName} · v{versionId}</p>
-        </div>
-        <button
-          onClick={handleSave}
-          disabled={!canSave || saved}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
-        >
-          <RobotIcon className="w-4 h-4" />
-          New Architecture Discovery
-        </button>
-      </div>
+      <ActionBar
+        className="mb-6"
+        title="New Architecture Discovery"
+        strapline={`${clientName} · v${versionId}`}
+        primary={
+          <button
+            onClick={handleSave}
+            disabled={!canSave || saved}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          >
+            <RobotIcon className="w-4 h-4" />
+            New Architecture Discovery
+          </button>
+        }
+      />
 
       {saved && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
