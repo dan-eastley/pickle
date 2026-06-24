@@ -5,6 +5,7 @@ import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
+import AutoGrowTextarea from '../ui/AutoGrowTextarea'
 
 export default function NewDecisionModal({ artefact, documents = [], selectedDocument, clientId, versionId, onClose }) {
   const [title, setTitle] = useState('')
@@ -100,12 +101,11 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                   <p className="text-xs text-gray-400 mb-1.5">
                     The current situation — what is happening that prompts this decision. Written for a business audience.
                   </p>
-                  <textarea
+                  <AutoGrowTextarea
                     value={context}
                     onChange={e => setContext(e.target.value)}
-                    rows={3}
                     placeholder="Today we..."
-                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
                 </div>
 
@@ -117,12 +117,11 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                   <p className="text-xs text-gray-400 mb-1.5">
                     What needs to be fixed or addressed — the gap or pain in the current situation.
                   </p>
-                  <textarea
+                  <AutoGrowTextarea
                     value={problem}
                     onChange={e => setProblem(e.target.value)}
-                    rows={3}
                     placeholder="This is a problem because..."
-                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
                 </div>
 
@@ -134,12 +133,11 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                   <p className="text-xs text-gray-400 mb-1.5">
                     How we propose to solve it — the direction, at a business level.
                   </p>
-                  <textarea
+                  <AutoGrowTextarea
                     value={proposal}
                     onChange={e => setProposal(e.target.value)}
-                    rows={3}
                     placeholder="We propose to..."
-                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-vertical"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
                 </div>
 
