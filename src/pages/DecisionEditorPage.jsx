@@ -5,6 +5,7 @@ import { getDecision } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
+import FormHelp from '../components/ui/FormHelp'
 import Spinner from '../components/ui/Spinner'
 import { PlusIcon, CloseIcon, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
@@ -235,95 +236,95 @@ export default function DecisionEditorPage() {
         </div>
       )}
 
-      <div className="max-w-3xl space-y-5">
-        {/* Title */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title <span className="text-error-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="e.g. Adopt event-driven integration for real-time data flows"
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex-1 max-w-2xl space-y-5">
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Title <span className="text-error-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="e.g. Adopt event-driven integration for real-time data flows"
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Context */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Context <span className="text-error-500">*</span>
+            </label>
+            <AutoGrowTextarea
+              value={context}
+              onChange={e => setContext(e.target.value)}
+              placeholder="Today we..."
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Problem */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Problem <span className="text-error-500">*</span>
+            </label>
+            <AutoGrowTextarea
+              value={problem}
+              onChange={e => setProblem(e.target.value)}
+              placeholder="This is a problem because..."
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Proposal */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Proposal <span className="text-error-500">*</span>
+            </label>
+            <AutoGrowTextarea
+              value={proposal}
+              onChange={e => setProposal(e.target.value)}
+              placeholder="We propose to..."
+              className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
+            />
+          </div>
+
+          {/* Requirements */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
+            <RequirementsList requirements={requirements} onChange={setRequirements} />
+          </div>
+
+          {/* Scope */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+            <ScopeSelector
+              domain={scopeDomain}
+              abstraction={scopeAbstraction}
+              artefact={scopeArtefact}
+              onChange={({ domain, abstraction, artefact }) => {
+                setScopeDomain(domain)
+                setScopeAbstraction(abstraction)
+                setScopeArtefact(artefact)
+              }}
+            />
+          </div>
         </div>
 
-        {/* Context */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Context <span className="text-error-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1.5">
-            The current situation — what is happening that prompts this decision. Written for a business audience.
-          </p>
-          <AutoGrowTextarea
-            value={context}
-            onChange={e => setContext(e.target.value)}
-            placeholder="Today we..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
-        </div>
-
-        {/* Problem */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Problem <span className="text-error-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1.5">
-            What needs to be fixed or addressed — the gap or pain in the current situation.
-          </p>
-          <AutoGrowTextarea
-            value={problem}
-            onChange={e => setProblem(e.target.value)}
-            placeholder="This is a problem because..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
-        </div>
-
-        {/* Proposal */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Proposal <span className="text-error-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1.5">
-            How we propose to solve it — the direction, at a business level.
-          </p>
-          <AutoGrowTextarea
-            value={proposal}
-            onChange={e => setProposal(e.target.value)}
-            placeholder="We propose to..."
-            className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-          />
-        </div>
-
-        {/* Requirements */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
-          <p className="text-xs text-gray-400 mb-2">
-            Optional. List the specific things this decision must achieve. Each requirement should be testable and state the "what", not the "how".
-          </p>
-          <RequirementsList requirements={requirements} onChange={setRequirements} />
-        </div>
-
-        {/* Scope */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
-          <p className="text-xs text-gray-400 mb-2">
-            Optional. Constrain the decision to a specific domain, abstraction layer, or artefact type.
-          </p>
-          <ScopeSelector
-            domain={scopeDomain}
-            abstraction={scopeAbstraction}
-            artefact={scopeArtefact}
-            onChange={({ domain, abstraction, artefact }) => {
-              setScopeDomain(domain)
-              setScopeAbstraction(abstraction)
-              setScopeArtefact(artefact)
-            }}
-          />
-        </div>
+        <FormHelp
+          title="Writing a good decision"
+          tips={[
+            ['Title', 'A short, plain-language summary — the headline, not the detail.'],
+            ['Context', 'Set the scene: what’s happening today that makes this worth deciding? Write it for a business reader.'],
+            ['Problem', 'Name the gap or the pain. What hurts if nothing changes?'],
+            ['Proposal', 'The direction you’re leaning, at a business level — the “how”, not the implementation.'],
+            ['Requirements', 'Optional. The testable things this must achieve — the “what”, never the “how”.'],
+            ['Scope', 'Optional. Pin it to a domain, layer, or artefact so the agents analyse just that slice.'],
+          ]}
+          footer="Don’t overthink it — the agents will review your draft and suggest improvements."
+        />
       </div>
     </div>
   )
