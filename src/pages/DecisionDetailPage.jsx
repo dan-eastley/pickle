@@ -293,15 +293,19 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
 
 // ── Analysis table ────────────────────────────────────────────────────────────
 
+// Findings render in four equal (25%) columns — uniform across all seven
+// analysis tables. Accept/decline is toggled by clicking the row (a coloured
+// left accent + tint shows the state); the analysis locks once Accepted.
 function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving, locked }) {
   if (!rows?.length) return <p className="text-sm text-gray-400">No findings recorded.</p>
+  const toggle = (i, isAccepted) => { if (!locked) onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted') }
   return (
     <div className="border border-gray-200 overflow-x-auto">
-      <table className="w-full min-w-[700px] text-sm">
+      <table className="w-full min-w-[640px] text-sm table-fixed">
         <thead>
           <tr className="bg-gray-50 border-b border-gray-200">
-            {['Finding', 'Impact', 'Recommendation', 'Rationale', ''].map((h, i) => (
-              <th key={i} className={`px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide ${i === 4 ? 'w-28' : ''}`}>{h}</th>
+            {['Finding', 'Impact', 'Recommendation', 'Rationale'].map(h => (
+              <th key={h} className="w-1/4 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
             ))}
           </tr>
         </thead>
@@ -313,26 +317,20 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving, locked })
             const isSaving = saving === key
             const isAccepted = state === 'accepted'
             return (
-              <tr key={i} className={`align-top ${isAccepted ? 'bg-success-50' : 'bg-error-50'}`}>
-                <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.finding ? <Markdown>{row.finding}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.impact ? <Markdown>{row.impact}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.recommendation ? <Markdown>{row.recommendation}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-700 w-1/5">{row.rationale ? <Markdown>{row.rationale}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 w-32">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => !locked && onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted')}
-                      disabled={isSaving || locked}
-                      className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none ${isAccepted ? 'bg-success-500' : 'bg-gray-300'}`}
-                      title={locked ? 'Analysis is locked once the decision is Accepted' : ''}
-                    >
-                      <span className={`inline-block h-4 w-4 bg-white transition-transform ${isAccepted ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
-                    </button>
-                    <span className={`text-xs font-medium whitespace-nowrap ${isAccepted ? 'text-success-700' : 'text-error-700'}`}>
-                      {isSaving ? <Spinner size="sm" /> : isAccepted ? 'Accepted' : 'Declined'}
-                    </span>
-                  </div>
-                </td>
+              <tr
+                key={i}
+                onClick={() => toggle(i, isAccepted)}
+                onKeyDown={e => { if (!locked && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(i, isAccepted) } }}
+                tabIndex={locked ? undefined : 0}
+                role={locked ? undefined : 'button'}
+                aria-pressed={!locked ? isAccepted : undefined}
+                title={locked ? 'Analysis is locked once the decision is Accepted' : `Click to ${isAccepted ? 'decline' : 'accept'} this finding`}
+                className={`align-top border-l-4 ${isAccepted ? 'bg-success-50 border-success-400' : 'bg-error-50 border-error-400'} ${locked ? '' : 'cursor-pointer hover:brightness-[0.98]'} ${isSaving ? 'opacity-60' : ''}`}
+              >
+                <td className="px-3 py-2.5 text-gray-700 break-words">{row.finding ? <Markdown>{row.finding}</Markdown> : '—'}</td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">{row.impact ? <Markdown>{row.impact}</Markdown> : '—'}</td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">{row.recommendation ? <Markdown>{row.recommendation}</Markdown> : '—'}</td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">{row.rationale ? <Markdown>{row.rationale}</Markdown> : '—'}</td>
               </tr>
             )
           })}
@@ -754,22 +752,33 @@ export default function DecisionDetailPage() {
 
   const renderAnalysisSub = (s) => {
     const rows = decision[s.key] ?? []
+    const subCollapsed = collapsed.has(s.key)
     return (
       <section key={s.key} ref={setSectionRef(s.key)} data-section={s.key} className="scroll-mt-20">
-        <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2 mb-3">
-          {s.label}
-          <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{rows.length}</span>
-        </h3>
-        {rows.length > 0 ? (
-          <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} locked={analysisLocked} />
-        ) : (
-          <div className="border border-dashed border-gray-200 bg-gray-50">
-            <EmptyState
-              size="sm"
-              illustration="findings"
-              title="No findings yet"
-              description="This section is populated when the analysis workflow runs. Workflows can take a few minutes — check back shortly."
-            />
+        <button onClick={() => toggleSection(s.key)} className="w-full flex items-center gap-2 text-left group">
+          <span className="text-gray-300 group-hover:text-gray-500"><Chevron open={!subCollapsed} /></span>
+          <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2">
+            {s.label}
+            <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{rows.length}</span>
+            {!analysisLocked && rows.length > 0 && (
+              <span className="text-xs font-normal text-gray-400">· click a row to accept / decline</span>
+            )}
+          </h3>
+        </button>
+        {!subCollapsed && (
+          <div className="mt-3">
+            {rows.length > 0 ? (
+              <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} locked={analysisLocked} />
+            ) : (
+              <div className="border border-dashed border-gray-200 bg-gray-50">
+                <EmptyState
+                  size="sm"
+                  illustration="findings"
+                  title="No findings yet"
+                  description="This section is populated when the analysis workflow runs. Workflows can take a few minutes — check back shortly."
+                />
+              </div>
+            )}
           </div>
         )}
       </section>
