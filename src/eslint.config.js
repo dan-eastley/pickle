@@ -48,7 +48,7 @@ export default [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^[A-Z_]' }],
       // Surfaced as warnings (tracked tech-debt) rather than blocking — the
       // form-label and autofocus patterns here are deliberate; see
-      // PRODUCTION_READINESS.md.
+      // BACKLOG.md (Quality, Validation & CI).
       'jsx-a11y/label-has-associated-control': 'warn',
       'jsx-a11y/no-autofocus': 'warn',
     },

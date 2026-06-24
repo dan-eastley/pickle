@@ -29,7 +29,7 @@ Narrative Review ([`decisions-narrative-review.yml`](../../.github/workflows/dec
 
 Every step accepts a `model` input, defaulting to **Haiku 4.5** (`claude-haiku-4-5-20251001`) to keep dev-time cost down. The orchestrator's `workflow_dispatch` exposes a single `model` input that's threaded through to all seven jobs — pass a different model (e.g. `claude-sonnet-4-6`) for a higher-quality run.
 
-> **Future:** model (and API key) selection is currently global to the repo. A planned improvement is to store the model/key per client alongside their other configuration, so different clients' architectures can be analysed with different Claude models — see `IMPROVEMENTS.md`.
+> **Future:** model (and API key) selection is currently global to the repo. A planned improvement is to store the model/key per client alongside their other configuration, so different clients' architectures can be analysed with different Claude models — see `BACKLOG.md`.
 
 ## Visual flow
 
