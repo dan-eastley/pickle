@@ -9,6 +9,14 @@
                 "abstraction": "logical",
                 "artefact": "DAT-PRN"
             }
+        },
+        {
+            "decision-id": "ADR-014",
+            "title": "Offboarding Customers",
+            "status": "draft",
+            "scope": {
+                "domain": "business"
+            }
         }
     ]
 }
