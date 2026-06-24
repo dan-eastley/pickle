@@ -146,6 +146,32 @@
             "rationale": "Scope controls the guardrails assessment. Only guardrails in the affected domain(s) are assessed; others are noted as out-of-scope."
         }
     ],
+    "proponent-analysis": [
+        {
+            "finding": "**Core Business Activity**: Offboarding is the inverse of onboarding and a natural completion of the customer lifecycle. The Customer Management capability (`CAP-001`) currently covers acquire, serve, and retain, but lacks the exit phase. This is a gap in the business capability model that compounds over time—every non-paying customer who leaves becomes invisible to the architecture, and the organization has no modeled way to manage the exit.",
+            "impact": "Formalizing offboarding as a capability (`CAP-001-05`) makes the business's entire customer lifecycle visible and measurable. This enables tracking of offboarding volume, cost, and quality—supporting data-driven investment decisions and competitive benchmarking. Without it, offboarding remains an ad-hoc operation.",
+            "recommendation": "**Proceed**: Offboarding is a natural business activity that deserves explicit architectural treatment. The capability gap should be closed as part of this decision.",
+            "rationale": "An architecture's job is to make all material business activities visible and governed. Leaving offboarding unmolded signals it is unmeasured and ungoverned—creating audit, compliance, and execution risk."
+        },
+        {
+            "finding": "**Strategic Alignment**: The decision aligns with **BUS-STR-001** ('Operate as a customer-centric organisation') and **BUS-STR-005** ('Build digital-by-default operations'). A well-designed offboarding process demonstrates respect for customers (clear communication, fair treatment) and operationalizes digital execution (automated notification, account closure, compliance logging).",
+            "impact": "Offboarding is a high-visibility customer interaction. Executed well (transparently, quickly, fairly), it reinforces brand trust and NPS even during account exit. Executed poorly (opaque, slow, frustrating), it damages Net Promoter Score and customer sentiment. The decision enables aligned execution of the customer-centric strategy.",
+            "recommendation": "**Proceed with emphasis on customer experience**: Ensure the offboarding process narrative and requirements include explicit guardrails for transparency, timeliness, and fairness. This converts a compliance task into a customer experience opportunity.",
+            "rationale": "Strategic statements are only valuable if they guide architecture decisions. This decision is a test case for whether customer-centricity extends beyond acquisition/retention to the full lifecycle. Succeeding signals the strategy is authentic."
+        },
+        {
+            "finding": "**Regulatory & Compliance Risk**: The upstream analysis identifies GDPR and CCPA compliance requirements for customer data deletion, payment settlement, and audit trails. These are non-negotiable regulatory obligations. Without explicit guardrails and process design, offboarding carries material compliance risk.",
+            "impact": "A structured offboarding process with defined guardrails (data deletion timelines, audit logging, dispute escalation) mitigates regulatory breach risk and demonstrates good governance to auditors and regulators. The cost of compliance is high; the cost of non-compliance (fines, loss of license) is catastrophic.",
+            "recommendation": "**Proceed immediately**: Regulatory compliance is non-discretionary. Formalizing offboarding with data protection guardrails is not a business choice; it is a regulatory requirement.",
+            "rationale": "Regulated industries have no discretion on material compliance obligations. Offboarding involves personal data and financial settlement—both heavily regulated. The decision should be approved and scoped to include guardrails before implementation."
+        },
+        {
+            "finding": "**Operational Maturity**: The upstream analysis notes that the decision narrative is currently vague ('capabilities and processes for offboarding'). However, the impact assessment has already identified the specific architecture artefacts to be changed (`CAP-001-05` in BUS-CAP, `PROC-001-06` in BUS-PRO) and the guardrails needed (data deletion timelines, audit trails, dispute escalation). This shows sufficient operational clarity to proceed to design and implementation.",
+            "impact": "The downstream architecture and delivery teams have a clear target: add a Level 2 capability under Customer Management with Level 3 sub-capabilities for notification, account closure, data handling, and settlement. Add a matching process structure in BUS-PRO. This unambiguous scope enables teams to design and build with confidence.",
+            "recommendation": "**Proceed**: Refine the proposal narrative to be more specific (as recommended in the upstream analysis), but the architecture model is sufficiently clear to move forward in parallel.",
+            "rationale": "Architecture decisions do not need to be perfect at proposal time. They need enough clarity to guide design. This decision has that clarity."
+        }
+    ],
     "recommendations": [
         {
             "recommendation": "Expand the **Context** section to explain *why* offboarding is becoming a priority. Is this a new problem, or an existing gap? For example: Is the volume of non-paying customers increasing? Are there regulatory or compliance drivers? This helps stakeholders understand the urgency."
