@@ -236,9 +236,20 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-7 · ✅ Footer config banner · Low
 **Context:** The footer shows owner/repo only when `/api/github` config is available (it now is in dev via the shim); the raw "not configured" env-var banner is gone.
 
-### QV-8 · ⬜ Productionisation security review · High
-**Context:** Pickle is moving from PoC toward production; before exposure it needs a deliberate security pass. Surfaces of concern: the `/api/github` serverless function (input validation, action allow-listing, injection into commit/branch paths), token/secret handling (`GITHUB_TOKEN`, never client-exposed), the GitHub App/PAT scopes, the `/api/arch` proxy (path traversal — note the existing `startsWith(basePath)` guard), workflow-dispatch authorisation, dependency CVEs, CORS (`Access-Control-Allow-Origin: *`), and XSS via rendered Markdown.
-**Proposed fix:** Run a structured security review (the `/security-review` skill is a starting point) covering authn/z, secret management, input validation, SSRF/path-traversal, dependency audit, and headers/CORS. Capture findings as their own backlog items. **Use the Fable model for the review where possible.** Pairs with [RAS-2]/[RAS-3] (auth/RBAC) and [DEC-6] (governance).
+### QV-8 · 🟡 Productionisation security review · High
+**Context:** Pickle is moving from PoC toward production; before exposure it needs a deliberate security pass.
+**Review done (first pass)** — findings by severity:
+
+| # | Severity | Finding | Status |
+|---|---|---|---|
+| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | ⬜ Open — needs [RAS-2] auth + a same-origin/allow-list CORS policy. Until then, treat the deployment as trusted-network only. |
+| 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/clients/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$` (400) on every GET/POST. |
+| 3 | Low (dev-only) | `npm audit`: 3 vulns (1 high, 2 moderate) in **esbuild/vite** — build/dev tooling only, **not in the production runtime bundle**. Fix is a breaking vite major bump. | ⬜ Defer; revisit on the next Vite upgrade. |
+| 4 | Low | `/api/arch` GitHub proxy interpolates `relPath` into the contents URL; the local schema/docs shim has a `startsWith(basePath)` traversal guard. | ⬜ Add an equivalent guard/validation on the deployed `/api/arch` function. |
+| 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
+| 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
+
+**Remaining:** finding #1 (auth + CORS) is the headline production blocker — sequence with [RAS-2]/[RAS-3] and [DEC-6]. #4 proxy guard. A deeper review (ideally with the **Fable** model and the `/security-review` skill) should follow once auth is in.
 
 ### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
 **Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.
