@@ -10,6 +10,7 @@ import Button from '../components/ui/Button'
 import ActionBar from '../components/ui/ActionBar'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import { RobotIcon, EditIcon } from '../components/ui/icons'
+import { githubAction } from '../lib/api'
 import { formatDate } from '../lib/format'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -37,20 +38,6 @@ export default function DiscoveryDetailPage() {
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   const canEdit = discovery?.status === 'active'
 
-  // POST to /api/github, throwing on a non-2xx so callers can surface + roll back.
-  async function postAction(body) {
-    const res = await fetch('/api/github', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}))
-      throw new Error(data.error ?? `Request failed (${res.status})`)
-    }
-    return res.json().catch(() => ({}))
-  }
-
   usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
 
   useEffect(() => {
@@ -66,7 +53,7 @@ export default function DiscoveryDetailPage() {
     setActionError(null)
     setDiscovery((d) => (d ? { ...d, status } : d)) // optimistic
     try {
-      await postAction({
+      await githubAction({
         action: 'update-discovery',
         clientId,
         versionId,
@@ -85,7 +72,7 @@ export default function DiscoveryDetailPage() {
     setRefreshing(true)
     setActionError(null)
     try {
-      await postAction({ action: 'refresh-discovery', clientId, versionId, discoveryId })
+      await githubAction({ action: 'refresh-discovery', clientId, versionId, discoveryId })
     } catch (err) {
       setRefreshing(false)
       setActionError(`Couldn’t start a refresh: ${err.message}`)
@@ -110,7 +97,7 @@ export default function DiscoveryDetailPage() {
     setActionError(null)
     setDiscovery((d) => (d ? { ...d, ...updates } : d)) // optimistic
     try {
-      await postAction({ action: 'update-discovery', clientId, versionId, discoveryId, updates })
+      await githubAction({ action: 'update-discovery', clientId, versionId, discoveryId, updates })
       setEdit(null)
       setRefreshing(true)
     } catch (err) {

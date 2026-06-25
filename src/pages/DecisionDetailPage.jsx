@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useId } from 'react'
 import { useParams, Navigate, useLocation } from 'react-router-dom'
-import { getDecision } from '../lib/api'
+import { getDecision, githubAction } from '../lib/api'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
 import Markdown from '../components/ui/Markdown'
@@ -910,32 +910,37 @@ export default function DecisionDetailPage() {
 
   async function handleAccept(sectionKey, findingIndex, review) {
     const key = `${sectionKey}-${findingIndex}`
+    const prev = accepted[key] // for rollback on failure
     // Optimistic update
-    setAccepted((prev) => {
+    setAccepted((p) => {
       if (review === null) {
-        const n = { ...prev }
+        const n = { ...p }
         delete n[key]
         return n
       }
-      return { ...prev, [key]: review }
+      return { ...p, [key]: review }
     })
     setSaving(key)
+    setTransitionError(null)
     try {
-      await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'update-finding',
-          clientId,
-          versionId,
-          decisionId,
-          sectionKey,
-          findingIndex,
-          review,
-        }),
+      await githubAction({
+        action: 'update-finding',
+        clientId,
+        versionId,
+        decisionId,
+        sectionKey,
+        findingIndex,
+        review,
       })
-    } catch {
-      /* optimistic — failure leaves local state changed */
+    } catch (err) {
+      // Roll back the optimistic change and surface the error.
+      setAccepted((p) => {
+        const n = { ...p }
+        if (prev === undefined) delete n[key]
+        else n[key] = prev
+        return n
+      })
+      setTransitionError(`Couldn’t save the review: ${err.message}`)
     } finally {
       setSaving(null)
     }
