@@ -74,9 +74,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ## Epic: Architecture Model & Content
 
 ### AMC-1 · 🟡 Artefact registry in config (i18n) · Low
-**Context:** User-facing names/descriptions live in `config/i18n/en.json`, overlaid onto the structural registry.
-**Gap:** Inline English fallbacks still duplicate the locale; per-client terminology overrides aren't supported.
-**Proposed fix:** Prune the inline fallbacks; add a per-client overlay.
+**Context:** User-facing names/descriptions live in `config/i18n/en.json`, overlaid onto the structural registry. The inline English in `artefacts.js` is kept as an intentional fallback (robustness if a key is missing); a coverage test (`lib/i18n.test.js`) now enforces that the locale covers every registry id, so the two can't drift and a new artefact can't ship without a locale entry.
+**Gap:** Per-client terminology overrides aren't supported.
+**Proposed fix:** Add a per-client locale overlay.
 
 ### AMC-2 · ✅ Derived-artefact cascade on apply · High
 **Context:** `config/artefact-relationships.json` maps each artefact to the artefacts `derived` from it. The Apply Changes prompt reads it and regenerates derivatives in the same PR when a source catalogue changes. **Verified live (ADR-015):** a `BUS-PRO` edit regenerated both `BUS-BPM` (diagram) and `BUS-CAP-PRO` (matrix).
@@ -88,6 +88,25 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### AMC-4 · ⬜ Matrix/diagram formats beyond current set · Low
 **Proposed fix:** Define the remaining diagram/matrix types in the registry and renderers.
+
+---
+
+## Epic: Document Artefacts (Low-Level Designs)
+
+Candidate document artefact types to add alongside the existing Interface Specification (`SOL-ISP`). Each is a low-level design produced during solution delivery; pick one to define (registry entry + schema + schema doc + per-version folder, per `docs/artefacts.md`). Most live in the Solution domain, Logical or Physical layer.
+
+- **DOC-1 · ⬜ Application Component Specification · Low** — detailed design of one application component: responsibilities, provided/consumed interfaces, internal data, dependencies, and configuration. (Physical)
+- **DOC-2 · ⬜ API Specification · Low** — formal API contract for a service (resources, operations, schemas, auth, versioning) — an OpenAPI-style document. (Physical)
+- **DOC-3 · ⬜ Physical Data Model · Low** — tables/collections, columns, keys, indexes, and constraints for a data store. (Physical)
+- **DOC-4 · ⬜ Data Migration Specification · Low** — source→target field mapping, transformation rules, reconciliation, and cutover. (Logical/Physical)
+- **DOC-5 · ⬜ Integration Design · Low** — end-to-end message flows, sequencing, idempotency, and error handling across systems (broader than a single interface). (Logical)
+- **DOC-6 · ⬜ Security Design · Low** — authn/authz flows, data protection, secrets, and the controls a solution implements. (Physical)
+- **DOC-7 · ⬜ Infrastructure / Deployment Design · Low** — hosting, network topology, environments, scaling, and resilience. (Physical / Technology)
+- **DOC-8 · ⬜ Sequence / Interaction Design · Low** — sequence diagrams for key scenarios across components and systems. (Logical)
+- **DOC-9 · ⬜ Non-Functional Requirements Specification · Low** — performance, availability, scalability, and operability targets with measures. (Logical)
+- **DOC-10 · ⬜ Operational Runbook · Low** — run, monitor, alert, and recover procedures for a deployed solution. (Physical)
+- **DOC-11 · ⬜ Batch / Job Specification · Low** — scheduled job design: inputs/outputs, schedule, dependencies, and SLAs. (Physical)
+- **DOC-12 · ⬜ Report / Dashboard Specification · Low** — analytics output design: datasets, metrics, filters, and audience. (Physical)
 
 ---
 

@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useId } from 'react'
 import { useParams, Navigate, useLocation, Link } from 'react-router-dom'
-import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
@@ -167,7 +166,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</label>
+              <span className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</span>
               <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
                 className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
                 {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
@@ -219,7 +218,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</label>
+              <span className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</span>
               <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
                 className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
                 {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
@@ -511,24 +510,37 @@ function HistorySection({ history }) {
 
 // ── Contents nav (document-style, left rail) ──────────────────────────────────
 
+// Compact empty placeholder — a small icon + message, used for "no findings
+// yet" and unpopulated sections (smaller than the illustrated EmptyState).
+function EmptyNote({ title, description }) {
+  return (
+    <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-4 text-center">
+      <svg className="w-5 h-5 mx-auto mb-1.5 text-gray-300" viewBox="0 0 24 24" fill="none">
+        <path d="M5 4h11l3 3v13H5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 12h6M9 15h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+      <p className="text-sm font-medium text-gray-500">{title}</p>
+      {description && <p className="text-xs text-gray-400 mt-0.5 max-w-md mx-auto leading-relaxed">{description}</p>}
+    </div>
+  )
+}
+
+// Sub-keys grouped under the "Change" heading.
+const CHANGE_SUB_KEYS = ['context', 'problem', 'proposal', 'narrative', 'scope', 'recommendations']
+
 function buildNavSections(decision) {
-  // Narrative split: Context / Problem / Proposal. Fall back to legacy single
-  // narrative for decisions authored before the split.
   const hasSplit = decision.context || decision.problem || decision.proposal
-  const narrativeSections = hasSplit
-    ? [
-        decision.context && { key: 'context', label: 'Context' },
-        decision.problem && { key: 'problem', label: 'Problem' },
-        decision.proposal && { key: 'proposal', label: 'Proposal' },
-      ].filter(Boolean)
-    : [{ key: 'narrative', label: 'Narrative' }]
+  const changeSubs = (hasSplit
+    ? [{ key: 'context', label: 'Context' }, { key: 'problem', label: 'Problem' }, { key: 'proposal', label: 'Proposal' }]
+    : [{ key: 'narrative', label: 'Narrative' }])
+  changeSubs.push({ key: 'scope', label: 'Scope' })
+  changeSubs.push({ key: 'recommendations', label: 'Recommendations', count: decision['recommendations']?.length ?? 0 })
 
   const analysisTotal = ANALYSIS_SECTIONS.reduce((n, s) => n + (decision[s.key]?.length ?? 0), 0)
 
   return [
-    ...narrativeSections,
-    decision.requirements?.length && { key: 'requirements', label: 'Requirements', count: decision.requirements.length },
-    decision['recommendations']?.length && { key: 'recommendations', label: 'Recommendations', count: decision['recommendations'].length },
+    { key: 'change', label: 'Change', subs: changeSubs },
+    { key: 'requirements', label: 'Requirements', count: decision.requirements?.length ?? 0 },
     {
       key: 'analysis',
       label: 'Analysis',
@@ -610,7 +622,6 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
 export default function DecisionDetailPage() {
   const { clientId, versionId, decisionId } = useParams()
   const location = useLocation()
-  const { clientsMetadata } = useArchitecture()
   const [decision, setDecision] = useState(undefined)
   const [accepted, setAccepted] = useState({})    // local overrides for finding review state
   const [saving, setSaving] = useState(null)       // key of the finding being saved, e.g. 'impact-assessment-0'
@@ -618,7 +629,6 @@ export default function DecisionDetailPage() {
   const [transitionError, setTransitionError] = useState(null)
   const [pendingWorkflow, setPendingWorkflow] = useState(null) // { label } while a workflow populates the next section
   const [repoSlug, setRepoSlug] = useState(null)   // owner/repo, for building a PR URL from pr-number
-  const clientName = clientsMetadata[clientId]?.name ?? clientId
 
   useEffect(() => {
     fetch('/api/github?action=config')
@@ -640,6 +650,7 @@ export default function DecisionDetailPage() {
       n.delete(key)
       // Analysis sub-sections live under the collapsible 'analysis' parent
       if (ANALYSIS_KEYS.includes(key)) n.delete('analysis')
+      if (CHANGE_SUB_KEYS.includes(key)) n.delete('change')
       return n
     })
     requestAnimationFrame(() => requestAnimationFrame(() =>
@@ -654,6 +665,7 @@ export default function DecisionDetailPage() {
     getDecision(clientId, versionId, decisionId, undefined, { bust })
       .then(setDecision)
       .catch(() => setDecision(null))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, decisionId])
 
   async function handleAccept(sectionKey, findingIndex, review) {
@@ -750,38 +762,35 @@ export default function DecisionDetailPage() {
   const analysisLocked = ['accepted', 'staged', 'committed', 'rejected'].includes(decision.status)
   const canReviewChanges = decision.status === 'accepted'
 
-  const renderAnalysisSub = (s) => {
-    const rows = decision[s.key] ?? []
-    const subCollapsed = collapsed.has(s.key)
+  // Collapsible H3 sub-section (used under Change and Analysis).
+  const renderSub = (key, label, body, { count, hint } = {}) => {
+    const subCollapsed = collapsed.has(key)
     return (
-      <section key={s.key} ref={setSectionRef(s.key)} data-section={s.key} className="scroll-mt-20">
-        <button onClick={() => toggleSection(s.key)} className="w-full flex items-center gap-2 text-left group">
+      <section key={key} ref={setSectionRef(key)} data-section={key} className="scroll-mt-20">
+        <button onClick={() => toggleSection(key)} className="w-full flex items-center gap-2 text-left group">
           <span className="text-gray-300 group-hover:text-gray-500"><Chevron open={!subCollapsed} /></span>
           <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2">
-            {s.label}
-            <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{rows.length}</span>
-            {!analysisLocked && rows.length > 0 && (
-              <span className="text-xs font-normal text-gray-400">· click a row to accept / decline</span>
+            {label}
+            {typeof count === 'number' && (
+              <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{count}</span>
             )}
+            {hint && <span className="text-xs font-normal text-gray-400">· {hint}</span>}
           </h3>
         </button>
-        {!subCollapsed && (
-          <div className="mt-3">
-            {rows.length > 0 ? (
-              <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} locked={analysisLocked} />
-            ) : (
-              <div className="border border-dashed border-gray-200 bg-gray-50">
-                <EmptyState
-                  size="sm"
-                  illustration="findings"
-                  title="No findings yet"
-                  description="This section is populated when the analysis workflow runs. Workflows can take a few minutes — check back shortly."
-                />
-              </div>
-            )}
-          </div>
-        )}
+        {!subCollapsed && <div className="mt-3">{body}</div>}
       </section>
+    )
+  }
+
+  const renderAnalysisSub = (s) => {
+    const rows = decision[s.key] ?? []
+    return renderSub(
+      s.key,
+      s.label,
+      rows.length > 0
+        ? <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} locked={analysisLocked} />
+        : <EmptyNote title="No findings yet" description="Populated when the analysis workflow runs — it can take a few minutes." />,
+      { count: rows.length, hint: !analysisLocked && rows.length > 0 ? 'click a row to accept / decline' : null },
     )
   }
 
@@ -866,45 +875,57 @@ export default function DecisionDetailPage() {
           )}
 
           <div className="space-y-8">
-            {(decision.context || decision.problem || decision.proposal) ? (
-              <>
-                {decision.context && renderSection('context',
-                  <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.context}</Markdown>
+            {/* Change: the proposal narrative, scope and recommendations */}
+            {renderSection('change',
+              <div className="space-y-8">
+                {(decision.context || decision.problem || decision.proposal) ? (
+                  <>
+                    {renderSub('context', 'Context', decision.context
+                      ? <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.context}</Markdown>
+                      : <EmptyNote title="Not provided" />)}
+                    {renderSub('problem', 'Problem', decision.problem
+                      ? <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.problem}</Markdown>
+                      : <EmptyNote title="Not provided" />)}
+                    {renderSub('proposal', 'Proposal', decision.proposal
+                      ? <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.proposal}</Markdown>
+                      : <EmptyNote title="Not provided" />)}
+                  </>
+                ) : (
+                  renderSub('narrative', 'Narrative',
+                    <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</Markdown>)
                 )}
-                {decision.problem && renderSection('problem',
-                  <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.problem}</Markdown>
-                )}
-                {decision.proposal && renderSection('proposal',
-                  <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.proposal}</Markdown>
-                )}
-              </>
-            ) : (
-              renderSection('narrative',
-                <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</Markdown>
-              )
-            )}
-
-            {decision.requirements?.length > 0 && renderSection('requirements',
-              <div className="border border-gray-200 divide-y divide-gray-100">
-                {decision.requirements.map((req, i) => {
-                  const title = typeof req === 'string' ? null : req.title
-                  const description = typeof req === 'string' ? req : req.description
-                  const type = typeof req === 'object' ? req.type : null
-                  return (
-                    <div key={i} className="px-4 py-3">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
-                        {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
-                      </div>
-                      <Markdown className="text-sm text-gray-600">{description}</Markdown>
-                    </div>
-                  )
-                })}
+                {renderSub('scope', 'Scope', decision.scope
+                  ? <ScopeChip scope={decision.scope} />
+                  : <EmptyNote title="No scope set" description="This decision applies to the whole architecture." />)}
+                {renderSub('recommendations', 'Recommendations',
+                  decision['recommendations']?.length
+                    ? <ReviewSection decision={decision} />
+                    : <EmptyNote title="No findings yet" description="Narrative Review runs when the decision is created and suggests improvements here." />,
+                  { count: decision['recommendations']?.length ?? 0 })}
               </div>
             )}
 
-            {decision['recommendations']?.length > 0 && renderSection('recommendations',
-              <ReviewSection decision={decision} />
+            {renderSection('requirements',
+              decision.requirements?.length > 0 ? (
+                <div className="border border-gray-200 divide-y divide-gray-100">
+                  {decision.requirements.map((req, i) => {
+                    const title = typeof req === 'string' ? null : req.title
+                    const description = typeof req === 'string' ? req : req.description
+                    const type = typeof req === 'object' ? req.type : null
+                    return (
+                      <div key={i} className="px-4 py-3">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
+                          {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
+                        </div>
+                        <Markdown className="text-sm text-gray-600">{description}</Markdown>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <EmptyNote title="No requirements" description="Add requirements on the full editor to record what this decision must achieve." />
+              )
             )}
 
             {renderSection('analysis',

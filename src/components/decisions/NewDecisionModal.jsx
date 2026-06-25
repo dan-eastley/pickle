@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { nameWithId } from '../../lib/format'
@@ -22,6 +22,8 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const saved = !!result?.ok
 
   const colors = DOMAIN_COLORS[artefact.domain]
+  const titleRef = useRef(null)
+  useEffect(() => { titleRef.current?.focus() }, [])
 
   // A document-level scope is only offered when the scoped artefact is the
   // document artefact we're viewing (the one whose documents we have to hand).
@@ -97,14 +99,24 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
         <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
-          {/* Header */}
-          <div className={`flex items-center justify-between px-5 py-4 ${colors.bg} flex-shrink-0`}>
-            <div>
-              <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
+          {/* Header — plain coloured bar, icon, title + purpose */}
+          <div className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}>
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
+                <DecisionIcon className={`w-4 h-4 ${colors?.text ?? 'text-brand-700'}`} />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
+                <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                  How a change to the architecture gets proposed and governed — capture the context,
+                  problem, and proposed direction; the agents analyse it and, once accepted, the change
+                  is applied through a reviewed pull request.
+                </p>
+              </div>
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors"
+              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -125,31 +137,26 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               </div>
             ) : (
               <>
-                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-brand-200 pl-3">
-                  An Architecture Decision is how a change to the architecture gets proposed and governed —
-                  capture the context, problem, and proposed direction; the agents analyse it and, once
-                  accepted, the change is applied through a reviewed pull request.
-                </p>
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Title <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <input
+                    ref={titleRef}
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="Short, human-readable summary of the decision"
                     className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-                    autoFocus
                   />
                 </div>
 
                 {/* Context */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Context <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <p className="text-xs text-gray-400 mb-1.5">
                     The current situation — what is happening that prompts this decision. Written for a business audience.
                   </p>
@@ -163,9 +170,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Problem */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Problem <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <p className="text-xs text-gray-400 mb-1.5">
                     What needs to be fixed or addressed — the gap or pain in the current situation.
                   </p>
@@ -179,9 +186,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Proposal */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Proposal <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <p className="text-xs text-gray-400 mb-1.5">
                     How we propose to solve it — the direction, at a business level.
                   </p>
@@ -195,7 +202,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Scope */}
                 <div className="border border-gray-200 bg-gray-50 p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                  <span className="block text-sm font-medium text-gray-700 mb-1">Scope</span>
                   <ScopeSelector
                     domain={scopeDomain}
                     abstraction={scopeAbstraction}
@@ -210,7 +217,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                   {showDocumentScope && (
                     <div className="mt-2">
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Document</label>
+                      <span className="block text-xs font-medium text-gray-500 mb-1">Document</span>
                       <select
                         value={scopeDocument}
                         onChange={e => setScopeDocument(e.target.value)}

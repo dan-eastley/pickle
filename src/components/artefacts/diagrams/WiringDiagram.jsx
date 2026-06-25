@@ -113,8 +113,6 @@ function PlatformDetail({ plat, domName }) {
 }
 
 function PairDetail({ pair, platformsById }) {
-  const srcPlat = platformsById[pair.src]
-  const tgtPlat = platformsById[pair.tgt]
 
   return (
     <div>
@@ -331,7 +329,7 @@ export default function WiringDiagram({ clientId, versionId }) {
                 </text>
 
                 {/* Platform boxes */}
-                {dom.platforms.map((platId, pi) => {
+                {dom.platforms.map((platId) => {
                   const pb = platBoxes[platId]
                   if (!pb) return null
                   const plat = platformsById[platId]

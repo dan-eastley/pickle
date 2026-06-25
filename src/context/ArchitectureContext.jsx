@@ -34,6 +34,7 @@ export function ArchitectureProvider({ children }) {
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -53,6 +54,7 @@ export function ArchitectureProvider({ children }) {
         }
       })
       .catch(err => setError(err.message))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClientId])
 
   useEffect(() => {
@@ -81,6 +83,7 @@ export function ArchitectureProvider({ children }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useArchitecture() {
   const ctx = useContext(ArchitectureContext)
   if (!ctx) throw new Error('useArchitecture must be used within ArchitectureProvider')

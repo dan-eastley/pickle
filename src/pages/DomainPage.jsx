@@ -53,7 +53,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
       </Link>
 
       {/* Format-grouped artefacts */}
-      {rows.map((row, i) =>
+      {rows.map((row) =>
         row.type === 'header' ? (
           <div key={`h-${row.format}`} className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100">
             <FormatIcon format={row.format} className="w-3 h-3 text-gray-400" />

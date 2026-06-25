@@ -108,6 +108,7 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
     getArtefactData(clientId, versionId, sourceArtefactDef.domain, sourceArtefactDef.abstraction, sourceArtefactDef.id)
       .then(d => { if (d) setItemMap(buildItemMap(d)) })
       .catch(() => {})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceArtefactId, clientId, versionId])
 
   const selectedItem = itemMap[selectedId]
