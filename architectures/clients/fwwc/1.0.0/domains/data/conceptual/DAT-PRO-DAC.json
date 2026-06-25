@@ -1,0 +1,312 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:data:conceptual:DAT-PRO-DAC",
+    "audience": [
+        "Enterprise Architect",
+        "Data Architect",
+        "Business Architect"
+    ],
+    "author": [
+        "Data Architect",
+        "Business Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-CUSTOMER",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-ACCOUNT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-CONTRACT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-PREMISE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-CUST-INTERACTION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "CON-ASSET",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "CON-ASSET-TYPE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "CON-ASSET-CONDITION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "CON-MAINT-WORK-ORDER",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "CON-GEN-UNIT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "CON-PRODUCTION-OUTPUT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "CON-FUEL-CONSUMPTION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "CON-GEN-OUTAGE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-NETWORK-NODE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-CONNECTION-POINT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-NETWORK-CAPACITY",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-POWER-FLOW",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-NETWORK-OUTAGE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-MARKET-PRICE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-TRADE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-POSITION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-COUNTERPARTY",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-SETTLEMENT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-METER",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-METER-POINT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-METER-READING",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-CONSUMPTION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-TARIFF",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-BILL",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-PAYMENT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-ARREARS",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "CON-LICENCE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "CON-REG-OBLIGATION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "CON-COMPLIANCE-REPORT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "CON-EMISSION",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "CON-RENEWABLE-SOURCE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "CON-CARBON-CREDIT",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "CON-EMPLOYEE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "CON-FIELD-CREW",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "CON-SUPPLIER",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "CON-INVOICE-PAYABLE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "CON-COST-CENTRE",
+            "operation": "CRUD"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-CUSTOMER",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-ACCOUNT",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-CONTRACT",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "CON-PREMISE",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-METER-POINT",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "CON-TARIFF",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-ASSET",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "CON-CONNECTION-POINT",
+            "operation": "RU"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "CON-EMISSION",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "CON-LICENCE",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "CON-PRODUCTION-OUTPUT",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "CON-FUEL-CONSUMPTION",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-NETWORK-CAPACITY",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "CON-PRODUCTION-OUTPUT",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "CON-ASSET",
+            "operation": "R"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "CON-FIELD-CREW",
+            "operation": "R"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial process-to-data CRUD matrix for the 1.0.0 baseline."
+        }
+    ]
+}

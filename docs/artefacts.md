@@ -56,6 +56,7 @@ This table is the authoritative registry of every defined artefact type. Every r
 | DAT-STR | Data | Conceptual | Catalogue | Data Architecture Strategy | Outcome-oriented strategic statements for the Data domain |
 | DAT-DAC | Data | Conceptual | Catalogue | Data Domains & Concepts | Two-tier catalogue of data subject areas and the conceptual data entities they contain |
 | DAT-CDM | Data | Conceptual | Diagram | Conceptual Data Model | Visual model of the Data Domains & Concepts Catalogue (DAT-DAC) |
+| DAT-PRO-DAC | Data | Conceptual | Matrix | Business Processes ↔ Data Domains & Concepts | CRUD matrix mapping which BUS-PRO processes create/read/update/delete which DAT-DAC data entities |
 | DAT-PRN | Data | Logical | Catalogue | Data Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Data domain |
 | DAT-STR-PRN | Data | Logical | Matrix | Data Architecture Strategy ↔ Principles | Many-to-many mapping between DAT-STR strategies and DAT-PRN principles |
 | DAT-GRD | Data | Physical | Catalogue | Data Architecture Guardrails | Non-negotiable constraints and mandatory standards for the Data domain |
@@ -83,6 +84,32 @@ This table is the authoritative registry of every defined artefact type. Every r
 | SOL-STR-PRN | Solution | Logical | Matrix | Solution Architecture Strategy ↔ Principles | Many-to-many mapping between SOL-STR strategies and SOL-PRN principles |
 | SOL-GRD | Solution | Physical | Catalogue | Solution Architecture Guardrails | Non-negotiable constraints and mandatory standards for the Solution domain |
 | SOL-PRN-GRD | Solution | Physical | Matrix | Solution Architecture Principles ↔ Guardrails | Many-to-many mapping between SOL-PRN principles and SOL-GRD guardrails |
+
+## Matrix coverage (AMC-5)
+
+Matrices are the **edges of the architecture graph** — they're what makes the model navigable and what impact analysis reasons over. Beyond the per-domain Strategy↔Principles and Principles↔Guardrails boilerplate, the *content* matrices that connect different concept types are the high-value ones. This is a coverage review of which cross-concept mappings exist and which are still missing.
+
+**Concept types:** Capability (BUS-CAP) · Process (BUS-PRO) · Data (DAT-DAC) · Application/Platform (APP-DAP) · Interface (INT-IFC) · Strategy/Principle (per-domain).
+
+| From ↓ \ To → | Capability | Process | Data | Application | Interface |
+|---|---|---|---|---|---|
+| **Capability** | — | ✅ BUS-CAP-PRO | ⬜ gap | ✅ APP-CAP-DAP | ⬜ |
+| **Process** | (above) | — | ✅ **DAT-PRO-DAC** (new) | ⬜ gap | ⬜ |
+| **Data** | (Cap↔Data gap) | (above) | — | ⬜ gap | ✅ INT-DAC-IFC |
+| **Application** | (above) | (Proc↔App gap) | (Data↔App gap) | — | ⬜ |
+| **Interface** | | | (above) | | — |
+
+**Existing content matrices:** BUS-CAP-PRO (capability↔process), APP-CAP-DAP (capability↔platform), APP-DAP-CAT (platform↔physical app), INT-DAC-IFC (data↔interface), and now **DAT-PRO-DAC** (process↔data, CRUD).
+
+**Prioritised gaps** (next candidates, in rough order of value):
+
+1. **Process ↔ Application** — which application supports which process (step). Pairs with DAT-PRO-DAC to complete the process's "what data, what system" picture.
+2. **Capability ↔ Data** — the data a capability owns/uses; supports data-ownership by capability.
+3. **Application ↔ Data** — systems of record; which application masters which entity.
+4. **Capability ↔ Strategy / Principle** — traceability from motivation to capability.
+5. **Capability ↔ Org / Role** — ownership (feeds DEC-6 governance); needs an Org artefact first.
+
+Each new matrix follows the [Adding a new artefact type](#adding-a-new-artefact-type) procedure and [Matrix placement](output-formats.md#matrix-placement) rules. DAT-PRO-DAC is the worked example.
 
 ## Adding a new artefact type
 
