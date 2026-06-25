@@ -1068,7 +1068,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
         </aside>
 
         {/* Document body — white box with drop shadow, the 'document' surface */}
-        <article className="flex-1 min-w-0 bg-white shadow-xl px-8 py-7">
+        <article className="flex-1 min-w-0 bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
           {/* Document title (H0) */}
           <header className="mb-8 pb-5 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">{nameWithId(doc.title, doc.id)}</h1>
@@ -1232,7 +1232,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
         </nav>
       </aside>
 
-      <article className="flex-1 min-w-0 bg-white shadow-xl px-8 py-7">
+      <article className="flex-1 min-w-0 bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
         <div
           ref={(el) => {
             sectionRefs.current['overview'] = el

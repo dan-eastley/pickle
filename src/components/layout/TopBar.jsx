@@ -85,7 +85,7 @@ export default function TopBar() {
   }
 
   return (
-    <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-6 gap-6 sticky top-0 z-40">
+    <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-3 sm:px-6 gap-3 sm:gap-6 sticky top-0 z-40">
       {/* Pickle brand — links to root */}
       <Link
         to="/"
