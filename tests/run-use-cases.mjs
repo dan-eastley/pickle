@@ -49,6 +49,38 @@ const CHECKS = {
   },
 }
 
+// Generic "this route renders real content" check — loads an artefact/page,
+// asserts no error boundary, an h1, substantive body text, and (optionally) a
+// known string. Guards the empty-render class of bug too.
+const at = (path) => `${BASE}/${REF}/${path}`
+function rendersWithContent(path, mustText) {
+  return async (page) => {
+    await page.goto(at(path), { waitUntil: 'networkidle' })
+    if (await page.getByText('This page failed to load.').count()) return fail('error boundary tripped')
+    const h1 = await page.getByRole('heading', { level: 1 }).first().innerText().catch(() => '')
+    if (!h1) return fail('no h1 rendered')
+    if (mustText && !(await page.getByText(mustText).count())) return fail(`expected to see "${mustText}"`)
+    const bodyLen = (await page.locator('main').innerText().catch(() => '')).length
+    if (bodyLen < 200) return fail(`page looks empty (body ${bodyLen} chars)`)
+    return pass(mustText ? `renders with "${mustText}"` : `renders (${bodyLen} chars)`)
+  }
+}
+
+Object.assign(CHECKS, {
+  'Drill into an abstraction layer': rendersWithContent('domains/business/conceptual'),
+  'View a business capability catalogue': rendersWithContent('domains/business/conceptual/BUS-CAP', 'Customer Management'),
+  'View a data domains & concepts catalogue': rendersWithContent('domains/data/conceptual/DAT-DAC'),
+  'View principles and guardrails': rendersWithContent('domains/business/logical/BUS-PRN'),
+  'View the application landscape': rendersWithContent('domains/application/logical/APP-DAP'),
+  'View the business capability model': rendersWithContent('domains/business/conceptual/BUS-BCM', 'Customer Management'),
+  'View the business process model': rendersWithContent('domains/business/conceptual/BUS-BPM'),
+  'Read an architecture vision': rendersWithContent('domains/solution/conceptual/SOL-AVI'),
+  'Read a solution intent': rendersWithContent('domains/solution/logical/SOL-SVI'),
+  'Read an interface specification': rendersWithContent('domains/solution/physical/SOL-ISP'),
+  'See an artefact’s change history': rendersWithContent('domains/business/conceptual/BUS-CAP', 'Joe Bloggs'),
+  'Export the raw JSON of an artefact': rendersWithContent('domains/business/conceptual/BUS-CAP', 'BUS-CAP.json'),
+})
+
 const data = JSON.parse(readFileSync(JSON_PATH, 'utf8'))
 const all = data['use-cases']
 const selected = all.filter(u =>

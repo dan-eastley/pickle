@@ -45,7 +45,7 @@
       "outcome": {
         "status": "passed",
         "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-25T06:27:22.271Z"
+        "checkedAt": "2026-06-25T08:18:51.699Z"
       }
     },
     {
@@ -63,7 +63,7 @@
       "outcome": {
         "status": "passed",
         "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-25T06:27:22.271Z"
+        "checkedAt": "2026-06-25T08:18:51.699Z"
       }
     },
     {
@@ -81,7 +81,7 @@
       "outcome": {
         "status": "passed",
         "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-25T06:27:22.271Z"
+        "checkedAt": "2026-06-25T08:18:51.699Z"
       }
     },
     {
@@ -95,7 +95,12 @@
       "acceptance-criteria": [
         "Each layer lists only its artefacts",
         "Breadcrumb reflects domain and layer"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (1283 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-005",
@@ -108,7 +113,12 @@
       "acceptance-criteria": [
         "Each layer lists only its artefacts",
         "Breadcrumb reflects domain and layer"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (1283 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-006",
@@ -121,7 +131,12 @@
       "acceptance-criteria": [
         "Each layer lists only its artefacts",
         "Breadcrumb reflects domain and layer"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (1283 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-007",
@@ -134,7 +149,12 @@
       "acceptance-criteria": [
         "Related artefacts are listed with the relationship type",
         "Links navigate to the related artefact"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-008",
@@ -147,7 +167,12 @@
       "acceptance-criteria": [
         "Related artefacts are listed with the relationship type",
         "Links navigate to the related artefact"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-009",
@@ -160,7 +185,12 @@
       "acceptance-criteria": [
         "Purpose is shown on the artefact header",
         "Audience roles are listed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-010",
@@ -173,7 +203,12 @@
       "acceptance-criteria": [
         "Purpose is shown on the artefact header",
         "Audience roles are listed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-011",
@@ -186,7 +221,12 @@
       "acceptance-criteria": [
         "Capabilities render as a level 1–3 hierarchy",
         "Each capability shows id, name, and description"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Customer Management\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-012",
@@ -199,7 +239,12 @@
       "acceptance-criteria": [
         "Capabilities render as a level 1–3 hierarchy",
         "Each capability shows id, name, and description"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Customer Management\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-013",
@@ -212,7 +257,12 @@
       "acceptance-criteria": [
         "Capabilities render as a level 1–3 hierarchy",
         "Each capability shows id, name, and description"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Customer Management\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-014",
@@ -225,7 +275,12 @@
       "acceptance-criteria": [
         "Data domains group their concepts",
         "Concepts link to the conceptual data model"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2277 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-015",
@@ -238,7 +293,12 @@
       "acceptance-criteria": [
         "Data domains group their concepts",
         "Concepts link to the conceptual data model"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2277 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-016",
@@ -251,7 +311,12 @@
       "acceptance-criteria": [
         "Data domains group their concepts",
         "Concepts link to the conceptual data model"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2277 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-017",
@@ -264,7 +329,12 @@
       "acceptance-criteria": [
         "Principles and guardrails are listed per domain",
         "Each states its rationale"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (4405 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-018",
@@ -277,7 +347,12 @@
       "acceptance-criteria": [
         "Principles and guardrails are listed per domain",
         "Each states its rationale"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (4405 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-019",
@@ -290,7 +365,12 @@
       "acceptance-criteria": [
         "Principles and guardrails are listed per domain",
         "Each states its rationale"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (4405 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-020",
@@ -303,7 +383,12 @@
       "acceptance-criteria": [
         "Platforms group under application domains",
         "Physical applications show lifecycle status"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2599 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-021",
@@ -316,7 +401,12 @@
       "acceptance-criteria": [
         "Platforms group under application domains",
         "Physical applications show lifecycle status"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2599 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-022",
@@ -329,7 +419,12 @@
       "acceptance-criteria": [
         "Platforms group under application domains",
         "Physical applications show lifecycle status"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2599 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-023",
@@ -342,7 +437,12 @@
       "acceptance-criteria": [
         "Platforms group under application domains",
         "Physical applications show lifecycle status"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (2599 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-024",
@@ -355,7 +455,12 @@
       "acceptance-criteria": [
         "Capabilities render as nested cards",
         "Selecting a card opens its detail"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Customer Management\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-025",
@@ -368,7 +473,12 @@
       "acceptance-criteria": [
         "Capabilities render as nested cards",
         "Selecting a card opens its detail"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Customer Management\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-026",
@@ -381,7 +491,12 @@
       "acceptance-criteria": [
         "Processes render as chevrons by level",
         "Per-L1 drill-down is available"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (10196 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-027",
@@ -394,7 +509,12 @@
       "acceptance-criteria": [
         "Processes render as chevrons by level",
         "Per-L1 drill-down is available"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (10196 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-028",
@@ -407,7 +527,12 @@
       "acceptance-criteria": [
         "Platform connections render with flow counts",
         "Per-pair interface drill-down is available"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-029",
@@ -420,7 +545,12 @@
       "acceptance-criteria": [
         "Platform connections render with flow counts",
         "Per-pair interface drill-down is available"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-030",
@@ -433,7 +563,12 @@
       "acceptance-criteria": [
         "A diagram opens fullscreen",
         "Escape returns to the page"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-031",
@@ -446,7 +581,12 @@
       "acceptance-criteria": [
         "A diagram opens fullscreen",
         "Escape returns to the page"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-032",
@@ -459,7 +599,12 @@
       "acceptance-criteria": [
         "Rows and columns map the two entity sets",
         "Intersections show the relationship"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-033",
@@ -472,7 +617,12 @@
       "acceptance-criteria": [
         "Rows and columns map the two entity sets",
         "Intersections show the relationship"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-034",
@@ -485,7 +635,12 @@
       "acceptance-criteria": [
         "Platforms map to level 2 capabilities",
         "Unsupported capabilities are visible"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-035",
@@ -498,7 +653,12 @@
       "acceptance-criteria": [
         "Platforms map to level 2 capabilities",
         "Unsupported capabilities are visible"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-036",
@@ -511,7 +671,12 @@
       "acceptance-criteria": [
         "Vision renders with its sections and contents nav",
         "Stakeholders and concerns are shown"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (10794 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-037",
@@ -524,7 +689,12 @@
       "acceptance-criteria": [
         "Vision renders with its sections and contents nav",
         "Stakeholders and concerns are shown"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (10794 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-038",
@@ -537,7 +707,12 @@
       "acceptance-criteria": [
         "Vision renders with its sections and contents nav",
         "Stakeholders and concerns are shown"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (10794 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-039",
@@ -550,7 +725,12 @@
       "acceptance-criteria": [
         "Fixed and variable intent are distinguished",
         "Capabilities and platforms are referenced"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (8118 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-040",
@@ -563,7 +743,12 @@
       "acceptance-criteria": [
         "Fixed and variable intent are distinguished",
         "Capabilities and platforms are referenced"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (8118 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-041",
@@ -576,7 +761,12 @@
       "acceptance-criteria": [
         "Fixed and variable intent are distinguished",
         "Capabilities and platforms are referenced"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (8118 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-042",
@@ -589,7 +779,12 @@
       "acceptance-criteria": [
         "Protocol, auth, and data format are specified",
         "Endpoints and error handling are documented"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (5023 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-043",
@@ -602,7 +797,12 @@
       "acceptance-criteria": [
         "Protocol, auth, and data format are specified",
         "Endpoints and error handling are documented"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (5023 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-044",
@@ -615,7 +815,12 @@
       "acceptance-criteria": [
         "Protocol, auth, and data format are specified",
         "Endpoints and error handling are documented"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders (5023 chars)",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-045",
@@ -628,7 +833,12 @@
       "acceptance-criteria": [
         "A query matches across artefacts and entities",
         "Results link to the item"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-046",
@@ -641,7 +851,12 @@
       "acceptance-criteria": [
         "A query matches across artefacts and entities",
         "Results link to the item"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-047",
@@ -654,7 +869,12 @@
       "acceptance-criteria": [
         "A query matches across artefacts and entities",
         "Results link to the item"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-048",
@@ -667,7 +887,12 @@
       "acceptance-criteria": [
         "A discovery captures title, context, and request",
         "It is stored as a versioned record"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-049",
@@ -680,7 +905,12 @@
       "acceptance-criteria": [
         "A discovery captures title, context, and request",
         "It is stored as a versioned record"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-050",
@@ -693,7 +923,12 @@
       "acceptance-criteria": [
         "A discovery captures title, context, and request",
         "It is stored as a versioned record"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-051",
@@ -706,7 +941,12 @@
       "acceptance-criteria": [
         "Active and archived pots are separated",
         "A discovery opens to its findings"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-052",
@@ -719,7 +959,12 @@
       "acceptance-criteria": [
         "Active and archived pots are separated",
         "A discovery opens to its findings"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-053",
@@ -732,7 +977,12 @@
       "acceptance-criteria": [
         "A decision captures context, problem, and proposal",
         "It is created as a draft on a branch"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-054",
@@ -745,7 +995,12 @@
       "acceptance-criteria": [
         "A decision captures context, problem, and proposal",
         "It is created as a draft on a branch"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-055",
@@ -758,7 +1013,12 @@
       "acceptance-criteria": [
         "A decision captures context, problem, and proposal",
         "It is created as a draft on a branch"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-056",
@@ -771,7 +1031,12 @@
       "acceptance-criteria": [
         "Each analysis stream lists findings",
         "Findings can be accepted or declined"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-057",
@@ -784,7 +1049,12 @@
       "acceptance-criteria": [
         "Each analysis stream lists findings",
         "Findings can be accepted or declined"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-058",
@@ -797,7 +1067,12 @@
       "acceptance-criteria": [
         "Changes group by domain",
         "Declined changes are excluded from the PR"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-059",
@@ -810,7 +1085,12 @@
       "acceptance-criteria": [
         "Changes group by domain",
         "Declined changes are excluded from the PR"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-060",
@@ -823,7 +1103,12 @@
       "acceptance-criteria": [
         "Each transition dispatches the right workflow",
         "Status is reflected in the index"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-061",
@@ -836,7 +1121,12 @@
       "acceptance-criteria": [
         "Each transition dispatches the right workflow",
         "Status is reflected in the index"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-062",
@@ -849,7 +1139,12 @@
       "acceptance-criteria": [
         "Accepted changes edit the artefact files",
         "A PR to main is opened and linked from the decision"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-063",
@@ -862,7 +1157,12 @@
       "acceptance-criteria": [
         "Accepted changes edit the artefact files",
         "A PR to main is opened and linked from the decision"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-064",
@@ -875,7 +1175,12 @@
       "acceptance-criteria": [
         "The PR is merged and closed",
         "The decision branch is deleted and status is committed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-065",
@@ -888,7 +1193,12 @@
       "acceptance-criteria": [
         "The PR is merged and closed",
         "The decision branch is deleted and status is committed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-066",
@@ -901,7 +1211,12 @@
       "acceptance-criteria": [
         "A rejection reason is recorded",
         "The decision is retained for history"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-067",
@@ -914,7 +1229,12 @@
       "acceptance-criteria": [
         "A rejection reason is recorded",
         "The decision is retained for history"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-068",
@@ -927,7 +1247,12 @@
       "acceptance-criteria": [
         "The scope filter narrows the list",
         "The filter is shareable via the URL"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-069",
@@ -940,7 +1265,12 @@
       "acceptance-criteria": [
         "The scope filter narrows the list",
         "The filter is shareable via the URL"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-070",
@@ -953,7 +1283,12 @@
       "acceptance-criteria": [
         "The scope filter narrows the list",
         "The filter is shareable via the URL"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-071",
@@ -966,7 +1301,12 @@
       "acceptance-criteria": [
         "Versions are selectable",
         "The view reflects the chosen version"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-072",
@@ -979,7 +1319,12 @@
       "acceptance-criteria": [
         "Versions are selectable",
         "The view reflects the chosen version"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-073",
@@ -992,7 +1337,12 @@
       "acceptance-criteria": [
         "Versions are selectable",
         "The view reflects the chosen version"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-074",
@@ -1005,7 +1355,12 @@
       "acceptance-criteria": [
         "A new version folder is created",
         "Prior versions remain immutable"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-075",
@@ -1018,7 +1373,12 @@
       "acceptance-criteria": [
         "A new version folder is created",
         "Prior versions remain immutable"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-076",
@@ -1031,7 +1391,12 @@
       "acceptance-criteria": [
         "Activity shows date, action, and author",
         "Entries are ordered most-recent first"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Joe Bloggs\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-077",
@@ -1044,7 +1409,12 @@
       "acceptance-criteria": [
         "Activity shows date, action, and author",
         "Entries are ordered most-recent first"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"Joe Bloggs\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-078",
@@ -1057,7 +1427,12 @@
       "acceptance-criteria": [
         "Audience-matched artefacts are surfaced",
         "Role can be changed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-079",
@@ -1070,7 +1445,12 @@
       "acceptance-criteria": [
         "Audience-matched artefacts are surfaced",
         "Role can be changed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-080",
@@ -1083,7 +1463,12 @@
       "acceptance-criteria": [
         "Audience-matched artefacts are surfaced",
         "Role can be changed"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-081",
@@ -1096,7 +1481,12 @@
       "acceptance-criteria": [
         "Only authorised roles can commit",
         "Attempts by others are blocked and logged"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-082",
@@ -1109,7 +1499,12 @@
       "acceptance-criteria": [
         "Only authorised roles can commit",
         "Attempts by others are blocked and logged"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-083",
@@ -1122,7 +1517,12 @@
       "acceptance-criteria": [
         "A diagram exports to PNG/SVG",
         "The export matches the on-screen view"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-084",
@@ -1135,7 +1535,12 @@
       "acceptance-criteria": [
         "A diagram exports to PNG/SVG",
         "The export matches the on-screen view"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-085",
@@ -1148,7 +1553,12 @@
       "acceptance-criteria": [
         "A diagram exports to PNG/SVG",
         "The export matches the on-screen view"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-086",
@@ -1161,7 +1571,12 @@
       "acceptance-criteria": [
         "Raw JSON is viewable",
         "It can be copied"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"BUS-CAP.json\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-087",
@@ -1174,7 +1589,12 @@
       "acceptance-criteria": [
         "Raw JSON is viewable",
         "It can be copied"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"BUS-CAP.json\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-088",
@@ -1187,7 +1607,12 @@
       "acceptance-criteria": [
         "Raw JSON is viewable",
         "It can be copied"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "renders with \"BUS-CAP.json\"",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-089",
@@ -1200,7 +1625,12 @@
       "acceptance-criteria": [
         "TOGAF and SAFe mappings are shown",
         "Supported vs roadmap is clear"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-090",
@@ -1213,7 +1643,12 @@
       "acceptance-criteria": [
         "TOGAF and SAFe mappings are shown",
         "Supported vs roadmap is clear"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-091",
@@ -1226,7 +1661,12 @@
       "acceptance-criteria": [
         "TOGAF and SAFe mappings are shown",
         "Supported vs roadmap is clear"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-092",
@@ -1239,7 +1679,12 @@
       "acceptance-criteria": [
         "Schema violations are reported",
         "Validation runs in CI"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-093",
@@ -1252,7 +1697,12 @@
       "acceptance-criteria": [
         "Schema violations are reported",
         "Validation runs in CI"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-094",
@@ -1265,7 +1715,12 @@
       "acceptance-criteria": [
         "Dangling references are flagged",
         "The check runs on committed data"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-095",
@@ -1278,7 +1733,12 @@
       "acceptance-criteria": [
         "Dangling references are flagged",
         "The check runs on committed data"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-096",
@@ -1291,7 +1751,12 @@
       "acceptance-criteria": [
         "An external id can be attached",
         "The link opens the backlog tool"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-097",
@@ -1304,7 +1769,12 @@
       "acceptance-criteria": [
         "An external id can be attached",
         "The link opens the backlog tool"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-098",
@@ -1317,7 +1787,12 @@
       "acceptance-criteria": [
         "An external id can be attached",
         "The link opens the backlog tool"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-099",
@@ -1330,7 +1805,12 @@
       "acceptance-criteria": [
         "The model exports to the agreed format",
         "A downstream tool can import it"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     },
     {
       "id": "UC-100",
@@ -1343,7 +1823,12 @@
       "acceptance-criteria": [
         "The model exports to the agreed format",
         "A downstream tool can import it"
-      ]
+      ],
+      "outcome": {
+        "status": "todo",
+        "note": "No automated check yet",
+        "checkedAt": "2026-06-25T08:18:51.699Z"
+      }
     }
   ]
 }
