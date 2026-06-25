@@ -44,7 +44,7 @@ function MarkdownComponents(currentPath) {
         return <TextLink to={resolved}>{children}</TextLink>
       }
       return (
-        <TextLink href={resolved} target="_blank" rel="noreferrer">
+        <TextLink href={resolved} target="_blank" rel="noopener noreferrer">
           {children}
         </TextLink>
       )

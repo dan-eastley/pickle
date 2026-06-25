@@ -7,6 +7,7 @@ import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
 import { RobotIcon } from '../ui/icons'
 import { githubAction } from '../../lib/api'
+import { buildScope } from '../../lib/scope'
 
 export default function NewDiscoveryModal({ artefact, clientId, versionId, onClose }) {
   const fid = useId() // base for associating field labels with their inputs
@@ -38,13 +39,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   async function handleSave() {
     setSaving(true)
     setResult(null)
-    const scope = scopeDomain
-      ? {
-          domain: scopeDomain,
-          ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-          ...(scopeArtefact && { artefact: scopeArtefact }),
-        }
-      : null
+    const scope = buildScope(scopeDomain, scopeAbstraction, scopeArtefact)
     try {
       const data = await githubAction({
         action: 'create-discovery',

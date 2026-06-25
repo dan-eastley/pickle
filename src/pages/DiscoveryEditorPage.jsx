@@ -2,6 +2,7 @@ import { useState, useId } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { githubAction } from '../lib/api'
+import { buildScope } from '../lib/scope'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
@@ -30,13 +31,7 @@ export default function DiscoveryEditorPage() {
 
   const canSave = title.trim() && context.trim() && request.trim()
 
-  const scope = scopeDomain
-    ? {
-        domain: scopeDomain,
-        ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-        ...(scopeArtefact && { artefact: scopeArtefact }),
-      }
-    : null
+  const scope = buildScope(scopeDomain, scopeAbstraction, scopeArtefact)
 
   async function handleSave() {
     setSaving(true)

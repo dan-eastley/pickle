@@ -2,6 +2,7 @@ import { useState, useEffect, useId } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision, githubAction, getNextDecisionId } from '../lib/api'
+import { buildScope } from '../lib/scope'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import Button from '../components/ui/Button'
@@ -112,13 +113,7 @@ export default function DecisionEditorPage() {
       .finally(() => setLoadingExisting(false))
   }, [isEdit, clientId, versionId, decisionId])
 
-  const scope = scopeDomain
-    ? {
-        domain: scopeDomain,
-        ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-        ...(scopeArtefact && { artefact: scopeArtefact }),
-      }
-    : null
+  const scope = buildScope(scopeDomain, scopeAbstraction, scopeArtefact)
 
   async function handleSave() {
     setSaving(true)
