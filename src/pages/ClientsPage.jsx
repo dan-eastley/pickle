@@ -2,25 +2,14 @@ import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import Spinner from '../components/ui/Spinner'
 import Illustration from '../components/ui/Illustration'
+import ClientLogo from '../components/ui/ClientLogo'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-function clientInitials(name) {
-  return (
-    name
-      .split(/\s+/)
-      .filter((w) => /^[A-Z]/.test(w))
-      .map((w) => w[0])
-      .slice(0, 3)
-      .join('') || name.slice(0, 2).toUpperCase()
-  )
-}
 
 function ClientCard({ client, clientsMetadata }) {
   const clientId = client['client-id']
   const meta = clientsMetadata[clientId]
   const name = meta?.name ?? clientId
-  const initials = clientInitials(name)
 
   return (
     <Link
@@ -28,9 +17,7 @@ function ClientCard({ client, clientsMetadata }) {
       className="group bg-white border border-gray-200 hover:border-gray-400 transition-colors flex flex-col"
     >
       <div className="flex items-center gap-4 px-5 py-5">
-        <div className="w-12 h-12 bg-brand-50 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm font-bold text-brand-600 tracking-tight">{initials}</span>
-        </div>
+        <ClientLogo clientId={clientId} name={name} className="w-12 h-12" />
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
             {name}

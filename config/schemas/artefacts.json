@@ -25,6 +25,9 @@
         "DAT-CDM": {
             "$ref": "./artefacts/domains/data/conceptual/DAT-CDM.json"
         },
+        "DAT-PRO-DAC": {
+            "$ref": "./artefacts/domains/data/conceptual/DAT-PRO-DAC.json"
+        },
         "APP-DAP": {
             "$ref": "./artefacts/domains/application/logical/APP-DAP.json"
         },

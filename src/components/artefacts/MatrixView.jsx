@@ -97,7 +97,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
 
   const relMap = new Map()
   for (const rel of data.relationships ?? []) {
-    relMap.set(`${rel['column-id']}|${rel['row-id']}`, rel.rationale)
+    relMap.set(`${rel['column-id']}|${rel['row-id']}`, rel)
   }
 
   const total = columnItems.length * rowItems.length
@@ -168,15 +168,22 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
               </td>
               {columnItems.map((col) => {
                 const key = `${col[columns.idField]}|${row[rows.idField]}`
-                const rationale = relMap.get(key)
-                const checked = relMap.has(key)
+                const rel = relMap.get(key)
+                // Tooltip prefers an explicit rationale, else the CRUD operation.
+                const tip =
+                  rel?.rationale ?? (rel?.operation ? `Operation: ${rel.operation}` : undefined)
                 return (
                   <td
                     key={key}
                     className="px-2 py-2.5 text-center group-hover:bg-gray-50 transition-colors"
-                    title={rationale}
+                    title={tip}
                   >
-                    {checked ? (
+                    {rel?.operation ? (
+                      // CRUD (or any value) matrix: show the operation letters.
+                      <span className="inline-block font-mono text-xs font-semibold text-brand-700 bg-brand-50 px-1.5 py-0.5 tracking-wider">
+                        {rel.operation}
+                      </span>
+                    ) : rel ? (
                       <CheckSquare className="w-4 h-4 text-brand-600 mx-auto" />
                     ) : (
                       <Square className="w-4 h-4 text-gray-200 mx-auto" />
