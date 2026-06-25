@@ -75,7 +75,48 @@
                 },
                 "additionalProperties": false
             }
+        },
+        "activity": {
+            "type": "array",
+            "description": "Chronological activity / change-history log.",
+            "items": {
+                "$ref": "#/$defs/activity-entry"
+            }
         }
     },
-    "additionalProperties": false
+    "additionalProperties": false,
+    "$defs": {
+        "activity-entry": {
+            "type": "object",
+            "required": [
+                "timestamp",
+                "action",
+                "who"
+            ],
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "description": "ISO 8601 datetime."
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "Created",
+                        "Updated",
+                        "Archived",
+                        "Deleted"
+                    ],
+                    "description": "The kind of change."
+                },
+                "who": {
+                    "type": "string",
+                    "description": "Display name of the person or agent."
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
 }

@@ -33,25 +33,65 @@
             "problem-statement": "fedc's operational and commercial teams cannot currently produce their own analytics without IT support. Reports are generated from Oracle CC&B on an overnight batch cycle, creating a 24-hour information lag. Commercial teams resort to manual Excel extracts for modelling, with no auditability or governance. There is no single, governed enterprise dataset combining billing, metering, asset, and contract data.",
             "solution-overview": "The solution introduces a Databricks Lakehouse as the governed enterprise data tier, fed by event-driven ingestion from Oracle CC&B via Confluent and batch ingestion from Oracle MDM and ERP. Oracle Analytics Cloud (PLAT-BI) is connected to the lakehouse via Databricks SQL and provides self-service workbooks, subject areas, and dashboards to business users. Data governance is enforced via Unity Catalog. The Confluent iPaaS layer orchestrates all event-driven data flows. AWS SageMaker connects to the lakehouse feature store for ML model training.",
             "key-capabilities": [
-                { "artefact-id": "CAP-001" },
-                { "artefact-id": "CAP-002" },
-                { "artefact-id": "CAP-003" },
-                { "artefact-id": "CAP-004" },
-                { "artefact-id": "CAP-005" }
+                {
+                    "artefact-id": "CAP-001"
+                },
+                {
+                    "artefact-id": "CAP-002"
+                },
+                {
+                    "artefact-id": "CAP-003"
+                },
+                {
+                    "artefact-id": "CAP-004"
+                },
+                {
+                    "artefact-id": "CAP-005"
+                }
             ],
             "platforms-involved": [
-                { "artefact-id": "PLAT-BI", "note": "Oracle Analytics Cloud — self-service BI surface." },
-                { "artefact-id": "PLAT-DATA-LAKEHOUSE", "note": "Databricks Lakehouse — governed enterprise data tier." },
-                { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B — primary operational data source." },
-                { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent Kafka — event orchestration / CDC." },
-                { "artefact-id": "PLAT-MDM", "note": "Oracle MDM — meter register, batch source." },
-                { "artefact-id": "PLAT-ERP", "note": "Oracle ERP — finance / contract batch source." }
+                {
+                    "artefact-id": "PLAT-BI",
+                    "note": "Oracle Analytics Cloud — self-service BI surface."
+                },
+                {
+                    "artefact-id": "PLAT-DATA-LAKEHOUSE",
+                    "note": "Databricks Lakehouse — governed enterprise data tier."
+                },
+                {
+                    "artefact-id": "PLAT-CIS",
+                    "note": "Oracle CC&B — primary operational data source."
+                },
+                {
+                    "artefact-id": "PLAT-EVENT-BROKER",
+                    "note": "Confluent Kafka — event orchestration / CDC."
+                },
+                {
+                    "artefact-id": "PLAT-MDM",
+                    "note": "Oracle MDM — meter register, batch source."
+                },
+                {
+                    "artefact-id": "PLAT-ERP",
+                    "note": "Oracle ERP — finance / contract batch source."
+                }
             ],
             "assumptions": [
-                { "id": "ASM-001", "description": "Oracle Analytics Cloud has an active licence covering at least 200 named users across operational and commercial teams." },
-                { "id": "ASM-002", "description": "Databricks Unity Catalog will be used for data governance; a single workspace will be provisioned for fedc with separate catalogues per domain (operational, commercial, regulatory)." },
-                { "id": "ASM-003", "description": "The Confluent Kafka cluster has been sized to handle CC&B CDC event volumes at peak load without throttling." },
-                { "id": "ASM-004", "description": "Oracle CC&B supports change-data-capture via LogMiner or an approved Kafka Connect source connector; the DBA team has confirmed this is available in the current CC&B version." }
+                {
+                    "id": "ASM-001",
+                    "description": "Oracle Analytics Cloud has an active licence covering at least 200 named users across operational and commercial teams."
+                },
+                {
+                    "id": "ASM-002",
+                    "description": "Databricks Unity Catalog will be used for data governance; a single workspace will be provisioned for fedc with separate catalogues per domain (operational, commercial, regulatory)."
+                },
+                {
+                    "id": "ASM-003",
+                    "description": "The Confluent Kafka cluster has been sized to handle CC&B CDC event volumes at peak load without throttling."
+                },
+                {
+                    "id": "ASM-004",
+                    "description": "Oracle CC&B supports change-data-capture via LogMiner or an approved Kafka Connect source connector; the DBA team has confirmed this is available in the current CC&B version."
+                }
             ],
             "risks": [
                 {
@@ -114,21 +154,51 @@
             "problem-statement": "fedc's asset lifecycle data is fragmented across three systems with no automated synchronisation. Asset commissioning events in MDM do not automatically trigger capitalisation journals in ERP, leading to month-end manual reconciliation. Predictive maintenance is not possible because maintenance history data is not in a machine-readable, integrated form. Ofgem's asset reporting obligations (RIIO-ED2) require an auditable, timestamped asset register that the current state cannot provide.",
             "solution-overview": "The solution establishes Oracle MDM as the system of record for all physical asset attributes and lifecycle status, with automated event-driven synchronisation to Oracle ERP via OIC for financial capitalisation. Asset lifecycle events (commissioning, maintenance, decommission) are streamed to the Databricks Lakehouse to build a historical asset event store. AWS SageMaker models consume the lakehouse feature store to predict asset failure probability. Field service work orders are raised in ServiceNow FSM and linked back to MDM asset records via the integration layer.",
             "key-capabilities": [
-                { "artefact-id": "CAP-002" },
-                { "artefact-id": "CAP-003" },
-                { "artefact-id": "CAP-006" }
+                {
+                    "artefact-id": "CAP-002"
+                },
+                {
+                    "artefact-id": "CAP-003"
+                },
+                {
+                    "artefact-id": "CAP-006"
+                }
             ],
             "platforms-involved": [
-                { "artefact-id": "PLAT-MDM", "note": "Oracle MDM — system of record for physical asset attributes." },
-                { "artefact-id": "PLAT-ERP", "note": "Oracle ERP — fixed asset accounting / capitalisation." },
-                { "artefact-id": "PLAT-DATA-LAKEHOUSE", "note": "Databricks — historical asset event store and ML feature store." },
-                { "artefact-id": "PLAT-FSM", "note": "ServiceNow FSM — field service work orders." },
-                { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent / OIC — integration and synchronisation layer." }
+                {
+                    "artefact-id": "PLAT-MDM",
+                    "note": "Oracle MDM — system of record for physical asset attributes."
+                },
+                {
+                    "artefact-id": "PLAT-ERP",
+                    "note": "Oracle ERP — fixed asset accounting / capitalisation."
+                },
+                {
+                    "artefact-id": "PLAT-DATA-LAKEHOUSE",
+                    "note": "Databricks — historical asset event store and ML feature store."
+                },
+                {
+                    "artefact-id": "PLAT-FSM",
+                    "note": "ServiceNow FSM — field service work orders."
+                },
+                {
+                    "artefact-id": "PLAT-EVENT-BROKER",
+                    "note": "Confluent / OIC — integration and synchronisation layer."
+                }
             ],
             "assumptions": [
-                { "id": "ASM-001", "description": "Oracle MDM has been fully configured with fedc's asset taxonomy (meter types, voltage levels, asset classes) and all active meter assets have been migrated and validated." },
-                { "id": "ASM-002", "description": "Oracle ERP fixed asset module is configured and in active use for asset capitalisation; no ERP upgrade is planned within the programme window." },
-                { "id": "ASM-003", "description": "ServiceNow FSM is the approved field service management tool and has an active integration capability with the integration layer." }
+                {
+                    "id": "ASM-001",
+                    "description": "Oracle MDM has been fully configured with fedc's asset taxonomy (meter types, voltage levels, asset classes) and all active meter assets have been migrated and validated."
+                },
+                {
+                    "id": "ASM-002",
+                    "description": "Oracle ERP fixed asset module is configured and in active use for asset capitalisation; no ERP upgrade is planned within the programme window."
+                },
+                {
+                    "id": "ASM-003",
+                    "description": "ServiceNow FSM is the approved field service management tool and has an active integration capability with the integration layer."
+                }
             ],
             "risks": [
                 {
@@ -158,6 +228,20 @@
                     "raised-by": "Regulatory Reporting"
                 }
             ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

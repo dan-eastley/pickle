@@ -3,7 +3,7 @@
     "strategies": [
         {
             "id": "DAT-STR-001",
-            "statement": "Treat data as a product \u2014 each domain publishes data assets consumed by the rest of the business",
+            "statement": "Treat data as a product — each domain publishes data assets consumed by the rest of the business",
             "driver": "Data is the second-most expensive asset and frequently the least managed; consumers cannot rely on what they cannot inspect",
             "target-outcome": "Top 30 data assets published as discoverable, versioned products with SLAs by end of 2026",
             "horizon": "medium-term",
@@ -48,6 +48,20 @@
             "target-outcome": "End-to-end lineage available for every published data product; automated provenance metadata captured at point of production",
             "horizon": "medium-term",
             "owner": "Head of Data Governance"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

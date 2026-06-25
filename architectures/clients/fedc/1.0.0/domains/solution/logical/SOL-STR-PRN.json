@@ -46,5 +46,19 @@
             "row-id": "SOL-PRN-003",
             "rationale": "A credible exit path depends on the decisions and constraints that shaped the original design being recorded as ADRs, so future teams can re-evaluate them as constraints evolve."
         }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
     ]
 }

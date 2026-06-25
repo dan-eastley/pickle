@@ -37,7 +37,7 @@
             "sla": {
                 "latency-p99-ms": null,
                 "throughput-tps": null,
-                "availability-percent": 99.0
+                "availability-percent": 99
             },
             "test-scenarios": [
                 {
@@ -117,6 +117,20 @@
                     "expected-outcome": "MDM match detects duplicate. OIC links both records to single golden record. No duplicate Person in CC&B. Alert raised for data steward review."
                 }
             ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

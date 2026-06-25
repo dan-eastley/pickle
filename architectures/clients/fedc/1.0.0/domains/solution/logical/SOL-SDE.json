@@ -31,35 +31,90 @@
                 }
             ],
             "capabilities": [
-                { "artefact-id": "CAP-006", "note": "Retail & Billing — operational billing KPIs surfaced through the portal." },
-                { "artefact-id": "CAP-001", "note": "Customer Management — operational dashboards for contact centre and field teams." },
-                { "artefact-id": "CAP-007", "note": "Regulatory & Compliance — Ofgem settlement and RIIO-ED2 reporting datasets." }
+                {
+                    "artefact-id": "CAP-006",
+                    "note": "Retail & Billing — operational billing KPIs surfaced through the portal."
+                },
+                {
+                    "artefact-id": "CAP-001",
+                    "note": "Customer Management — operational dashboards for contact centre and field teams."
+                },
+                {
+                    "artefact-id": "CAP-007",
+                    "note": "Regulatory & Compliance — Ofgem settlement and RIIO-ED2 reporting datasets."
+                }
             ],
             "functional-requirements": [
-                { "id": "FR-001", "requirement": "Provide self-service workbooks, subject areas, dashboards, and natural-language querying for operational and commercial business users.", "priority": "must" },
-                { "id": "FR-002", "requirement": "Surface CC&B operational data in the gold layer for reporting without exposing raw PII to analytics users.", "priority": "must" },
-                { "id": "FR-003", "requirement": "Supplement event-driven ingestion with scheduled batch ingestion for MDM and ERP source systems.", "priority": "should" }
+                {
+                    "id": "FR-001",
+                    "requirement": "Provide self-service workbooks, subject areas, dashboards, and natural-language querying for operational and commercial business users.",
+                    "priority": "must"
+                },
+                {
+                    "id": "FR-002",
+                    "requirement": "Surface CC&B operational data in the gold layer for reporting without exposing raw PII to analytics users.",
+                    "priority": "must"
+                },
+                {
+                    "id": "FR-003",
+                    "requirement": "Supplement event-driven ingestion with scheduled batch ingestion for MDM and ERP source systems.",
+                    "priority": "should"
+                }
             ],
             "features": [
-                { "id": "FEAT-001", "name": "Operational Dashboard", "description": "Near-real-time operational KPI dashboard (DSO, payment failure rate, unread meter percentage) for contact centre and field operations." },
-                { "id": "FEAT-002", "name": "Governed Self-Service BI", "description": "Semantic model of governed metrics, KPIs, and dimensions with role-aware access via Unity Catalog." },
-                { "id": "FEAT-003", "name": "Near-Real-Time Ingestion", "description": "Change-data-capture pipeline delivering CC&B changes to the lakehouse within minutes." }
+                {
+                    "id": "FEAT-001",
+                    "name": "Operational Dashboard",
+                    "description": "Near-real-time operational KPI dashboard (DSO, payment failure rate, unread meter percentage) for contact centre and field operations."
+                },
+                {
+                    "id": "FEAT-002",
+                    "name": "Governed Self-Service BI",
+                    "description": "Semantic model of governed metrics, KPIs, and dimensions with role-aware access via Unity Catalog."
+                },
+                {
+                    "id": "FEAT-003",
+                    "name": "Near-Real-Time Ingestion",
+                    "description": "Change-data-capture pipeline delivering CC&B changes to the lakehouse within minutes."
+                }
             ],
             "nfr-business-continuity": [
-                { "id": "NFR-BC-001", "requirement": "The end-to-end pipeline (PLAT-CIS → PLAT-EVENT-BROKER → PLAT-DATA-LAKEHOUSE) must achieve 99.5% availability during business hours (07:00–22:00 UK time).", "rationale": "Operational dashboards are used by contact centre and field operations teams throughout the business day." }
+                {
+                    "id": "NFR-BC-001",
+                    "requirement": "The end-to-end pipeline (PLAT-CIS → PLAT-EVENT-BROKER → PLAT-DATA-LAKEHOUSE) must achieve 99.5% availability during business hours (07:00–22:00 UK time).",
+                    "rationale": "Operational dashboards are used by contact centre and field operations teams throughout the business day."
+                }
             ],
             "nfr-data-classification": [
-                { "id": "NFR-DC-001", "requirement": "PII fields (customer name, address, contact details) must be masked at the Confluent transformation layer and must not be present in Databricks bronze or silver tables. Gold-layer tables may surface pseudonymised identifiers only.", "rationale": "UK GDPR data minimisation principle. Databricks analytics users should not have access to raw PII." }
+                {
+                    "id": "NFR-DC-001",
+                    "requirement": "PII fields (customer name, address, contact details) must be masked at the Confluent transformation layer and must not be present in Databricks bronze or silver tables. Gold-layer tables may surface pseudonymised identifiers only.",
+                    "rationale": "UK GDPR data minimisation principle. Databricks analytics users should not have access to raw PII."
+                }
             ],
             "nfr-performance": [
-                { "id": "NFR-PF-001", "requirement": "CC&B operational data must be available in the gold layer of the Databricks Lakehouse within 15 minutes of the originating transaction being committed in Oracle CC&B.", "rationale": "Reduce operational information lag from 24 hours to under 15 minutes for critical operational KPIs." },
-                { "id": "NFR-PF-002", "requirement": "The Confluent cluster and Databricks Auto Loader must handle 3x current peak event volume (150,000 events/hour) without degradation.", "rationale": "Smart meter estate is projected to grow from 800,000 to 2.5 million endpoints by 2028, significantly increasing CC&B event volumes." }
+                {
+                    "id": "NFR-PF-001",
+                    "requirement": "CC&B operational data must be available in the gold layer of the Databricks Lakehouse within 15 minutes of the originating transaction being committed in Oracle CC&B.",
+                    "rationale": "Reduce operational information lag from 24 hours to under 15 minutes for critical operational KPIs."
+                },
+                {
+                    "id": "NFR-PF-002",
+                    "requirement": "The Confluent cluster and Databricks Auto Loader must handle 3x current peak event volume (150,000 events/hour) without degradation.",
+                    "rationale": "Smart meter estate is projected to grow from 800,000 to 2.5 million endpoints by 2028, significantly increasing CC&B event volumes."
+                }
             ],
             "arch-business": {
                 "description": "The portal serves operational, commercial, and regulatory reporting consumers. Operational users (contact centre, field operations) consume near-real-time KPIs; commercial users consume financial and trading datasets; regulatory users consume Ofgem settlement and RIIO-ED2 datasets.",
                 "references": [
-                    { "artefact-id": "CAP-006", "note": "Retail & Billing" },
-                    { "artefact-id": "CAP-007", "note": "Regulatory & Compliance" }
+                    {
+                        "artefact-id": "CAP-006",
+                        "note": "Retail & Billing"
+                    },
+                    {
+                        "artefact-id": "CAP-007",
+                        "note": "Regulatory & Compliance"
+                    }
                 ]
             },
             "arch-data": {
@@ -68,24 +123,57 @@
             "arch-integration": {
                 "description": "Oracle CC&B changes are captured by a Debezium Oracle CDC connector (LogMiner) and published to Confluent Kafka. A Kafka Streams processor applies PII masking before Databricks Auto Loader consumes events and lands them in the bronze layer. Scheduled connectors orchestrate batch ingestion for MDM and ERP.",
                 "references": [
-                    { "artefact-id": "INT-IFC-001", "note": "PLAT-CIS → iPaaS — Avro CDC, events within 60s of DB commit, up to 50,000 events/hour at peak." },
-                    { "artefact-id": "INT-IFC-002", "note": "iPaaS → PLAT-DATA-LAKEHOUSE — Databricks Auto Loader, micro-batches every 10 minutes." },
-                    { "artefact-id": "INT-IFC-003", "note": "PLAT-DATA-LAKEHOUSE → PLAT-BI — SQL over JDBC via OAC Data Gateway, OAuth2 service principal." }
+                    {
+                        "artefact-id": "INT-IFC-001",
+                        "note": "PLAT-CIS → iPaaS — Avro CDC, events within 60s of DB commit, up to 50,000 events/hour at peak."
+                    },
+                    {
+                        "artefact-id": "INT-IFC-002",
+                        "note": "iPaaS → PLAT-DATA-LAKEHOUSE — Databricks Auto Loader, micro-batches every 10 minutes."
+                    },
+                    {
+                        "artefact-id": "INT-IFC-003",
+                        "note": "PLAT-DATA-LAKEHOUSE → PLAT-BI — SQL over JDBC via OAC Data Gateway, OAuth2 service principal."
+                    }
                 ]
             },
             "arch-application": {
                 "description": "Three primary platforms realise the solution, with Oracle CC&B as a read-only operational source.",
                 "references": [
-                    { "artefact-id": "PLAT-BI", "note": "Oracle Analytics Cloud 23.x — self-service BI surface. OAC Data Gateway deployed in the fedc AWS VPC to bridge OAC SaaS to the private Databricks SQL endpoint. Hosts the fedc Semantic Model." },
-                    { "artefact-id": "PLAT-DATA-LAKEHOUSE", "note": "Databricks on AWS — bronze/silver/gold Delta tables governed by Unity Catalog. Gold-layer tables exposed to OAC via the SQL serverless endpoint." },
-                    { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent Cloud on AWS — Kafka event orchestration. Schema Registry enforces Avro compatibility. Retention: 7 days operational, 90 days regulatory." },
-                    { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B 2.9 — primary operational data source via Debezium LogMiner CDC. Read-only; no write-back." }
+                    {
+                        "artefact-id": "PLAT-BI",
+                        "note": "Oracle Analytics Cloud 23.x — self-service BI surface. OAC Data Gateway deployed in the fedc AWS VPC to bridge OAC SaaS to the private Databricks SQL endpoint. Hosts the fedc Semantic Model."
+                    },
+                    {
+                        "artefact-id": "PLAT-DATA-LAKEHOUSE",
+                        "note": "Databricks on AWS — bronze/silver/gold Delta tables governed by Unity Catalog. Gold-layer tables exposed to OAC via the SQL serverless endpoint."
+                    },
+                    {
+                        "artefact-id": "PLAT-EVENT-BROKER",
+                        "note": "Confluent Cloud on AWS — Kafka event orchestration. Schema Registry enforces Avro compatibility. Retention: 7 days operational, 90 days regulatory."
+                    },
+                    {
+                        "artefact-id": "PLAT-CIS",
+                        "note": "Oracle CC&B 2.9 — primary operational data source via Debezium LogMiner CDC. Read-only; no write-back."
+                    }
                 ]
             },
             "principles-adherence": [
-                { "principle-id": "INT-PRN-001", "adherence": "adheres", "statement": "Ingestion is event-driven by default via CC&B change-data-capture, keeping the non-critical analytics path asynchronous." },
-                { "principle-id": "INT-PRN-006", "adherence": "adheres", "statement": "The CC&B internal model is transformed and masked at the integration layer before landing in the lakehouse; the source model does not leak into the analytics estate." },
-                { "principle-id": "SOL-PRN-004", "adherence": "adheres", "statement": "Uses the reference medallion (bronze/silver/gold) lakehouse pattern rather than a bespoke pipeline design." }
+                {
+                    "principle-id": "INT-PRN-001",
+                    "adherence": "adheres",
+                    "statement": "Ingestion is event-driven by default via CC&B change-data-capture, keeping the non-critical analytics path asynchronous."
+                },
+                {
+                    "principle-id": "INT-PRN-006",
+                    "adherence": "adheres",
+                    "statement": "The CC&B internal model is transformed and masked at the integration layer before landing in the lakehouse; the source model does not leak into the analytics estate."
+                },
+                {
+                    "principle-id": "SOL-PRN-004",
+                    "adherence": "adheres",
+                    "statement": "Uses the reference medallion (bronze/silver/gold) lakehouse pattern rather than a bespoke pipeline design."
+                }
             ],
             "flows-information": [
                 {
@@ -154,33 +242,80 @@
                 }
             ],
             "capabilities": [
-                { "artefact-id": "CAP-001", "note": "Customer Management — unified agent desktop with embedded billing context." },
-                { "artefact-id": "CAP-006", "note": "Retail & Billing — billing account data surfaced to agents and used in notifications." },
-                { "artefact-id": "CAP-007", "note": "Regulatory & Compliance — Ofgem Consumer Duty proactive communications." }
+                {
+                    "artefact-id": "CAP-001",
+                    "note": "Customer Management — unified agent desktop with embedded billing context."
+                },
+                {
+                    "artefact-id": "CAP-006",
+                    "note": "Retail & Billing — billing account data surfaced to agents and used in notifications."
+                },
+                {
+                    "artefact-id": "CAP-007",
+                    "note": "Regulatory & Compliance — Ofgem Consumer Duty proactive communications."
+                }
             ],
             "functional-requirements": [
-                { "id": "FR-001", "requirement": "Display a real-time billing summary (balance, last payment date, last meter read, service agreement status) inline within the Salesforce agent's customer record.", "priority": "must" },
-                { "id": "FR-002", "requirement": "Trigger proactive outbound customer communications (email/SMS) in response to CC&B payment failure events, respecting customer communication preferences.", "priority": "must" },
-                { "id": "FR-003", "requirement": "Maintain a cross-reference between Salesforce Account/Contact IDs and CC&B Account Numbers to mediate lookups and event routing.", "priority": "must" }
+                {
+                    "id": "FR-001",
+                    "requirement": "Display a real-time billing summary (balance, last payment date, last meter read, service agreement status) inline within the Salesforce agent's customer record.",
+                    "priority": "must"
+                },
+                {
+                    "id": "FR-002",
+                    "requirement": "Trigger proactive outbound customer communications (email/SMS) in response to CC&B payment failure events, respecting customer communication preferences.",
+                    "priority": "must"
+                },
+                {
+                    "id": "FR-003",
+                    "requirement": "Maintain a cross-reference between Salesforce Account/Contact IDs and CC&B Account Numbers to mediate lookups and event routing.",
+                    "priority": "must"
+                }
             ],
             "features": [
-                { "id": "FEAT-001", "name": "Embedded Billing Panel", "description": "Salesforce Lightning Web Component showing real-time CC&B billing summary within the agent's customer record." },
-                { "id": "FEAT-002", "name": "Proactive Payment-Failure Notifications", "description": "Event-driven outbound email/SMS to customers within 4 hours of a CC&B payment failure, via Salesforce Marketing Cloud." }
+                {
+                    "id": "FEAT-001",
+                    "name": "Embedded Billing Panel",
+                    "description": "Salesforce Lightning Web Component showing real-time CC&B billing summary within the agent's customer record."
+                },
+                {
+                    "id": "FEAT-002",
+                    "name": "Proactive Payment-Failure Notifications",
+                    "description": "Event-driven outbound email/SMS to customers within 4 hours of a CC&B payment failure, via Salesforce Marketing Cloud."
+                }
             ],
             "nfr-support-slas": [
-                { "id": "NFR-SLA-001", "requirement": "CC&B payment failure events must trigger Salesforce Marketing Cloud notification dispatches within 4 hours of the originating payment failure event.", "rationale": "Ofgem Consumer Duty requirement for proactive customer communication." }
+                {
+                    "id": "NFR-SLA-001",
+                    "requirement": "CC&B payment failure events must trigger Salesforce Marketing Cloud notification dispatches within 4 hours of the originating payment failure event.",
+                    "rationale": "Ofgem Consumer Duty requirement for proactive customer communication."
+                }
             ],
             "nfr-business-continuity": [
-                { "id": "NFR-BC-001", "requirement": "The Kafka consumer (OIC) must process payment failure events with at-least-once delivery semantics. Duplicate suppression must be applied using the CC&B event ID as an idempotency key.", "rationale": "A missed payment failure notification constitutes a Consumer Duty breach. Duplicates are preferable to missed notifications but must be suppressed to avoid customer confusion." }
+                {
+                    "id": "NFR-BC-001",
+                    "requirement": "The Kafka consumer (OIC) must process payment failure events with at-least-once delivery semantics. Duplicate suppression must be applied using the CC&B event ID as an idempotency key.",
+                    "rationale": "A missed payment failure notification constitutes a Consumer Duty breach. Duplicates are preferable to missed notifications but must be suppressed to avoid customer confusion."
+                }
             ],
             "nfr-performance": [
-                { "id": "NFR-PF-001", "requirement": "The agent billing context lookup must complete within 3 seconds end-to-end (Salesforce callout to OIC to CC&B and back) under normal load.", "rationale": "Contact centre UX requirement: agents cannot wait more than 3 seconds for the billing panel to render before the call experience degrades." }
+                {
+                    "id": "NFR-PF-001",
+                    "requirement": "The agent billing context lookup must complete within 3 seconds end-to-end (Salesforce callout to OIC to CC&B and back) under normal load.",
+                    "rationale": "Contact centre UX requirement: agents cannot wait more than 3 seconds for the billing panel to render before the call experience degrades."
+                }
             ],
             "arch-business": {
                 "description": "Contact centre agents are the primary users of the embedded billing panel. Proactive notifications support Ofgem Consumer Duty obligations by reaching customers quickly after payment failures.",
                 "references": [
-                    { "artefact-id": "CAP-001", "note": "Customer Management" },
-                    { "artefact-id": "CAP-006", "note": "Retail & Billing" }
+                    {
+                        "artefact-id": "CAP-001",
+                        "note": "Customer Management"
+                    },
+                    {
+                        "artefact-id": "CAP-006",
+                        "note": "Retail & Billing"
+                    }
                 ]
             },
             "arch-data": {
@@ -189,23 +324,53 @@
             "arch-integration": {
                 "description": "Two OIC integration flows: a synchronous REST-to-REST account lookup, and an asynchronous Kafka-to-REST flow consuming CC&B billing events and triggering Salesforce Marketing Cloud journeys. OIC mediates all calls and applies idempotency on event consumption.",
                 "references": [
-                    { "artefact-id": "INT-IFC-004", "note": "PLAT-CRM → iPaaS — synchronous JSON/REST, 10s timeout, OAuth2 client credentials." },
-                    { "artefact-id": "INT-IFC-005", "note": "iPaaS → PLAT-CIS — synchronous JSON/REST to CC&B Service Layer, 500 requests/minute rate limit." },
-                    { "artefact-id": "INT-IFC-006", "note": "iPaaS → PLAT-CRM — async JSON/REST to Salesforce Marketing Cloud Transactional Messaging API." }
+                    {
+                        "artefact-id": "INT-IFC-004",
+                        "note": "PLAT-CRM → iPaaS — synchronous JSON/REST, 10s timeout, OAuth2 client credentials."
+                    },
+                    {
+                        "artefact-id": "INT-IFC-005",
+                        "note": "iPaaS → PLAT-CIS — synchronous JSON/REST to CC&B Service Layer, 500 requests/minute rate limit."
+                    },
+                    {
+                        "artefact-id": "INT-IFC-006",
+                        "note": "iPaaS → PLAT-CRM — async JSON/REST to Salesforce Marketing Cloud Transactional Messaging API."
+                    }
                 ]
             },
             "arch-application": {
                 "description": "Salesforce CRM is the customer engagement system of record; Oracle CC&B is the billing system of record; Oracle Integration Cloud mediates between them.",
                 "references": [
-                    { "artefact-id": "PLAT-CRM", "note": "Salesforce Sales + Service + Marketing Cloud. Lightning Web Component for the embedded billing summary; Marketing Cloud triggers outbound communications." },
-                    { "artefact-id": "PLAT-CIS", "note": "Oracle CC&B — system of record for billing accounts. Exposes account data via the CC&B Service Layer REST API; publishes billing events via Debezium CDC." },
-                    { "artefact-id": "PLAT-EVENT-BROKER", "note": "Confluent Kafka — carries CC&B billing events (ccb.billing.events) consumed by OIC." }
+                    {
+                        "artefact-id": "PLAT-CRM",
+                        "note": "Salesforce Sales + Service + Marketing Cloud. Lightning Web Component for the embedded billing summary; Marketing Cloud triggers outbound communications."
+                    },
+                    {
+                        "artefact-id": "PLAT-CIS",
+                        "note": "Oracle CC&B — system of record for billing accounts. Exposes account data via the CC&B Service Layer REST API; publishes billing events via Debezium CDC."
+                    },
+                    {
+                        "artefact-id": "PLAT-EVENT-BROKER",
+                        "note": "Confluent Kafka — carries CC&B billing events (ccb.billing.events) consumed by OIC."
+                    }
                 ]
             },
             "principles-adherence": [
-                { "principle-id": "INT-PRN-005", "adherence": "adheres", "statement": "Payment failure event consumption uses the CC&B event ID as an idempotency key, honouring the consumer's idempotency contract under at-least-once delivery." },
-                { "principle-id": "INT-PRN-004", "adherence": "adheres", "statement": "All cross-system calls are mediated through Oracle Integration Cloud rather than point-to-point bespoke middleware." },
-                { "principle-id": "SOL-PRN-006", "adherence": "partial", "statement": "A 4-hour notification SLA is defined; per-service SLOs and error budgets for the integration flows are still to be formalised." }
+                {
+                    "principle-id": "INT-PRN-005",
+                    "adherence": "adheres",
+                    "statement": "Payment failure event consumption uses the CC&B event ID as an idempotency key, honouring the consumer's idempotency contract under at-least-once delivery."
+                },
+                {
+                    "principle-id": "INT-PRN-004",
+                    "adherence": "adheres",
+                    "statement": "All cross-system calls are mediated through Oracle Integration Cloud rather than point-to-point bespoke middleware."
+                },
+                {
+                    "principle-id": "SOL-PRN-006",
+                    "adherence": "partial",
+                    "statement": "A 4-hour notification SLA is defined; per-service SLOs and error budgets for the integration flows are still to be formalised."
+                }
             ],
             "flows-user": [
                 {
@@ -246,6 +411,20 @@
                     ]
                 }
             ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

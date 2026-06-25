@@ -27,7 +27,7 @@
         },
         {
             "id": "INT-STR-004",
-            "statement": "Zero direct cross-zone traffic \u2014 all inter-zone integration flows through the managed gateway and broker",
+            "statement": "Zero direct cross-zone traffic — all inter-zone integration flows through the managed gateway and broker",
             "driver": "Direct connections undermine centralised security, observability, and rate management",
             "target-outcome": "No production direct cross-zone connections by 2026; gateway/broker mediates everything",
             "horizon": "medium-term",
@@ -40,6 +40,20 @@
             "target-outcome": "A documented catalogue of reusable integration capabilities; new initiatives consume before they commission",
             "horizon": "medium-term",
             "owner": "Head of Integration"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

@@ -17,11 +17,12 @@ function formatTimestamp(ts) {
   }
 }
 
+// Canonical activity actions (enforced by the activity-entry schema enum).
 const ACTION_STYLES = {
   Created: 'bg-emerald-50 text-emerald-700',
   Updated: 'bg-blue-50 text-blue-700',
-  Reviewed: 'bg-amber-50 text-amber-700',
   Archived: 'bg-gray-100 text-gray-500',
+  Deleted: 'bg-error-50 text-error-700',
 }
 
 export default function ActivityHistory({ activity, title = 'Activity' }) {

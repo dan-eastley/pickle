@@ -5,7 +5,9 @@
             "id": "APP-CAT-001",
             "vendor": "Salesforce",
             "product": "Sales Cloud",
-            "aliases": ["SFDC"],
+            "aliases": [
+                "SFDC"
+            ],
             "description": "Customer relationship management platform for sales, service, and case management.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -14,7 +16,9 @@
             "id": "APP-CAT-002",
             "vendor": "Oracle",
             "product": "Oracle Utilities Customer Self Service",
-            "aliases": ["Oracle Utilities Customer Cloud Service"],
+            "aliases": [
+                "Oracle Utilities Customer Cloud Service"
+            ],
             "description": "Self-service customer portal for account management, billing, and service requests.",
             "status": "live",
             "lifecycle-stage": "invest"
@@ -50,7 +54,9 @@
             "id": "APP-CAT-006",
             "vendor": "IBM",
             "product": "Maximo Application Suite",
-            "aliases": ["IBM Maximo"],
+            "aliases": [
+                "IBM Maximo"
+            ],
             "description": "Enterprise asset management suite covering asset register, work orders, and asset lifecycle.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -59,7 +65,10 @@
             "id": "APP-CAT-007",
             "vendor": "Oracle",
             "product": "Oracle Field Service",
-            "aliases": ["Oracle Field Service Cloud", "OFSC"],
+            "aliases": [
+                "Oracle Field Service Cloud",
+                "OFSC"
+            ],
             "description": "Field service scheduling, dispatch, and mobile execution for field crews.",
             "status": "live",
             "lifecycle-stage": "invest"
@@ -77,7 +86,9 @@
             "id": "APP-CAT-009",
             "vendor": "ION Group",
             "product": "Endur",
-            "aliases": ["ION Endur"],
+            "aliases": [
+                "ION Endur"
+            ],
             "description": "Energy trading and risk management platform — deal capture, position, P&L, and settlement.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -86,7 +97,9 @@
             "id": "APP-CAT-010",
             "vendor": "LSEG",
             "product": "Workspace",
-            "aliases": ["Refinitiv Eikon"],
+            "aliases": [
+                "Refinitiv Eikon"
+            ],
             "description": "Wholesale price feeds, forward curves, and reference data for trading.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -122,7 +135,9 @@
             "id": "APP-CAT-014",
             "vendor": "Oracle",
             "product": "Oracle Utilities Network Management System",
-            "aliases": ["Oracle NMS"],
+            "aliases": [
+                "Oracle NMS"
+            ],
             "description": "Outage prediction, dispatch, and customer communication for network outage management.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -131,7 +146,9 @@
             "id": "APP-CAT-015",
             "vendor": "Esri",
             "product": "ArcGIS Utility Network",
-            "aliases": ["ArcGIS"],
+            "aliases": [
+                "ArcGIS"
+            ],
             "description": "Spatial register of network assets, topology, and connectivity.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -140,7 +157,10 @@
             "id": "APP-CAT-016",
             "vendor": "Oracle",
             "product": "Oracle Utilities Customer Care & Billing",
-            "aliases": ["Oracle CC&B", "CC&B"],
+            "aliases": [
+                "Oracle CC&B",
+                "CC&B"
+            ],
             "description": "Customer information system providing account management, meter-to-cash, and billing.",
             "status": "live",
             "lifecycle-stage": "tolerate"
@@ -149,7 +169,10 @@
             "id": "APP-CAT-017",
             "vendor": "Oracle",
             "product": "Oracle Utilities Revenue Management and Billing",
-            "aliases": ["Oracle ORMB", "ORMB"],
+            "aliases": [
+                "Oracle ORMB",
+                "ORMB"
+            ],
             "description": "Pricing and billing engine for complex tariff calculation and revenue management.",
             "status": "live",
             "lifecycle-stage": "invest"
@@ -158,7 +181,9 @@
             "id": "APP-CAT-018",
             "vendor": "Oracle",
             "product": "Oracle Utilities Meter Data Management",
-            "aliases": ["Oracle MDM"],
+            "aliases": [
+                "Oracle MDM"
+            ],
             "description": "Validates, estimates, and stores meter reading data for billing and analytics.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -167,7 +192,9 @@
             "id": "APP-CAT-019",
             "vendor": "Itron",
             "product": "Itron Enterprise Edition",
-            "aliases": ["IEE"],
+            "aliases": [
+                "IEE"
+            ],
             "description": "Head-end system for smart meter communication and meter reading collection.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -185,7 +212,9 @@
             "id": "APP-CAT-021",
             "vendor": "Persefoni",
             "product": "Persefoni Climate Management & Accounting Platform",
-            "aliases": ["Persefoni CMAP"],
+            "aliases": [
+                "Persefoni CMAP"
+            ],
             "description": "Carbon accounting platform for measuring and managing greenhouse-gas emissions.",
             "status": "in-development",
             "lifecycle-stage": "invest"
@@ -212,7 +241,10 @@
             "id": "APP-CAT-024",
             "vendor": "Oracle",
             "product": "Oracle Enterprise Data Management Cloud",
-            "aliases": ["Oracle EDM Cloud", "Oracle EDMCS"],
+            "aliases": [
+                "Oracle EDM Cloud",
+                "Oracle EDMCS"
+            ],
             "description": "Master and reference data management for enterprise hierarchies and golden records.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -221,7 +253,9 @@
             "id": "APP-CAT-025",
             "vendor": "Oracle",
             "product": "Oracle Analytics Cloud",
-            "aliases": ["OAC"],
+            "aliases": [
+                "OAC"
+            ],
             "description": "Enterprise business intelligence and reporting platform.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -239,7 +273,9 @@
             "id": "APP-CAT-027",
             "vendor": "Oracle",
             "product": "Oracle Fusion Cloud ERP",
-            "aliases": ["Oracle Fusion ERP"],
+            "aliases": [
+                "Oracle Fusion ERP"
+            ],
             "description": "Enterprise resource planning covering finance, procurement, and supply chain.",
             "status": "live",
             "lifecycle-stage": "invest"
@@ -248,7 +284,9 @@
             "id": "APP-CAT-028",
             "vendor": "Oracle",
             "product": "Oracle Fusion Cloud HCM",
-            "aliases": ["Oracle Fusion HCM"],
+            "aliases": [
+                "Oracle Fusion HCM"
+            ],
             "description": "Human capital management covering core HR, payroll, and talent.",
             "status": "live",
             "lifecycle-stage": "invest"
@@ -266,7 +304,10 @@
             "id": "APP-CAT-030",
             "vendor": "Microsoft",
             "product": "Microsoft 365",
-            "aliases": ["M365", "Office 365"],
+            "aliases": [
+                "M365",
+                "Office 365"
+            ],
             "description": "Productivity and collaboration suite — email, documents, and messaging.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -293,7 +334,9 @@
             "id": "APP-CAT-033",
             "vendor": "Oracle",
             "product": "Oracle Integration Cloud",
-            "aliases": ["OIC"],
+            "aliases": [
+                "OIC"
+            ],
             "description": "Integration platform-as-a-service for connecting applications and orchestrating processes.",
             "status": "live",
             "lifecycle-stage": "maintain"
@@ -302,7 +345,10 @@
             "id": "APP-CAT-034",
             "vendor": "SAP",
             "product": "SAP ERP Central Component",
-            "aliases": ["SAP ECC 6.0", "Legacy Finance System"],
+            "aliases": [
+                "SAP ECC 6.0",
+                "Legacy Finance System"
+            ],
             "description": "Legacy on-premise ERP previously used for finance and procurement, superseded by Oracle Fusion Cloud ERP and retained read-only for historical reporting during transition.",
             "status": "retired",
             "lifecycle-stage": "eliminate"
@@ -311,10 +357,26 @@
             "id": "APP-CAT-035",
             "vendor": "Oracle",
             "product": "Oracle Utilities Distributed Energy Resource Management System",
-            "aliases": ["Oracle Utilities DERMS"],
+            "aliases": [
+                "Oracle Utilities DERMS"
+            ],
             "description": "Planned platform for forecasting, monitoring, and dispatching distributed energy resources such as rooftop solar, batteries, and EVs.",
             "status": "planned",
             "lifecycle-stage": "invest"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

@@ -4,7 +4,7 @@
         {
             "id": "APP-DOM-CUSTOMER",
             "name": "Customer Engagement",
-            "description": "Applications customers interact with \u2014 digital channels, CRM and self-service.",
+            "description": "Applications customers interact with — digital channels, CRM and self-service.",
             "owner": "Chief Customer Officer"
         },
         {
@@ -72,7 +72,7 @@
         {
             "id": "PLAT-CRM",
             "name": "CRM",
-            "description": "Customer relationship management \u2014 sales, service, and case management.",
+            "description": "Customer relationship management — sales, service, and case management.",
             "domain-id": "APP-DOM-CUSTOMER",
             "type": "system-of-engagement",
             "lifecycle": "adopt"
@@ -136,7 +136,7 @@
         {
             "id": "PLAT-ETRM",
             "name": "ETRM",
-            "description": "Energy trading and risk management \u2014 deal capture, position, P&L, settlement.",
+            "description": "Energy trading and risk management — deal capture, position, P&L, settlement.",
             "domain-id": "APP-DOM-TRADING",
             "type": "system-of-record",
             "lifecycle": "adopt"
@@ -312,7 +312,7 @@
         {
             "id": "PLAT-API-GATEWAY",
             "name": "API Gateway",
-            "description": "Managed gateway for all inter-system API traffic \u2014 auth, rate, audit.",
+            "description": "Managed gateway for all inter-system API traffic — auth, rate, audit.",
             "domain-id": "APP-DOM-INTEGRATION",
             "type": "system-of-record",
             "lifecycle": "adopt"
@@ -332,6 +332,20 @@
             "domain-id": "APP-DOM-INTEGRATION",
             "type": "system-of-record",
             "lifecycle": "adopt"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }
