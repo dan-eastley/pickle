@@ -8,7 +8,8 @@ import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
 import Button from '../components/ui/Button'
 import ActionBar from '../components/ui/ActionBar'
-import { RobotIcon } from '../components/ui/icons'
+import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
+import { RobotIcon, EditIcon } from '../components/ui/icons'
 import { formatDate } from '../lib/format'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -30,7 +31,10 @@ export default function DiscoveryDetailPage() {
   const [discovery, setDiscovery] = useState(undefined)
   const [archiving, setArchiving] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const [edit, setEdit] = useState(null) // { title, context, request } while editing
+  const [saving, setSaving] = useState(false)
   const clientName = clientsMetadata[clientId]?.name ?? clientId
+  const canEdit = discovery?.status === 'active'
 
   usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
 
@@ -76,6 +80,42 @@ export default function DiscoveryDetailPage() {
     }
   }
 
+  function startEdit() {
+    setEdit({
+      title: discovery.title ?? '',
+      context: discovery.context ?? '',
+      request: discovery.request ?? '',
+    })
+  }
+
+  // Save inline edits. update-discovery persists the fields and, because the
+  // question changed, re-dispatches the to-active workflow to regenerate the
+  // point-in-time view — so we show the regenerating banner.
+  async function saveEdit() {
+    const updates = edit
+    setSaving(true)
+    setDiscovery((prev) => (prev ? { ...prev, ...updates } : prev)) // optimistic
+    try {
+      await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update-discovery',
+          clientId,
+          versionId,
+          discoveryId,
+          updates,
+        }),
+      })
+      setEdit(null)
+      setRefreshing(true)
+    } catch {
+      /* optimistic; leave edit mode open on failure */
+    } finally {
+      setSaving(false)
+    }
+  }
+
   if (discovery === undefined) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -96,23 +136,46 @@ export default function DiscoveryDetailPage() {
 
   return (
     <div>
-      <ActionBar
-        className="mb-5"
-        tertiary={
-          <Button variant="tertiary" onClick={refresh} disabled={refreshing}>
-            {refreshing ? 'Refreshing…' : 'Refresh'}
-          </Button>
-        }
-        secondary={
-          <Button
-            variant="secondary"
-            onClick={() => setStatus(discovery.status === 'archived' ? 'active' : 'archived')}
-            disabled={archiving}
-          >
-            {archiving ? '…' : discovery.status === 'archived' ? 'Reactivate' : 'Archive'}
-          </Button>
-        }
-      />
+      {edit ? (
+        <ActionBar
+          className="mb-5"
+          tertiary={
+            <Button variant="tertiary" onClick={() => setEdit(null)} disabled={saving}>
+              Cancel
+            </Button>
+          }
+          primary={
+            <Button variant="primary" onClick={saveEdit} disabled={saving || !edit.title.trim()}>
+              {saving ? 'Saving…' : 'Save & regenerate'}
+            </Button>
+          }
+        />
+      ) : (
+        <ActionBar
+          className="mb-5"
+          tertiary={
+            canEdit ? (
+              <Button variant="tertiary" onClick={startEdit}>
+                <EditIcon className="w-3.5 h-3.5" /> Edit
+              </Button>
+            ) : undefined
+          }
+          secondary={
+            <Button variant="secondary" onClick={refresh} disabled={refreshing}>
+              {refreshing ? 'Refreshing…' : 'Refresh'}
+            </Button>
+          }
+          primary={
+            <Button
+              variant="secondary"
+              onClick={() => setStatus(discovery.status === 'archived' ? 'active' : 'archived')}
+              disabled={archiving}
+            >
+              {archiving ? '…' : discovery.status === 'archived' ? 'Reactivate' : 'Archive'}
+            </Button>
+          }
+        />
+      )}
 
       {refreshing && (
         <div className="mb-5 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-rose-50 border border-blue-200 text-sm text-gray-700">
@@ -131,7 +194,16 @@ export default function DiscoveryDetailPage() {
               <RobotIcon className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-semibold text-gray-900">{discovery.title}</h1>
+              {edit ? (
+                <input
+                  value={edit.title}
+                  onChange={(e) => setEdit((p) => ({ ...p, title: e.target.value }))}
+                  aria-label="Discovery title"
+                  className="w-full text-xl font-semibold text-gray-900 border-b border-gray-300 focus:border-brand-500 focus:outline-none pb-1"
+                />
+              ) : (
+                <h1 className="text-xl font-semibold text-gray-900">{discovery.title}</h1>
+              )}
               <p className="mt-1 text-sm text-gray-500">
                 {clientName} · v{versionId}
               </p>
@@ -179,11 +251,35 @@ export default function DiscoveryDetailPage() {
         </div>
 
         <Section title="Context">
-          <Markdown className="text-sm text-gray-700 leading-relaxed">{discovery.context}</Markdown>
+          {edit ? (
+            <AutoGrowTextarea
+              value={edit.context}
+              onChange={(e) => setEdit((p) => ({ ...p, context: e.target.value }))}
+              minRows={3}
+              aria-label="Context"
+              className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
+            />
+          ) : (
+            <Markdown className="text-sm text-gray-700 leading-relaxed">
+              {discovery.context}
+            </Markdown>
+          )}
         </Section>
 
         <Section title="Request">
-          <Markdown className="text-sm text-gray-700 leading-relaxed">{discovery.request}</Markdown>
+          {edit ? (
+            <AutoGrowTextarea
+              value={edit.request}
+              onChange={(e) => setEdit((p) => ({ ...p, request: e.target.value }))}
+              minRows={3}
+              aria-label="Request"
+              className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
+            />
+          ) : (
+            <Markdown className="text-sm text-gray-700 leading-relaxed">
+              {discovery.request}
+            </Markdown>
+          )}
         </Section>
 
         <Section title="Findings">

@@ -10,6 +10,21 @@ export function ChevronRight({ className = 'w-4 h-4' }) {
   )
 }
 
+// Pencil / edit affordance.
+export function EditIcon({ className = 'w-3.5 h-3.5' }) {
+  return (
+    <svg className={className} viewBox="0 0 14 14" fill="none">
+      <path
+        d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+      />
+    </svg>
+  )
+}
+
 // Disclosure chevron that rotates from ▶ to ▼ as a section opens. Shared by the
 // collapsible sections on the document and decision detail views.
 export function DisclosureChevron({ open, className = 'w-3.5 h-3.5' }) {
