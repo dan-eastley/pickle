@@ -17,7 +17,7 @@ export default function JsonPreview({ data, label = 'JSON', docUrl, prUrl }) {
           <a
             href={prUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700 text-gray-200 text-xs font-mono hover:bg-gray-600 transition-colors shadow-lg"
             title="Open the pull request on GitHub"
           >
@@ -45,7 +45,7 @@ export default function JsonPreview({ data, label = 'JSON', docUrl, prUrl }) {
           <a
             href={docUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-600 text-gray-200 text-xs font-mono hover:bg-gray-500 transition-colors shadow-lg"
             title="Open schema documentation"
           >

@@ -29,7 +29,7 @@ export default function Footer() {
         <a
           href={`https://${config.branchUrl}`}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="text-xs text-gray-400 font-mono hover:text-gray-600 transition-colors"
         >
           {config.branchUrl}
