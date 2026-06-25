@@ -659,6 +659,21 @@ async function refreshDiscovery({ clientId, versionId, discoveryId }, token, own
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
+// Path-segment identifiers from the request flow into repository paths
+// (architectures/clients/<clientId>/<versionId>/…). Reject anything that isn't a
+// plain id so a crafted value can't traverse out of the architectures tree.
+const SAFE_ID = /^[A-Za-z0-9._-]+$/
+function assertSafeIds(params) {
+  for (const k of ['clientId', 'versionId', 'decisionId', 'discoveryId']) {
+    const v = params[k]
+    if (v != null && !SAFE_ID.test(String(v))) {
+      const err = new Error(`Invalid ${k}`)
+      err.statusCode = 400
+      throw err
+    }
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
@@ -681,6 +696,7 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const { action, ...params } = req.query
+      assertSafeIds(params)
       if (action === 'next-id') return res.json(await getNextId(params, token, owner, repo))
       if (action === 'config')
         return res.json({
@@ -694,6 +710,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       const { action, ...params } = req.body ?? {}
+      assertSafeIds(params)
       if (action === 'create-decision')
         return res.json(await createDecision(params, token, owner, repo))
       if (action === 'edit-decision')
@@ -716,6 +733,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   } catch (err) {
     console.error('[/api/github]', err.message)
-    return res.status(500).json({ error: err.message })
+    return res.status(err.statusCode ?? 500).json({ error: err.message })
   }
 }
