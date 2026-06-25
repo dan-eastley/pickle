@@ -10,12 +10,12 @@ describe('ActivityHistory', () => {
 
   it('renders an entry per activity item with its action and author', () => {
     render(<ActivityHistory activity={[
-      { timestamp: '2026-01-15T09:30:00Z', action: 'Created', who: 'Joe Bloggs' },
+      { timestamp: '2026-01-15T09:30:00Z', action: 'Created', who: 'Joe B' },
       { timestamp: '2026-03-04T14:10:00Z', action: 'Updated', who: 'Jane Doe' },
     ]} />)
     expect(screen.getByText('Created')).toBeInTheDocument()
     expect(screen.getByText('Updated')).toBeInTheDocument()
-    expect(screen.getByText('Joe Bloggs')).toBeInTheDocument()
+    expect(screen.getByText('Joe B')).toBeInTheDocument()
     expect(screen.getByText('Jane Doe')).toBeInTheDocument()
   })
 
