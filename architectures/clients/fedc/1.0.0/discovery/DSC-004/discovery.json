@@ -1,0 +1,15 @@
+{
+    "$schema": "urn:pickle:schemas:discovery",
+    "discovery-id": "DSC-004",
+    "title": "What capabilities and platforms support customer offboarding",
+    "status": "active",
+    "context": "We currently handle offboarding in an immature way",
+    "request": "We need a clear list of platform can capabilities so we can identify areas of maturity improvement",
+    "activity": [
+        {
+            "timestamp": "2026-06-25T12:48:16.036Z",
+            "action": "Created",
+            "who": "Joe B"
+        }
+    ]
+}
