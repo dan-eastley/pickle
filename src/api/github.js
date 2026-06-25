@@ -45,6 +45,14 @@ function decisionBranch(clientId, versionId, decisionId) {
   return `decisions/${clientId}/${versionId}/${decisionId}`
 }
 
+// Discovery records live on main (no per-record branch), unlike decisions.
+function discoveryPath(clientId, versionId, discoveryId) {
+  return `architectures/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`
+}
+function discoveriesIndexPath(clientId, versionId) {
+  return `architectures/clients/${clientId}/${versionId}/discovery/discovery.json`
+}
+
 async function readFile(path, ref, token, owner, repo) {
   const f = await gh('GET', `/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(ref)}`, null, token)
   return { content: JSON.parse(b64decode(f.content)), sha: f.sha }
@@ -304,6 +312,75 @@ async function commitDecision({ clientId, versionId, decisionId, prNumber }, tok
   return { ok: true, decisionId, status: 'committed' }
 }
 
+// ── Discovery ───────────────────────────────────────────────────────────────
+// Discovery records live on main (no branch). create-discovery writes the
+// record + index and dispatches the Virtual Architect Agent workflow.
+
+async function readDiscoveriesIndex(clientId, versionId, token, owner, repo) {
+  try {
+    return await readFile(discoveriesIndexPath(clientId, versionId), BASE, token, owner, repo)
+  } catch {
+    return { content: { discoveries: [] }, sha: undefined }
+  }
+}
+
+async function syncDiscoveryIndex(clientId, versionId, discoveryId, { title, status, scope }, token, owner, repo) {
+  const iPath = discoveriesIndexPath(clientId, versionId)
+  const { content: index, sha } = await readDiscoveriesIndex(clientId, versionId, token, owner, repo)
+  const list = index.discoveries ?? (index.discoveries = [])
+  const i = list.findIndex(d => d['discovery-id'] === discoveryId)
+  const existing = i >= 0 ? list[i] : {}
+  const entry = {
+    'discovery-id': discoveryId,
+    title: title ?? existing.title ?? '',
+    status: status ?? existing.status ?? 'active',
+    ...((scope ?? existing.scope) ? { scope: scope ?? existing.scope } : {}),
+  }
+  if (i >= 0) list[i] = entry; else list.push(entry)
+  await writeFile(iPath, index, `Sync ${discoveryId} in discovery index (${entry.status})`, sha, BASE, token, owner, repo)
+}
+
+async function nextDiscoveryId(clientId, versionId, token, owner, repo) {
+  const { content } = await readDiscoveriesIndex(clientId, versionId, token, owner, repo)
+  const max = (content.discoveries ?? []).reduce((m, d) => {
+    const n = parseInt(String(d['discovery-id']).replace('DSC-', ''), 10)
+    return isNaN(n) ? m : Math.max(m, n)
+  }, 0)
+  return `DSC-${String(max + 1).padStart(3, '0')}`
+}
+
+async function createDiscovery({ clientId, versionId, discovery }, token, owner, repo) {
+  const discoveryId = await nextDiscoveryId(clientId, versionId, token, owner, repo)
+  const record = {
+    $schema: 'urn:pickle:schemas:discovery',
+    'discovery-id': discoveryId,
+    title: discovery.title,
+    status: 'active',
+    context: discovery.context,
+    request: discovery.request,
+    ...(discovery.scope ? { scope: discovery.scope } : {}),
+    activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe Bloggs' }],
+  }
+  // Write the record on main, then index, then dispatch the agent workflow.
+  await writeFile(discoveryPath(clientId, versionId, discoveryId), record, `Add ${discoveryId}: ${record.title}`, null, BASE, token, owner, repo)
+  await syncDiscoveryIndex(clientId, versionId, discoveryId, record, token, owner, repo)
+  await dispatch('discovery-to-active.yml', { 'client-id': clientId, 'version-id': versionId, 'discovery-id': discoveryId }, token, owner, repo)
+  return { ok: true, discoveryId }
+}
+
+async function updateDiscovery({ clientId, versionId, discoveryId, updates }, token, owner, repo) {
+  const dPath = discoveryPath(clientId, versionId, discoveryId)
+  const { content: current, sha } = await readFile(dPath, BASE, token, owner, repo)
+  const updated = { ...current, ...updates }
+  updated.activity = [
+    ...(current.activity ?? []),
+    { timestamp: new Date().toISOString(), action: updates.status === 'archived' ? 'Archived' : 'Updated', who: 'Joe Bloggs' },
+  ]
+  await writeFile(dPath, updated, `Update ${discoveryId}${updates.status ? `: status → ${updates.status}` : ''}`, sha, BASE, token, owner, repo)
+  await syncDiscoveryIndex(clientId, versionId, discoveryId, { title: updated.title, status: updated.status, scope: updated.scope }, token, owner, repo)
+  return { ok: true, discoveryId, status: updated.status }
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
@@ -342,6 +419,8 @@ export default async function handler(req, res) {
       if (action === 'update-decision') return res.json(await updateDecision(params, token, owner, repo))
       if (action === 'update-finding')  return res.json(await updateFinding(params, token, owner, repo))
       if (action === 'commit-decision') return res.json(await commitDecision(params, token, owner, repo))
+      if (action === 'create-discovery') return res.json(await createDiscovery(params, token, owner, repo))
+      if (action === 'update-discovery') return res.json(await updateDiscovery(params, token, owner, repo))
       return res.status(400).json({ error: `Unknown POST action: ${action}` })
     }
 
