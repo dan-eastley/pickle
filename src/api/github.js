@@ -594,7 +594,19 @@ async function updateDiscovery({ clientId, versionId, discoveryId, updates }, to
     owner,
     repo
   )
-  return { ok: true, discoveryId, status: updated.status }
+  // Editing the question (title/context/request) regenerates the point-in-time
+  // view: re-dispatch the Virtual Architect Agent against the revised request.
+  const contentEdited = ['title', 'context', 'request'].some((k) => k in updates)
+  if (contentEdited && updated.status === 'active') {
+    await dispatch(
+      'discovery-to-active.yml',
+      { 'client-id': clientId, 'version-id': versionId, 'discovery-id': discoveryId },
+      token,
+      owner,
+      repo
+    )
+  }
+  return { ok: true, discoveryId, status: updated.status, regenerating: contentEdited }
 }
 
 // ── Action: refresh-discovery ─────────────────────────────────────────────────
