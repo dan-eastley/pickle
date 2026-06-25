@@ -423,6 +423,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "PROC-010",
+      "name": "Customer Offboarding",
+      "items": [
+        {
+          "id": "PROC-010-01",
+          "name": "Capture Offboarding Request",
+          "items": []
+        },
+        {
+          "id": "PROC-010-02",
+          "name": "Perform Final Settlement",
+          "items": []
+        },
+        {
+          "id": "PROC-010-03",
+          "name": "Close Account",
+          "items": []
+        }
+      ]
     }
   ]
 }

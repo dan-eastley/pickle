@@ -51,6 +51,10 @@
         { "column-id": "CAP-009-01", "row-id": "PROC-009-01", "rationale": "Manage Finance capability is enacted through the Manage Finance & Accounts process" },
         { "column-id": "CAP-009-02", "row-id": "PROC-009-02", "rationale": "Manage People capability is enacted through the Manage People & HR process" },
         { "column-id": "CAP-009-03", "row-id": "PROC-009-03", "rationale": "Manage Technology capability is enacted through the Manage Technology & Systems process" },
-        { "column-id": "CAP-009-04", "row-id": "PROC-009-04", "rationale": "Manage Procurement capability is enacted through the Manage Procurement & Supply Chain process" }
+        { "column-id": "CAP-009-04", "row-id": "PROC-009-04", "rationale": "Manage Procurement capability is enacted through the Manage Procurement & Supply Chain process" },
+        { "column-id": "CAP-001-05", "row-id": "PROC-010", "rationale": "Offboard Customer capability is realised through the Customer Offboarding process group" },
+        { "column-id": "CAP-001-05", "row-id": "PROC-010-01", "rationale": "Capturing offboarding requests is part of the Offboard Customer capability" },
+        { "column-id": "CAP-001-05", "row-id": "PROC-010-02", "rationale": "Performing final settlement is part of the Offboard Customer capability" },
+        { "column-id": "CAP-001-05", "row-id": "PROC-010-03", "rationale": "Closing customer accounts is part of the Offboard Customer capability" }
     ]
 }

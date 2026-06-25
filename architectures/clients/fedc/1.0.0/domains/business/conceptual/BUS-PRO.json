@@ -1402,6 +1402,46 @@
       "type": "supporting",
       "level": 3,
       "parent-id": "PROC-009-04"
+    },
+    {
+      "id": "PROC-010",
+      "name": "Customer Offboarding",
+      "type": "core",
+      "level": 1,
+      "trigger": "Customer offboarding request initiated",
+      "outcome": "Customer fully offboarded with account closure and final settlement",
+      "owner": "Chief Customer Officer",
+      "description": "Manage the end-to-end departure of a customer from the portfolio, covering offboarding request, final settlement, and account closure."
+    },
+    {
+      "id": "PROC-010-01",
+      "name": "Capture Offboarding Request",
+      "type": "core",
+      "level": 2,
+      "parent-id": "PROC-010",
+      "trigger": "Customer initiates offboarding request",
+      "outcome": "Offboarding request captured and validated",
+      "owner": "Customer Operations"
+    },
+    {
+      "id": "PROC-010-02",
+      "name": "Perform Final Settlement",
+      "type": "core",
+      "level": 2,
+      "parent-id": "PROC-010",
+      "trigger": "Offboarding request approved",
+      "outcome": "All outstanding balances settled and confirmed",
+      "owner": "Finance"
+    },
+    {
+      "id": "PROC-010-03",
+      "name": "Close Account",
+      "type": "core",
+      "level": 2,
+      "parent-id": "PROC-010",
+      "trigger": "Final settlement completed",
+      "outcome": "Customer account closed and archived",
+      "owner": "Customer Operations"
     }
   ]
 }
