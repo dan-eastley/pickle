@@ -47,10 +47,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Context:** Full flow works end-to-end. The form/modal call `create-discovery`; the self-contained `discovery-to-active` workflow runs the `architecture-discovery` prompt and commits Markdown `findings` back to main; the detail page Archive/Reactivate calls `update-discovery`. A **Refresh** action re-dispatches `discovery-to-active.yml` to regenerate findings (`refresh-discovery` API), and the header shows an "As at <date>" stamp for the point-in-time view. **Verified live (DSC-003).**
 **Gap:** Findings aren't versioned across re-runs (a refresh overwrites the prior view).
 
-### DSC-2 · ⬜ Inline editing of discoveries (replace the edit form) · Medium
-**Context:** A discovery's Title / Context / Request can only be set at creation; there's no way to refine the question while looking at the findings the agent produced.
-**Gap:** No in-place edit of a discovery on its detail page, alongside the output it should react to.
-**Proposed fix:** Mirror [DEC-5] for discoveries — a per-field edit (pencil) affordance on the discovery detail page that swaps to inline inputs and saves via `update-discovery`, then **kicks off the `discovery-to-active` step** so findings regenerate against the revised request. Editing is allowed **only while `status === 'active'`** (archived discoveries are read-only; reactivate first). Preferred approach; **supersedes any standalone discovery edit form.** Cross-cutting with [PDL-4] (live refresh) and [DSC-1] (findings versioning, so an edit-driven refresh doesn't silently discard the prior view).
+### DSC-2 · ✅ Inline editing of discoveries (replace the edit form) · Medium
+**Done:** The discovery detail page has an inline **Edit** mode (pencil affordance, active-only) that swaps Title / Context / Request to inline inputs (`AutoGrowTextarea`) and saves via `update-discovery`. The API now **re-dispatches `discovery-to-active`** when any of title/context/request changes, regenerating the point-in-time view; the page shows the regenerating banner. Archived discoveries are read-only (reactivate first). No standalone discovery edit form is needed. Cross-cutting with [PDL-4] (live refresh instead of manual page refresh) and [DSC-1] (findings versioning across re-runs) remain open.
 
 ---
 
