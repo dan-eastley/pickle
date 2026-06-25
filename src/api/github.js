@@ -675,7 +675,20 @@ function assertSafeIds(params) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
+  // CORS: this endpoint performs repository writes with the server token, so it
+  // must not be callable cross-origin by arbitrary sites. Same-origin requests
+  // (the SPA itself) need no ACAO header; only explicitly allow-listed origins
+  // (API_ALLOWED_ORIGINS, comma-separated) are reflected. NB: CORS is a browser
+  // control only — real auth is tracked under RAS-2.
+  const origin = req.headers?.origin
+  const allowOrigins = (process.env.API_ALLOWED_ORIGINS ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  if (origin && allowOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+    res.setHeader('Vary', 'Origin')
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   if (req.method === 'OPTIONS') return res.status(200).end()
