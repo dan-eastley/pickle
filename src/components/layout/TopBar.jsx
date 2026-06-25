@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import { ChevronDown } from '../ui/icons'
+import QuickPicker from './QuickPicker'
 
 function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
   const [open, setOpen] = useState(false)
@@ -86,6 +87,9 @@ export default function TopBar() {
       <div className="min-w-0 flex-1 text-lg font-medium text-gray-600 truncate">
         {clientMeta?.name ?? ''}
       </div>
+
+      {/* Quick jump — scoped to the current client + domain */}
+      <div className="flex-shrink-0"><QuickPicker /></div>
 
       {/* Docs link — opens in a new window */}
       <a
