@@ -17,11 +17,22 @@
 
 const GH_API = 'https://api.github.com'
 
+// `prefix` is set by the vercel.json rewrites, but the function is also directly
+// reachable, so it (and `path`) must be validated: only the three known content
+// roots are served, and no path may traverse out of them.
+const ALLOWED_PREFIXES = new Set(['architectures', 'config/schemas', 'docs'])
+
 export default async function handler(req, res) {
   const { prefix, path: filePath, ref: REF = 'main', nocache } = req.query
 
   if (!prefix || !filePath) {
     return res.status(400).json({ error: 'Missing prefix or path' })
+  }
+  if (!ALLOWED_PREFIXES.has(prefix)) {
+    return res.status(400).json({ error: 'Invalid prefix' })
+  }
+  if (filePath.startsWith('/') || /(^|\/)\.\.(\/|$)/.test(filePath)) {
+    return res.status(400).json({ error: 'Invalid path' })
   }
 
   const token = process.env.GITHUB_TOKEN

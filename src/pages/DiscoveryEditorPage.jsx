@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeSelector from '../components/decisions/ScopeSelector'
@@ -10,6 +10,7 @@ import { RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 export default function DiscoveryEditorPage() {
+  const fid = useId() // base for associating field labels with their inputs
   const { clientId, versionId } = useParams()
   const [searchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
@@ -106,10 +107,14 @@ export default function DiscoveryEditorPage() {
         <div className="flex-1 max-w-2xl space-y-5">
           {/* Title */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-title`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Title <span className="text-error-500">*</span>
-            </span>
+            </label>
             <input
+              id={`${fid}-title`}
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -120,10 +125,14 @@ export default function DiscoveryEditorPage() {
 
           {/* Context */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-context`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Context <span className="text-error-500">*</span>
-            </span>
+            </label>
             <AutoGrowTextarea
+              id={`${fid}-context`}
               value={context}
               onChange={(e) => setContext(e.target.value)}
               placeholder="Today we..."
@@ -133,10 +142,14 @@ export default function DiscoveryEditorPage() {
 
           {/* Request */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-request`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Request <span className="text-error-500">*</span>
-            </span>
+            </label>
             <AutoGrowTextarea
+              id={`${fid}-request`}
               value={request}
               onChange={(e) => setRequest(e.target.value)}
               placeholder="List the..."

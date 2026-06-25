@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
@@ -72,6 +72,7 @@ function RequirementsList({ requirements, onChange }) {
 }
 
 export default function DecisionEditorPage() {
+  const fid = useId() // base for associating field labels with their inputs
   const { clientId, versionId, decisionId } = useParams()
   const [searchParams] = useSearchParams()
   const { clientsMetadata } = useArchitecture()
@@ -282,10 +283,14 @@ export default function DecisionEditorPage() {
         <div className="flex-1 max-w-2xl space-y-5">
           {/* Title */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-title`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Title <span className="text-error-500">*</span>
-            </span>
+            </label>
             <input
+              id={`${fid}-title`}
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -296,10 +301,14 @@ export default function DecisionEditorPage() {
 
           {/* Context */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-context`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Context <span className="text-error-500">*</span>
-            </span>
+            </label>
             <AutoGrowTextarea
+              id={`${fid}-context`}
               value={context}
               onChange={(e) => setContext(e.target.value)}
               placeholder="Today we..."
@@ -309,10 +318,14 @@ export default function DecisionEditorPage() {
 
           {/* Problem */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-problem`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Problem <span className="text-error-500">*</span>
-            </span>
+            </label>
             <AutoGrowTextarea
+              id={`${fid}-problem`}
               value={problem}
               onChange={(e) => setProblem(e.target.value)}
               placeholder="This is a problem because..."
@@ -322,10 +335,14 @@ export default function DecisionEditorPage() {
 
           {/* Proposal */}
           <div>
-            <span className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor={`${fid}-proposal`}
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Proposal <span className="text-error-500">*</span>
-            </span>
+            </label>
             <AutoGrowTextarea
+              id={`${fid}-proposal`}
               value={proposal}
               onChange={(e) => setProposal(e.target.value)}
               placeholder="We propose to..."
