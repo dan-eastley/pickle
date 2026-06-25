@@ -7,6 +7,7 @@ import { DisclosureChevron } from '../ui/icons'
 import { toggleInSet } from '../../lib/collections'
 import useActiveSection from '../../hooks/useActiveSection'
 import usePersistedSet from '../../hooks/usePersistedSet'
+import useSearchParamState from '../../hooks/useSearchParamState'
 import EntityPanel from './EntityPanel'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 
@@ -952,7 +953,8 @@ export function DocumentSelector({ artefact, documents, selectedIdx, onSelect })
 function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }) {
   const sectionRefs = useRef({})
   const [collapsed, setCollapsed] = usePersistedSet(storageKey)
-  const [entityId, setEntityId] = useState(null)
+  // Entity panel selection lives in the URL (?entity=…) so it is deep-linkable.
+  const [entityId, setEntityId] = useSearchParamState('entity')
   const [activeKey, setActiveKey] = useActiveSection(sectionRefs, [doc, collapsed])
 
   // Build visible structure with stable, schema-derived numbering.
