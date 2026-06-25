@@ -139,9 +139,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               <>
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Title <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <input
                     ref={titleRef}
                     type="text"
@@ -154,9 +154,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Context */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Context <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <p className="text-xs text-gray-400 mb-1.5">
                     The current situation — what is happening that prompts this decision. Written for a business audience.
                   </p>
@@ -170,9 +170,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Problem */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Problem <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <p className="text-xs text-gray-400 mb-1.5">
                     What needs to be fixed or addressed — the gap or pain in the current situation.
                   </p>
@@ -186,9 +186,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Proposal */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Proposal <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <p className="text-xs text-gray-400 mb-1.5">
                     How we propose to solve it — the direction, at a business level.
                   </p>
@@ -202,7 +202,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                 {/* Scope */}
                 <div className="border border-gray-200 bg-gray-50 p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                  <span className="block text-sm font-medium text-gray-700 mb-1">Scope</span>
                   <ScopeSelector
                     domain={scopeDomain}
                     abstraction={scopeAbstraction}
@@ -217,7 +217,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
                   {showDocumentScope && (
                     <div className="mt-2">
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Document</label>
+                      <span className="block text-xs font-medium text-gray-500 mb-1">Document</span>
                       <select
                         value={scopeDocument}
                         onChange={e => setScopeDocument(e.target.value)}

@@ -166,7 +166,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</label>
+              <span className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</span>
               <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
                 className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
                 {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
@@ -218,7 +218,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</label>
+              <span className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</span>
               <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
                 className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
                 {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
