@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useId } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
@@ -8,6 +8,7 @@ import AutoGrowTextarea from '../ui/AutoGrowTextarea'
 import { RobotIcon } from '../ui/icons'
 
 export default function NewDiscoveryModal({ artefact, clientId, versionId, onClose }) {
+  const fid = useId() // base for associating field labels with their inputs
   const [title, setTitle] = useState('')
   const [context, setContext] = useState('')
   const [request, setRequest] = useState('')
@@ -139,10 +140,14 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
             ) : (
               <>
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-title`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Title <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <input
+                    id={`${fid}-title`}
                     ref={titleRef}
                     type="text"
                     value={title}
@@ -153,10 +158,14 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 </div>
 
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-context`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Context <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <AutoGrowTextarea
+                    id={`${fid}-context`}
                     value={context}
                     onChange={(e) => setContext(e.target.value)}
                     placeholder="Today we..."
@@ -165,10 +174,14 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 </div>
 
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-request`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Request <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <AutoGrowTextarea
+                    id={`${fid}-request`}
                     value={request}
                     onChange={(e) => setRequest(e.target.value)}
                     placeholder="List the..."

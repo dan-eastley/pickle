@@ -226,8 +226,9 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 **Context:** ESLint reports **0 problems**. Removed unused vars, switched modal autofocus to refs, justified the intentional exhaustive-deps/react-refresh cases, and converted false-association form labels to spans. `format:check` also gates CI.
 
 ### QV-5 · 🟡 Accessibility pass · Medium
-**Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (now `role=dialog`/`aria-modal`).
-**Gap:** Slide panel focus management, real `htmlFor` label association, and a contrast/keyboard-order audit remain.
+**Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (`role=dialog`/`aria-modal`).
+**Done:** `SlidePanel` (entity panel) now has full focus management — `role=dialog`/`aria-modal`/`aria-label`, focus moves in on open and returns to the trigger on close (`useFocusTrap`), and the off-screen closed panel is `inert` so its controls leave the tab order. Real `htmlFor`/`id` label association added to the New Decision and New Discovery create forms (replacing the `<span>` pseudo-labels).
+**Remaining:** label association on the full editor pages; a deliberate contrast + keyboard-order audit.
 
 ### QV-6 · ✅ Formatting + coverage · Low
 **Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.

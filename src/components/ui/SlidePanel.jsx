@@ -1,8 +1,20 @@
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
+import useFocusTrap from '../../hooks/useFocusTrap'
 
 export default function SlidePanel({ open, onClose, title, subtitle, children }) {
   useEscapeKey(onClose, open)
+  // Trap Tab within the panel while open and restore focus to the trigger on
+  // close. The panel stays mounted (off-screen) when closed, so mark it `inert`
+  // to keep its controls out of the tab order, and move focus in on open.
+  const panelRef = useFocusTrap(open)
+  useEffect(() => {
+    const node = panelRef.current
+    if (!node) return
+    node.inert = !open
+    if (open) node.focus()
+  }, [open, panelRef])
 
   return createPortal(
     <>
@@ -13,7 +25,13 @@ export default function SlidePanel({ open, onClose, title, subtitle, children })
         <div className="fixed inset-0 z-[150] bg-black/10" onClick={onClose} />
       )}
       <div
-        className={`fixed top-0 right-0 h-full z-[151] w-96 bg-white border-l border-gray-200 shadow-2xl flex flex-col transition-transform duration-200 ease-in-out ${
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={typeof title === 'string' ? title : 'Details'}
+        aria-hidden={!open}
+        tabIndex={-1}
+        className={`fixed top-0 right-0 h-full z-[151] w-96 bg-white border-l border-gray-200 shadow-2xl flex flex-col transition-transform duration-200 ease-in-out focus:outline-none ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
