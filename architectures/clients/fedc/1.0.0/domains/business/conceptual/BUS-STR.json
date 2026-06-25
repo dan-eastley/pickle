@@ -19,7 +19,7 @@
         },
         {
             "id": "BUS-STR-003",
-            "statement": "Decide with data \u2014 every material business decision must cite the evidence that supports it",
+            "statement": "Decide with data — every material business decision must cite the evidence that supports it",
             "driver": "Decisions made on intuition are slow to challenge and slow to correct",
             "target-outcome": "Self-serve analytics available to every team; decision logs in place for executive-grade decisions",
             "horizon": "medium-term",
@@ -35,7 +35,7 @@
         },
         {
             "id": "BUS-STR-005",
-            "statement": "Build digital-by-default operations \u2014 paper, manual handovers, and bespoke spreadsheets are exceptions, not the norm",
+            "statement": "Build digital-by-default operations — paper, manual handovers, and bespoke spreadsheets are exceptions, not the norm",
             "driver": "Manual operations cap throughput, hide quality issues, and erode margin",
             "target-outcome": "Top 20 business processes fully digital end-to-end by 2026",
             "horizon": "medium-term",
@@ -48,6 +48,20 @@
             "target-outcome": "Carbon and ESG metrics owned by line management with operational KPIs; reporting is a by-product, not the goal",
             "horizon": "long-term",
             "owner": "Chief Sustainability Officer"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

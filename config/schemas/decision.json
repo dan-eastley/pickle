@@ -23,13 +23,23 @@
         },
         "status": {
             "type": "string",
-            "enum": ["draft", "proposed", "accepted", "staged", "committed", "rejected"],
+            "enum": [
+                "draft",
+                "proposed",
+                "accepted",
+                "staged",
+                "committed",
+                "rejected"
+            ],
             "description": "Current lifecycle stage. DRAFT → PROPOSED → ACCEPTED → STAGED → COMMITTED. REJECTED is a terminal state reachable from DRAFT or PROPOSED."
         },
         "rejection-reason": {
             "type": "string",
             "description": "Required when status is 'rejected'.",
-            "enum": ["duplicate", "superseded"]
+            "enum": [
+                "duplicate",
+                "superseded"
+            ]
         },
         "pr-number": {
             "type": "integer",
@@ -58,7 +68,9 @@
         "requirements": {
             "type": "array",
             "description": "Structured requirements per ISO 29148. Each must have a title, description, and type.",
-            "items": { "$ref": "#/$defs/requirement" }
+            "items": {
+                "$ref": "#/$defs/requirement"
+            }
         },
         "scope": {
             "type": "object",
@@ -66,20 +78,48 @@
             "properties": {
                 "domain": {
                     "type": "string",
-                    "enum": ["business", "data", "integration", "application", "solution"]
+                    "enum": [
+                        "business",
+                        "data",
+                        "integration",
+                        "application",
+                        "solution"
+                    ]
                 },
                 "abstraction": {
                     "type": "string",
-                    "enum": ["conceptual", "logical", "physical"]
+                    "enum": [
+                        "conceptual",
+                        "logical",
+                        "physical"
+                    ]
                 },
                 "artefact": {
                     "type": "string",
                     "enum": [
-                        "BUS-STR", "BUS-CAP", "BUS-BCM", "BUS-PRO", "BUS-BPM", "BUS-PRN", "BUS-GRD",
-                        "DAT-STR", "DAT-DAC", "DAT-CDM", "DAT-PRN", "DAT-GRD",
-                        "INT-STR", "INT-PRN", "INT-GRD",
-                        "APP-STR", "APP-DAP", "APP-DPM", "APP-PRN", "APP-GRD",
-                        "SOL-STR", "SOL-PRN", "SOL-GRD"
+                        "BUS-STR",
+                        "BUS-CAP",
+                        "BUS-BCM",
+                        "BUS-PRO",
+                        "BUS-BPM",
+                        "BUS-PRN",
+                        "BUS-GRD",
+                        "DAT-STR",
+                        "DAT-DAC",
+                        "DAT-CDM",
+                        "DAT-PRN",
+                        "DAT-GRD",
+                        "INT-STR",
+                        "INT-PRN",
+                        "INT-GRD",
+                        "APP-STR",
+                        "APP-DAP",
+                        "APP-DPM",
+                        "APP-PRN",
+                        "APP-GRD",
+                        "SOL-STR",
+                        "SOL-PRN",
+                        "SOL-GRD"
                     ]
                 }
             },
@@ -90,14 +130,29 @@
             "description": "Chronological log of status transitions.",
             "items": {
                 "type": "object",
-                "required": ["timestamp", "event"],
+                "required": [
+                    "timestamp",
+                    "event"
+                ],
                 "properties": {
-                    "timestamp": { "type": "string", "description": "ISO 8601 datetime." },
+                    "timestamp": {
+                        "type": "string",
+                        "description": "ISO 8601 datetime."
+                    },
                     "event": {
                         "type": "string",
-                        "enum": ["opened", "proposed", "accepted", "staged", "committed", "rejected"]
+                        "enum": [
+                            "opened",
+                            "proposed",
+                            "accepted",
+                            "staged",
+                            "committed",
+                            "rejected"
+                        ]
                     },
-                    "notes": { "type": "string" }
+                    "notes": {
+                        "type": "string"
+                    }
                 },
                 "additionalProperties": false
             }
@@ -105,12 +160,16 @@
         "activity": {
             "type": "array",
             "description": "Chronological activity / change-history log (Created, Updated, …). Auto-populated by the decision process and workflows.",
-            "items": { "$ref": "#/$defs/activity-entry" }
+            "items": {
+                "$ref": "#/$defs/activity-entry"
+            }
         },
         "architecture-changes": {
             "type": "array",
             "description": "Output of the Architecture Changes workflow (fires on PROPOSED → ACCEPTED). Each entry describes a discrete change to a specific architecture artefact.",
-            "items": { "$ref": "#/$defs/architecture-change" }
+            "items": {
+                "$ref": "#/$defs/architecture-change"
+            }
         },
         "context-validation": {
             "type": "object",
@@ -118,42 +177,58 @@
         },
         "recommendations": {
             "type": "array",
-            "items": { "$ref": "#/$defs/recommendation" },
+            "items": {
+                "$ref": "#/$defs/recommendation"
+            },
             "description": "Output of the Narrative Review workflow — fires on DRAFT creation. Plain suggestions for tightening the narrative and requirements; it is up to the author whether to act on them."
         },
         "impact-assessment": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Impact Assessment workflow — fires on PROPOSED."
         },
         "referential-integrity": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Referential Integrity workflow — fires on PROPOSED."
         },
         "strategy-alignment": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Strategy Alignment workflow — fires on PROPOSED."
         },
         "principles-alignment": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Principles Alignment workflow — fires on PROPOSED."
         },
         "guardrails-alignment": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Guardrails Alignment workflow — fires on PROPOSED."
         },
         "proponent-analysis": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Proponent Analysis workflow — fires on PROPOSED."
         },
         "challenger-analysis": {
             "type": "array",
-            "items": { "$ref": "#/$defs/section" },
+            "items": {
+                "$ref": "#/$defs/section"
+            },
             "description": "Output of the Challenger Analysis workflow — fires on PROPOSED."
         }
     },
@@ -161,24 +236,56 @@
     "$defs": {
         "activity-entry": {
             "type": "object",
-            "required": ["timestamp", "action", "who"],
+            "required": [
+                "timestamp",
+                "action",
+                "who"
+            ],
             "properties": {
-                "timestamp": { "type": "string", "description": "ISO 8601 datetime." },
-                "action": { "type": "string", "description": "e.g. Created, Updated, Reviewed, Archived." },
-                "who": { "type": "string", "description": "Display name of the person or agent." },
-                "notes": { "type": "string" }
+                "timestamp": {
+                    "type": "string",
+                    "description": "ISO 8601 datetime."
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "Created",
+                        "Updated",
+                        "Archived",
+                        "Deleted"
+                    ],
+                    "description": "The kind of change."
+                },
+                "who": {
+                    "type": "string",
+                    "description": "Display name of the person or agent."
+                },
+                "notes": {
+                    "type": "string"
+                }
             },
             "additionalProperties": false
         },
         "requirement": {
             "type": "object",
-            "required": ["title", "description", "type"],
+            "required": [
+                "title",
+                "description",
+                "type"
+            ],
             "properties": {
-                "title":       { "type": "string" },
-                "description": { "type": "string" },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
                 "type": {
                     "type": "string",
-                    "enum": ["Functional", "Non-Functional"]
+                    "enum": [
+                        "Functional",
+                        "Non-Functional"
+                    ]
                 }
             },
             "additionalProperties": false
@@ -186,25 +293,50 @@
         "recommendation": {
             "type": "object",
             "description": "A single suggestion for improving the narrative or requirements. No accept/decline tracking — it's down to the author to act on it or not.",
-            "required": ["recommendation"],
+            "required": [
+                "recommendation"
+            ],
             "properties": {
-                "recommendation": { "type": "string", "description": "A concrete, actionable suggestion. Max ~500 characters." }
+                "recommendation": {
+                    "type": "string",
+                    "description": "A concrete, actionable suggestion. Max ~500 characters."
+                }
             },
             "additionalProperties": false
         },
         "section": {
             "type": "object",
             "description": "A single finding within an analysis section. `review` records whether the author accepted or declined the recommendation.",
-            "required": ["finding", "impact", "recommendation", "rationale"],
+            "required": [
+                "finding",
+                "impact",
+                "recommendation",
+                "rationale"
+            ],
             "properties": {
-                "finding":        { "type": "string", "description": "What the workflow observed. Max ~500 characters." },
-                "impact":         { "type": "string", "description": "Why the finding matters. Max ~500 characters." },
-                "recommendation": { "type": "string", "description": "What the author should do. Max ~500 characters." },
-                "rationale":      { "type": "string", "description": "Why the recommendation is the right course of action. Max ~500 characters." },
+                "finding": {
+                    "type": "string",
+                    "description": "What the workflow observed. Max ~500 characters."
+                },
+                "impact": {
+                    "type": "string",
+                    "description": "Why the finding matters. Max ~500 characters."
+                },
+                "recommendation": {
+                    "type": "string",
+                    "description": "What the author should do. Max ~500 characters."
+                },
+                "rationale": {
+                    "type": "string",
+                    "description": "Why the recommendation is the right course of action. Max ~500 characters."
+                },
                 "review": {
                     "type": "string",
                     "description": "Author review decision — set via the UI when the author accepts or declines a recommendation.",
-                    "enum": ["accepted", "declined"]
+                    "enum": [
+                        "accepted",
+                        "declined"
+                    ]
                 }
             },
             "additionalProperties": false
@@ -212,13 +344,30 @@
         "architecture-change": {
             "type": "object",
             "description": "A discrete, artefact-level change derived from accepted findings. Generated by the Architecture Changes workflow on ACCEPTED.",
-            "required": ["artefact-id", "artefact-name", "change-type", "description"],
+            "required": [
+                "artefact-id",
+                "artefact-name",
+                "change-type",
+                "description"
+            ],
             "properties": {
-                "artefact-id":   { "type": "string", "description": "e.g. BUS-CAP" },
-                "artefact-name": { "type": "string", "description": "e.g. Business Capabilities" },
+                "artefact-id": {
+                    "type": "string",
+                    "description": "e.g. BUS-CAP"
+                },
+                "artefact-name": {
+                    "type": "string",
+                    "description": "e.g. Business Capabilities"
+                },
                 "change-type": {
                     "type": "string",
-                    "enum": ["create", "update", "delete", "rename", "move"],
+                    "enum": [
+                        "create",
+                        "update",
+                        "delete",
+                        "rename",
+                        "move"
+                    ],
                     "description": "The type of change to be made."
                 },
                 "description": {
@@ -227,7 +376,10 @@
                 },
                 "review": {
                     "type": "string",
-                    "enum": ["accepted", "declined"],
+                    "enum": [
+                        "accepted",
+                        "declined"
+                    ],
                     "description": "Author review decision, set via the UI while the decision is ACCEPTED. Declined changes are skipped when the Apply Changes workflow stages the PR."
                 }
             },

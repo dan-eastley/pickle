@@ -30,15 +30,54 @@
                 }
             ],
             "stakeholders": [
-                { "id": "STK-001", "name": "Chief Data Officer", "role": "Accountable owner for the analytical platform direction", "concerns": ["CON-001", "CON-003"] },
-                { "id": "STK-002", "name": "Analytics & BI Team", "role": "Owners of the OAC consumption layer and semantic models", "concerns": ["CON-002"] },
-                { "id": "STK-003", "name": "Enterprise Architecture", "role": "Custodians of platform standards and principle adherence", "concerns": ["CON-001", "CON-004"] }
+                {
+                    "id": "STK-001",
+                    "name": "Chief Data Officer",
+                    "role": "Accountable owner for the analytical platform direction",
+                    "concerns": [
+                        "CON-001",
+                        "CON-003"
+                    ]
+                },
+                {
+                    "id": "STK-002",
+                    "name": "Analytics & BI Team",
+                    "role": "Owners of the OAC consumption layer and semantic models",
+                    "concerns": [
+                        "CON-002"
+                    ]
+                },
+                {
+                    "id": "STK-003",
+                    "name": "Enterprise Architecture",
+                    "role": "Custodians of platform standards and principle adherence",
+                    "concerns": [
+                        "CON-001",
+                        "CON-004"
+                    ]
+                }
             ],
             "concerns": [
-                { "id": "CON-001", "description": "The chosen direction must avoid stranding the existing Oracle Analytics Cloud investment.", "type": "business" },
-                { "id": "CON-002", "description": "The platform must serve both BI and ML workloads from a single governed tier.", "type": "technical" },
-                { "id": "CON-003", "description": "Ingestion latency must meet sub-15-minute operational targets.", "type": "operational" },
-                { "id": "CON-004", "description": "Data governance must be enforced centrally via Unity Catalog.", "type": "regulatory" }
+                {
+                    "id": "CON-001",
+                    "description": "The chosen direction must avoid stranding the existing Oracle Analytics Cloud investment.",
+                    "type": "business"
+                },
+                {
+                    "id": "CON-002",
+                    "description": "The platform must serve both BI and ML workloads from a single governed tier.",
+                    "type": "technical"
+                },
+                {
+                    "id": "CON-003",
+                    "description": "Ingestion latency must meet sub-15-minute operational targets.",
+                    "type": "operational"
+                },
+                {
+                    "id": "CON-004",
+                    "description": "Data governance must be enforced centrally via Unity Catalog.",
+                    "type": "regulatory"
+                }
             ],
             "intent-statement": "fedc will adopt a lakehouse architecture on Databricks as its enterprise data platform, with Oracle Analytics Cloud (OAC) retained as the self-service consumption layer. Data will be ingested from Oracle CC&B, MDM, and ERP via event-driven pipelines through the Confluent event broker. This approach avoids replacing OAC (preserving existing user investment and training), while providing a modern, scalable storage and transformation tier that can serve both BI and ML workloads.",
             "background": "fedc's current analytical landscape is fragmented: operational reports are generated directly from Oracle CC&B via custom OBIEE dashboards, commercial teams extract data to Excel for modelling, and there is no governed enterprise data store. The Oracle Analytics Cloud (OAC) licence is underutilised — it is connected only to CC&B and lacks a governed semantic layer. ADR-013 has been raised to address this fragmentation. The architecture intent decision centres on how to modernise the platform: whether to invest in OAC natively, adopt a fully cloud-native SaaS alternative, or introduce a lakehouse tier beneath OAC.",
@@ -111,8 +150,16 @@
                 }
             ],
             "recommended-direction": "Option 3 — Lakehouse on Databricks with OAC as BI layer — is the recommended direction. It is the only option that simultaneously achieves sub-15-minute data latency, preserves existing OAC investment, and provides an ML-ready data tier for future AI workloads. The JDBC connector risk is mitigated by Oracle's published OAC-Databricks integration guidance and fedc's existing AWS infrastructure. Option 1 is deferred for strategic review post-2027 pending Oracle contract renewal. Option 2 is rejected due to its inability to support ML workloads and real-time latency requirements.",
-            "architecture-principles": ["PRN-SOL-001", "PRN-SOL-003", "PRN-DAT-002"],
-            "guardrails": ["GRD-SOL-001", "GRD-DAT-001", "GRD-DAT-003"],
+            "architecture-principles": [
+                "PRN-SOL-001",
+                "PRN-SOL-003",
+                "PRN-DAT-002"
+            ],
+            "guardrails": [
+                "GRD-SOL-001",
+                "GRD-DAT-001",
+                "GRD-DAT-003"
+            ],
             "open-questions": [
                 {
                     "id": "OQ-001",
@@ -219,8 +266,14 @@
                 }
             ],
             "recommended-direction": "Option 3 — Confluent event backbone combined with Oracle Integration Cloud — is the recommended direction. It maximises existing Oracle investment, meets latency and lineage requirements, and provides a clear separation between event-driven and synchronous integration patterns. Option 1 is cost-prohibitive at fedc's scale. Option 2 cannot meet programme requirements and is rejected.",
-            "architecture-principles": ["PRN-SOL-002", "PRN-INT-001"],
-            "guardrails": ["GRD-INT-001", "GRD-INT-002"],
+            "architecture-principles": [
+                "PRN-SOL-002",
+                "PRN-INT-001"
+            ],
+            "guardrails": [
+                "GRD-INT-001",
+                "GRD-INT-002"
+            ],
             "open-questions": [
                 {
                     "id": "OQ-001",
@@ -233,6 +286,20 @@
                     "raised-by": "Data Engineering Lead"
                 }
             ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe Bloggs",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe Bloggs",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
         }
     ]
 }

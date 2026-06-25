@@ -126,7 +126,13 @@
                 },
                 "action": {
                     "type": "string",
-                    "description": "e.g. Created, Updated, Reviewed, Archived."
+                    "enum": [
+                        "Created",
+                        "Updated",
+                        "Archived",
+                        "Deleted"
+                    ],
+                    "description": "The kind of change."
                 },
                 "who": {
                     "type": "string",
