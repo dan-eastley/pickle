@@ -219,6 +219,14 @@
                         "The gold table ops_catalogue.reporting.meter_estate_summary is refreshed, providing counts by meter type, region, and lifecycle status for regulatory reporting."
                     ]
                 }
+            ],
+            "audience": [
+                "Technical Architect",
+                "Engineering Lead"
+            ],
+            "author": [
+                "Solution Architect",
+                "Technical Architect"
             ]
         },
         {
@@ -418,6 +426,14 @@
                         "OIC logs the notification dispatch event to the integration audit log for Ofwat Consumer Duty reporting."
                     ]
                 }
+            ],
+            "audience": [
+                "Technical Architect",
+                "Engineering Lead"
+            ],
+            "author": [
+                "Solution Architect",
+                "Technical Architect"
             ]
         }
     ],
