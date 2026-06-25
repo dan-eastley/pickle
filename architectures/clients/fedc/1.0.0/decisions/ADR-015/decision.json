@@ -12,5 +12,22 @@
             "action": "Created",
             "who": "Joe Bloggs"
         }
+    ],
+    "recommendations": [
+        {
+            "recommendation": "**Add a `requirements` field.** The narrative describes a significant operational change (contractor sourcing) but has no measurable requirements. Include functional requirements (e.g., *Contractors must provide field service delivery in [regions]*) and non-functional requirements (e.g., *Contractor onboarding must complete within X days*) so downstream analysis can assess impact."
+        },
+        {
+            "recommendation": "**Expand the narrative with business impact.** Clarify why capacity or capability is insufficient (current headcount, skill gaps, forecast demand?) and what field services entail. This context is needed for the architecture analysis to understand scope."
+        },
+        {
+            "recommendation": "**Define scope boundaries.** Will *all* field services move to contractors, or only specific types? Are there services or regions excluded? Clarify what remains internal vs. what becomes contractor-delivered."
+        },
+        {
+            "recommendation": "**Address constraints and assumptions.** Are there security, compliance, or legal constraints around contractor use (data access, certifications, vendor approval)? What is the expected timeline and budget envelope? These shape the architecture response."
+        },
+        {
+            "recommendation": "**Specify success criteria.** Beyond delivery, how will success be measured? Cost savings %, uptime %, time-to-hire %, customer satisfaction? This helps validate that the proposed changes achieve the intended outcome."
+        }
     ]
 }
