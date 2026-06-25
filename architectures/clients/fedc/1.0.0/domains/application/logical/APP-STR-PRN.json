@@ -1,5 +1,14 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-STR-PRN",
+    "audience": [
+        "Enterprise Architect",
+        "Application Architect",
+        "Chief Information Officer"
+    ],
+    "author": [
+        "Application Architect",
+        "Systems Analyst"
+    ],
     "relationships": [
         {
             "column-id": "APP-STR-001",

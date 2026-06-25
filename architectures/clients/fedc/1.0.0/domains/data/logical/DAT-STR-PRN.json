@@ -1,5 +1,14 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:data:logical:DAT-STR-PRN",
+    "audience": [
+        "Enterprise Architect",
+        "Data Architect",
+        "Chief Data Officer"
+    ],
+    "author": [
+        "Data Architect",
+        "Data Analyst"
+    ],
     "relationships": [
         {
             "column-id": "DAT-STR-001",

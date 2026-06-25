@@ -78,6 +78,28 @@ async function handleApiRequest(req, res, next) {
     return res.end(content)
   }
 
+  // /api/github → run the serverless handler in-process so the decisions and
+  // discovery pipelines can be exercised in local dev (needs GITHUB_* env).
+  if (url.pathname === '/api/github') {
+    let body = {}
+    if (req.method === 'POST') {
+      const chunks = []
+      for await (const c of req) chunks.push(c)
+      const raw = Buffer.concat(chunks).toString('utf8')
+      body = raw ? JSON.parse(raw) : {}
+    }
+    const { default: handler } = await import('./api/github.js')
+    const shimReq = { method: req.method, query: Object.fromEntries(url.searchParams), body }
+    const shimRes = {
+      statusCode: 200,
+      setHeader: (k, v) => res.setHeader(k, v),
+      status(code) { this.statusCode = code; res.statusCode = code; return this },
+      json(obj) { res.setHeader('Content-Type', 'application/json'); res.statusCode = this.statusCode; res.end(JSON.stringify(obj)) },
+      end() { res.statusCode = this.statusCode; res.end() },
+    }
+    return handler(shimReq, shimRes)
+  }
+
   // /api/schemas/** and /api/docs/** → read from local disk (codebase-managed, no live updates needed)
   let basePath, relPath, isMarkdown = false
 
