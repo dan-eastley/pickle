@@ -179,3 +179,15 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### ⬜ Features workflow: Fable review → Sonnet apply · Low
 **Proposed fix:** A code-change workflow mirroring the decisions pipeline for non-ADR changes.
+
+---
+
+## Epic: Use Case Outcomes
+
+Failures from running the use-case corpus ([tests/use-cases.json](tests/use-cases.json)) against the product, captured here so they can be fixed. Outcomes are tracked in the JSON and reported in [tests/use-case-outcomes.md](tests/use-case-outcomes.md); run with `node tests/run-use-cases.mjs` (filter via `COMPLEXITY` / `PRIORITY`).
+
+### ✅ XS · Must Have — Browse the architecture by domain (UC-001–003) · High
+**Context:** Run 2026-06-25 against the live site. All three (Enterprise Architect, Business Architect, Chief Operating Officer) **passed** — five domains listed with descriptions, and selecting one shows its artefacts.
+**Gap:** None.
+
+> No outstanding use-case failures. As more of the corpus is run (widen the `COMPLEXITY`/`PRIORITY` filters), any failure gets a feature here with its Context / Gap / Proposed fix.

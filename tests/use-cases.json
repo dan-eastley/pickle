@@ -41,7 +41,12 @@
       "acceptance-criteria": [
         "All five domains are listed with descriptions",
         "Selecting a domain shows its artefacts"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
+        "checkedAt": "2026-06-25T06:27:22.271Z"
+      }
     },
     {
       "id": "UC-002",
@@ -54,7 +59,12 @@
       "acceptance-criteria": [
         "All five domains are listed with descriptions",
         "Selecting a domain shows its artefacts"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
+        "checkedAt": "2026-06-25T06:27:22.271Z"
+      }
     },
     {
       "id": "UC-003",
@@ -67,7 +77,12 @@
       "acceptance-criteria": [
         "All five domains are listed with descriptions",
         "Selecting a domain shows its artefacts"
-      ]
+      ],
+      "outcome": {
+        "status": "passed",
+        "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
+        "checkedAt": "2026-06-25T06:27:22.271Z"
+      }
     },
     {
       "id": "UC-004",
