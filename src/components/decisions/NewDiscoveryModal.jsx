@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
+import useFocusTrap from '../../hooks/useFocusTrap'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
@@ -16,6 +17,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState(null) // { ok, discoveryId } | { ok:false, error }
   const saved = !!result?.ok
+  const trapRef = useFocusTrap()
   const titleRef = useRef(null)
   useEffect(() => { titleRef.current?.focus() }, [])
 
@@ -69,7 +71,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
       <div className="fixed inset-0 bg-black/30 z-[150]" onClick={requestClose} />
 
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
+        <div ref={trapRef} role="dialog" aria-modal="true" aria-label="New Architecture Discovery" className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
           {/* Header — plain coloured bar, icon, title + purpose */}
           <div className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0">
             <div className="flex items-start gap-3 min-w-0">

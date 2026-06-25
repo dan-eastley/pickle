@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
+import useFocusTrap from '../../hooks/useFocusTrap'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
@@ -22,6 +23,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const saved = !!result?.ok
 
   const colors = DOMAIN_COLORS[artefact.domain]
+  const trapRef = useFocusTrap()
   const titleRef = useRef(null)
   useEffect(() => { titleRef.current?.focus() }, [])
 
@@ -98,7 +100,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
+        <div ref={trapRef} role="dialog" aria-modal="true" aria-label="New Architecture Decision" className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
           {/* Header — plain coloured bar, icon, title + purpose */}
           <div className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}>
             <div className="flex items-start gap-3 min-w-0">
