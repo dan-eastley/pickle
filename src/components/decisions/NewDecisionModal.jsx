@@ -125,6 +125,11 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               </div>
             ) : (
               <>
+                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-brand-200 pl-3">
+                  An Architecture Decision is how a change to the architecture gets proposed and governed —
+                  capture the context, problem, and proposed direction; the agents analyse it and, once
+                  accepted, the change is applied through a reviewed pull request.
+                </p>
                 {/* Title */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
