@@ -1,0 +1,76 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-STR",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
+    "strategies": [
+        {
+            "id": "BUS-STR-001",
+            "statement": "Operate as a customer-centric, inclusive provider, organised around end-to-end customer outcomes and the needs of vulnerable customers rather than internal functions",
+            "driver": "As a regional monopoly for households, trust is earned through service and fairness, and customers compare every interaction against best-in-class digital experiences",
+            "target-outcome": "Top-quartile C-MeX customer measure; Priority Services Register reaching 9% of households; affordability support offered to every customer in difficulty by end of 2027",
+            "horizon": "long-term",
+            "owner": "Chief Customer Officer"
+        },
+        {
+            "id": "BUS-STR-002",
+            "statement": "Run on outcome-based, cross-functional product teams with full ownership of their value stream",
+            "driver": "Functional silos create handoff friction and dilute accountability for end-to-end performance",
+            "target-outcome": "All value-creating work delivered by persistent product teams by 2026; no project-based funding for in-life products",
+            "horizon": "medium-term",
+            "owner": "Chief Operating Officer"
+        },
+        {
+            "id": "BUS-STR-003",
+            "statement": "Decide with data — every material business decision must cite the evidence that supports it",
+            "driver": "Decisions made on intuition are slow to challenge and slow to correct",
+            "target-outcome": "Self-serve analytics available to every team; decision logs in place for executive-grade decisions",
+            "horizon": "medium-term",
+            "owner": "Chief Data Officer"
+        },
+        {
+            "id": "BUS-STR-004",
+            "statement": "Invest on a risk-based, outcome-led basis across the regulatory price-review (AMP) cycle so spend follows resilience and performance, not the plan",
+            "driver": "Fixed five-year settlements lock investment ahead of evidence and create sunk-cost momentum, while asset health and resilience risks evolve continuously",
+            "target-outcome": "Rolling risk-based investment prioritisation refreshed each year within the AMP envelope; every scheme traceable to a performance commitment or resilience outcome",
+            "horizon": "medium-term",
+            "owner": "Chief Strategy Officer"
+        },
+        {
+            "id": "BUS-STR-005",
+            "statement": "Build digital-by-default operations — paper, manual handovers, and bespoke spreadsheets are exceptions, not the norm",
+            "driver": "Manual operations cap throughput, hide quality issues, and erode margin",
+            "target-outcome": "Top 20 business processes fully digital end-to-end by 2026",
+            "horizon": "medium-term",
+            "owner": "Chief Operating Officer"
+        },
+        {
+            "id": "BUS-STR-006",
+            "statement": "Lead on the environment — treat leakage, pollution, storm-overflow spills, and carbon as primary operational measures, not a reporting overlay",
+            "driver": "Regulator, investor, and public expectations on river health, bathing water, and net zero are converging on operational standards, not disclosure",
+            "target-outcome": "Leakage reduced 50% against the 2017-18 baseline by 2050 (interim AMP targets met); storm-overflow spills cut materially year-on-year; operational net zero by 2030",
+            "horizon": "long-term",
+            "owner": "Chief Sustainability Officer"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}
