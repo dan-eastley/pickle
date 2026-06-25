@@ -1,6 +1,32 @@
 {
     "discoveries": [
-        { "discovery-id": "DSC-001", "title": "Which capabilities depend on Oracle CC&B?", "status": "active", "scope": { "domain": "business", "abstraction": "conceptual", "artefact": "BUS-CAP" } },
-        { "discovery-id": "DSC-002", "title": "Integration interfaces affected by the MDM upgrade", "status": "archived", "scope": { "domain": "integration" } }
+        {
+            "discovery-id": "DSC-001",
+            "title": "Which capabilities depend on Oracle CC&B?",
+            "status": "active",
+            "scope": {
+                "domain": "business",
+                "abstraction": "conceptual",
+                "artefact": "BUS-CAP"
+            }
+        },
+        {
+            "discovery-id": "DSC-002",
+            "title": "Integration interfaces affected by the MDM upgrade",
+            "status": "archived",
+            "scope": {
+                "domain": "integration"
+            }
+        },
+        {
+            "discovery-id": "DSC-003",
+            "title": "Which platforms support Billing & Revenue Management?",
+            "status": "active",
+            "scope": {
+                "domain": "application",
+                "abstraction": "logical",
+                "artefact": "APP-DAP"
+            }
+        }
     ]
 }
