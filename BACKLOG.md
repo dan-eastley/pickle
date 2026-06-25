@@ -228,7 +228,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-5 · 🟡 Accessibility pass · Medium
 **Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (`role=dialog`/`aria-modal`).
 **Done:** `SlidePanel` (entity panel) now has full focus management — `role=dialog`/`aria-modal`/`aria-label`, focus moves in on open and returns to the trigger on close (`useFocusTrap`), and the off-screen closed panel is `inert` so its controls leave the tab order. Real `htmlFor`/`id` label association added to the New Decision and New Discovery create forms (replacing the `<span>` pseudo-labels).
-**Remaining:** label association on the full editor pages; a deliberate contrast + keyboard-order audit.
+**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). **Remaining:** a deliberate contrast + keyboard-order audit.
 
 ### QV-6 · ✅ Formatting + coverage · Low
 **Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.
@@ -242,10 +242,10 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 
 | # | Severity | Finding | Status |
 |---|---|---|---|
-| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | ⬜ Open — needs [RAS-2] auth + a same-origin/allow-list CORS policy. Until then, treat the deployment as trusted-network only. |
+| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | 🟡 **CORS hardened** — blanket `*` removed; default is same-origin only, with an optional `API_ALLOWED_ORIGINS` env allow-list. Full **auth still open** under [RAS-2] (CORS is a browser-only control). |
 | 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/clients/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$` (400) on every GET/POST. |
 | 3 | Low (dev-only) | `npm audit`: 3 vulns (1 high, 2 moderate) in **esbuild/vite** — build/dev tooling only, **not in the production runtime bundle**. Fix is a breaking vite major bump. | ⬜ Defer; revisit on the next Vite upgrade. |
-| 4 | Low | `/api/arch` GitHub proxy interpolates `relPath` into the contents URL; the local schema/docs shim has a `startsWith(basePath)` traversal guard. | ⬜ Add an equivalent guard/validation on the deployed `/api/arch` function. |
+| 4 | Low | `/api/arch` GitHub proxy interpolates `relPath` into the contents URL; the local schema/docs shim has a `startsWith(basePath)` traversal guard. | ✅ **Fixed** — `/api/content` now allow-lists `prefix` to the three content roots and rejects `..`/leading-`/` paths. |
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
 | 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
 
