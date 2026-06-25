@@ -4,8 +4,8 @@ name: Discovery — To Active
 # Virtual Architect Agent over the discovery's context + request and writes a
 # point-in-time view into the discovery's `findings`.
 #
-# Discovery records live on main (no per-record branch), so this passes ref=main
-# and the discovery.json path to the shared Claude step.
+# Discovery records live on main (no per-record branch), so this checks out
+# main and commits the findings back to main.
 #
 # Triggered via workflow_dispatch from the Pickle API on discovery creation.
 
@@ -30,19 +30,106 @@ on:
         type: string
         default: claude-haiku-4-5-20251001
 
+permissions:
+  contents: write
+
 jobs:
   discover:
-    uses: ./.github/workflows/claude-step.yml
-    with:
-      analysis-name: "Architecture Discovery"
-      prompt-file:   config/prompts/discovery/architecture-discovery.md
-      section-key:   findings
-      client-id:     ${{ inputs.client-id }}
-      version-id:    ${{ inputs.version-id }}
-      decision-id:   ${{ inputs.discovery-id }}
-      record-id:     ${{ inputs.discovery-id }}
-      ref:           main
-      record-file:   architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/discovery/${{ inputs.discovery-id }}/discovery.json
-      model:         ${{ inputs.model }}
-    secrets:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    runs-on: ubuntu-latest
+    env:
+      CLIENT_ID:     ${{ inputs.client-id }}
+      VERSION_ID:    ${{ inputs.version-id }}
+      DISCOVERY_ID:  ${{ inputs.discovery-id }}
+      PROMPT_FILE:   config/prompts/discovery/architecture-discovery.md
+      DISCOVERY_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/discovery/${{ inputs.discovery-id }}/discovery.json
+    steps:
+      - name: Started
+        run: |
+          echo "::notice::Started Discovery To Active for ${DISCOVERY_ID}"
+
+      - name: Verify ANTHROPIC_API_KEY is set
+        env:
+          API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set or is empty"
+            exit 1
+          fi
+
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run the Virtual Architect Agent
+        id: claude
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: ${{ inputs.model }}
+          allowed_tools: "Read,Edit,Write,Grep,Glob"
+          prompt: |
+            You are the Architecture Discovery step (the Virtual Architect Agent).
+
+            Discovery file: ${{ env.DISCOVERY_FILE }}
+            Prompt file:    ${{ env.PROMPT_FILE }}
+
+            Steps:
+              1. Read the prompt instructions at ${{ env.PROMPT_FILE }}.
+              2. Read the discovery JSON at ${{ env.DISCOVERY_FILE }} (its context, request, scope).
+              3. Interrogate the architecture data under
+                 architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/.
+              4. Write your Markdown answer into the discovery JSON's `findings` property
+                 using the Edit or Write tool. Do not modify any other property.
+
+            Do not commit or push — the workflow handles that.
+
+      - name: Report Claude outcome
+        if: always()
+        run: |
+          echo "::notice::Claude conclusion ${{ steps.claude.outputs.conclusion }}"
+
+      - name: Commit findings to main
+        run: |
+          set -euo pipefail
+          git add "$DISCOVERY_FILE"
+          if git diff --cached --quiet; then
+            echo "::notice::No findings to commit."
+            exit 0
+          fi
+          git commit -m "[Discovery] Findings for ${DISCOVERY_ID}"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "::notice::Pushed on attempt ${attempt}."
+              exit 0
+            fi
+            echo "::warning::Push rejected (attempt ${attempt}); rebasing onto origin/main."
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "::error::Failed to push findings after rebasing."
+          exit 1
+
+      - name: Write summary
+        if: always()
+        run: |
+          {
+            echo "## Discovery — To Active"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Discovery | \`${DISCOVERY_ID}\` |"
+            echo "| Claude | \`${{ steps.claude.outputs.conclusion }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Finished
+        if: always()
+        run: |
+          echo "::notice::Finished Discovery To Active for ${DISCOVERY_ID}"
