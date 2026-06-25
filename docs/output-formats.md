@@ -28,7 +28,7 @@ Artefact types are displayed in format order: **Catalogues → Diagrams → Docu
 
 A Matrix joins two source artefacts. Each source artefact has a domain and an abstraction layer, ordered along two axes:
 
-- **Domain order:** Business < Data < Integration < Application < Solution (see [domains.md](domains.md))
+- **Domain order:** Business < Data < Application < Integration < Solution (see [domains.md](domains.md))
 - **Abstraction order:** Conceptual < Logical < Physical (see [abstraction-layers.md](abstraction-layers.md))
 
 **Rule:** the matrix lives at the domain/abstraction of whichever source artefact is **more downstream on both axes** — its "home" artefact. The home artefact's array becomes the matrix's `rows`; the other source's array becomes `columns`. The matrix ID is `<home-domain-acronym>-<columns-suffix>-<rows-suffix>`.
