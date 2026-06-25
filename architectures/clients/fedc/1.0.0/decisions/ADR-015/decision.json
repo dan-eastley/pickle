@@ -126,6 +126,14 @@
             "rationale": "Cross-domain decisions have interdependencies invisible to single-domain analysis. The Architecture Council is the forum for surfacing these tensions and recording agreed trade-offs. Proceeding without Council alignment risks downstream rework and architectural inconsistency."
         }
     ],
+    "guardrails-alignment": [
+        {
+            "finding": "**Business Guardrails** (`BUS-GRD`), **Data Guardrails** (`DAT-GRD`), **Integration Guardrails** (`INT-GRD`), **Application Guardrails** (`APP-GRD`), and **Solution Guardrails** (`SOL-GRD`) all exist but are currently empty (no guardrail rules defined). All five domains are in scope per the architecture-review, strategy-alignment, and principles-alignment sections.",
+            "impact": "Without populated guardrails, no guardrail compliance or breach assessment can be made. The decision cannot be evaluated against domain-specific operational constraints, security policies, or governance boundaries. This is a blocking issue: the governance framework is not yet in place to evaluate contractor-delivery decisions.",
+            "recommendation": "**Halt decision progression until guardrails are populated.** Before contractor-sourcing decisions can proceed, each in-scope domain must define its guardrails: (1) **Business Guardrails** (`BUS-GRD`) — contractor operating model constraints, team ownership rules, decision rights. (2) **Data Guardrails** (`DAT-GRD`) — contractor data-access boundaries, classification policies, consent frameworks. (3) **Integration Guardrails** (`INT-GRD`) — contractor connectivity requirements, gateway/broker routing mandates, trust boundary policies. (4) **Application Guardrails** (`APP-GRD`) — contractor application access, platform integration constraints. (5) **Solution Guardrails** (`SOL-GRD`) — contractor team/team structure, MVP governance, cross-domain approval gates. Once populated, re-run this analysis to assess compliance.",
+            "rationale": "Guardrails are the control framework that ensures decisions align with governance, regulatory, and operational policy. Contractor-sourcing decisions are high-risk and cross-domain — they require explicitly documented guardrails to ensure compliance by design. Proceeding without guardrails invites ad-hoc exceptions and architectural debt."
+        }
+    ],
     "referential-integrity": [
         {
             "finding": "Referential integrity checks passed across all scoped catalogues. All parent-id and domain-id foreign keys resolve to defined entities; no orphaned items detected.",
