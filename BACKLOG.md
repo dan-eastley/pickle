@@ -73,8 +73,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-5 · 🟡 Responsiveness, loading skeletons, entity deep-linking · Low
 **Context:** Desktop-first; some routes flash a bare spinner; the entity panel has no shareable URL.
 **Proposed fix:** A mobile pass, skeleton loaders, and deep-linkable entity URLs.
-**Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface, giving the page its eventual shape (title + intro + card rows) with an `sr-only` loading status.
-**Remaining:** Deliberate mobile/responsive pass; deep-linkable entity-panel URLs (e.g. `?entity=…`).
+**Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface. **Deep-linkable entity-panel URLs** — the entity panel selection now lives in the URL (`?entity=…`) via a reusable `useSearchParamState` hook, so an open entity is shareable, survives refresh, and is restorable from a link.
+**Remaining:** a deliberate mobile/responsive pass.
 
 ### UI-6 · ⬜ Diagram export / download · Medium
 **Context:** Diagrams render as SVG in-app.
