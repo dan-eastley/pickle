@@ -1143,7 +1143,7 @@ export default function DecisionDetailPage() {
         />
 
         {/* Document surface */}
-        <article className="flex-1 min-w-0 bg-white shadow-xl px-8 py-7">
+        <article className="flex-1 min-w-0 bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
           {/* Header */}
           <div className="mb-6 pb-5 border-b border-gray-200">
             <div className="flex items-start gap-4">
