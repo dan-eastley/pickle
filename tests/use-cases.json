@@ -45,7 +45,7 @@
       "outcome": {
         "status": "passed",
         "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -63,7 +63,7 @@
       "outcome": {
         "status": "passed",
         "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -81,7 +81,7 @@
       "outcome": {
         "status": "passed",
         "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -99,7 +99,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders (1283 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -117,7 +117,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders (1283 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -135,7 +135,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders (1283 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -151,9 +151,9 @@
         "Links navigate to the related artefact"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"Related Artefacts\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -169,9 +169,9 @@
         "Links navigate to the related artefact"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"Related Artefacts\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -189,7 +189,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -207,7 +207,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -225,7 +225,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -243,7 +243,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -261,7 +261,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -278,8 +278,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2277 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2267 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -296,8 +296,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2277 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2267 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -314,8 +314,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2277 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2267 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -332,8 +332,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (4405 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (4395 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -350,8 +350,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (4405 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (4395 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -368,8 +368,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (4405 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (4395 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -386,8 +386,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2599 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2589 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -404,8 +404,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2599 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2589 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -422,8 +422,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2599 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2589 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -440,8 +440,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (2599 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (2589 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -459,7 +459,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -477,7 +477,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -494,8 +494,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (10196 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (10186 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -512,8 +512,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (10196 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (10186 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -531,7 +531,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -549,7 +549,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -567,7 +567,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -585,7 +585,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -601,9 +601,9 @@
         "Intersections show the relationship"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders (9829 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -619,9 +619,9 @@
         "Intersections show the relationship"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders (9829 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -637,9 +637,9 @@
         "Unsupported capabilities are visible"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders (6259 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -655,9 +655,9 @@
         "Unsupported capabilities are visible"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders (6259 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -674,8 +674,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (10794 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (10784 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -692,8 +692,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (10794 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (10784 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -710,8 +710,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (10794 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (10784 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -728,8 +728,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (8118 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (8108 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -746,8 +746,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (8118 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (8108 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -764,8 +764,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (8118 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (8108 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -782,8 +782,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (5023 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (5013 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -800,8 +800,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (5023 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (5013 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -818,8 +818,8 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders (5023 chars)",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "note": "renders (5013 chars)",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -837,7 +837,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -855,7 +855,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -873,7 +873,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -889,9 +889,9 @@
         "It is stored as a versioned record"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "status": "passed",
+        "note": "renders with \"New Architecture Discovery\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -907,9 +907,9 @@
         "It is stored as a versioned record"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "status": "passed",
+        "note": "renders with \"New Architecture Discovery\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -925,9 +925,9 @@
         "It is stored as a versioned record"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "status": "passed",
+        "note": "renders with \"New Architecture Discovery\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -943,9 +943,9 @@
         "A discovery opens to its findings"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "status": "passed",
+        "note": "renders with \"Active\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -961,9 +961,9 @@
         "A discovery opens to its findings"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "status": "passed",
+        "note": "renders with \"Active\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -979,9 +979,9 @@
         "It is created as a draft on a branch"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"New Architecture Decision\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -997,9 +997,9 @@
         "It is created as a draft on a branch"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"New Architecture Decision\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1015,9 +1015,9 @@
         "It is created as a draft on a branch"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"New Architecture Decision\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1035,7 +1035,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1053,7 +1053,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1071,7 +1071,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1089,7 +1089,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1107,7 +1107,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1125,7 +1125,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1143,7 +1143,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1161,7 +1161,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1179,7 +1179,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1197,7 +1197,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1215,7 +1215,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1233,7 +1233,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1249,9 +1249,9 @@
         "The filter is shareable via the URL"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"Architecture Decisions\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1267,9 +1267,9 @@
         "The filter is shareable via the URL"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"Architecture Decisions\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1285,9 +1285,9 @@
         "The filter is shareable via the URL"
       ],
       "outcome": {
-        "status": "todo",
-        "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "status": "passed",
+        "note": "renders with \"Architecture Decisions\"",
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1305,7 +1305,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1323,7 +1323,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1341,7 +1341,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1359,7 +1359,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1377,7 +1377,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1395,7 +1395,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Joe B\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1413,7 +1413,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"Joe B\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1431,7 +1431,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1449,7 +1449,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1467,7 +1467,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1485,7 +1485,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1503,7 +1503,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1521,7 +1521,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1539,7 +1539,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1557,7 +1557,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1575,7 +1575,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"BUS-CAP.json\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1593,7 +1593,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"BUS-CAP.json\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1611,7 +1611,7 @@
       "outcome": {
         "status": "passed",
         "note": "renders with \"BUS-CAP.json\"",
-        "checkedAt": "2026-06-25T08:27:34.297Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1629,7 +1629,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1647,7 +1647,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1665,7 +1665,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1683,7 +1683,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1701,7 +1701,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1719,7 +1719,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1737,7 +1737,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1755,7 +1755,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1773,7 +1773,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1791,7 +1791,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1809,7 +1809,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     },
     {
@@ -1827,7 +1827,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-25T08:18:51.699Z"
+        "checkedAt": "2026-06-25T11:56:13.664Z"
       }
     }
   ]

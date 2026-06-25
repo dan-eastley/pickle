@@ -57,9 +57,11 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** No way to jump to a capability/process/platform/decision by name or id.
 **Proposed fix:** A search index over artefacts and entities with a command-palette UI.
 
-### UI-5 · ⬜ Responsiveness, loading skeletons, entity deep-linking · Low
+### UI-5 · 🟡 Responsiveness, loading skeletons, entity deep-linking · Low
 **Context:** Desktop-first; some routes flash a bare spinner; the entity panel has no shareable URL.
 **Proposed fix:** A mobile pass, skeleton loaders, and deep-linkable entity URLs.
+**Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface, giving the page its eventual shape (title + intro + card rows) with an `sr-only` loading status.
+**Remaining:** Deliberate mobile/responsive pass; deep-linkable entity-panel URLs (e.g. `?entity=…`).
 
 ### UI-6 · ⬜ Diagram export / download · Medium
 **Context:** Diagrams render as SVG in-app.
@@ -177,6 +179,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### TT-1 · 🟡 Use-case corpus · Medium
 **Context:** `tests/use-cases.json` — 100 use cases; `tests/run-use-cases.mjs` drives them against the deployment (comma-separated `COMPLEXITY`/`PRIORITY` filters) and records outcomes in the JSON + `tests/use-case-outcomes.md`.
 **Gap:** Some titles still need an automated check (recorded "to do"); failures auto-route to *Use Case Outcomes*.
+**Progress:** Added a reusable `rendersWithContent(path, mustText)` check and wired 7 more titles (capability-to-process / capability-to-application matrices, follow related-artefact link, raise decision, raise discovery, review past discoveries, filter decisions by scope). Full corpus now **54 passed, 0 failed, 46 to-do** (was 37/0/63). No product defects surfaced.
 
 ### TT-2 · ✅ URL-mapped screenshots + route smoke · Low
 **Context:** `screenshot.mjs` mirrors the URL structure; `smoke.spec.js` hits all 66 routes against the deployment; `nightly.yml` regenerates screenshots.
