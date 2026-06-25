@@ -1,0 +1,18 @@
+{
+    "$schema": "urn:pickle:schemas:decision",
+    "decision-id": "ADR-015",
+    "title": "Introduce a Customer Offboarding business process",
+    "status": "accepted",
+    "context": "fedc has added an Offboard Customer capability (CAP-001-05) but there is no business process describing how customers are offboarded.",
+    "problem": "Without a defined offboarding process, customer exits are handled inconsistently and the process model does not reflect the new capability.",
+    "proposal": "Add a level-1 business process for Customer Offboarding to the business process catalogue, covering request, settlement, and closure.",
+    "scope": { "domain": "business", "abstraction": "conceptual" },
+    "architecture-changes": [
+        {
+            "artefact-id": "BUS-PRO",
+            "artefact-name": "Business Processes",
+            "change-type": "create",
+            "description": "Add a new level-1 business process 'Customer Offboarding' with a suitable PROC id (next available at level 1), description 'Manage the end-to-end departure of a customer from the portfolio, covering offboarding request, final settlement, and account closure.', realising capability CAP-001-05. Add level-2 sub-processes for 'Capture Offboarding Request', 'Perform Final Settlement', and 'Close Account' with sequential PROC ids under the new level-1 process."
+        }
+    ]
+}
