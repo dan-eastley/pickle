@@ -17,7 +17,9 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const [scopeAbstraction, setScopeAbstraction] = useState(artefact.abstraction)
   const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
   const [scopeDocument, setScopeDocument] = useState(selectedDocument?.id ?? '')
-  const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [result, setResult] = useState(null)  // { ok, decisionId } | { ok:false, error }
+  const saved = !!result?.ok
 
   const colors = DOMAIN_COLORS[artefact.domain]
 
@@ -37,9 +39,45 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
   const canSave = title.trim() && context.trim() && problem.trim() && proposal.trim()
 
-  function handleSave() {
-    // TODO: push to repo on new branch
-    setSaved(true)
+  async function handleSave() {
+    setSaving(true)
+    setResult(null)
+    // Decision scope is domain/abstraction/artefact only (no document level).
+    const scope = scopeDomain ? {
+      domain: scopeDomain,
+      ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+      ...(scopeArtefact && { artefact: scopeArtefact }),
+    } : null
+    try {
+      const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
+      const { nextId, error: idError } = await idRes.json()
+      if (idError) throw new Error(idError)
+      const decision = {
+        'decision-id': nextId,
+        title,
+        status: 'draft',
+        context, problem, proposal,
+        narrative: [
+          context && `## Context\n\n${context}`,
+          problem && `## Problem\n\n${problem}`,
+          proposal && `## Proposal\n\n${proposal}`,
+        ].filter(Boolean).join('\n\n'),
+        ...(scope && { scope }),
+        activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe Bloggs' }],
+      }
+      const res = await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create-decision', clientId, versionId, decision }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
+      setResult({ ok: true, decisionId: nextId })
+    } catch (err) {
+      setResult({ ok: false, error: err.message })
+    } finally {
+      setSaving(false)
+    }
   }
 
   const scopeParams = [
@@ -79,10 +117,11 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
           <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
             {saved ? (
               <div className="py-6 text-center">
-                <div className="text-success-700 font-medium text-sm mb-1">Decision record saved.</div>
-                <p className="text-xs text-gray-400">
-                  Branch creation and PR workflow will be available in a future release.
-                </p>
+                <div className="text-success-700 font-medium text-sm mb-1">{result.decisionId} created as a draft.</div>
+                <p className="text-xs text-gray-400 mb-3">Narrative Review is running to suggest improvements.</p>
+                <TextLink to={`/clients/${clientId}/${versionId}/decisions/${result.decisionId}`} state={{ cacheBust: true }} onClick={onClose} className="text-sm font-medium">
+                  Open {result.decisionId} →
+                </TextLink>
               </div>
             ) : (
               <>
@@ -199,15 +238,20 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                 </button>
                 <button
                   onClick={handleSave}
-                  disabled={!canSave}
+                  disabled={!canSave || saving}
                   className={`inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                     colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
                   }`}
                 >
                   <DecisionIcon className="w-4 h-4" />
-                  New Architecture Decision
+                  {saving ? 'Creating…' : 'New Architecture Decision'}
                 </button>
               </div>
+            </div>
+          )}
+          {result?.ok === false && (
+            <div className="px-5 py-2.5 border-t border-error-200 bg-error-50 text-error-700 text-xs flex-shrink-0">
+              {result.error}
             </div>
           )}
         </div>

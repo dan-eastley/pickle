@@ -1,5 +1,14 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-STR",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
     "strategies": [
         {
             "id": "BUS-STR-001",

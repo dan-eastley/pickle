@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:integration:physical:INT-GRD",
+    "audience": [
+        "Enterprise Architect",
+        "Integration Architect"
+    ],
+    "author": [
+        "Integration Architect",
+        "Systems Analyst"
+    ],
     "guardrails": [],
     "activity": [
         {

@@ -1,5 +1,14 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:data:physical:DAT-PRN-GRD",
+    "audience": [
+        "Enterprise Architect",
+        "Data Architect",
+        "Chief Data Officer"
+    ],
+    "author": [
+        "Data Architect",
+        "Data Analyst"
+    ],
     "relationships": [],
     "activity": [
         {

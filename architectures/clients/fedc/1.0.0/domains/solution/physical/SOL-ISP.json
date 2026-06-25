@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:solution:physical:SOL-ISP",
+    "audience": [
+        "Enterprise Architect",
+        "Solution Architect",
+        "Product Owner"
+    ],
+    "author": [
+        "Solution Architect"
+    ],
     "documents": [
         {
             "id": "SOL-ISP-001",

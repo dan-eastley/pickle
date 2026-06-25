@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-PRN",
+    "audience": [
+        "Enterprise Architect",
+        "Integration Architect"
+    ],
+    "author": [
+        "Integration Architect",
+        "Systems Analyst"
+    ],
     "principles": [
         {
             "id": "INT-PRN-001",
