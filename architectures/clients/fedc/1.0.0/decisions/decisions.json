@@ -17,6 +17,11 @@
             "scope": {
                 "domain": "business"
             }
+        },
+        {
+            "decision-id": "ADR-015",
+            "title": "Contractor Driven Work",
+            "status": "draft"
         }
     ]
 }
