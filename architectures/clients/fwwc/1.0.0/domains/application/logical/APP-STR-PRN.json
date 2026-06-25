@@ -1,0 +1,83 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-STR-PRN",
+    "audience": [
+        "Enterprise Architect",
+        "Application Architect",
+        "Chief Information Officer"
+    ],
+    "author": [
+        "Application Architect",
+        "Systems Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "APP-STR-001",
+            "row-id": "APP-PRN-001",
+            "rationale": "Twelve-factor patterns are the concrete baseline that makes an application cloud-native by design."
+        },
+        {
+            "column-id": "APP-STR-001",
+            "row-id": "APP-PRN-004",
+            "rationale": "Cloud-native operability — horizontal scaling, immutable deploys, routine restarts — depends on application processes holding no durable state."
+        },
+        {
+            "column-id": "APP-STR-001",
+            "row-id": "APP-PRN-007",
+            "rationale": "A cloud-native operating model is built on environments described as code and deploys that replace immutable artefacts rather than mutating servers."
+        },
+        {
+            "column-id": "APP-STR-002",
+            "row-id": "APP-PRN-002",
+            "rationale": "Assembling commodity capability rather than building it depends on those capabilities being composable, replaceable services rather than embedded in a monolith."
+        },
+        {
+            "column-id": "APP-STR-003",
+            "row-id": "APP-PRN-002",
+            "rationale": "This strategy is the direct mandate for composing capabilities from independent, replaceable services with monoliths as the exception."
+        },
+        {
+            "column-id": "APP-STR-003",
+            "row-id": "APP-PRN-003",
+            "rationale": "Independently replaceable services are only independent in practice if each can be deployed without coordinating with other teams."
+        },
+        {
+            "column-id": "APP-STR-004",
+            "row-id": "APP-PRN-003",
+            "rationale": "Deploying on demand via automated pipelines depends on each service being independently deployable without cross-team coordination."
+        },
+        {
+            "column-id": "APP-STR-004",
+            "row-id": "APP-PRN-006",
+            "rationale": "Continuous delivery pipelines are where dependency scanning and policy checks run, shifting security into the development workflow rather than a release gate."
+        },
+        {
+            "column-id": "APP-STR-004",
+            "row-id": "APP-PRN-007",
+            "rationale": "On-demand automated deployment depends on environments and artefacts being defined as code and deployed immutably."
+        },
+        {
+            "column-id": "APP-STR-005",
+            "row-id": "APP-PRN-005",
+            "rationale": "This strategy is the direct mandate for every service exposing health, structured logs, metrics, and traces from day one."
+        },
+        {
+            "column-id": "APP-STR-006",
+            "row-id": "APP-PRN-004",
+            "rationale": "Each service selecting its own primary data store for fit depends on services holding no shared durable state, with state externalised to the store that fits the workload."
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}
