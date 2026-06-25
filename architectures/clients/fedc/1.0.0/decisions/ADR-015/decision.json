@@ -15,19 +15,19 @@
     ],
     "recommendations": [
         {
-            "recommendation": "**Add a `requirements` field.** The narrative describes a significant operational change (contractor sourcing) but has no measurable requirements. Include functional requirements (e.g., *Contractors must provide field service delivery in [regions]*) and non-functional requirements (e.g., *Contractor onboarding must complete within X days*) so downstream analysis can assess impact."
+            "recommendation": "**Add a `requirements` field with measurable statements.** The narrative describes contractor-driven field service delivery but has no formal requirements list. Add both functional requirements (e.g., *Contractors must deliver field services in regions [X, Y, Z]*) and non-functional requirements (e.g., *Contractor onboarding must complete within 15 days*, *Field response time must meet 4-hour SLA*) so downstream analysis can assess completeness and verify success."
         },
         {
-            "recommendation": "**Expand the narrative with business impact.** Clarify why capacity or capability is insufficient (current headcount, skill gaps, forecast demand?) and what field services entail. This context is needed for the architecture analysis to understand scope."
+            "recommendation": "**Expand 'Problem' with quantified evidence of the capacity/capability gap.** State the current situation (e.g., *Internal team capacity is 80% utilized with 20% of requests unmet* or *Current skill gaps prevent 30% of customer requests from being resolved in-region*). This frames why contractor sourcing is necessary and helps readers understand the business urgency."
         },
         {
-            "recommendation": "**Define scope boundaries.** Will *all* field services move to contractors, or only specific types? Are there services or regions excluded? Clarify what remains internal vs. what becomes contractor-delivered."
+            "recommendation": "**Define what 'field services' means in this context.** The term is generic and could span network operations (hands-on infrastructure work), asset management (inspection/repair), or customer service (visits/support). Clarify which capability or service type(s) are in scope and which remain internal. This prevents ambiguity downstream."
         },
         {
-            "recommendation": "**Address constraints and assumptions.** Are there security, compliance, or legal constraints around contractor use (data access, certifications, vendor approval)? What is the expected timeline and budget envelope? These shape the architecture response."
+            "recommendation": "**Specify success criteria and how they will be measured.** Beyond delivery, state how success will be evaluated (e.g., *90% SLA compliance rate*, *Cost per transaction within 10% of internal baseline*, *Customer satisfaction >7.5/10*). This gives the architecture team measurable targets and helps validate whether the change achieved its business intent."
         },
         {
-            "recommendation": "**Specify success criteria.** Beyond delivery, how will success be measured? Cost savings %, uptime %, time-to-hire %, customer satisfaction? This helps validate that the proposed changes achieve the intended outcome."
+            "recommendation": "**Mention any known constraints or assumptions about contractor engagement.** For example: Are there security/compliance constraints (e.g., contractors must be cleared for data access)? Are there legal or vendor-approval requirements? Is there a timeline for contractor deployment or a budget envelope? These shape the architecture response and prevent downstream surprises."
         }
     ],
     "impact-assessment": [
