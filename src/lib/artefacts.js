@@ -68,8 +68,6 @@ const DIAGRAM_TYPES_BASE = [
 ]
 export const DIAGRAM_TYPES = DIAGRAM_TYPES_BASE.map((t) => ({ ...t, ...tr('diagramTypes', t.id) }))
 
-export const getDiagramType = (id) => DIAGRAM_TYPES.find((t) => t.id === id)
-
 // Relationship types used in artefact relatedTo links.
 // 'feeds' = this artefact's data drives the related artefact's content.
 // 'informs' = this artefact provides context or input to the related artefact.

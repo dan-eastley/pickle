@@ -265,12 +265,3 @@ export const DOCS_NAV = [
     ],
   },
 ]
-
-export function findDocByPath(path) {
-  for (const section of DOCS_NAV) {
-    for (const item of section.items) {
-      if (item.path === path) return item
-    }
-  }
-  return null
-}
