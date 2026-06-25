@@ -957,13 +957,7 @@ export default function DecisionDetailPage() {
         action === 'commit-decision'
           ? { action, clientId, versionId, decisionId, prNumber: decision?.['pr-number'] }
           : { action, clientId, versionId, decisionId, updates }
-      const res = await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Update failed')
+      await githubAction(body)
       // These transitions dispatch a workflow that populates the next section
       // asynchronously — flag it so the UI shows a "working" banner.
       const WORKFLOW_LABELS = {
@@ -1000,19 +994,7 @@ export default function DecisionDetailPage() {
     setTransitionError(null)
     setDecision((prev) => (prev ? { ...prev, ...edit } : prev)) // optimistic
     try {
-      const res = await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'edit-decision',
-          clientId,
-          versionId,
-          decisionId,
-          ...edit,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Save failed')
+      await githubAction({ action: 'edit-decision', clientId, versionId, decisionId, ...edit })
       setEdit(null)
       setPendingWorkflow({
         label: 'reviewing your updated narrative and refreshing recommendations',

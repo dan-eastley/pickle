@@ -1,6 +1,7 @@
 import { useState, useId } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
+import { githubAction } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
@@ -41,18 +42,12 @@ export default function DiscoveryEditorPage() {
     setSaving(true)
     setResult(null)
     try {
-      const res = await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'create-discovery',
-          clientId,
-          versionId,
-          discovery: { title, context, request, ...(scope && { scope }) },
-        }),
+      const data = await githubAction({
+        action: 'create-discovery',
+        clientId,
+        versionId,
+        discovery: { title, context, request, ...(scope && { scope }) },
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed to create discovery')
       setResult({ ok: true, discoveryId: data.discoveryId })
     } catch (err) {
       setResult({ ok: false, error: err.message })
