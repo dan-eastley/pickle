@@ -5,6 +5,7 @@ import { getVersions, getVersion } from '../lib/api'
 import { versionStatusBadge } from '../lib/theme'
 import Spinner from '../components/ui/Spinner'
 import Illustration from '../components/ui/Illustration'
+import ClientLogo from '../components/ui/ClientLogo'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -45,9 +46,14 @@ export default function VersionsPage() {
         </Link>
       </div>
       <div className="mb-8 flex items-center justify-between gap-8">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
-          <p className="mt-1 text-sm text-gray-500">Select a version to browse its architecture.</p>
+        <div className="flex items-center gap-4 min-w-0">
+          <ClientLogo clientId={clientId} name={clientName} className="w-12 h-12" />
+          <div className="min-w-0">
+            <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Select a version to browse its architecture.
+            </p>
+          </div>
         </div>
         <Illustration name="timeline" className="hidden md:block w-52 flex-shrink-0" />
       </div>

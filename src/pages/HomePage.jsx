@@ -216,7 +216,7 @@ function Hero() {
             <span className="w-1.5 h-1.5 bg-brand-500" />
             Architecture as Code · Agentic
           </span>
-          <h1 className="text-5xl font-bold tracking-wide uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold tracking-widest uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
             Pickle
           </h1>
           <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>

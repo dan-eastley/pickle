@@ -309,6 +309,7 @@ const ARTEFACTS_BASE = [
       "The organisation's key data subject areas and the conceptual data entities within each.",
     relatedTo: [
       { artefactId: 'DAT-CDM', relationship: 'feeds' },
+      { artefactId: 'DAT-PRO-DAC', relationship: 'informs' },
       { artefactId: 'INT-DAC-IFC', relationship: 'informs' },
     ],
   },
@@ -322,6 +323,20 @@ const ARTEFACTS_BASE = [
     description: "A visual map of the organisation's key data concepts and how they relate.",
     diagramType: 'entity-based',
     relatedTo: [{ artefactId: 'DAT-DAC', relationship: 'derived-from' }],
+  },
+  {
+    id: 'DAT-PRO-DAC',
+    domain: 'data',
+    abstraction: 'conceptual',
+    format: 'matrix',
+    key: false,
+    name: 'Business Processes ↔ Data Domains & Concepts',
+    description:
+      'CRUD mapping showing which business processes create, read, update, or delete which conceptual data entities.',
+    relatedTo: [
+      { artefactId: 'BUS-PRO', relationship: 'derived-from' },
+      { artefactId: 'DAT-DAC', relationship: 'derived-from' },
+    ],
   },
   {
     id: 'DAT-PRN',
