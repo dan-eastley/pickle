@@ -1,0 +1,106 @@
+name: CI
+
+# Path-scoped PR/push gate. A `changes` job detects which areas were touched and
+# the downstream jobs run conditionally, so a data-only change doesn't run the
+# SPA suite and a component tweak doesn't re-validate every schema.
+#
+# No job uses Claude or any API key — all gates are deterministic. The Claude
+# pipelines (decisions / discovery / apply) stay event-driven and separate.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
+      data: ${{ steps.filter.outputs.data }}
+      schemas: ${{ steps.filter.outputs.schemas }}
+      config: ${{ steps.filter.outputs.config }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'src/**'
+            schemas:
+              - 'config/schemas/**'
+            data:
+              - 'architectures/**'
+            config:
+              - 'config/i18n/**'
+              - 'config/roles.json'
+              - 'config/artefact-relationships.json'
+
+  lint:
+    name: Lint
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' || needs.changes.outputs.config == 'true' }}
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: src } }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - run: npm ci
+      - run: npm run lint
+
+  unit:
+    name: Unit & build
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' || needs.changes.outputs.config == 'true' }}
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: src } }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - run: npm ci
+      - run: npm run test
+      - run: npm run build
+
+  validate-data:
+    name: Validate data (schema + integrity)
+    needs: changes
+    if: ${{ needs.changes.outputs.data == 'true' || needs.changes.outputs.schemas == 'true' || needs.changes.outputs.config == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - name: Install validator deps (ajv)
+        working-directory: src
+        run: npm ci
+      - name: L1 — schema validation
+        run: node tests/validate-schemas.mjs
+      - name: L2 — referential integrity
+        run: node tests/validate-integrity.mjs
+
+  e2e:
+    name: End-to-end smoke
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' }}
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: src } }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Playwright smoke test
+        run: |
+          export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          export GITHUB_OWNER="${{ github.repository_owner }}"
+          export GITHUB_REPO="${{ github.event.repository.name }}"
+          npm run test:e2e
