@@ -85,22 +85,5 @@ jobs:
       - name: L2 — referential integrity
         run: node tests/validate-integrity.mjs
 
-  e2e:
-    name: End-to-end smoke
-    needs: changes
-    if: ${{ needs.changes.outputs.src == 'true' }}
-    runs-on: ubuntu-latest
-    defaults: { run: { working-directory: src } }
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
-      - run: npm ci
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Playwright smoke test
-        run: |
-          export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
-          export GITHUB_OWNER="${{ github.repository_owner }}"
-          export GITHUB_REPO="${{ github.event.repository.name }}"
-          npm run test:e2e
+  # Browser tests (L6 smoke + L7 use-case subset) run against the real Vercel
+  # deployment — see post-deploy.yml — so CI needs no data server or secrets.
