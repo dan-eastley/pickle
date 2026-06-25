@@ -206,5 +206,67 @@
             "recommendation": "**Specify network architecture for contractor access before MVP approval.** Document: (1) Whether contractor field devices, mobile apps, and external platforms connect via the managed gateway/broker (mandatory) or identify compensating controls if not. (2) Authentication mechanism (e.g., API-first with OAuth, field-device certificates). (3) Integration patterns (e.g., event-driven per `INT-STR-002`, not batch direct access). (4) Update **Integration Architecture** (`INT-IFC`) to show contractor connectivity patterns and trust boundaries. Coordinate with Integration domain architects to ensure zero-direct-cross-zone-traffic principle is non-negotiable.",
             "rationale": "The gateway/broker is FEDC's centralised control point for security, observability, rate limiting, and audit across trust boundaries. Contractors operating outside this control point undermine the integration strategy's foundational assumptions. In a regulated, security-conscious environment, this is a material risk that must be resolved upfront, not deferred to post-engagement."
         }
+    ],
+    "architecture-changes": [
+        {
+            "artefact-id": "BUS-GRD",
+            "artefact-name": "Business Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail BUS-GRD-CON-001: Contractor Operating Model — Contractors must be embedded in cross-functional product teams or operate under explicit internal team direction with documented handoff points, escalation paths, and outcome-accountability boundaries. Scope: All contractor-delivered work. Rationale: FEDC's strategy (BUS-STR-002) requires all value-creating work to be owned by persistent product teams; contractor work must reinforce, not fragment, this principle. Enforcement: Architecture review gate before contractor engagement."
+        },
+        {
+            "artefact-id": "BUS-GRD",
+            "artefact-name": "Business Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail BUS-GRD-CON-002: Contractor Decision Rights — Contractor decision authority must be explicitly documented, mapping routine decisions (delegated to contractors, e.g., field diagnostics, scheduling within SLA) from decisions requiring internal approval (e.g., scope changes, asset write-offs). Scope: All contractor field operations. Rationale: Absence of clear decision rights creates operational friction and delays customer response. Enforcement: Bind to team decision-right matrices in the operating model."
+        },
+        {
+            "artefact-id": "BUS-GRD",
+            "artefact-name": "Business Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail BUS-GRD-CON-003: Outcome-Based Measurement — All contractor-delivered work must be measured against business outcomes (not activity): SLA compliance targets, cost-per-unit targets, customer satisfaction thresholds, and response-time KPIs must be defined before engagement and bind contractor SLAs. Scope: Contractor sourcing decisions. Rationale: BUS-PRN-002 (Outcome over output) requires measurement discipline; contractors operate under the same measurement framework as internal teams."
+        },
+        {
+            "artefact-id": "DAT-GRD",
+            "artefact-name": "Data Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail DAT-GRD-CON-001: Contractor Data Classification Access — Contractors must be assigned explicit data-classification access levels: contractors may access `public` and `internal` classifications; access to `sensitive` and `personal` classifications requires documented consent basis (explicit or legitimate interest) and audit trails. Scope: All contractor field operations. Rationale: DAT-PRN-004 (Privacy by design) and DAT-STR-004 (Privacy and consent designed in, not bolted on) mandate upfront data governance to prevent compliance violations in regulated industries. Enforcement: Data domain review before contractor onboarding."
+        },
+        {
+            "artefact-id": "DAT-GRD",
+            "artefact-name": "Data Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail DAT-GRD-CON-002: Contractor Access Controls and Audit — Contractor data access must be enforced by role-based or field-location-based controls and logged with audit trails capturing: who accessed what data, when, and for what purpose. Audit logs must be retained and available for compliance verification (GDPR, industry-specific regimes). Scope: All contractor access to personal or sensitive data. Rationale: FEDC is accountable for data even when contractors process it; audit trails enable compliance by design and support incident investigation."
+        },
+        {
+            "artefact-id": "INT-GRD",
+            "artefact-name": "Integration Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail INT-GRD-CON-001: Contractor Connectivity via Gateway/Broker — All contractor field devices, mobile applications, and external platforms must connect to internal systems via the managed gateway/broker. Direct connections to internal systems are prohibited. Scope: All contractor field operations. Rationale: INT-STR-004 (Zero direct cross-zone traffic) and INT-PRN-004 (Mediated through the gateway) ensure observability, rate-limiting, security enforcement, and audit across trust boundaries. Energy utilities operate in a high-threat environment; direct connections create unmanaged attack surface. Enforcement: Security and integration architecture review."
+        },
+        {
+            "artefact-id": "INT-GRD",
+            "artefact-name": "Integration Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail INT-GRD-CON-002: Contractor Authentication and Integration Pattern — Contractor systems must authenticate via API-first mechanisms (e.g., OAuth 2.0, field-device certificates) and use event-driven integration patterns (per INT-STR-002) rather than batch direct access or synchronous polling. Scope: Contractor integration with internal platforms. Rationale: Enforces modern integration discipline and prevents contractor systems from creating tight coupling or direct database access."
+        },
+        {
+            "artefact-id": "APP-GRD",
+            "artefact-name": "Application Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail APP-GRD-CON-001: Contractor Application Access — Contractor systems may access only documented and approved platform endpoints (e.g., published APIs, event streams). Direct database access is prohibited. Scope: All contractor field operations. Rationale: Prevents contractor systems from creating unmanaged dependencies or bypassing application-layer controls."
+        },
+        {
+            "artefact-id": "SOL-GRD",
+            "artefact-name": "Solution Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail SOL-GRD-CON-001: Contractor MVP Governance — Contractor sourcing decisions must be scoped as thin-vertical MVPs (one geographic region, business capability, or customer segment) with defined success criteria (SLA compliance, cost envelope, customer satisfaction) and a 90-day evaluation gate before scaling. Scope: All contractor-sourcing pilots. Rationale: SOL-STR-001 (Thin-vertical MVPs) ensures learning feedback loops and evidence-based scaling decisions."
+        },
+        {
+            "artefact-id": "SOL-GRD",
+            "artefact-name": "Solution Architecture Guardrails",
+            "change-type": "update",
+            "description": "Add guardrail SOL-GRD-CON-002: Cross-Domain Architecture Council Sign-Off — Contractor-sourcing decisions touching multiple domains (Business, Data, Integration, Application, Solution) require explicit Architecture Council sign-off before MVP launch. Scope: High-risk, cross-domain contractor decisions. Rationale: SOL-PRN-002 (Architecture review gates cross-domain solutions) ensures multi-perspective review and prevents single-domain blind spots."
+        }
     ]
 }
