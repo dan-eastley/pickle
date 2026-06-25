@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { DOMAIN_COLORS } from '../../lib/artefacts'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
@@ -17,6 +16,8 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState(null) // { ok, discoveryId } | { ok:false, error }
   const saved = !!result?.ok
+  const titleRef = useRef(null)
+  useEffect(() => { titleRef.current?.focus() }, [])
 
   const canSave = title.trim() && context.trim() && request.trim()
 
@@ -115,12 +116,12 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                     Title <span className="text-error-500">*</span>
                   </label>
                   <input
+                    ref={titleRef}
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="e.g. Which capabilities depend on this platform?"
                     className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-                    autoFocus
                   />
                 </div>
 

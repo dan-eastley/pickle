@@ -213,7 +213,7 @@ export default function CatalogueView({ data, schema }) {
 
   // ── Grouped mode (two-array schemas like DAT-DAC, APP-DAP) ──
   if (grouped && meta.grouping) {
-    const { parentArray, childArray, foreignKey } = meta.grouping
+    const { childArray, foreignKey } = meta.grouping
     const childItemProps = schema.properties?.[childArray]?.items?.properties ?? {}
     // Exclude the foreign key column from the child table display
     const filteredProps = Object.fromEntries(

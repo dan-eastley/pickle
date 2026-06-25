@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { nameWithId } from '../../lib/format'
@@ -22,6 +22,8 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const saved = !!result?.ok
 
   const colors = DOMAIN_COLORS[artefact.domain]
+  const titleRef = useRef(null)
+  useEffect(() => { titleRef.current?.focus() }, [])
 
   // A document-level scope is only offered when the scoped artefact is the
   // document artefact we're viewing (the one whose documents we have to hand).
@@ -141,12 +143,12 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                     Title <span className="text-error-500">*</span>
                   </label>
                   <input
+                    ref={titleRef}
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="Short, human-readable summary of the decision"
                     className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-                    autoFocus
                   />
                 </div>
 

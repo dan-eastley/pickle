@@ -143,6 +143,7 @@ export default function DocsPage() {
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docPath])
 
   if (loading) {

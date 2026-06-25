@@ -38,7 +38,7 @@ function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onTo
 
       {open && decisions.length > 0 && (
         <div className="divide-y divide-gray-100">
-          {decisions.map((d, i) => (
+          {decisions.map((d) => (
             <Link
               key={d['decision-id']}
               to={`/clients/${clientId}/${versionId}/decisions/${d['decision-id']}`}
@@ -120,7 +120,7 @@ export default function DecisionsPage() {
     collapsedOverride
       ? collapsedOverride.has(status)
       : (count === 0 || !STATUS_DEFAULT_OPEN.has(status))
-  const toggleGroup = (status, count) =>
+  const toggleGroup = (status) =>
     setCollapsedOverride(prev => {
       const next = new Set(prev ?? grouped.filter(g => isCollapsed(g.status, g.decisions.length)).map(g => g.status))
       next.has(status) ? next.delete(status) : next.add(status)

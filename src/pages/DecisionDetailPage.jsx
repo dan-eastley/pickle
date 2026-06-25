@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useId } from 'react'
 import { useParams, Navigate, useLocation, Link } from 'react-router-dom'
-import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision } from '../lib/api'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
@@ -623,7 +622,6 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
 export default function DecisionDetailPage() {
   const { clientId, versionId, decisionId } = useParams()
   const location = useLocation()
-  const { clientsMetadata } = useArchitecture()
   const [decision, setDecision] = useState(undefined)
   const [accepted, setAccepted] = useState({})    // local overrides for finding review state
   const [saving, setSaving] = useState(null)       // key of the finding being saved, e.g. 'impact-assessment-0'
@@ -631,7 +629,6 @@ export default function DecisionDetailPage() {
   const [transitionError, setTransitionError] = useState(null)
   const [pendingWorkflow, setPendingWorkflow] = useState(null) // { label } while a workflow populates the next section
   const [repoSlug, setRepoSlug] = useState(null)   // owner/repo, for building a PR URL from pr-number
-  const clientName = clientsMetadata[clientId]?.name ?? clientId
 
   useEffect(() => {
     fetch('/api/github?action=config')
@@ -668,6 +665,7 @@ export default function DecisionDetailPage() {
     getDecision(clientId, versionId, decisionId, undefined, { bust })
       .then(setDecision)
       .catch(() => setDecision(null))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, decisionId])
 
   async function handleAccept(sectionKey, findingIndex, review) {
