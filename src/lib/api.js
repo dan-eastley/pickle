@@ -79,12 +79,3 @@ export async function getDecision(clientId, versionId, decisionId, status, { bus
   if (res.status === 404) return fetchJson(`${basePath}${bust ? '?nocache=1' : ''}`)
   throw new Error(`API error ${res.status} fetching decision`)
 }
-
-export async function getClientLogo(clientId) {
-  const extensions = ['svg', 'png', 'jpg', 'webp']
-  for (const ext of extensions) {
-    const res = await fetch(`/api/arch/clients/${clientId}/logo.${ext}`)
-    if (res.ok) return `/api/arch/clients/${clientId}/logo.${ext}`
-  }
-  return null
-}

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useId } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { githubAction, getNextDecisionId } from '../../lib/api'
+import { buildScope } from '../../lib/scope'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
@@ -59,13 +60,7 @@ export default function NewDecisionModal({
     setSaving(true)
     setResult(null)
     // Decision scope is domain/abstraction/artefact only (no document level).
-    const scope = scopeDomain
-      ? {
-          domain: scopeDomain,
-          ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-          ...(scopeArtefact && { artefact: scopeArtefact }),
-        }
-      : null
+    const scope = buildScope(scopeDomain, scopeAbstraction, scopeArtefact)
     try {
       const nextId = await getNextDecisionId(clientId, versionId)
       const decision = {
