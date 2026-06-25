@@ -28,11 +28,9 @@ function NavSection({ section }) {
       {groups.map((group, gi) => (
         <div key={gi}>
           {group.label && (
-            <div className="px-3 pt-2 pb-0.5 text-xs font-medium text-gray-400">
-              {group.label}
-            </div>
+            <div className="px-3 pt-2 pb-0.5 text-xs font-medium text-gray-400">{group.label}</div>
           )}
-          {group.items.map(item => (
+          {group.items.map((item) => (
             <NavLink
               key={item.path}
               to={`/docs/${item.path}`}
@@ -60,7 +58,7 @@ export default function DocsLayout() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <nav className="w-64 flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto py-4 px-2">
-          {DOCS_NAV.map(section => (
+          {DOCS_NAV.map((section) => (
             <NavSection key={section.id} section={section} />
           ))}
         </nav>

@@ -2,7 +2,14 @@ import Illustration from './Illustration'
 
 // Empty / placeholder state. When `illustration` is set it shows an unDraw
 // illustration; otherwise it falls back to a small `icon` tile.
-export default function EmptyState({ title, description, icon: Icon, illustration, action, size = 'md' }) {
+export default function EmptyState({
+  title,
+  description,
+  icon: Icon,
+  illustration,
+  action,
+  size = 'md',
+}) {
   const pad = size === 'sm' ? 'py-8' : 'py-16'
 
   return (
@@ -15,9 +22,7 @@ export default function EmptyState({ title, description, icon: Icon, illustratio
         </div>
       ) : null}
       <p className="text-sm font-semibold text-gray-700">{title}</p>
-      {description && (
-        <p className="mt-1 text-sm text-gray-500 max-w-sm">{description}</p>
-      )}
+      {description && <p className="mt-1 text-sm text-gray-500 max-w-sm">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   )

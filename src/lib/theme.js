@@ -14,21 +14,27 @@
 // Decision lifecycle — order matters: this is the progression rendered by
 // the status progress bar and the grouping order on the decisions index.
 export const DECISION_STATUS = {
-  draft:     { label: 'Draft',     badge: 'bg-gray-100 text-gray-600' },
-  proposed:  { label: 'Proposed',  badge: 'bg-brand-50 text-brand-700' },
-  accepted:  { label: 'Accepted',  badge: 'bg-success-50 text-success-700' },
-  staged:    { label: 'Staged',    badge: 'bg-emerald-100 text-emerald-800' },
+  draft: { label: 'Draft', badge: 'bg-gray-100 text-gray-600' },
+  proposed: { label: 'Proposed', badge: 'bg-brand-50 text-brand-700' },
+  accepted: { label: 'Accepted', badge: 'bg-success-50 text-success-700' },
+  staged: { label: 'Staged', badge: 'bg-emerald-100 text-emerald-800' },
   committed: { label: 'Committed', badge: 'bg-gray-800 text-white' },
-  rejected:  { label: 'Rejected',  badge: 'bg-error-50 text-error-700' },
+  rejected: { label: 'Rejected', badge: 'bg-error-50 text-error-700' },
 }
 
-export const DECISION_STATUS_ORDER = ['draft', 'proposed', 'accepted', 'staged', 'committed', 'rejected']
+export const DECISION_STATUS_ORDER = [
+  'draft',
+  'proposed',
+  'accepted',
+  'staged',
+  'committed',
+  'rejected',
+]
 
 export const decisionStatusBadge = (status) =>
   DECISION_STATUS[status]?.badge ?? 'bg-gray-100 text-gray-600'
 
-export const decisionStatusLabel = (status) =>
-  DECISION_STATUS[status]?.label ?? status
+export const decisionStatusLabel = (status) => DECISION_STATUS[status]?.label ?? status
 
 // History events reuse decision-status colours; 'opened' is history-only.
 export const HISTORY_EVENT_STYLES = {
@@ -38,8 +44,8 @@ export const HISTORY_EVENT_STYLES = {
 
 // Version lifecycle (architectures/clients/<client>/<version>/version.json).
 export const VERSION_STATUS = {
-  draft:   { label: 'Draft',   badge: 'bg-warning-50 text-warning-700' },
-  active:  { label: 'Active',  badge: 'bg-success-50 text-success-700' },
+  draft: { label: 'Draft', badge: 'bg-warning-50 text-warning-700' },
+  active: { label: 'Active', badge: 'bg-success-50 text-success-700' },
   retired: { label: 'Retired', badge: 'bg-gray-100 text-gray-500' },
 }
 
@@ -52,5 +58,5 @@ export const CHANGE_TYPE_STYLES = {
   update: 'bg-brand-50 text-brand-700',
   delete: 'bg-error-50 text-error-700',
   rename: 'bg-warning-50 text-warning-700',
-  move:   'bg-gray-100 text-gray-600',
+  move: 'bg-gray-100 text-gray-600',
 }

@@ -9,7 +9,14 @@ import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
 import { DecisionIcon } from '../ui/icons'
 
-export default function NewDecisionModal({ artefact, documents = [], selectedDocument, clientId, versionId, onClose }) {
+export default function NewDecisionModal({
+  artefact,
+  documents = [],
+  selectedDocument,
+  clientId,
+  versionId,
+  onClose,
+}) {
   const [title, setTitle] = useState('')
   const [context, setContext] = useState('')
   const [problem, setProblem] = useState('')
@@ -19,13 +26,15 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
   const [scopeDocument, setScopeDocument] = useState(selectedDocument?.id ?? '')
   const [saving, setSaving] = useState(false)
-  const [result, setResult] = useState(null)  // { ok, decisionId } | { ok:false, error }
+  const [result, setResult] = useState(null) // { ok, decisionId } | { ok:false, error }
   const saved = !!result?.ok
 
   const colors = DOMAIN_COLORS[artefact.domain]
   const trapRef = useFocusTrap()
   const titleRef = useRef(null)
-  useEffect(() => { titleRef.current?.focus() }, [])
+  useEffect(() => {
+    titleRef.current?.focus()
+  }, [])
 
   // A document-level scope is only offered when the scoped artefact is the
   // document artefact we're viewing (the one whose documents we have to hand).
@@ -35,7 +44,8 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   // Confirm before discarding in-progress input.
   const isDirty = !!(title || context || problem || proposal)
   const requestClose = () => {
-    if (!saved && isDirty && !window.confirm('Discard this decision? Your changes will be lost.')) return
+    if (!saved && isDirty && !window.confirm('Discard this decision? Your changes will be lost.'))
+      return
     onClose()
   }
 
@@ -47,25 +57,33 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
     setSaving(true)
     setResult(null)
     // Decision scope is domain/abstraction/artefact only (no document level).
-    const scope = scopeDomain ? {
-      domain: scopeDomain,
-      ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-      ...(scopeArtefact && { artefact: scopeArtefact }),
-    } : null
+    const scope = scopeDomain
+      ? {
+          domain: scopeDomain,
+          ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+          ...(scopeArtefact && { artefact: scopeArtefact }),
+        }
+      : null
     try {
-      const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
+      const idRes = await fetch(
+        `/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`
+      )
       const { nextId, error: idError } = await idRes.json()
       if (idError) throw new Error(idError)
       const decision = {
         'decision-id': nextId,
         title,
         status: 'draft',
-        context, problem, proposal,
+        context,
+        problem,
+        proposal,
         narrative: [
           context && `## Context\n\n${context}`,
           problem && `## Problem\n\n${problem}`,
           proposal && `## Proposal\n\n${proposal}`,
-        ].filter(Boolean).join('\n\n'),
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
         ...(scope && { scope }),
         activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
       }
@@ -85,11 +103,13 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
   }
 
   const scopeParams = [
-    scopeDomain      && `domain=${scopeDomain}`,
+    scopeDomain && `domain=${scopeDomain}`,
     scopeAbstraction && `abstraction=${scopeAbstraction}`,
-    scopeArtefact    && `artefact=${scopeArtefact}`,
+    scopeArtefact && `artefact=${scopeArtefact}`,
     showDocumentScope && scopeDocument && `document=${scopeDocument}`,
-  ].filter(Boolean).join('&')
+  ]
+    .filter(Boolean)
+    .join('&')
   const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
@@ -100,9 +120,17 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
 
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
-        <div ref={trapRef} role="dialog" aria-modal="true" aria-label="New Architecture Decision" className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
+        <div
+          ref={trapRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="New Architecture Decision"
+          className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
+        >
           {/* Header — plain coloured bar, icon, title + purpose */}
-          <div className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}>
+          <div
+            className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}
+          >
             <div className="flex items-start gap-3 min-w-0">
               <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
                 <DecisionIcon className={`w-4 h-4 ${colors?.text ?? 'text-brand-700'}`} />
@@ -111,8 +139,8 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                 <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
                 <p className="text-xs text-gray-600 mt-1 leading-relaxed">
                   How a change to the architecture gets proposed and governed — capture the context,
-                  problem, and proposed direction; the agents analyse it and, once accepted, the change
-                  is applied through a reviewed pull request.
+                  problem, and proposed direction; the agents analyse it and, once accepted, the
+                  change is applied through a reviewed pull request.
                 </p>
               </div>
             </div>
@@ -122,7 +150,12 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
-                <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                <path
+                  d="M5 5l10 10M15 5L5 15"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="square"
+                />
               </svg>
             </button>
           </div>
@@ -131,9 +164,18 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
           <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
             {saved ? (
               <div className="py-6 text-center">
-                <div className="text-success-700 font-medium text-sm mb-1">{result.decisionId} created as a draft.</div>
-                <p className="text-xs text-gray-400 mb-3">Narrative Review is running to suggest improvements.</p>
-                <TextLink to={`/clients/${clientId}/${versionId}/decisions/${result.decisionId}`} state={{ cacheBust: true }} onClick={onClose} className="text-sm font-medium">
+                <div className="text-success-700 font-medium text-sm mb-1">
+                  {result.decisionId} created as a draft.
+                </div>
+                <p className="text-xs text-gray-400 mb-3">
+                  Narrative Review is running to suggest improvements.
+                </p>
+                <TextLink
+                  to={`/clients/${clientId}/${versionId}/decisions/${result.decisionId}`}
+                  state={{ cacheBust: true }}
+                  onClick={onClose}
+                  className="text-sm font-medium"
+                >
                   Open {result.decisionId} →
                 </TextLink>
               </div>
@@ -148,7 +190,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                     ref={titleRef}
                     type="text"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     placeholder="Short, human-readable summary of the decision"
                     className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
@@ -160,11 +202,12 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                     Context <span className="text-error-500">*</span>
                   </span>
                   <p className="text-xs text-gray-400 mb-1.5">
-                    The current situation — what is happening that prompts this decision. Written for a business audience.
+                    The current situation — what is happening that prompts this decision. Written
+                    for a business audience.
                   </p>
                   <AutoGrowTextarea
                     value={context}
-                    onChange={e => setContext(e.target.value)}
+                    onChange={(e) => setContext(e.target.value)}
                     placeholder="Today we..."
                     className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
@@ -180,7 +223,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                   </p>
                   <AutoGrowTextarea
                     value={problem}
-                    onChange={e => setProblem(e.target.value)}
+                    onChange={(e) => setProblem(e.target.value)}
                     placeholder="This is a problem because..."
                     className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
@@ -196,7 +239,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                   </p>
                   <AutoGrowTextarea
                     value={proposal}
-                    onChange={e => setProposal(e.target.value)}
+                    onChange={(e) => setProposal(e.target.value)}
                     placeholder="We propose to..."
                     className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
@@ -222,12 +265,14 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                       <span className="block text-xs font-medium text-gray-500 mb-1">Document</span>
                       <select
                         value={scopeDocument}
-                        onChange={e => setScopeDocument(e.target.value)}
+                        onChange={(e) => setScopeDocument(e.target.value)}
                         className="w-full px-3 py-1.5 text-sm border border-gray-300 bg-white focus:outline-none focus:border-brand-500 text-gray-700"
                       >
                         <option value="">Whole artefact (all documents)</option>
-                        {documents.map(d => (
-                          <option key={d.id} value={d.id}>{nameWithId(d.title, d.id)}</option>
+                        {documents.map((d) => (
+                          <option key={d.id} value={d.id}>
+                            {nameWithId(d.title, d.id)}
+                          </option>
                         ))}
                       </select>
                     </div>

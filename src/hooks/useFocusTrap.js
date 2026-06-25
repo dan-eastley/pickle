@@ -13,24 +13,36 @@ export default function useFocusTrap(active = true) {
     const previouslyFocused = document.activeElement
 
     const selector = [
-      'a[href]', 'button:not([disabled])', 'textarea:not([disabled])',
-      'input:not([disabled])', 'select:not([disabled])', '[tabindex]:not([tabindex="-1"])',
+      'a[href]',
+      'button:not([disabled])',
+      'textarea:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
     ].join(',')
 
     function onKeyDown(e) {
       if (e.key !== 'Tab') return
-      const focusable = [...node.querySelectorAll(selector)].filter(el => el.offsetParent !== null)
+      const focusable = [...node.querySelectorAll(selector)].filter(
+        (el) => el.offsetParent !== null
+      )
       if (focusable.length === 0) return
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
 
     node.addEventListener('keydown', onKeyDown)
     return () => {
       node.removeEventListener('keydown', onKeyDown)
-      if (previouslyFocused && typeof previouslyFocused.focus === 'function') previouslyFocused.focus()
+      if (previouslyFocused && typeof previouslyFocused.focus === 'function')
+        previouslyFocused.focus()
     }
   }, [active])
 

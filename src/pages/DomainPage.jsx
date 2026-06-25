@@ -1,7 +1,12 @@
 import { Link, useParams, Navigate } from 'react-router-dom'
 import {
-  getDomain, ABSTRACTIONS, getArtefactsForDomain,
-  DOMAIN_COLORS, ABSTRACTION_COLORS, FORMAT_ORDER, getFormat,
+  getDomain,
+  ABSTRACTIONS,
+  getArtefactsForDomain,
+  DOMAIN_COLORS,
+  ABSTRACTION_COLORS,
+  FORMAT_ORDER,
+  getFormat,
 } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
@@ -14,23 +19,23 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
   const colors = ABSTRACTION_COLORS[abstraction.id]
 
   // Build format groups in canonical order, starred at top of each group
-  const groups = FORMAT_ORDER
-    .map(fmtId => {
-      const items = artefacts.filter(a => a.format === fmtId)
-      if (!items.length) return null
-      return {
-        format: fmtId,
-        fmt: getFormat(fmtId),
-        items: [...items.filter(a => a.key), ...items.filter(a => !a.key)],
-      }
-    })
-    .filter(Boolean)
+  const groups = FORMAT_ORDER.map((fmtId) => {
+    const items = artefacts.filter((a) => a.format === fmtId)
+    if (!items.length) return null
+    return {
+      format: fmtId,
+      fmt: getFormat(fmtId),
+      items: [...items.filter((a) => a.key), ...items.filter((a) => !a.key)],
+    }
+  }).filter(Boolean)
 
   // Flat list with group-header markers for rendering
   const rows = []
-  groups.forEach(group => {
+  groups.forEach((group) => {
     rows.push({ type: 'header', format: group.format, fmt: group.fmt, count: group.items.length })
-    group.items.forEach((artefact, i) => rows.push({ type: 'artefact', artefact, firstInGroup: i === 0 }))
+    group.items.forEach((artefact, i) =>
+      rows.push({ type: 'artefact', artefact, firstInGroup: i === 0 })
+    )
   })
 
   return (
@@ -55,7 +60,10 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
       {/* Format-grouped artefacts */}
       {rows.map((row) =>
         row.type === 'header' ? (
-          <div key={`h-${row.format}`} className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100">
+          <div
+            key={`h-${row.format}`}
+            className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100"
+          >
             <FormatIcon format={row.format} className="w-3 h-3 text-gray-400" />
             <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               {row.fmt?.label ?? row.format} ({row.count})
@@ -98,15 +106,19 @@ export default function DomainPage() {
           <p className="mt-1 text-sm text-gray-500 max-w-3xl">{domainData.description}</p>
           <div className="mt-3 flex items-center gap-2 flex-wrap">
             <span className="text-xs text-gray-400">View for this domain</span>
-            <Button to={`${base}/decisions?domain=${domain}`} variant="secondary" size="sm">Decisions</Button>
-            <Button to={`${base}/discovery?domain=${domain}`} variant="secondary" size="sm">Discovery</Button>
+            <Button to={`${base}/decisions?domain=${domain}`} variant="secondary" size="sm">
+              Decisions
+            </Button>
+            <Button to={`${base}/discovery?domain=${domain}`} variant="secondary" size="sm">
+              Discovery
+            </Button>
           </div>
         </div>
       </div>
 
       <div>
         <div className="space-y-6">
-          {ABSTRACTIONS.map(abstraction => {
+          {ABSTRACTIONS.map((abstraction) => {
             const artefacts = getArtefactsForDomain(domain, abstraction.id)
             return (
               <AbstractionSection

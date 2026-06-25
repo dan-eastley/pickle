@@ -8,8 +8,8 @@ export default {
       },
       colors: {
         brand: {
-          25:  '#F5F8FF',
-          50:  '#EFF4FF',
+          25: '#F5F8FF',
+          50: '#EFF4FF',
           100: '#D1E0FF',
           200: '#B2CCFF',
           300: '#84ADFF',
@@ -22,8 +22,8 @@ export default {
           950: '#002266',
         },
         gray: {
-          25:  '#FCFCFD',
-          50:  '#F9FAFB',
+          25: '#FCFCFD',
+          50: '#F9FAFB',
           100: '#F2F4F7',
           200: '#EAECF0',
           300: '#D0D5DD',
@@ -36,17 +36,17 @@ export default {
           950: '#0C111D',
         },
         success: {
-          50:  '#ECFDF3',
+          50: '#ECFDF3',
           500: '#17B26A',
           700: '#067647',
         },
         warning: {
-          50:  '#FFFAEB',
+          50: '#FFFAEB',
           500: '#F79009',
           700: '#B54708',
         },
         error: {
-          50:  '#FEF3F2',
+          50: '#FEF3F2',
           500: '#F04438',
           700: '#B42318',
         },

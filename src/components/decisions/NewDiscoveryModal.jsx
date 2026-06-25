@@ -19,13 +19,16 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   const saved = !!result?.ok
   const trapRef = useFocusTrap()
   const titleRef = useRef(null)
-  useEffect(() => { titleRef.current?.focus() }, [])
+  useEffect(() => {
+    titleRef.current?.focus()
+  }, [])
 
   const canSave = title.trim() && context.trim() && request.trim()
 
   const isDirty = !!(title || context || request)
   const requestClose = () => {
-    if (!saved && isDirty && !window.confirm('Discard this discovery? Your changes will be lost.')) return
+    if (!saved && isDirty && !window.confirm('Discard this discovery? Your changes will be lost.'))
+      return
     onClose()
   }
   useEscapeKey(requestClose)
@@ -33,18 +36,21 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   async function handleSave() {
     setSaving(true)
     setResult(null)
-    const scope = scopeDomain ? {
-      domain: scopeDomain,
-      ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-      ...(scopeArtefact && { artefact: scopeArtefact }),
-    } : null
+    const scope = scopeDomain
+      ? {
+          domain: scopeDomain,
+          ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+          ...(scopeArtefact && { artefact: scopeArtefact }),
+        }
+      : null
     try {
       const res = await fetch('/api/github', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'create-discovery',
-          clientId, versionId,
+          clientId,
+          versionId,
           discovery: { title, context, request, ...(scope && { scope }) },
         }),
       })
@@ -59,10 +65,12 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   }
 
   const scopeParams = [
-    scopeDomain      && `domain=${scopeDomain}`,
+    scopeDomain && `domain=${scopeDomain}`,
     scopeAbstraction && `abstraction=${scopeAbstraction}`,
-    scopeArtefact    && `artefact=${scopeArtefact}`,
-  ].filter(Boolean).join('&')
+    scopeArtefact && `artefact=${scopeArtefact}`,
+  ]
+    .filter(Boolean)
+    .join('&')
   const fullEditorUrl = `/clients/${clientId}/${versionId}/discovery/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
@@ -71,7 +79,13 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
       <div className="fixed inset-0 bg-black/30 z-[150]" onClick={requestClose} />
 
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
-        <div ref={trapRef} role="dialog" aria-modal="true" aria-label="New Architecture Discovery" className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
+        <div
+          ref={trapRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="New Architecture Discovery"
+          className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
+        >
           {/* Header — plain coloured bar, icon, title + purpose */}
           <div className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0">
             <div className="flex items-start gap-3 min-w-0">
@@ -79,7 +93,9 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 <RobotIcon className="w-4 h-4 text-blue-600" />
               </div>
               <div className="min-w-0">
-                <h2 className="text-base font-semibold text-gray-900">New Architecture Discovery</h2>
+                <h2 className="text-base font-semibold text-gray-900">
+                  New Architecture Discovery
+                </h2>
                 <p className="text-xs text-gray-600 mt-1 leading-relaxed">
                   Ask the Virtual Architect Agent a question about your architecture — describe the
                   situation and what you want to know, and it produces a point-in-time view from the
@@ -93,7 +109,12 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
-                <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                <path
+                  d="M5 5l10 10M15 5L5 15"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="square"
+                />
               </svg>
             </button>
           </div>
@@ -107,7 +128,11 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 <p className="text-xs text-gray-400 mb-3">
                   The Virtual Architect Agent is running to produce its findings.
                 </p>
-                <TextLink to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`} onClick={onClose} className="text-sm font-medium">
+                <TextLink
+                  to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`}
+                  onClick={onClose}
+                  className="text-sm font-medium"
+                >
                   Open {result.discoveryId} →
                 </TextLink>
               </div>
@@ -121,7 +146,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                     ref={titleRef}
                     type="text"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Which capabilities depend on this platform?"
                     className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
@@ -133,7 +158,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                   </span>
                   <AutoGrowTextarea
                     value={context}
-                    onChange={e => setContext(e.target.value)}
+                    onChange={(e) => setContext(e.target.value)}
                     placeholder="Today we..."
                     className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />
@@ -145,7 +170,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                   </span>
                   <AutoGrowTextarea
                     value={request}
-                    onChange={e => setRequest(e.target.value)}
+                    onChange={(e) => setRequest(e.target.value)}
                     placeholder="List the..."
                     className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
                   />

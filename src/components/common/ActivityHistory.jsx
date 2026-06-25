@@ -10,7 +10,11 @@
 function formatTimestamp(ts) {
   try {
     return new Date(ts).toLocaleString('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     })
   } catch {
     return ts
@@ -38,18 +42,30 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">Date / Time</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">Activity</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-40">By</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">
+                Date / Time
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">
+                Activity
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-40">
+                By
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                Notes
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {rows.map((entry, i) => (
               <tr key={i} className="align-top">
-                <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">{formatTimestamp(entry.timestamp)}</td>
+                <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">
+                  {formatTimestamp(entry.timestamp)}
+                </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs font-medium px-2 py-0.5 ${ACTION_STYLES[entry.action] ?? 'bg-gray-100 text-gray-600'}`}>
+                  <span
+                    className={`text-xs font-medium px-2 py-0.5 ${ACTION_STYLES[entry.action] ?? 'bg-gray-100 text-gray-600'}`}
+                  >
                     {entry.action}
                   </span>
                 </td>

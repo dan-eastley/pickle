@@ -55,9 +55,18 @@ function MarkdownComponents(currentPath) {
         return <MermaidBlock>{children}</MermaidBlock>
       }
       const inline = !className
-      return inline
-        ? <code className="px-1 py-0.5 rounded bg-gray-100 text-sm font-mono text-gray-800" {...props}>{children}</code>
-        : <code className="block overflow-auto text-sm font-mono" {...props}>{children}</code>
+      return inline ? (
+        <code
+          className="px-1 py-0.5 rounded bg-gray-100 text-sm font-mono text-gray-800"
+          {...props}
+        >
+          {children}
+        </code>
+      ) : (
+        <code className="block overflow-auto text-sm font-mono" {...props}>
+          {children}
+        </code>
+      )
     },
     pre({ children }) {
       return (
@@ -70,7 +79,11 @@ function MarkdownComponents(currentPath) {
       return <h1 className="text-2xl font-bold text-gray-900 mb-4 mt-0">{children}</h1>
     },
     h2({ children }) {
-      return <h2 className="text-xl font-semibold text-gray-900 mb-3 mt-8 pb-2 border-b border-gray-200">{children}</h2>
+      return (
+        <h2 className="text-xl font-semibold text-gray-900 mb-3 mt-8 pb-2 border-b border-gray-200">
+          {children}
+        </h2>
+      )
     },
     h3({ children }) {
       return <h3 className="text-base font-semibold text-gray-900 mb-2 mt-6">{children}</h3>
@@ -98,7 +111,11 @@ function MarkdownComponents(currentPath) {
       return <thead className="bg-gray-50">{children}</thead>
     },
     th({ children }) {
-      return <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{children}</th>
+      return (
+        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+          {children}
+        </th>
+      )
     },
     td({ children }) {
       return <td className="px-4 py-3 text-gray-700 border-t border-gray-100">{children}</td>
@@ -133,17 +150,20 @@ export default function DocsPage() {
     setContent(null)
 
     fetch(`/api/docs/${docPath}.md`)
-      .then(r => {
-        if (r.status === 404) { setNotFound(true); return null }
+      .then((r) => {
+        if (r.status === 404) {
+          setNotFound(true)
+          return null
+        }
         if (!r.ok) throw new Error(`Failed to load doc: ${r.status}`)
         return r.text()
       })
-      .then(text => {
+      .then((text) => {
         if (text !== null) setContent(text)
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docPath])
 
   if (loading) {
@@ -165,10 +185,7 @@ export default function DocsPage() {
 
   return (
     <article className="prose-none">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={MarkdownComponents(docPath ?? '')}
-      >
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents(docPath ?? '')}>
         {content}
       </ReactMarkdown>
     </article>

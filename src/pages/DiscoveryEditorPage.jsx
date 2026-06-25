@@ -28,11 +28,13 @@ export default function DiscoveryEditorPage() {
 
   const canSave = title.trim() && context.trim() && request.trim()
 
-  const scope = scopeDomain ? {
-    domain: scopeDomain,
-    ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-    ...(scopeArtefact && { artefact: scopeArtefact }),
-  } : null
+  const scope = scopeDomain
+    ? {
+        domain: scopeDomain,
+        ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+        ...(scopeArtefact && { artefact: scopeArtefact }),
+      }
+    : null
 
   async function handleSave() {
     setSaving(true)
@@ -43,7 +45,8 @@ export default function DiscoveryEditorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'create-discovery',
-          clientId, versionId,
+          clientId,
+          versionId,
           discovery: { title, context, request, ...(scope && { scope }) },
         }),
       })
@@ -77,8 +80,12 @@ export default function DiscoveryEditorPage() {
 
       {result?.ok && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
-          <span className="font-semibold">{result.discoveryId}</span> created. The Virtual Architect Agent is running to produce its findings.{' '}
-          <TextLink to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`} className="font-medium">
+          <span className="font-semibold">{result.discoveryId}</span> created. The Virtual Architect
+          Agent is running to produce its findings.{' '}
+          <TextLink
+            to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`}
+            className="font-medium"
+          >
             Open {result.discoveryId} →
           </TextLink>
         </div>
@@ -90,9 +97,9 @@ export default function DiscoveryEditorPage() {
       )}
 
       <p className="max-w-2xl mb-6 text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3">
-        A Discovery asks the Virtual Architect Agent a question about your architecture. Describe the
-        situation and what you want to know, and it interrogates the model as it stands today to produce
-        a point-in-time view you can keep — it's read-only, nothing is changed.
+        A Discovery asks the Virtual Architect Agent a question about your architecture. Describe
+        the situation and what you want to know, and it interrogates the model as it stands today to
+        produce a point-in-time view you can keep — it's read-only, nothing is changed.
       </p>
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -105,7 +112,7 @@ export default function DiscoveryEditorPage() {
             <input
               type="text"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Which capabilities depend on Oracle CC&B?"
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -118,7 +125,7 @@ export default function DiscoveryEditorPage() {
             </span>
             <AutoGrowTextarea
               value={context}
-              onChange={e => setContext(e.target.value)}
+              onChange={(e) => setContext(e.target.value)}
               placeholder="Today we..."
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -131,7 +138,7 @@ export default function DiscoveryEditorPage() {
             </span>
             <AutoGrowTextarea
               value={request}
-              onChange={e => setRequest(e.target.value)}
+              onChange={(e) => setRequest(e.target.value)}
               placeholder="List the..."
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -158,7 +165,10 @@ export default function DiscoveryEditorPage() {
           tips={[
             ['Title', 'The question in a nutshell — short and scannable.'],
             ['Context', 'Why are you asking now, and what does the architecture look like today?'],
-            ['Request', 'Exactly what you want the agent to find, trace, or compare across the model.'],
+            [
+              'Request',
+              'Exactly what you want the agent to find, trace, or compare across the model.',
+            ],
             ['Scope', 'Optional. Narrow it to a domain, layer, or artefact to focus the answer.'],
           ]}
           footer="The Virtual Architect Agent reads the architecture as data and produces a point-in-time view you can keep."

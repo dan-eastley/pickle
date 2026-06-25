@@ -32,20 +32,29 @@ function useRecordTitle(url, id) {
   useEffect(() => {
     if (!id) return
     fetch(url)
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d?.title) setTitle(d.title) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.title) setTitle(d.title)
+      })
       .catch(() => {})
   }, [url, id])
   return title
 }
 
 export default function Breadcrumb() {
-  const { clientId, versionId, domain, abstraction, artefactId, decisionId, discoveryId } = useParams()
+  const { clientId, versionId, domain, abstraction, artefactId, decisionId, discoveryId } =
+    useParams()
   const { pathname } = useLocation()
   const base = `/clients/${clientId}/${versionId}`
 
-  const decisionTitle = useRecordTitle(`/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`, decisionId)
-  const discoveryTitle = useRecordTitle(`/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`, discoveryId)
+  const decisionTitle = useRecordTitle(
+    `/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`,
+    decisionId
+  )
+  const discoveryTitle = useRecordTitle(
+    `/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`,
+    discoveryId
+  )
 
   // ── Discovery routes ──────────────────────────────────────────────────────
   if (pathname.includes('/discovery')) {
@@ -53,7 +62,7 @@ export default function Breadcrumb() {
     const isNew = pathname.endsWith('/new')
 
     const crumbs = [{ label: 'Discovery', to: discoveryId || isNew ? discoveryBase : null }]
-    if (isNew)       crumbs.push({ label: 'New Discovery', to: null })
+    if (isNew) crumbs.push({ label: 'New Discovery', to: null })
     if (discoveryId) crumbs.push({ label: discoveryTitle ?? discoveryId, to: null })
 
     return <Crumbs crumbs={crumbs} />
@@ -65,7 +74,7 @@ export default function Breadcrumb() {
     const isNew = pathname.endsWith('/new')
 
     const crumbs = [{ label: 'Decisions', to: decisionId || isNew ? decisionsBase : null }]
-    if (isNew)      crumbs.push({ label: 'New Decision', to: null })
+    if (isNew) crumbs.push({ label: 'New Decision', to: null })
     if (decisionId) crumbs.push({ label: decisionTitle ?? decisionId, to: null })
 
     return <Crumbs crumbs={crumbs} />

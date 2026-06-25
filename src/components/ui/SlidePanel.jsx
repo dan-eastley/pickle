@@ -10,10 +10,7 @@ export default function SlidePanel({ open, onClose, title, subtitle, children })
         // Backdrop: clicking dismisses the panel; keyboard users dismiss with
         // Escape (see useEscapeKey above).
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
-        <div
-          className="fixed inset-0 z-[150] bg-black/10"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 z-[150] bg-black/10" onClick={onClose} />
       )}
       <div
         className={`fixed top-0 right-0 h-full z-[151] w-96 bg-white border-l border-gray-200 shadow-2xl flex flex-col transition-transform duration-200 ease-in-out ${
@@ -31,13 +28,16 @@ export default function SlidePanel({ open, onClose, title, subtitle, children })
             aria-label="Close"
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path
+                d="M12 4L4 12M4 4l8 8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
     </>,
     document.body

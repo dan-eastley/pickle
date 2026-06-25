@@ -6,12 +6,14 @@ import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function clientInitials(name) {
-  return name
-    .split(/\s+/)
-    .filter(w => /^[A-Z]/.test(w))
-    .map(w => w[0])
-    .slice(0, 3)
-    .join('') || name.slice(0, 2).toUpperCase()
+  return (
+    name
+      .split(/\s+/)
+      .filter((w) => /^[A-Z]/.test(w))
+      .map((w) => w[0])
+      .slice(0, 3)
+      .join('') || name.slice(0, 2).toUpperCase()
+  )
 }
 
 function ClientCard({ client, clientsMetadata }) {
@@ -70,12 +72,14 @@ export default function ClientsPage() {
           <Illustration name="no-data" className="w-56 mb-6" />
           <p className="text-sm font-semibold text-gray-700">No clients yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
-            Architecture is organised per client. Add a client folder under <code className="font-mono text-xs bg-gray-100 px-1">architectures/clients/</code> to get started.
+            Architecture is organised per client. Add a client folder under{' '}
+            <code className="font-mono text-xs bg-gray-100 px-1">architectures/clients/</code> to
+            get started.
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {clients.map(client => (
+          {clients.map((client) => (
             <ClientCard
               key={client['client-id']}
               client={client}

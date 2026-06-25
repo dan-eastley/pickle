@@ -12,10 +12,12 @@ export default defineConfig({
   expect: { timeout: 10000 },
   fullyParallel: true,
   use: { baseURL: externalBaseURL ?? 'http://localhost:3000' },
-  webServer: externalBaseURL ? undefined : {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  webServer: externalBaseURL
+    ? undefined
+    : {
+        command: 'npm run dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: !process.env.CI,
+        timeout: 120000,
+      },
 })

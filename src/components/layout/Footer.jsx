@@ -6,8 +6,10 @@ export default function Footer() {
 
   useEffect(() => {
     fetch('/api/github?action=config')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data) setConfig(data) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) setConfig(data)
+      })
       .catch(() => {})
   }, [])
 
@@ -17,12 +19,12 @@ export default function Footer() {
       {config?.owner && config?.repo && (
         <>
           <span className="text-xs text-gray-300">·</span>
-          <span className="text-xs text-gray-400 font-mono">{config.owner} / {config.repo}</span>
+          <span className="text-xs text-gray-400 font-mono">
+            {config.owner} / {config.repo}
+          </span>
         </>
       )}
-      {config?.env && (
-        <span className="text-xs text-gray-400 font-mono">{config.env}</span>
-      )}
+      {config?.env && <span className="text-xs text-gray-400 font-mono">{config.env}</span>}
       {config?.branchUrl && (
         <a
           href={`https://${config.branchUrl}`}
