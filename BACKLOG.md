@@ -91,6 +91,25 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ---
 
+## Epic: Document Artefacts (Low-Level Designs)
+
+Candidate document artefact types to add alongside the existing Interface Specification (`SOL-ISP`). Each is a low-level design produced during solution delivery; pick one to define (registry entry + schema + schema doc + per-version folder, per `docs/artefacts.md`). Most live in the Solution domain, Logical or Physical layer.
+
+- **DOC-1 · ⬜ Application Component Specification · Low** — detailed design of one application component: responsibilities, provided/consumed interfaces, internal data, dependencies, and configuration. (Physical)
+- **DOC-2 · ⬜ API Specification · Low** — formal API contract for a service (resources, operations, schemas, auth, versioning) — an OpenAPI-style document. (Physical)
+- **DOC-3 · ⬜ Physical Data Model · Low** — tables/collections, columns, keys, indexes, and constraints for a data store. (Physical)
+- **DOC-4 · ⬜ Data Migration Specification · Low** — source→target field mapping, transformation rules, reconciliation, and cutover. (Logical/Physical)
+- **DOC-5 · ⬜ Integration Design · Low** — end-to-end message flows, sequencing, idempotency, and error handling across systems (broader than a single interface). (Logical)
+- **DOC-6 · ⬜ Security Design · Low** — authn/authz flows, data protection, secrets, and the controls a solution implements. (Physical)
+- **DOC-7 · ⬜ Infrastructure / Deployment Design · Low** — hosting, network topology, environments, scaling, and resilience. (Physical / Technology)
+- **DOC-8 · ⬜ Sequence / Interaction Design · Low** — sequence diagrams for key scenarios across components and systems. (Logical)
+- **DOC-9 · ⬜ Non-Functional Requirements Specification · Low** — performance, availability, scalability, and operability targets with measures. (Logical)
+- **DOC-10 · ⬜ Operational Runbook · Low** — run, monitor, alert, and recover procedures for a deployed solution. (Physical)
+- **DOC-11 · ⬜ Batch / Job Specification · Low** — scheduled job design: inputs/outputs, schedule, dependencies, and SLAs. (Physical)
+- **DOC-12 · ⬜ Report / Dashboard Specification · Low** — analytics output design: datasets, metrics, filters, and audience. (Physical)
+
+---
+
 ## Epic: Roles, Access & Storage
 
 ### RAS-1 · ✅ Roles & audience/author · Medium
