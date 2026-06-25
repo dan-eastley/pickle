@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from 'react'
 import { LayersThree01, GitBranch01, CpuChip01 } from '@untitled-ui/icons-react'
 import { DOMAINS, ABSTRACTIONS, FORMATS, DOMAIN_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
@@ -9,6 +10,10 @@ import capabilityShot from '../assets/screenshots/capability-model.png'
 import documentShot from '../assets/screenshots/vision-document.png'
 import decisionShot from '../assets/screenshots/decision.png'
 import catalogueShot from '../assets/screenshots/catalogue.png'
+import processFlowShot from '../assets/screenshots/process-flow.png'
+import wiringShot from '../assets/screenshots/wiring-diagram.png'
+import solutionDesignShot from '../assets/screenshots/solution-design.png'
+import matrixShot from '../assets/screenshots/all-pages/matrix.png'
 
 const FEATURE_CARDS = [
   {
@@ -170,11 +175,29 @@ function DocumentChain() {
           </p>
         </div>
 
+        {/* Pronounced layer track — the conceptual → logical → physical spine */}
+        <div className="mb-6 grid grid-cols-3 gap-2 items-stretch">
+          {[
+            ['Conceptual', 'What & why · strategic', 'bg-blue-500'],
+            ['Logical', 'How · design', 'bg-amber-500'],
+            ['Physical', 'Where & with what · build', 'bg-rose-500'],
+          ].map(([label, sub, bar], j) => (
+            <div key={label} className="relative">
+              <div className={`h-1.5 ${bar}`} />
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-sm font-bold text-gray-900">{label}</span>
+                {j < 2 && <ArrowRight className="w-4 h-4 text-gray-300" />}
+              </div>
+              <p className="text-xs text-gray-400 uppercase tracking-wide">{sub}</p>
+            </div>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {DOCUMENT_CHAIN.map((doc, i) => (
             <div
               key={doc.id}
-              className={`relative bg-white border border-gray-200 border-t-2 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col hover:shadow-md transition-shadow`}
+              className={`relative bg-white border border-gray-200 border-t-4 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col hover:shadow-md transition-shadow`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-mono text-gray-300">
@@ -192,12 +215,6 @@ function DocumentChain() {
               </p>
             </div>
           ))}
-        </div>
-
-        <div className="mt-4 flex items-center justify-between text-xs font-medium text-gray-400 uppercase tracking-wider">
-          <span>Conceptual · more strategic</span>
-          <span className="hidden sm:block flex-1 mx-4 border-t border-dashed border-gray-300" />
-          <span>Physical · more detailed</span>
         </div>
       </div>
     </section>
@@ -221,13 +238,38 @@ function Hero() {
           </h1>
           <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
           <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-            Your TOGAF Architecture Repository — as code. Enterprise architecture as structured,
-            version-controlled data, with AI agents that analyse every proposed change and a
-            decision-record workflow that keeps humans in charge.
+            Your enterprise architecture as structured, version-controlled data — with AI agents
+            that analyse every proposed change and a decision-record workflow that keeps your
+            architects in charge.
           </p>
+          {/* The strongest selling points, lifted to the top */}
+          <ul className="mt-6 space-y-2 max-w-xl mx-auto lg:mx-0 text-left">
+            {[
+              [
+                'Architecture as code',
+                'Every artefact is schema-validated JSON in Git — versioned, auditable, queryable.',
+              ],
+              [
+                'AI-analysed change',
+                'Seven analysis agents stress-test each decision before it reaches a human.',
+              ],
+              [
+                'Governed by Decision Records',
+                'No undocumented drift — intent, rationale and analysis are captured for every change.',
+              ],
+              ['Framework-aligned', 'Maps onto TOGAF, SAFe, Zachman and UAF out of the box.'],
+            ].map(([h, t]) => (
+              <li key={h} className="flex items-start gap-2.5 text-sm">
+                <CheckIcon className="w-4 h-4 mt-0.5 text-brand-600 flex-shrink-0" />
+                <span className="text-gray-600">
+                  <span className="font-semibold text-gray-900">{h}</span> — {t}
+                </span>
+              </li>
+            ))}
+          </ul>
           <div className="mt-8 flex items-center justify-center lg:justify-start gap-3">
             <Button to="/clients" size="lg">
-              View Clients
+              Get started
               <ArrowRight className="w-4 h-4" />
             </Button>
             <Button to="/docs" variant="secondary" size="lg">
@@ -550,44 +592,150 @@ function SevenDimensions() {
             </p>
           </div>
         </div>
-
-        {/* Meta-model note — ties the three alignment steps to the layers */}
-        <div className="mt-8 bg-gray-50 border-l-2 border-gray-300 px-5 py-4 max-w-3xl">
-          <p className="text-sm text-gray-600 leading-relaxed">
-            <span className="font-semibold text-gray-900">Strategy, Principles and Guardrails</span>{' '}
-            are the three foundation artefacts every domain carries — one per abstraction layer
-            (Conceptual, Logical, Physical). The matching analysis steps test every decision against
-            all three, in every domain it touches.
-          </p>
-        </div>
       </div>
     </section>
   )
 }
 
-const SHOWCASE = [
+// The defining piece: architects author Strategy / Principles / Guardrails for
+// every domain × layer. Everything else — and every AI analysis — is measured
+// against them. Full-width, high-emphasis.
+const FOUNDATION = [
+  {
+    name: 'Strategy',
+    suffix: 'STR',
+    layer: 'Conceptual',
+    q: 'What & why',
+    text: 'The outcomes the architecture must achieve, per domain. Sets direction for everything below.',
+    bar: 'bg-blue-500',
+    badge: 'bg-blue-100 text-blue-700',
+  },
+  {
+    name: 'Principles',
+    suffix: 'PRN',
+    layer: 'Logical',
+    q: 'How we decide',
+    text: 'The vendor-neutral rules that shape design choices — the architect’s guidance, codified.',
+    bar: 'bg-amber-500',
+    badge: 'bg-amber-100 text-amber-700',
+  },
+  {
+    name: 'Guardrails',
+    suffix: 'GRD',
+    layer: 'Physical',
+    q: 'What we never cross',
+    text: 'The non-negotiable constraints and minimum standards. A breach blocks the change.',
+    bar: 'bg-rose-500',
+    badge: 'bg-rose-100 text-rose-700',
+  },
+]
+
+function FoundationArtefacts() {
+  return (
+    <section className="border-y border-gray-200 bg-gradient-to-br from-brand-700 to-rose-700 text-white">
+      <div className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="max-w-3xl mb-10">
+          <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-white/70">
+            The foundation — defined by your architects
+          </p>
+          <h2 className="text-2xl font-bold">Strategy, Principles &amp; Guardrails</h2>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">
+            These three artefacts are the spine of the whole model. Your{' '}
+            <span className="font-semibold text-white">architects author them</span> for every
+            domain — one per abstraction layer — and every other artefact, and every AI analysis
+            step, is measured against them. This is where human judgement sets the rules; the agents
+            only check that changes respect them.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {FOUNDATION.map((f) => (
+            <div key={f.name} className="bg-white text-gray-900 shadow-xl flex flex-col">
+              <div className={`h-1.5 ${f.bar}`} />
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-lg font-bold">{f.name}</span>
+                  <span className={`text-xs font-medium px-2 py-0.5 ${f.badge}`}>{f.layer}</span>
+                </div>
+                <p className="text-xs font-mono text-gray-400 mb-2">&lt;DOMAIN&gt;-{f.suffix}</p>
+                <p className="text-sm font-semibold text-brand-700 mb-1">{f.q}</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{f.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-6 text-sm text-white/70">
+          Five domains × three layers = <span className="font-semibold text-white">15</span>{' '}
+          foundation artefacts that define the guardrails the rest of the architecture lives within.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+// Up to 8 product screenshots spanning every aspect of Pickle.
+const CAROUSEL = [
+  {
+    src: capabilityShot,
+    title: 'Capability models as diagrams',
+    desc: 'Hierarchical business capability and process models, rendered live from the repository.',
+  },
+  {
+    src: catalogueShot,
+    title: 'Models as structured data',
+    desc: 'Capabilities, processes, data and platforms are schema-validated, queryable catalogues.',
+  },
+  {
+    src: matrixShot,
+    title: 'Relationships as matrices',
+    desc: 'Capability-to-process, process-to-data (CRUD) and more — the edges of the architecture graph.',
+  },
+  {
+    src: processFlowShot,
+    title: 'Process & data flows',
+    desc: 'Operating-model processes visualised end to end, generated from the catalogues.',
+  },
+  {
+    src: wiringShot,
+    title: 'Integration landscape',
+    desc: 'Platform-to-platform wiring with the interfaces that flow across each connection.',
+  },
   {
     src: documentShot,
     title: 'Architecture as documents',
-    desc: 'Visions, intents, and designs render as structured, navigable documents — straight from the repository.',
+    desc: 'Visions, intents and designs render as structured, navigable documents.',
+  },
+  {
+    src: solutionDesignShot,
+    title: 'Low-level design',
+    desc: 'Solution designs and interface specs — concrete enough for engineers to build against.',
   },
   {
     src: decisionShot,
     title: 'Every change, AI-analysed',
     desc: 'A decision runs a seven-step analysis pipeline before a human accepts or declines it.',
   },
-  {
-    src: catalogueShot,
-    title: 'Models as structured data',
-    desc: 'Capabilities, processes, and platforms are schema-validated catalogues you can query and diff.',
-  },
 ]
 
-function Showcase() {
+function ProductCarousel() {
+  const [i, setI] = useState(0)
+  const n = CAROUSEL.length
+  const go = useCallback((d) => setI((p) => (p + d + n) % n), [n])
+
+  // Auto-advance, paused on hover (via the paused flag).
+  const [paused, setPaused] = useState(false)
+  useEffect(() => {
+    if (paused) return
+    const t = setInterval(() => setI((p) => (p + 1) % n), 5000)
+    return () => clearInterval(t)
+  }, [paused, n])
+
+  const slide = CAROUSEL[i]
   return (
     <section className="border-b border-gray-200 bg-gray-50">
       <div className="max-w-[1400px] mx-auto px-6 py-16">
-        <div className="max-w-3xl mb-10">
+        <div className="max-w-3xl mb-8">
           <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
             See it in action
           </p>
@@ -595,19 +743,60 @@ function Showcase() {
             A working architecture repository, not slideware
           </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Every artefact is live, structured, and rendered directly from the Git repository —
-            diagrams, documents, catalogues, and AI-analysed decisions.
+            Every artefact is live, structured, and rendered directly from the Git repository.
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {SHOWCASE.map((s) => (
-            <div key={s.title} className="flex flex-col">
-              <div className="border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow overflow-hidden bg-white">
-                <img src={s.src} alt={s.title} className="w-full h-auto" loading="lazy" />
-              </div>
-              <h3 className="mt-4 text-sm font-bold text-gray-900">{s.title}</h3>
-              <p className="mt-1 text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+
+        <div
+          className="relative bg-white border border-gray-200 shadow-xl"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          <div className="overflow-hidden">
+            <img
+              key={slide.src}
+              src={slide.src}
+              alt={slide.title}
+              className="w-full h-auto block"
+              loading="lazy"
+            />
+          </div>
+
+          {/* Caption bar */}
+          <div className="flex items-center justify-between gap-4 border-t border-gray-200 px-5 py-3">
+            <div className="min-w-0">
+              <h3 className="text-sm font-bold text-gray-900 truncate">{slide.title}</h3>
+              <p className="text-xs text-gray-500 truncate">{slide.desc}</p>
             </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => go(-1)}
+                aria-label="Previous screenshot"
+                className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-500 hover:bg-gray-50 transition-colors"
+              >
+                <ArrowRight className="w-4 h-4 rotate-180" />
+              </button>
+              <button
+                onClick={() => go(1)}
+                aria-label="Next screenshot"
+                className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-500 hover:bg-gray-50 transition-colors"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dots */}
+        <div className="mt-4 flex items-center justify-center gap-2">
+          {CAROUSEL.map((s, j) => (
+            <button
+              key={s.title}
+              onClick={() => setI(j)}
+              aria-label={`Go to ${s.title}`}
+              aria-current={j === i}
+              className={`h-1.5 transition-all ${j === i ? 'w-6 bg-brand-600' : 'w-1.5 bg-gray-300 hover:bg-gray-400'}`}
+            />
           ))}
         </div>
       </div>
@@ -615,97 +804,67 @@ function Showcase() {
   )
 }
 
-const SUPPORT_STYLES = {
-  Supported: 'bg-emerald-50 text-emerald-700',
-  Partial: 'bg-amber-50 text-amber-700',
-  Roadmap: 'bg-gray-100 text-gray-500',
-}
-
-const TOGAF_ROWS = [
-  ['Architecture Repository — as code', 'Supported'],
-  ['Business · Data · Application domains', 'Supported'],
-  ['Architecture Decisions (ADRs) & change management', 'Supported'],
-  ['ADM phases — Vision → Definition → Governance', 'Partial'],
-  ['Building blocks (ABB / SBB) via abstraction layers', 'Partial'],
-  ['Technology architecture (Phase D)', 'Roadmap'],
-  ['Roadmap & Transition Architectures', 'Roadmap'],
+// Positive alignment bullets only — sales call-outs, a tick is enough.
+const FRAMEWORKS = [
+  {
+    name: 'TOGAF',
+    sub: 'ADM',
+    className: 'bg-sky-700 text-white',
+    blurb: 'A TOGAF Architecture Repository — as code.',
+    points: [
+      'Architecture Repository as versioned data',
+      'Business · Data · Application domains',
+      'ADR-driven change management & governance',
+      'Building blocks across abstraction layers',
+    ],
+  },
+  {
+    name: 'SAFe',
+    sub: '6.0',
+    className: 'bg-indigo-700 text-white',
+    blurb: 'A SAFe Solution Intent store.',
+    points: [
+      'Solution Intent — the document chain',
+      'Architectural enablers as Decision Records',
+      'Capabilities & features',
+      'PI / release baselines as versions',
+    ],
+  },
+  {
+    name: 'Zachman',
+    sub: '3.0',
+    className: 'bg-teal-700 text-white',
+    blurb: 'The interrogatives, as a model.',
+    points: [
+      'What → Data domains & concepts',
+      'How → Business processes',
+      'Why → Strategy & principles',
+      'Perspectives → Conceptual / Logical / Physical',
+    ],
+  },
+  {
+    name: 'UAF',
+    sub: '1.2',
+    className: 'bg-rose-700 text-white',
+    blurb: 'The model kinds, as formats.',
+    points: [
+      'Taxonomy → Catalogues',
+      'Connectivity & Traceability → Matrices',
+      'Structure & Processes → Diagrams',
+      'Operational domains → the five domains',
+    ],
+  },
 ]
 
-const SAFE_ROWS = [
-  ['Solution Intent — the solution document chain', 'Supported'],
-  ['Architectural enablers via Decision Records', 'Supported'],
-  ['Capabilities & Features', 'Supported'],
-  ['PI / release baselines — versions', 'Supported'],
-  ['Architectural Runway — physical layer readiness', 'Partial'],
-  ['WSJF prioritisation', 'Roadmap'],
-  ['Value Streams', 'Roadmap'],
-]
-
-// Zachman: interrogatives (rows) map to our domains; perspectives map to the
-// three abstraction layers. See FW-3 in BACKLOG.md for the full cell mapping.
-const ZACHMAN_ROWS = [
-  ['What (Data) — Data domains & concepts', 'Supported'],
-  ['How (Function) — Business processes', 'Supported'],
-  ['Why (Motivation) — Strategy & principles', 'Supported'],
-  ['Perspectives → Conceptual / Logical / Physical', 'Supported'],
-  ['Where (Network) — Integration & locations', 'Partial'],
-  ['Who (People) — Roles, audience & authors', 'Partial'],
-  ['When (Time) — Roadmap & events', 'Roadmap'],
-]
-
-// UAF: model kinds (rows) map to our three artefact formats; UAF domains map
-// onto our five architecture domains. See FW-4 in BACKLOG.md for detail.
-const UAF_ROWS = [
-  ['Taxonomy — Catalogues', 'Supported'],
-  ['Connectivity / Traceability — Matrices', 'Supported'],
-  ['Structure / Processes — Diagrams', 'Supported'],
-  ['Strategic & Operational domains', 'Partial'],
-  ['Information & Constraints — Data & guardrails', 'Partial'],
-  ['Roadmap — Transition architectures', 'Roadmap'],
-  ['Security & Projects domains', 'Roadmap'],
-]
-
-// Text-based framework wordmark badges (not the trademarked logo artwork).
-const FRAMEWORK_WORDMARK = {
-  TOGAF: { text: 'TOGAF', sub: 'ADM', className: 'bg-sky-700 text-white' },
-  SAFe: { text: 'SAFe', sub: '6.0', className: 'bg-indigo-700 text-white' },
-  Zachman: { text: 'Zachman', sub: '3.0', className: 'bg-teal-700 text-white' },
-  UAF: { text: 'UAF', sub: '1.2', className: 'bg-rose-700 text-white' },
-}
-
-function FrameworkWordmark({ name }) {
-  const mark = FRAMEWORK_WORDMARK[name] ?? { text: name, className: 'bg-gray-800 text-white' }
+function FrameworkWordmark({ name, sub, className }) {
   return (
     <span
-      className={`inline-flex items-baseline gap-1 px-2.5 py-1 text-sm font-bold tracking-tight ${mark.className}`}
+      className={`inline-flex items-baseline gap-1 px-2.5 py-1 text-sm font-bold tracking-tight ${className}`}
     >
-      {mark.text}
-      {mark.sub && (
-        <span className="text-[10px] font-semibold opacity-70 tracking-wider">{mark.sub}</span>
-      )}
+      {name}
+      {sub && <span className="text-[10px] font-semibold opacity-70 tracking-wider">{sub}</span>}
       <span className="text-[10px] font-normal opacity-70 align-super">®</span>
     </span>
-  )
-}
-
-function FrameworkTable({ name, blurb, rows }) {
-  return (
-    <div className="bg-white border-l-4 border-brand-600 shadow-sm p-6 flex flex-col">
-      <FrameworkWordmark name={name} />
-      <p className="mt-3 text-sm text-gray-500 leading-relaxed">{blurb}</p>
-      <ul className="mt-4 divide-y divide-gray-100">
-        {rows.map(([label, status]) => (
-          <li key={label} className="flex items-center gap-3 py-2">
-            <span className="text-sm text-gray-700 flex-1">{label}</span>
-            <span
-              className={`text-xs font-medium px-2 py-0.5 flex-shrink-0 ${SUPPORT_STYLES[status]}`}
-            >
-              {status}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
   )
 }
 
@@ -718,35 +877,32 @@ function FrameworkSupport() {
             Works with your framework
           </p>
           <h2 className="text-2xl font-bold text-gray-900">
-            Built to slot into TOGAF, SAFe, Zachman & UAF
+            Aligned to TOGAF, SAFe, Zachman &amp; UAF
           </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Pickle is a TOGAF-shaped architecture repository and a SAFe Solution Intent store — and
-            its domains, layers, and formats map cleanly onto the Zachman and UAF ontologies. Here's
-            what maps today, and what's on the roadmap.
+            Pickle isn’t a rival method — it’s the repository the methods you already use are crying
+            out for. Its domains, layers, and formats map straight onto the frameworks your
+            architects work in.
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <FrameworkTable
-            name="TOGAF"
-            blurb="The Architecture Repository, domains, and ADR-driven governance, expressed as versioned data."
-            rows={TOGAF_ROWS}
-          />
-          <FrameworkTable
-            name="SAFe"
-            blurb="Solution Intent and an architectural runway, with enablers raised as Decision Records."
-            rows={SAFE_ROWS}
-          />
-          <FrameworkTable
-            name="Zachman"
-            blurb="The six interrogatives map to our architecture domains; the perspectives map to the Conceptual / Logical / Physical layers."
-            rows={ZACHMAN_ROWS}
-          />
-          <FrameworkTable
-            name="UAF"
-            blurb="UAF model kinds map onto our three artefact formats — Catalogue, Matrix, Diagram — across the five architecture domains."
-            rows={UAF_ROWS}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {FRAMEWORKS.map((fw) => (
+            <div
+              key={fw.name}
+              className="bg-white border-l-4 border-brand-600 shadow-sm p-6 flex flex-col"
+            >
+              <FrameworkWordmark name={fw.name} sub={fw.sub} className={fw.className} />
+              <p className="mt-3 text-sm font-medium text-gray-600 leading-relaxed">{fw.blurb}</p>
+              <ul className="mt-4 space-y-2">
+                {fw.points.map((p) => (
+                  <li key={p} className="flex items-start gap-2 text-sm text-gray-600">
+                    <CheckIcon className="w-4 h-4 mt-0.5 text-emerald-600 flex-shrink-0" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -819,13 +975,14 @@ export default function HomePage() {
   return (
     <div>
       <Hero />
+      <ProductCarousel />
       <FeatureCards />
       <ArchitectureModel />
+      <FoundationArtefacts />
       <DocumentChain />
       <SevenDimensions />
       <FrameworkSupport />
       <VirtualArchitectAgent />
-      <Showcase />
       <ClosingCta />
     </div>
   )
