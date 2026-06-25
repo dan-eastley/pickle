@@ -77,7 +77,7 @@ Object.assign(CHECKS, {
   'Read an architecture vision': rendersWithContent('domains/solution/conceptual/SOL-AVI'),
   'Read a solution intent': rendersWithContent('domains/solution/logical/SOL-SVI'),
   'Read an interface specification': rendersWithContent('domains/solution/physical/SOL-ISP'),
-  'See an artefact’s change history': rendersWithContent('domains/business/conceptual/BUS-CAP', 'Joe Bloggs'),
+  'See an artefact’s change history': rendersWithContent('domains/business/conceptual/BUS-CAP', 'Joe B'),
   'Export the raw JSON of an artefact': rendersWithContent('domains/business/conceptual/BUS-CAP', 'BUS-CAP.json'),
 })
 

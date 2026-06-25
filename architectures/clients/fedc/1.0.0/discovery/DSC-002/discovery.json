@@ -7,7 +7,7 @@
     "request": "List the interfaces in the Interface Catalogue whose source or target is the MDM platform, with the conceptual data entities flowing across each.",
     "scope": { "domain": "integration" },
     "activity": [
-        { "timestamp": "2026-02-20T09:15:00Z", "action": "Created", "who": "Joe Bloggs" },
-        { "timestamp": "2026-04-01T16:40:00Z", "action": "Archived", "who": "Joe Bloggs" }
+        { "timestamp": "2026-02-20T09:15:00Z", "action": "Created", "who": "Joe B" },
+        { "timestamp": "2026-04-01T16:40:00Z", "action": "Archived", "who": "Joe B" }
     ]
 }

@@ -148,7 +148,7 @@ export default function DecisionEditorPage() {
             proposal && `## Proposal\n\n${proposal}`,
           ].filter(Boolean).join('\n\n'),
           activity: [
-            { timestamp: new Date().toISOString(), action: 'Created', who: 'Joe Bloggs' },
+            { timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' },
           ],
           ...(requirements.filter(r => r.description?.trim()).length > 0 && {
             requirements: requirements.filter(r => r.description?.trim()),
