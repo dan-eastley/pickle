@@ -50,6 +50,38 @@
             "rationale": "Field operations and field support have fundamentally different control models. Operations require real-time compliance and asset safety oversight; support requires customer experience and brand consistency. Clear separation allows the architecture to assign the right guardrails and principles to each, preventing one-size-fits-all constraints that either over-govern support or under-govern operations."
         }
     ],
+    "strategy-alignment": [
+        {
+            "finding": "The proposal introduces external contractors into the operating model, which challenges **Business Strategy** (`BUS-STR-002`): *Run on outcome-based, cross-functional product teams with full ownership of their value stream*. Teams owning their value streams require clarity on whether contractors participate as team members or execute work on behalf of teams. The ADR does not clarify this boundary.",
+            "impact": "If contractor-delivered field services are executed outside the team's direct ownership model, accountability for end-to-end outcomes becomes fragmented. This creates tension with the target outcome of *all value-creating work delivered by persistent product teams by 2026*. Contractors may perform work but not own its outcomes.",
+            "recommendation": "**Clarify team ownership:** Define whether contractors are embedded in product teams (reinforces BUS-STR-002) or operate as a separate delivery capability (risks diluting team ownership). If separate, update **Business Processes** (`BUS-PRO`) to explicitly show contractor handoff points and escalation paths so team accountability remains traceable.",
+            "rationale": "Outcome-based team ownership is foundational to FEDC's operating model. Contractor relationships must be designed to preserve, not undermine, this principle — whether through direct team membership, transparent service agreements, or outcome-based contracts."
+        },
+        {
+            "finding": "The proposal aligns with **Business Strategy** (`BUS-STR-001`): *Operate as a customer-centric organisation, organised around end-to-end customer outcomes*. Field service delivery (network operations, asset management, customer support) is customer-facing work. Contractor involvement expands capacity to deliver customer outcomes.",
+            "impact": "If contractor sourcing enables faster response to customer demand or geographic coverage gaps, it strengthens the customer-centric strategy. However, **target outcome** includes *90% of frontline staff working in cross-functional customer-facing teams by end of 2027* — contractors must be integrated into these teams, not parallel to them.",
+            "recommendation": "**Evidence the customer-centric fit:** Document how contractor-delivered field services preserve or enhance customer experience (e.g., SLAs, training, brand consistency). If contractors operate outside cross-functional teams, reconsider whether outsourcing is compatible with the target outcome.",
+            "rationale": "Customer outcomes are the strategic north star. Any capacity or capability decision must demonstrate that it moves toward, not away from, customer-centric delivery — especially at the frontline where contractors will interact directly with customers."
+        },
+        {
+            "finding": "The proposal raises a critical gap against **Data Strategy** (`DAT-STR-004`): *Privacy and consent are designed in, not bolted on*. Contractors will require access to customer data, asset data, or operational systems to deliver field services. The ADR does not specify data-access boundaries, classifications, or consent frameworks.",
+            "impact": "Contractor access to personal or sensitive data without guardrails creates regulatory and operational risk. GDPR and industry-specific data-protection regimes hold the organisation accountable even when contractors process data. Absence of clear data-access policy violates the *all personal-data flows traceable to a consent record* target outcome.",
+            "recommendation": "**Add data-access requirements:** (1) List which systems, databases, or data classifications contractors may access. (2) Specify whether contractor access is consented or de-identified. (3) Update **Data Architecture Guardrails** (`DAT-GRD`) to embed contractor-access constraints. (4) Define audit trails for contractor data access to meet lineage and provenance expectations (DAT-STR-006).",
+            "rationale": "In regulated industries, data access is not negotiable. Contractors must operate within published guardrails from day one. Designing data policies after contractor onboarding creates shadow access, compliance violations, and architecture debt."
+        },
+        {
+            "finding": "The proposal introduces operational complexity for **Integration Strategy** (`INT-STR-004`): *Zero direct cross-zone traffic — all inter-zone integration flows through the managed gateway and broker*. If contractors access applications or systems from external locations, integration traffic must route through the gateway/broker, not bypass it.",
+            "impact": "Contractor field operations may attempt to connect directly to asset-management or network-operations systems. Without explicit guardrails, this violates the zero-direct-cross-zone-traffic principle and undermines *gateway/broker mediates everything* target outcome. This creates security and observability blind spots.",
+            "recommendation": "**Specify network architecture for contractor access:** (1) Document whether contractor systems connect to internal systems via the managed gateway/broker. (2) Update **Integration Architecture** (`INT-IFC`) to show contractor connectivity patterns. (3) If contractors use field devices or mobile apps, clarify how they authenticate and integrate (e.g., API-first, event-driven — per INT-STR-001 and INT-STR-002).",
+            "rationale": "The gateway/broker is the control point for security, observability, and rate management across zones. Contractors operating outside this model undermine the integration strategy's foundational assumptions."
+        },
+        {
+            "finding": "The proposal aligns with **Solution Strategy** (`SOL-STR-001`): *Deliver solutions as thin vertical MVPs — prove value end-to-end before scaling*. Contractor sourcing for field services can be framed as a pilot to test contractor-delivery models before full-scale rollout.",
+            "impact": "If contractor sourcing is positioned as a 90-day MVP with measurable customer outcomes, it reinforces the thin-vertical delivery model. This increases confidence in the approach and provides evidence for subsequent scaling decisions.",
+            "recommendation": "**Reframe the proposal as an MVP:** Define a bounded scope (e.g., field services in one region or for one capability), success criteria (e.g., cost per transaction, first-response time, customer satisfaction), and a decision gate at 90 days to evaluate outcome evidence before broader rollout.",
+            "rationale": "Big-bang contractor rollouts risk duplicating delivery models and architectural patterns without evidence of fit. MVP framing aligns the decision with solution strategy and creates a learning feedback loop."
+        }
+    ],
     "referential-integrity": [
         {
             "finding": "Referential integrity checks passed across all scoped catalogues. All parent-id and domain-id foreign keys resolve to defined entities; no orphaned items detected.",
