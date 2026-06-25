@@ -49,5 +49,13 @@
             "recommendation": "**Expand the narrative** to distinguish: (1) What field operations work (inspection, maintenance, repair, emergency response)? (2) What field support work (customer visits, installations, troubleshooting)? (3) Are both contractor-delivered, or only one? Then **update Business Processes** (`BUS-PRO`) at L2/L3 level to show contractor-executed flows and decision points for approval/escalation.",
             "rationale": "Field operations and field support have fundamentally different control models. Operations require real-time compliance and asset safety oversight; support requires customer experience and brand consistency. Clear separation allows the architecture to assign the right guardrails and principles to each, preventing one-size-fits-all constraints that either over-govern support or under-govern operations."
         }
+    ],
+    "referential-integrity": [
+        {
+            "finding": "Referential integrity checks passed across all scoped catalogues. All parent-id and domain-id foreign keys resolve to defined entities; no orphaned items detected.",
+            "impact": "The architecture data is internally consistent and ready for downstream analysis. Cross-catalogue relationships (e.g., platform references to application domains in **Application Domains & Platforms** (`APP-DAP`), and platform endpoints in **Integration Architecture** (`INT-IFC`)) are valid and traceable.",
+            "recommendation": "No action required. The architecture baseline is structurally sound.",
+            "rationale": "Referential integrity is a prerequisite for reliable architecture analysis. When all IDs resolve and no orphans exist, architects can navigate the model with confidence, and downstream tools (query, view generation, impact analysis) can operate without data-quality surprises."
+        }
     ]
 }
