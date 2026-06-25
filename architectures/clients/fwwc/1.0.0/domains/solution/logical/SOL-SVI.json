@@ -1,0 +1,255 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SVI",
+    "audience": [
+        "Enterprise Architect",
+        "Solution Architect",
+        "Product Owner"
+    ],
+    "author": [
+        "Solution Architect"
+    ],
+    "documents": [
+        {
+            "id": "SVI-001",
+            "title": "Self-Service Analytics Solution Vision",
+            "description": "Solution vision for the delivery of self-service analytics to fwwc's operational and commercial teams, scoped to ADR-013 and the Q3 FY2026 delivery milestone.",
+            "status": "approved",
+            "scope": "ADR-013: Self-Service Analytics for Operational & Commercial Teams. Covers the Oracle Analytics Cloud (PLAT-BI) self-service portal, Databricks Lakehouse as the data tier, and CC&B (PLAT-CIS) as the primary operational data source.",
+            "executive-summary": {
+                "summary": "This solution vision covers the end-to-end logical design of fwwc's self-service analytics capability, giving operational and commercial teams governed, near-real-time access to data without IT support.",
+                "points": [
+                    "Business users access governed datasets through Oracle Analytics Cloud workbooks and subject areas.",
+                    "Data is sourced from a Databricks Delta Lakehouse, fed near-real-time from Oracle CC&B via Confluent change-data-capture and in batch from Oracle MDM and ERP.",
+                    "Data governance is enforced through Unity Catalog with per-domain catalogues.",
+                    "Defines the logical data flow, platform roles, and the risks and open questions to resolve before detailed design begins."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AIN",
+                    "document-id": "AIN-001",
+                    "title": "Analytical Platform Architecture Intent"
+                },
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-SDE",
+                    "document-id": "SDE-001",
+                    "title": "Analytics Portal Solution Design"
+                }
+            ],
+            "problem-statement": "fwwc's operational and commercial teams cannot currently produce their own analytics without IT support. Reports are generated from Oracle CC&B on an overnight batch cycle, creating a 24-hour information lag. Commercial teams resort to manual Excel extracts for modelling, with no auditability or governance. There is no single, governed enterprise dataset combining billing, metering, asset, and contract data.",
+            "solution-overview": "The solution introduces a Databricks Lakehouse as the governed enterprise data tier, fed by event-driven ingestion from Oracle CC&B via Confluent and batch ingestion from Oracle MDM and ERP. Oracle Analytics Cloud (PLAT-BI) is connected to the lakehouse via Databricks SQL and provides self-service workbooks, subject areas, and dashboards to business users. Data governance is enforced via Unity Catalog. The Confluent iPaaS layer orchestrates all event-driven data flows. AWS SageMaker connects to the lakehouse feature store for ML model training.",
+            "key-capabilities": [
+                {
+                    "artefact-id": "CAP-001"
+                },
+                {
+                    "artefact-id": "CAP-002"
+                },
+                {
+                    "artefact-id": "CAP-003"
+                },
+                {
+                    "artefact-id": "CAP-004"
+                },
+                {
+                    "artefact-id": "CAP-005"
+                }
+            ],
+            "platforms-involved": [
+                {
+                    "artefact-id": "PLAT-BI",
+                    "note": "Oracle Analytics Cloud — self-service BI surface."
+                },
+                {
+                    "artefact-id": "PLAT-DATA-LAKEHOUSE",
+                    "note": "Databricks Lakehouse — governed enterprise data tier."
+                },
+                {
+                    "artefact-id": "PLAT-CIS",
+                    "note": "Oracle CC&B — primary operational data source."
+                },
+                {
+                    "artefact-id": "PLAT-EVENT-BROKER",
+                    "note": "Confluent Kafka — event orchestration / CDC."
+                },
+                {
+                    "artefact-id": "PLAT-MDM",
+                    "note": "Oracle MDM — meter register, batch source."
+                },
+                {
+                    "artefact-id": "PLAT-ERP",
+                    "note": "Oracle ERP — finance / contract batch source."
+                }
+            ],
+            "assumptions": [
+                {
+                    "id": "ASM-001",
+                    "description": "Oracle Analytics Cloud has an active licence covering at least 200 named users across operational and commercial teams."
+                },
+                {
+                    "id": "ASM-002",
+                    "description": "Databricks Unity Catalog will be used for data governance; a single workspace will be provisioned for fwwc with separate catalogues per domain (operational, commercial, regulatory)."
+                },
+                {
+                    "id": "ASM-003",
+                    "description": "The Confluent Kafka cluster has been sized to handle CC&B CDC event volumes at peak load without throttling."
+                },
+                {
+                    "id": "ASM-004",
+                    "description": "Oracle CC&B supports change-data-capture via LogMiner or an approved Kafka Connect source connector; the DBA team has confirmed this is available in the current CC&B version."
+                }
+            ],
+            "risks": [
+                {
+                    "id": "RSK-001",
+                    "description": "The OAC-to-Databricks SQL connector uses JDBC and is not natively certified by Oracle Support. If Oracle raises a support boundary issue, the connection layer may need to be rearchitected via OAC's data replication feature or a custom connector.",
+                    "likelihood": "medium",
+                    "impact": "high",
+                    "mitigation": "Obtain written confirmation from Oracle Support pre-build. Evaluate OAC Data Gateway as an alternative connectivity path. Include a contingency sprint in the delivery plan."
+                },
+                {
+                    "id": "RSK-002",
+                    "description": "CC&B CDC event volume during billing run cycles (month-end) may exceed Confluent cluster capacity if the cluster has not been right-sized, causing event lag and delaying lakehouse refresh.",
+                    "likelihood": "medium",
+                    "impact": "medium",
+                    "mitigation": "Conduct a CC&B billing cycle load test against the Confluent cluster in the pre-production environment before go-live. Implement auto-scaling topic partitions and consumer group lag alerting."
+                },
+                {
+                    "id": "RSK-003",
+                    "description": "Data Engineering team capacity (currently 2 FTEs) is insufficient to deliver lakehouse pipelines, Unity Catalog governance setup, and OAC semantic layer simultaneously within the Q3 FY2026 milestone.",
+                    "likelihood": "high",
+                    "impact": "high",
+                    "mitigation": "Accelerate recruitment of 2 additional Data Engineers. Engage a Databricks-certified SI partner for Unity Catalog initial setup. Prioritise operational datasets (billing, metering) over commercial datasets in wave 1."
+                }
+            ],
+            "open-questions": [
+                {
+                    "id": "OQ-001",
+                    "question": "Will the Databricks lakehouse be hosted on AWS (co-located with SageMaker) or on Azure (Oracle Cloud Interconnect-adjacent)? This decision affects network latency for CC&B CDC and the SageMaker integration architecture.",
+                    "raised-by": "Enterprise Architecture"
+                },
+                {
+                    "id": "OQ-002",
+                    "question": "What is the agreed data retention policy for raw (bronze) layer data in the lakehouse — is 90 days sufficient for Ofwat audit requirements or does settlement data require 7 years?",
+                    "raised-by": "Data Governance"
+                }
+            ]
+        },
+        {
+            "id": "SVI-002",
+            "title": "Asset Lifecycle Management Solution Vision",
+            "description": "Solution vision for an integrated asset lifecycle management capability, combining Oracle MDM (meter asset register) with Oracle ERP (asset accounting) and Databricks (predictive maintenance ML) to provide a complete view of fwwc's network asset estate.",
+            "status": "draft",
+            "scope": "Asset Lifecycle Management — covering meter and network asset tracking from procurement through decommission. Platforms in scope: Oracle MDM, Oracle ERP, Databricks, and ServiceNow FSM for field operations.",
+            "executive-summary": {
+                "summary": "fwwc manages over 2.5 million metering points and a large network-asset portfolio whose lifecycle data is fragmented across Oracle MDM, Oracle ERP, and manual maintenance records.",
+                "points": [
+                    "Creates a unified, governed asset lifecycle view spanning MDM (asset register), ERP (asset accounting), and maintenance history.",
+                    "Automates event-driven synchronisation from MDM to ERP for capitalisation, removing month-end manual reconciliation.",
+                    "Supports RIIO-ED2 regulatory asset reporting, planned maintenance scheduling, and predictive failure modelling on Databricks / SageMaker."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AIN",
+                    "document-id": "AIN-002",
+                    "title": "Integration Platform Architecture Intent"
+                }
+            ],
+            "problem-statement": "fwwc's asset lifecycle data is fragmented across three systems with no automated synchronisation. Asset commissioning events in MDM do not automatically trigger capitalisation journals in ERP, leading to month-end manual reconciliation. Predictive maintenance is not possible because maintenance history data is not in a machine-readable, integrated form. Ofwat's asset reporting obligations (RIIO-ED2) require an auditable, timestamped asset register that the current state cannot provide.",
+            "solution-overview": "The solution establishes Oracle MDM as the system of record for all physical asset attributes and lifecycle status, with automated event-driven synchronisation to Oracle ERP via OIC for financial capitalisation. Asset lifecycle events (commissioning, maintenance, decommission) are streamed to the Databricks Lakehouse to build a historical asset event store. AWS SageMaker models consume the lakehouse feature store to predict asset failure probability. Field service work orders are raised in ServiceNow FSM and linked back to MDM asset records via the integration layer.",
+            "key-capabilities": [
+                {
+                    "artefact-id": "CAP-002"
+                },
+                {
+                    "artefact-id": "CAP-003"
+                },
+                {
+                    "artefact-id": "CAP-006"
+                }
+            ],
+            "platforms-involved": [
+                {
+                    "artefact-id": "PLAT-MDM",
+                    "note": "Oracle MDM — system of record for physical asset attributes."
+                },
+                {
+                    "artefact-id": "PLAT-ERP",
+                    "note": "Oracle ERP — fixed asset accounting / capitalisation."
+                },
+                {
+                    "artefact-id": "PLAT-DATA-LAKEHOUSE",
+                    "note": "Databricks — historical asset event store and ML feature store."
+                },
+                {
+                    "artefact-id": "PLAT-FSM",
+                    "note": "ServiceNow FSM — field service work orders."
+                },
+                {
+                    "artefact-id": "PLAT-EVENT-BROKER",
+                    "note": "Confluent / OIC — integration and synchronisation layer."
+                }
+            ],
+            "assumptions": [
+                {
+                    "id": "ASM-001",
+                    "description": "Oracle MDM has been fully configured with fwwc's asset taxonomy (meter types, pressure levels, asset classes) and all active meter assets have been migrated and validated."
+                },
+                {
+                    "id": "ASM-002",
+                    "description": "Oracle ERP fixed asset module is configured and in active use for asset capitalisation; no ERP upgrade is planned within the programme window."
+                },
+                {
+                    "id": "ASM-003",
+                    "description": "ServiceNow FSM is the approved field service management tool and has an active integration capability with the integration layer."
+                }
+            ],
+            "risks": [
+                {
+                    "id": "RSK-001",
+                    "description": "Historical maintenance records held in spreadsheets and paper formats cannot be easily ingested into the lakehouse without a significant data cleansing programme, limiting the initial ML training dataset quality.",
+                    "likelihood": "high",
+                    "impact": "medium",
+                    "mitigation": "Commission a data quality assessment of historical maintenance records in wave 0. Prioritise digitisation of the last 5 years of maintenance history for priority asset classes (HV transformers, metering). Accept reduced ML model accuracy in year 1 with improvement as historical data is cleansed."
+                },
+                {
+                    "id": "RSK-002",
+                    "description": "Oracle MDM-to-ERP event synchronisation via OIC may create duplicate capitalisation entries if MDM asset commissioning events are replayed during Confluent consumer group rebalancing.",
+                    "likelihood": "low",
+                    "impact": "high",
+                    "mitigation": "Implement idempotent event processing in OIC using event deduplication keys (MDM asset ID + event timestamp). Include duplicate detection test scenarios in UAT."
+                }
+            ],
+            "open-questions": [
+                {
+                    "id": "OQ-001",
+                    "question": "Who is the business owner for the unified asset register — is it the Asset Management team or Finance? This determines data stewardship governance for MDM and ERP reconciliation.",
+                    "raised-by": "Enterprise Architecture"
+                },
+                {
+                    "id": "OQ-002",
+                    "question": "Does the RIIO-ED2 regulatory asset reporting obligation require fwwc to report at individual asset level or aggregated asset class level? This drives the granularity required in the lakehouse asset event store.",
+                    "raised-by": "Regulatory Reporting"
+                }
+            ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}
