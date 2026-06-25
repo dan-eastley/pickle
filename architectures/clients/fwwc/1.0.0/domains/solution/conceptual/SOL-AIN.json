@@ -1,0 +1,313 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AIN",
+    "audience": [
+        "Enterprise Architect",
+        "Solution Architect",
+        "Product Owner"
+    ],
+    "author": [
+        "Solution Architect"
+    ],
+    "documents": [
+        {
+            "id": "AIN-001",
+            "title": "Analytical Platform Architecture Intent",
+            "description": "Architecture intent for fwwc's analytical platform modernisation, establishing the chosen direction for self-service analytics in response to ADR-013.",
+            "status": "approved",
+            "scope": "Self-Service Analytics initiative — the analytical platform layer covering ingestion, storage, transformation, and consumption of enterprise data. Directly aligned to ADR-013.",
+            "executive-summary": {
+                "summary": "This intent sets fwwc's direction for analytical platform modernisation: a Databricks lakehouse as the enterprise data tier, with Oracle Analytics Cloud retained as the self-service BI layer.",
+                "points": [
+                    "Chosen over a full SaaS replacement (too costly and high-risk) and a native-OAC-only approach (no ML tier, cannot meet latency).",
+                    "Event-driven ingestion from CC&B, MDM, and ERP via the Confluent event broker meets sub-15-minute latency targets.",
+                    "Preserves existing OAC investment while adding an ML-ready tier governed by Unity Catalog."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AVI",
+                    "document-id": "AVI-001",
+                    "title": "Data & Analytics Vision"
+                },
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-SVI",
+                    "document-id": "SVI-001",
+                    "title": "Self-Service Analytics Solution Vision"
+                }
+            ],
+            "stakeholders": [
+                {
+                    "id": "STK-001",
+                    "name": "Chief Data Officer",
+                    "role": "Accountable owner for the analytical platform direction",
+                    "concerns": [
+                        "CON-001",
+                        "CON-003"
+                    ]
+                },
+                {
+                    "id": "STK-002",
+                    "name": "Analytics & BI Team",
+                    "role": "Owners of the OAC consumption layer and semantic models",
+                    "concerns": [
+                        "CON-002"
+                    ]
+                },
+                {
+                    "id": "STK-003",
+                    "name": "Enterprise Architecture",
+                    "role": "Custodians of platform standards and principle adherence",
+                    "concerns": [
+                        "CON-001",
+                        "CON-004"
+                    ]
+                }
+            ],
+            "concerns": [
+                {
+                    "id": "CON-001",
+                    "description": "The chosen direction must avoid stranding the existing Oracle Analytics Cloud investment.",
+                    "type": "business"
+                },
+                {
+                    "id": "CON-002",
+                    "description": "The platform must serve both BI and ML workloads from a single governed tier.",
+                    "type": "technical"
+                },
+                {
+                    "id": "CON-003",
+                    "description": "Ingestion latency must meet sub-15-minute operational targets.",
+                    "type": "operational"
+                },
+                {
+                    "id": "CON-004",
+                    "description": "Data governance must be enforced centrally via Unity Catalog.",
+                    "type": "regulatory"
+                }
+            ],
+            "intent-statement": "fwwc will adopt a lakehouse architecture on Databricks as its enterprise data platform, with Oracle Analytics Cloud (OAC) retained as the self-service consumption layer. Data will be ingested from Oracle CC&B, MDM, and ERP via event-driven pipelines through the Confluent event broker. This approach avoids replacing OAC (preserving existing user investment and training), while providing a modern, scalable storage and transformation tier that can serve both BI and ML workloads.",
+            "background": "fwwc's current analytical landscape is fragmented: operational reports are generated directly from Oracle CC&B via custom OBIEE dashboards, commercial teams extract data to Excel for modelling, and there is no governed enterprise data store. The Oracle Analytics Cloud (OAC) licence is underutilised — it is connected only to CC&B and lacks a governed semantic layer. ADR-013 has been raised to address this fragmentation. The architecture intent decision centres on how to modernise the platform: whether to invest in OAC natively, adopt a fully cloud-native SaaS alternative, or introduce a lakehouse tier beneath OAC.",
+            "drivers": [
+                {
+                    "id": "DRV-001",
+                    "description": "Business demand for self-service analytics is increasing — operational managers require real-time views of metering, payment, and network data without IT-mediated report production.",
+                    "type": "business"
+                },
+                {
+                    "id": "DRV-002",
+                    "description": "Ofwat market settlement mandates require sub-30-minute data latency for settlement-related datasets by 2027.",
+                    "type": "regulatory"
+                },
+                {
+                    "id": "DRV-003",
+                    "description": "AI/ML workloads for churn prediction and predictive asset maintenance require a scalable, ML-ready data tier that CC&B cannot provide directly.",
+                    "type": "technology"
+                }
+            ],
+            "options-considered": [
+                {
+                    "id": "OPT-001",
+                    "name": "Cloud-Native SaaS (e.g. Snowflake + Tableau)",
+                    "description": "Replace the existing Oracle analytics stack with a cloud-native SaaS data warehouse (Snowflake) and a best-of-breed BI tool (Tableau or Power BI), migrating all existing OAC content.",
+                    "pros": [
+                        "Best-in-class SaaS scalability and managed infrastructure",
+                        "Strong ecosystem for ML integration via Snowpark",
+                        "Widely adopted in UK utilities sector"
+                    ],
+                    "cons": [
+                        "High migration cost and risk — all existing OAC content and training is stranded",
+                        "Oracle ERP and CC&B integration complexity on non-Oracle platforms",
+                        "Additional licensing cost on top of existing Oracle contracts",
+                        "18–24 month migration timeline before operational benefit"
+                    ]
+                },
+                {
+                    "id": "OPT-002",
+                    "name": "Extend Oracle Analytics Cloud natively",
+                    "description": "Invest in OAC's native data integration (Oracle Data Integrator) and semantic layer capabilities, connecting OAC directly to CC&B, MDM, and ERP without introducing a separate lakehouse tier.",
+                    "pros": [
+                        "Fully within existing Oracle contractual and support boundary",
+                        "No new tooling — builds on existing OAC skills",
+                        "Faster initial delivery for incremental BI use cases"
+                    ],
+                    "cons": [
+                        "Oracle Data Integrator is not suited for real-time event-driven ingestion at scale",
+                        "No native ML-ready data tier — Sagemaker and Databricks integration is complex",
+                        "Limited support for open data formats (Delta Lake, Parquet) needed for ML feature stores",
+                        "Perpetuates tight coupling to Oracle CC&B as the analytical source"
+                    ]
+                },
+                {
+                    "id": "OPT-003",
+                    "name": "Lakehouse on Databricks with OAC as BI layer",
+                    "description": "Introduce Databricks as the enterprise data lakehouse (Delta Lake, Unity Catalog for governance), feeding OAC via a semantic layer (OAC Data Gateway or direct Databricks SQL connector). Event-driven ingestion via Confluent.",
+                    "pros": [
+                        "Decouples BI consumption from source systems — OAC connects to governed lakehouse, not raw CC&B",
+                        "Databricks supports both BI (SQL) and ML (Python/Spark) workloads on the same platform",
+                        "Unity Catalog provides fine-grained governance and lineage required for UK GDPR and Ofwat audit",
+                        "Preserves OAC investment — existing content and user skills are retained",
+                        "Event-driven ingestion via Confluent achieves sub-15-minute latency targets"
+                    ],
+                    "cons": [
+                        "Introduces new tooling (Databricks) requiring upskilling of Data Engineering team",
+                        "OAC-to-Databricks connector is via JDBC — not natively certified by Oracle",
+                        "Adds architectural complexity versus Option 2"
+                    ]
+                }
+            ],
+            "recommended-direction": "Option 3 — Lakehouse on Databricks with OAC as BI layer — is the recommended direction. It is the only option that simultaneously achieves sub-15-minute data latency, preserves existing OAC investment, and provides an ML-ready data tier for future AI workloads. The JDBC connector risk is mitigated by Oracle's published OAC-Databricks integration guidance and fwwc's existing AWS infrastructure. Option 1 is deferred for strategic review post-2027 pending Oracle contract renewal. Option 2 is rejected due to its inability to support ML workloads and real-time latency requirements.",
+            "architecture-principles": [
+                "PRN-SOL-001",
+                "PRN-SOL-003",
+                "PRN-DAT-002"
+            ],
+            "guardrails": [
+                "GRD-SOL-001",
+                "GRD-DAT-001",
+                "GRD-DAT-003"
+            ],
+            "open-questions": [
+                {
+                    "id": "OQ-001",
+                    "question": "Can Oracle Support confirm that the OAC-to-Databricks SQL connector is within the standard OAC support boundary, or will fwwc require a separate support agreement with Databricks for this integration path?",
+                    "raised-by": "Enterprise Architecture"
+                },
+                {
+                    "id": "OQ-002",
+                    "question": "What is the agreed Databricks workspace tiering model — will operational and commercial teams share a single workspace with Unity Catalog namespace separation, or require separate workspaces?",
+                    "raised-by": "Data Engineering Lead"
+                }
+            ]
+        },
+        {
+            "id": "AIN-002",
+            "title": "Integration Platform Architecture Intent",
+            "description": "Architecture intent for the modernisation of fwwc's integration landscape, establishing the role of the Confluent event broker and Oracle Integration Cloud within the target integration architecture.",
+            "status": "in-review",
+            "scope": "Integration landscape modernisation — covering the iPaaS layer, point-to-point integrations between CC&B, CRM, ERP, MDM, and the lakehouse, and the adoption of event-driven patterns across fwwc's application estate.",
+            "executive-summary": {
+                "summary": "This intent establishes a hybrid integration architecture: Confluent Kafka as the enterprise event backbone for real-time flows and Oracle Integration Cloud for synchronous API orchestration.",
+                "points": [
+                    "All new integrations must route through this iPaaS tier; bespoke middleware and direct database links are decommissioned on a schedule.",
+                    "Chosen over a single managed iPaaS (cost-prohibitive at scale) and retaining ODI batch (cannot meet latency or lineage needs).",
+                    "Maximises existing Oracle investment and provides Ofwat-ready audit trails and data lineage."
+                ]
+            },
+            "context": [
+                {
+                    "relationship": "informed-by",
+                    "artefact-id": "SOL-AVI",
+                    "document-id": "AVI-002",
+                    "title": "Digital Customer Experience Vision"
+                },
+                {
+                    "relationship": "informs",
+                    "artefact-id": "SOL-SVI",
+                    "document-id": "SVI-002",
+                    "title": "Asset Lifecycle Management Solution Vision"
+                }
+            ],
+            "intent-statement": "fwwc will adopt a hybrid integration architecture combining Confluent Kafka as the enterprise event backbone for real-time, high-volume data flows and Oracle Integration Cloud (OIC) as the API management and orchestration layer for synchronous service integrations. All new integrations must be routed via this iPaaS tier; direct application-to-application database links and bespoke middleware will be decommissioned on a scheduled basis.",
+            "background": "fwwc's current integration landscape has grown organically and includes a mix of Oracle Data Integrator batch jobs, direct database links between CC&B and MDM, and several bespoke Java middleware components connecting Salesforce to CC&B. This creates a fragile, hard-to-govern integration mesh with no central observability. The integration platform modernisation intent is being driven by the Data & Analytics Programme (which requires event streams from CC&B) and the CX Transformation Programme (which requires real-time CRM-to-CIS sync).",
+            "drivers": [
+                {
+                    "id": "DRV-001",
+                    "description": "Multiple concurrent programmes (Data & Analytics, CX Transformation, Smart Meter Rollout) each require real-time data flows that the existing batch-based integration layer cannot deliver.",
+                    "type": "business"
+                },
+                {
+                    "id": "DRV-002",
+                    "description": "Bespoke Java middleware components connecting Salesforce and CC&B are reaching end-of-support and are not maintainable by the current team.",
+                    "type": "technology"
+                },
+                {
+                    "id": "DRV-003",
+                    "description": "Ofwat requires auditable, time-stamped data lineage for settlement-related data flows — the current batch ODI approach cannot provide this without significant manual effort.",
+                    "type": "regulatory"
+                }
+            ],
+            "options-considered": [
+                {
+                    "id": "OPT-001",
+                    "name": "Fully managed iPaaS (e.g. MuleSoft Anypoint)",
+                    "description": "Replace all existing integration with a single MuleSoft Anypoint platform providing both event streaming (via Anypoint MQ) and API management.",
+                    "pros": [
+                        "Single vendor, single platform for all integration patterns",
+                        "Strong governance, monitoring, and API catalogue out-of-box"
+                    ],
+                    "cons": [
+                        "High licensing cost — Anypoint pricing at fwwc's integration volume is significantly above Confluent + OIC",
+                        "MuleSoft's Kafka-compatible event streaming does not match Confluent's throughput and ecosystem maturity",
+                        "Displaces existing Oracle Integration Cloud investment"
+                    ]
+                },
+                {
+                    "id": "OPT-002",
+                    "name": "Retain ODI batch + extend with point-to-point APIs",
+                    "description": "Continue with Oracle Data Integrator for batch data flows and add REST APIs on a case-by-case basis for real-time needs, without adopting a central event backbone.",
+                    "pros": [
+                        "No new platform investment required",
+                        "Team has existing ODI skills"
+                    ],
+                    "cons": [
+                        "Cannot meet sub-15-minute latency requirements for analytics or CRM sync",
+                        "Proliferates point-to-point complexity — no central observability",
+                        "Does not address Ofwat lineage requirements"
+                    ]
+                },
+                {
+                    "id": "OPT-003",
+                    "name": "Confluent event backbone + Oracle Integration Cloud (OIC)",
+                    "description": "Confluent Kafka as the enterprise event backbone for all high-volume, real-time data streams; OIC for synchronous API orchestration and transformation. All new integrations must use one of these two patterns.",
+                    "pros": [
+                        "Confluent provides enterprise Kafka with Schema Registry, governed connectors, and Ofwat-ready audit trails",
+                        "OIC is already licensed and familiar to the integration team for synchronous patterns",
+                        "Separation of concerns: event-driven (Confluent) vs request-reply (OIC) is well-understood",
+                        "Kafka Connect provides certified connectors for CC&B, Salesforce, and Databricks"
+                    ],
+                    "cons": [
+                        "Requires upskilling on Kafka administration and Schema Registry governance",
+                        "Two platforms to operate and monitor — tooling integration (observability) requires investment"
+                    ]
+                }
+            ],
+            "recommended-direction": "Option 3 — Confluent event backbone combined with Oracle Integration Cloud — is the recommended direction. It maximises existing Oracle investment, meets latency and lineage requirements, and provides a clear separation between event-driven and synchronous integration patterns. Option 1 is cost-prohibitive at fwwc's scale. Option 2 cannot meet programme requirements and is rejected.",
+            "architecture-principles": [
+                "PRN-SOL-002",
+                "PRN-INT-001"
+            ],
+            "guardrails": [
+                "GRD-INT-001",
+                "GRD-INT-002"
+            ],
+            "open-questions": [
+                {
+                    "id": "OQ-001",
+                    "question": "What is the target decommission date for the existing bespoke Java middleware connecting Salesforce and CC&B? This is on the critical path for the CX Transformation Programme.",
+                    "raised-by": "Integration Architecture"
+                },
+                {
+                    "id": "OQ-002",
+                    "question": "Should Oracle Data Integrator (ODI) be retained for any ongoing batch ETL use cases (e.g. ERP period-end extracts), or is OIC capable of replacing all ODI patterns within the programme scope?",
+                    "raised-by": "Data Engineering Lead"
+                }
+            ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

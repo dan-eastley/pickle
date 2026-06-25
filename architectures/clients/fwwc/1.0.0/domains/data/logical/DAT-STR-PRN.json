@@ -1,0 +1,88 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:data:logical:DAT-STR-PRN",
+    "audience": [
+        "Enterprise Architect",
+        "Data Architect",
+        "Chief Data Officer"
+    ],
+    "author": [
+        "Data Architect",
+        "Data Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "DAT-STR-001",
+            "row-id": "DAT-PRN-001",
+            "rationale": "Publishing data assets as products requires each domain to have a single accountable owner responsible for the product."
+        },
+        {
+            "column-id": "DAT-STR-001",
+            "row-id": "DAT-PRN-003",
+            "rationale": "Data products carry quality SLAs as part of their contract, which makes the producing team accountable for quality."
+        },
+        {
+            "column-id": "DAT-STR-001",
+            "row-id": "DAT-PRN-005",
+            "rationale": "Discoverable, versioned data products require stable, machine-readable contracts so consumers can integrate without bespoke work."
+        },
+        {
+            "column-id": "DAT-STR-002",
+            "row-id": "DAT-PRN-001",
+            "rationale": "Federating ownership to domain teams is the direct mandate for every data domain having a named, accountable steward."
+        },
+        {
+            "column-id": "DAT-STR-002",
+            "row-id": "DAT-PRN-002",
+            "rationale": "Centralising standards while federating ownership depends on a single canonical definition per concept that all domain teams reference."
+        },
+        {
+            "column-id": "DAT-STR-003",
+            "row-id": "DAT-PRN-002",
+            "rationale": "Self-service analytics depends on canonical, trusted definitions that consumers can rely on without re-deriving them."
+        },
+        {
+            "column-id": "DAT-STR-003",
+            "row-id": "DAT-PRN-005",
+            "rationale": "Satisfying analytics use cases without bespoke pipeline work requires data products to expose open, machine-readable contracts."
+        },
+        {
+            "column-id": "DAT-STR-004",
+            "row-id": "DAT-PRN-004",
+            "rationale": "This strategy is the direct mandate for classifying, consent-tracking, and access-controlling personal data from the point of capture."
+        },
+        {
+            "column-id": "DAT-STR-005",
+            "row-id": "DAT-PRN-003",
+            "rationale": "Stream-first architectures for time-sensitive domains depend on producers taking responsibility for the quality of data the moment it is produced."
+        },
+        {
+            "column-id": "DAT-STR-005",
+            "row-id": "DAT-PRN-006",
+            "rationale": "Real-time distribution often creates derived copies and materialised views, which must be explicit, expiring, and traceable to the canonical source."
+        },
+        {
+            "column-id": "DAT-STR-006",
+            "row-id": "DAT-PRN-002",
+            "rationale": "End-to-end lineage depends on every derived value being traceable back to a single canonical definition rather than a parallel one."
+        },
+        {
+            "column-id": "DAT-STR-006",
+            "row-id": "DAT-PRN-006",
+            "rationale": "Automated provenance metadata is what makes copies of canonical data explicit, expiring, and traceable to source, as this principle requires."
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}
