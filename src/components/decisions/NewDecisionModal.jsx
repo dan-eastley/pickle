@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useId } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { nameWithId } from '../../lib/format'
@@ -17,6 +17,7 @@ export default function NewDecisionModal({
   versionId,
   onClose,
 }) {
+  const fid = useId() // base for associating field labels with their inputs
   const [title, setTitle] = useState('')
   const [context, setContext] = useState('')
   const [problem, setProblem] = useState('')
@@ -183,10 +184,14 @@ export default function NewDecisionModal({
               <>
                 {/* Title */}
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-title`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Title <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <input
+                    id={`${fid}-title`}
                     ref={titleRef}
                     type="text"
                     value={title}
@@ -198,14 +203,18 @@ export default function NewDecisionModal({
 
                 {/* Context */}
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-context`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Context <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <p className="text-xs text-gray-400 mb-1.5">
                     The current situation — what is happening that prompts this decision. Written
                     for a business audience.
                   </p>
                   <AutoGrowTextarea
+                    id={`${fid}-context`}
                     value={context}
                     onChange={(e) => setContext(e.target.value)}
                     placeholder="Today we..."
@@ -215,13 +224,17 @@ export default function NewDecisionModal({
 
                 {/* Problem */}
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-problem`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Problem <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <p className="text-xs text-gray-400 mb-1.5">
                     What needs to be fixed or addressed — the gap or pain in the current situation.
                   </p>
                   <AutoGrowTextarea
+                    id={`${fid}-problem`}
                     value={problem}
                     onChange={(e) => setProblem(e.target.value)}
                     placeholder="This is a problem because..."
@@ -231,13 +244,17 @@ export default function NewDecisionModal({
 
                 {/* Proposal */}
                 <div>
-                  <span className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor={`${fid}-proposal`}
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Proposal <span className="text-error-500">*</span>
-                  </span>
+                  </label>
                   <p className="text-xs text-gray-400 mb-1.5">
                     How we propose to solve it — the direction, at a business level.
                   </p>
                   <AutoGrowTextarea
+                    id={`${fid}-proposal`}
                     value={proposal}
                     onChange={(e) => setProposal(e.target.value)}
                     placeholder="We propose to..."
