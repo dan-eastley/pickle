@@ -99,20 +99,20 @@ const DOMAINS_BASE = [
     color: 'blue',
   },
   {
-    id: 'integration',
-    name: 'Integration',
-    acronym: 'INT',
-    description:
-      'How systems and services connect and communicate — covering APIs, events, messaging, and the rules that govern how information flows between them.',
-    color: 'emerald',
-  },
-  {
     id: 'application',
     name: 'Application',
     acronym: 'APP',
     description:
       'The software applications and platforms that deliver business capabilities — what exists, how it is organised, and how it relates to business needs.',
     color: 'amber',
+  },
+  {
+    id: 'integration',
+    name: 'Integration',
+    acronym: 'INT',
+    description:
+      'How systems and services connect and communicate — covering APIs, events, messaging, and the rules that govern how information flows between them.',
+    color: 'emerald',
   },
   {
     id: 'solution',
