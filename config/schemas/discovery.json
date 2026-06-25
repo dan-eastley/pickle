@@ -12,6 +12,10 @@
         "request"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to."
+        },
         "discovery-id": {
             "type": "string",
             "description": "Unique identifier in the form DSC-NNN (three-digit number, uppercase). Must match the parent folder name."

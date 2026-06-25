@@ -13,6 +13,10 @@
         "proposal"
     ],
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to."
+        },
         "decision-id": {
             "type": "string",
             "description": "Unique identifier in the form ADR-NNN (three-digit number, uppercase). Must match the parent folder name."

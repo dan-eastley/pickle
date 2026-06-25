@@ -172,6 +172,10 @@
                     "items": {
                         "$ref": "#/$defs/diagram-ref"
                     }
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "The interface or initiative this specification covers."
                 }
             },
             "additionalProperties": false
@@ -209,10 +213,16 @@
             "type": "object",
             "properties": {
                 "latency-p99-ms": {
-                    "type": "integer"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "throughput-tps": {
-                    "type": "integer"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "availability-percent": {
                     "type": "number"
