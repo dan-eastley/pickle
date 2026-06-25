@@ -1,0 +1,80 @@
+name: Nightly
+
+# Scheduled full-corpus run against production:
+#   - L7 use cases across every complexity + priority (outcomes committed back)
+#   - screenshot regeneration (uploaded as an artifact, not committed)
+# Deterministic — no Claude, no API key. Hits the deployed site directly.
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # 03:00 UTC daily
+  workflow_dispatch:
+    inputs:
+      base-url:
+        description: "Target base URL"
+        required: false
+        type: string
+        default: https://pickle-psi-neon.vercel.app
+
+permissions:
+  contents: write
+
+jobs:
+  use-cases:
+    name: Full use-case run
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: ${{ inputs.base-url || 'https://pickle-psi-neon.vercel.app' }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - name: Install deps
+        working-directory: src
+        run: npm ci
+      - name: Install Playwright Chromium
+        working-directory: src
+        run: npx playwright install --with-deps chromium
+
+      - name: Run full use-case corpus
+        env:
+          COMPLEXITY: all
+          PRIORITY: all
+        run: node tests/run-use-cases.mjs
+
+      - name: Commit outcomes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/use-cases.json tests/use-case-outcomes.md
+          if git diff --cached --quiet; then
+            echo "::notice::No use-case outcome changes."
+          else
+            git commit -m "Nightly: refresh use-case outcomes"
+            git push origin HEAD:main
+          fi
+
+  screenshots:
+    name: Screenshot regeneration
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: ${{ inputs.base-url || 'https://pickle-psi-neon.vercel.app' }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - name: Install deps
+        working-directory: src
+        run: npm ci
+      - name: Install Playwright Chromium
+        working-directory: src
+        run: npx playwright install --with-deps chromium
+      - name: Regenerate screenshots
+        working-directory: src
+        run: node scripts/screenshot.mjs
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ github.run_id }}
+          path: src/assets/screenshots/**
+          retention-days: 14
