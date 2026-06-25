@@ -127,7 +127,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** No deliberate review of *which* cross-artefact mappings matter. Likely-missing examples: **Data ↔ Process** (which processes create/read/update/delete which data), **Capability ↔ Data** (data owned/used by a capability), **Application ↔ Data** (systems of record), **Process ↔ Application** (which app supports which process step), **Capability ↔ Strategy/Principle** (traceability), **Application ↔ Integration/Interface**, **Capability ↔ Org/Role** (ownership, feeds [DEC-6]).
 **Proposed fix:** Produce a coverage map of artefact-type × artefact-type, mark which mappings are valuable, prioritise, then define the missing matrix types (registry entry + schema + doc + renderer, per `docs/artefacts.md` and [AMC-4]). Start with **Data ↔ Process**.
 
-### AMC-6 · ⬜ Multi-sector sample content · Medium
+### AMC-6 · 🟡 Multi-sector sample content · Medium
+**Progress (in flight):** Water client renamed `fwdc`→`fwwc` (Water & Wastewater); `fetc`/`fegc`/`fersc` scaffolded (metadata + 1.0.0 skeleton). `clients.json` lists all five. Synthesis method established: **preserve fedc's id graph, retheme prose per sector** (keeps matrices/diagrams referentially valid). `fwwc` business foundation done (BUS-STR, BUS-CAP water-tailored; principles/guardrails reused). Remaining: `fwwc` BUS-PRO/BUS-BPM/BUS-CAP-PRO/BUS-BCM + data/integration/application/solution; then full parity for `fetc`/`fegc`/`fersc`. ~35k lines remain — sequence per domain, validate each, commit incrementally.
 **Context:** Demo content should let us exercise the product across a range of regulated-utility sectors, not just one. Naming convention: **"Fictitious &lt;Sector&gt; Company"**.
 **Target sectors / clients:**
 | # | Sector | Client id | State |
