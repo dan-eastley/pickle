@@ -135,6 +135,13 @@
                     "question": "What is the agreed data retention policy for raw (bronze) layer data in the lakehouse — is 90 days sufficient for Ofgem audit requirements or does settlement data require 7 years?",
                     "raised-by": "Data Governance"
                 }
+            ],
+            "audience": [
+                "Solution Architect",
+                "Product Owner"
+            ],
+            "author": [
+                "Solution Architect"
             ]
         },
         {
@@ -235,6 +242,13 @@
                     "question": "Does the RIIO-ED2 regulatory asset reporting obligation require fersc to report at individual asset level or aggregated asset class level? This drives the granularity required in the lakehouse asset event store.",
                     "raised-by": "Regulatory Reporting"
                 }
+            ],
+            "audience": [
+                "Solution Architect",
+                "Product Owner"
+            ],
+            "author": [
+                "Solution Architect"
             ]
         }
     ],

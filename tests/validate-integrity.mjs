@@ -84,12 +84,17 @@ for (const client of clientFolders) {
       if (nonMeta.length > 0 && !nonMeta.some(k => Array.isArray(data[k]))) {
         err(`${f.replace(REPO + '/', '')}: has content but no content array — would render empty`)
       }
-      // audience / author roles valid
-      for (const field of ['audience', 'author']) {
-        for (const role of data[field] ?? []) {
-          if (!roleNames.has(role)) err(`${f.replace(REPO + '/', '')}: ${field} role "${role}" not in config/roles.json`)
+      // audience / author roles valid — at the artefact level, and on each
+      // document instance (documents carry their own audience/author roles).
+      const checkRoles = (obj, where) => {
+        for (const field of ['audience', 'author']) {
+          for (const role of obj[field] ?? []) {
+            if (!roleNames.has(role)) err(`${f.replace(REPO + '/', '')}${where}: ${field} role "${role}" not in config/roles.json`)
+          }
         }
       }
+      checkRoles(data, '')
+      for (const doc of data.documents ?? []) checkRoles(doc, ` document ${doc.id ?? ''}`)
     }
   }
 }

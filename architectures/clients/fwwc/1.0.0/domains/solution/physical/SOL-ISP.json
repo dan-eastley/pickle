@@ -63,6 +63,13 @@
                     "description": "Schema evolution: CC&B adds an optional new field (payment_method) not in current Avro schema.",
                     "expected-outcome": "Avro schema backward-compatible evolution accepted by schema registry. Existing consumers unaffected. New field available in next Databricks silver refresh."
                 }
+            ],
+            "audience": [
+                "Technical Architect",
+                "Engineering Lead"
+            ],
+            "author": [
+                "Technical Architect"
             ]
         },
         {
@@ -124,6 +131,13 @@
                     "description": "Concurrent create: same customer created in CRM and CC&B simultaneously before integration is active.",
                     "expected-outcome": "MDM match detects duplicate. OIC links both records to single golden record. No duplicate Person in CC&B. Alert raised for data steward review."
                 }
+            ],
+            "audience": [
+                "Technical Architect",
+                "Engineering Lead"
+            ],
+            "author": [
+                "Technical Architect"
             ]
         }
     ],
