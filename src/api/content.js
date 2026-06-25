@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
   const token = process.env.GITHUB_TOKEN
   const owner = process.env.GITHUB_OWNER
-  const repo  = process.env.GITHUB_REPO
+  const repo = process.env.GITHUB_REPO
 
   if (!token || !owner || !repo) {
     return res.status(503).json({ error: 'GitHub not configured' })
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Cache-Control', 'no-store')
     return res.json({
-      entries: data.map(f => ({ name: f.name, isDir: f.type === 'dir' })),
+      entries: data.map((f) => ({ name: f.name, isDir: f.type === 'dir' })),
     })
   }
 

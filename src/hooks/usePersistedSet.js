@@ -25,9 +25,13 @@ export default function usePersistedSet(storageKey) {
   }, [storageKey])
 
   const setSet = useCallback((updater) => {
-    setSetState(prev => {
+    setSetState((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater
-      try { localStorage.setItem(keyRef.current, JSON.stringify([...next])) } catch { /* ignore */ }
+      try {
+        localStorage.setItem(keyRef.current, JSON.stringify([...next]))
+      } catch {
+        /* ignore */
+      }
       return next
     })
   }, [])

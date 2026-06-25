@@ -11,47 +11,64 @@ function useArtefactCount(clientId, versionId, artefact, rowRef) {
   const [count, setCount] = useState(undefined)
 
   useEffect(() => {
-    if (artefact.format !== 'catalogue') { setCount(null); return }
+    if (artefact.format !== 'catalogue') {
+      setCount(null)
+      return
+    }
 
     const el = rowRef.current
     if (!el) return
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      observer.disconnect()
-      Promise.all([
-        getArtefactData(clientId, versionId, artefact.domain, artefact.abstraction, artefact.id),
-        getSchema(artefact.domain, artefact.abstraction, artefact.id),
-      ]).then(([data, schema]) => {
-        if (!data) { setCount(null); return }
-        const meta = schema?.meta
-        const labels = meta?.countLabels
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+        Promise.all([
+          getArtefactData(clientId, versionId, artefact.domain, artefact.abstraction, artefact.id),
+          getSchema(artefact.domain, artefact.abstraction, artefact.id),
+        ])
+          .then(([data, schema]) => {
+            if (!data) {
+              setCount(null)
+              return
+            }
+            const meta = schema?.meta
+            const labels = meta?.countLabels
 
-        if (meta?.renderAs === 'grouped' && meta?.grouping) {
-          const { parentArray, childArray } = meta.grouping
-          const pCount = data[parentArray]?.length ?? 0
-          const cCount = data[childArray]?.length ?? 0
-          setCount({ type: 'grouped', pCount, cCount, labels })
-          return
-        }
+            if (meta?.renderAs === 'grouped' && meta?.grouping) {
+              const { parentArray, childArray } = meta.grouping
+              const pCount = data[parentArray]?.length ?? 0
+              const cCount = data[childArray]?.length ?? 0
+              setCount({ type: 'grouped', pCount, cCount, labels })
+              return
+            }
 
-        const rootKey = getRootArrayKey(data)
-        if (!rootKey) { setCount(null); return }
-        const items = data[rootKey]
-        if (!items.length) { setCount(null); return }
-        const isHierarchical = items.some(item => item['parent-id'])
-        if (isHierarchical) {
-          const level1 = items.filter(i => !i['parent-id']).length
-          setCount({ type: 'hierarchical', level1, total: items.length, labels })
-        } else {
-          setCount({ type: 'flat', total: items.length, labels })
-        }
-      }).catch(() => setCount(null))
-    }, { threshold: 0.1 })
+            const rootKey = getRootArrayKey(data)
+            if (!rootKey) {
+              setCount(null)
+              return
+            }
+            const items = data[rootKey]
+            if (!items.length) {
+              setCount(null)
+              return
+            }
+            const isHierarchical = items.some((item) => item['parent-id'])
+            if (isHierarchical) {
+              const level1 = items.filter((i) => !i['parent-id']).length
+              setCount({ type: 'hierarchical', level1, total: items.length, labels })
+            } else {
+              setCount({ type: 'flat', total: items.length, labels })
+            }
+          })
+          .catch(() => setCount(null))
+      },
+      { threshold: 0.1 }
+    )
 
     observer.observe(el)
     return () => observer.disconnect()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, artefact.id])
 
   return count
@@ -62,9 +79,15 @@ function EntryCount({ count }) {
   const { type, level1, total, pCount, cCount, labels } = count
 
   if (type === 'grouped') {
-    const pl = pCount === 1 ? (labels?.parent ?? 'group') : (labels?.parent ? labels.parent + 's' : 'groups')
-    const cl = cCount === 1 ? (labels?.child ?? 'item')  : (labels?.child  ? labels.child  + 's' : 'items')
-    return <span className="text-xs text-gray-400 flex-shrink-0">{pCount} {pl} · {cCount} {cl}</span>
+    const pl =
+      pCount === 1 ? (labels?.parent ?? 'group') : labels?.parent ? labels.parent + 's' : 'groups'
+    const cl =
+      cCount === 1 ? (labels?.child ?? 'item') : labels?.child ? labels.child + 's' : 'items'
+    return (
+      <span className="text-xs text-gray-400 flex-shrink-0">
+        {pCount} {pl} · {cCount} {cl}
+      </span>
+    )
   }
 
   if (type === 'hierarchical') {
@@ -79,7 +102,11 @@ function EntryCount({ count }) {
 
   const sing = labels?.singular ?? 'entry'
   const plur = labels?.plural ?? 'entries'
-  return <span className="text-xs text-gray-400 flex-shrink-0">{total} {total === 1 ? sing : plur}</span>
+  return (
+    <span className="text-xs text-gray-400 flex-shrink-0">
+      {total} {total === 1 ? sing : plur}
+    </span>
+  )
 }
 
 export default function ArtefactRow({ artefact, to, clientId, versionId, divider = false }) {
@@ -91,7 +118,9 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
       ref={rowRef}
       to={to}
       className={`group flex items-center gap-4 px-5 py-4 transition-colors border-l-4 ${
-        artefact.key ? 'border-amber-400 bg-amber-50 hover:bg-amber-100' : 'border-transparent hover:bg-gray-50'
+        artefact.key
+          ? 'border-amber-400 bg-amber-50 hover:bg-amber-100'
+          : 'border-transparent hover:bg-gray-50'
       } ${divider ? 'border-t border-gray-100' : ''}`}
     >
       <div className="w-8 h-8 bg-gray-100 flex items-center justify-center flex-shrink-0 group-hover:bg-gray-200 transition-colors">
@@ -119,7 +148,9 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
       </div>
 
       <div className="flex items-center gap-3 flex-shrink-0">
-        <span className="text-xs font-mono text-gray-300" title={artefact.name}>{artefact.id}</span>
+        <span className="text-xs font-mono text-gray-300" title={artefact.name}>
+          {artefact.id}
+        </span>
         <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors" />
       </div>
     </Link>

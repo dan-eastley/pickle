@@ -13,7 +13,7 @@ function architectureApiPlugin() {
     name: 'architecture-api',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        handleApiRequest(req, res, next).catch(err => {
+        handleApiRequest(req, res, next).catch((err) => {
           res.statusCode = 500
           res.end(JSON.stringify({ error: err.message }))
         })
@@ -37,11 +37,15 @@ async function handleApiRequest(req, res, next) {
 
     const token = process.env.GITHUB_TOKEN
     const owner = process.env.GITHUB_OWNER
-    const repo  = process.env.GITHUB_REPO
+    const repo = process.env.GITHUB_REPO
 
     if (!token || !owner || !repo) {
       res.statusCode = 503
-      return res.end(JSON.stringify({ error: 'GitHub not configured — set GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO' }))
+      return res.end(
+        JSON.stringify({
+          error: 'GitHub not configured — set GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO',
+        })
+      )
     }
 
     const ghUrl = `${GH_API}/repos/${owner}/${repo}/contents/architectures/${relPath}?ref=${encodeURIComponent(ref)}`
@@ -67,9 +71,11 @@ async function handleApiRequest(req, res, next) {
     if (Array.isArray(data)) {
       res.setHeader('Content-Type', 'application/json')
       res.setHeader('Cache-Control', 'no-store')
-      return res.end(JSON.stringify({
-        entries: data.map(f => ({ name: f.name, isDir: f.type === 'dir' })),
-      }))
+      return res.end(
+        JSON.stringify({
+          entries: data.map((f) => ({ name: f.name, isDir: f.type === 'dir' })),
+        })
+      )
     }
 
     const content = Buffer.from(data.content, 'base64').toString('utf-8')
@@ -93,15 +99,28 @@ async function handleApiRequest(req, res, next) {
     const shimRes = {
       statusCode: 200,
       setHeader: (k, v) => res.setHeader(k, v),
-      status(code) { this.statusCode = code; res.statusCode = code; return this },
-      json(obj) { res.setHeader('Content-Type', 'application/json'); res.statusCode = this.statusCode; res.end(JSON.stringify(obj)) },
-      end() { res.statusCode = this.statusCode; res.end() },
+      status(code) {
+        this.statusCode = code
+        res.statusCode = code
+        return this
+      },
+      json(obj) {
+        res.setHeader('Content-Type', 'application/json')
+        res.statusCode = this.statusCode
+        res.end(JSON.stringify(obj))
+      },
+      end() {
+        res.statusCode = this.statusCode
+        res.end()
+      },
     }
     return handler(shimReq, shimRes)
   }
 
   // /api/schemas/** and /api/docs/** → read from local disk (codebase-managed, no live updates needed)
-  let basePath, relPath, isMarkdown = false
+  let basePath,
+    relPath,
+    isMarkdown = false
 
   if (url.pathname.startsWith('/api/schemas/')) {
     basePath = resolve(REPO_ROOT, 'config/schemas')
@@ -131,7 +150,7 @@ async function handleApiRequest(req, res, next) {
 
   const stat = statSync(filePath)
   if (stat.isDirectory()) {
-    const entries = readdirSync(filePath).map(name => ({
+    const entries = readdirSync(filePath).map((name) => ({
       name,
       isDir: statSync(resolve(filePath, name)).isDirectory(),
     }))

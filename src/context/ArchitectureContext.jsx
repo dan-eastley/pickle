@@ -19,22 +19,20 @@ export function ArchitectureProvider({ children }) {
 
   useEffect(() => {
     getClients()
-      .then(list => {
+      .then((list) => {
         setClients(list)
         if (!selectedClientId && list.length > 0) {
           setSelectedClientId(list[0]['client-id'])
         }
         Promise.all(
-          list.map(c =>
-            getClient(c['client-id']).then(meta => [c['client-id'], meta])
-          )
-        ).then(entries => {
+          list.map((c) => getClient(c['client-id']).then((meta) => [c['client-id'], meta]))
+        ).then((entries) => {
           setClientsMetadata(Object.fromEntries(entries.filter(([, m]) => m)))
         })
       })
-      .catch(err => setError(err.message))
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -47,14 +45,14 @@ export function ArchitectureProvider({ children }) {
       .then(([meta, vers]) => {
         setClientMeta(meta)
         setVersions(vers)
-        const currentVersionValid = vers.some(v => v['version-id'] === selectedVersionId)
+        const currentVersionValid = vers.some((v) => v['version-id'] === selectedVersionId)
         if (!currentVersionValid && vers.length > 0) {
           // Select the latest (last) version
           setSelectedVersionId(vers[vers.length - 1]['version-id'])
         }
       })
-      .catch(err => setError(err.message))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch((err) => setError(err.message))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClientId])
 
   useEffect(() => {

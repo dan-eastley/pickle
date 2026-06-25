@@ -16,12 +16,12 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const currentOpt = value ? options.find(o => getId(o) === value) : null
+  const currentOpt = value ? options.find((o) => getId(o) === value) : null
 
   return (
     <div ref={ref} className="relative">
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 transition-colors border-0"
       >
         <span className="max-w-[200px] truncate">{currentOpt ? getLabel(currentOpt) : label}</span>
@@ -30,10 +30,13 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
 
       {open && (
         <div className="absolute right-0 top-full mt-0 w-72 bg-white border border-gray-300 z-50 py-1 overflow-hidden shadow-md">
-          {options.map(opt => (
+          {options.map((opt) => (
             <button
               key={getId(opt)}
-              onClick={() => { onSelect(getId(opt)); setOpen(false) }}
+              onClick={() => {
+                onSelect(getId(opt))
+                setOpen(false)
+              }}
               className={`w-full text-left px-3 py-2 text-sm transition-colors ${
                 getId(opt) === value
                   ? 'bg-brand-600 text-white font-medium'
@@ -53,7 +56,16 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
 }
 
 export default function TopBar() {
-  const { clients, clientsMetadata, selectedClientId, selectedVersionId, clientMeta, versions, setClientId, setVersionId } = useArchitecture()
+  const {
+    clients,
+    clientsMetadata,
+    selectedClientId,
+    selectedVersionId,
+    clientMeta,
+    versions,
+    setClientId,
+    setVersionId,
+  } = useArchitecture()
   const navigate = useNavigate()
 
   const handleClientChange = (newClientId) => {
@@ -75,9 +87,16 @@ export default function TopBar() {
   return (
     <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-6 gap-6 sticky top-0 z-40">
       {/* Pickle brand — links to root */}
-      <Link to="/" className="flex items-baseline gap-3 flex-shrink-0 hover:opacity-80 transition-opacity">
-        <span className="text-lg font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">Pickle</span>
-        <span className="text-lg text-gray-400 hidden sm:block">Agentic Architecture as a Service</span>
+      <Link
+        to="/"
+        className="flex items-baseline gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
+      >
+        <span className="text-lg font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
+          Pickle
+        </span>
+        <span className="text-lg text-gray-400 hidden sm:block">
+          Agentic Architecture as a Service
+        </span>
       </Link>
 
       {/* Divider */}
@@ -89,7 +108,9 @@ export default function TopBar() {
       </div>
 
       {/* Quick jump — scoped to the current client + domain */}
-      <div className="flex-shrink-0"><QuickPicker /></div>
+      <div className="flex-shrink-0">
+        <QuickPicker />
+      </div>
 
       {/* Docs link — opens in a new window */}
       <a
@@ -100,7 +121,13 @@ export default function TopBar() {
       >
         Docs
         <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
-          <path d="M6 3h7v7M13 3L6.5 9.5M11 9.5V13H3V5h3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M6 3h7v7M13 3L6.5 9.5M11 9.5V13H3V5h3.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </a>
 
@@ -113,7 +140,7 @@ export default function TopBar() {
             options={clients}
             onSelect={handleClientChange}
             getLabel={getClientLabel}
-            getId={o => o['client-id']}
+            getId={(o) => o['client-id']}
           />
         )}
         <Dropdown
@@ -121,8 +148,8 @@ export default function TopBar() {
           value={selectedVersionId}
           options={versions}
           onSelect={handleVersionChange}
-          getLabel={o => o['version-id']}
-          getId={o => o['version-id']}
+          getLabel={(o) => o['version-id']}
+          getId={(o) => o['version-id']}
         />
       </div>
     </header>

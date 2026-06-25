@@ -10,18 +10,19 @@ import Spinner from '../ui/Spinner'
 
 export default function Layout() {
   const { clientId, versionId } = useParams()
-  const { selectedClientId, selectedVersionId, loading, setClientId, setVersionId } = useArchitecture()
+  const { selectedClientId, selectedVersionId, loading, setClientId, setVersionId } =
+    useArchitecture()
 
   // URL is the source of truth — sync params into context when navigating directly to a URL.
   // This fixes the case where localStorage has a different client than the URL being visited.
   useEffect(() => {
     if (clientId && clientId !== selectedClientId) setClientId(clientId)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId])
 
   useEffect(() => {
     if (versionId && versionId !== selectedVersionId) setVersionId(versionId)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [versionId])
 
   if (loading) {

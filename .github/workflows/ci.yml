@@ -53,6 +53,7 @@ jobs:
         with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
       - run: npm ci
       - run: npm run lint
+      - run: npm run format:check
 
   unit:
     name: Unit & build

@@ -14,7 +14,9 @@ function countSummary(groups, labels) {
   const groupCount = groups.length
   const itemCount = groups.reduce((sum, g) => sum + (g.items?.length ?? 0), 0)
   const subitemCount = groups.reduce(
-    (sum, g) => sum + (g.items?.reduce((s, item) => s + (item.items?.length ?? 0), 0) ?? 0), 0)
+    (sum, g) => sum + (g.items?.reduce((s, item) => s + (item.items?.length ?? 0), 0) ?? 0),
+    0
+  )
   const groupWord = labels?.groups ?? 'groups'
   const itemWord = labels?.items ?? 'items'
   const groupLabel = groupCount === 1 ? groupWord.replace(/s$/, '') : groupWord
@@ -33,9 +35,14 @@ function buildItemMap(data) {
   const map = {}
   const collect = (obj) => {
     if (!obj || typeof obj !== 'object') return
-    if (Array.isArray(obj)) { obj.forEach(collect); return }
+    if (Array.isArray(obj)) {
+      obj.forEach(collect)
+      return
+    }
     if (typeof obj.id === 'string') map[obj.id] = obj
-    Object.values(obj).forEach(v => { if (typeof v === 'object') collect(v) })
+    Object.values(obj).forEach((v) => {
+      if (typeof v === 'object') collect(v)
+    })
   }
   collect(data)
   return map
@@ -91,9 +98,10 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
   const [selectedId, setSelectedId] = useState(null)
   const [itemMap, setItemMap] = useState({})
 
-  const sourceArtefactId = (NESTED_GROUP_TYPES.has(diagramType) || PROCESS_FLOW_TYPES.has(diagramType))
-    ? artefact?.relatedTo?.find(r => r.relationship === 'derived-from')?.artefactId
-    : null
+  const sourceArtefactId =
+    NESTED_GROUP_TYPES.has(diagramType) || PROCESS_FLOW_TYPES.has(diagramType)
+      ? artefact?.relatedTo?.find((r) => r.relationship === 'derived-from')?.artefactId
+      : null
   const sourceArtefactDef = sourceArtefactId ? getArtefact(sourceArtefactId) : null
 
   // Reset selection when navigating between diagrams
@@ -105,10 +113,18 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
   // Fetch source catalogue data to populate the slide panel
   useEffect(() => {
     if (!sourceArtefactDef || !clientId || !versionId) return
-    getArtefactData(clientId, versionId, sourceArtefactDef.domain, sourceArtefactDef.abstraction, sourceArtefactDef.id)
-      .then(d => { if (d) setItemMap(buildItemMap(d)) })
+    getArtefactData(
+      clientId,
+      versionId,
+      sourceArtefactDef.domain,
+      sourceArtefactDef.abstraction,
+      sourceArtefactDef.id
+    )
+      .then((d) => {
+        if (d) setItemMap(buildItemMap(d))
+      })
       .catch(() => {})
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourceArtefactId, clientId, versionId])
 
   const selectedItem = itemMap[selectedId]

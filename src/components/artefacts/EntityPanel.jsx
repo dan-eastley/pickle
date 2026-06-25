@@ -12,7 +12,7 @@ function findEntity(data, entityId) {
   if (!data) return null
   for (const value of Object.values(data)) {
     if (Array.isArray(value)) {
-      const hit = value.find(item => item && item.id === entityId)
+      const hit = value.find((item) => item && item.id === entityId)
       if (hit) return hit
     }
   }
@@ -20,7 +20,7 @@ function findEntity(data, entityId) {
 }
 
 const HIDDEN_FIELDS = new Set(['id', 'name', 'description'])
-const humanize = (key) => key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+const humanize = (key) => key.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
 
 function FieldValue({ value }) {
   if (value == null || value === '') return <span className="text-gray-300">—</span>
@@ -29,13 +29,19 @@ function FieldValue({ value }) {
     return (
       <ul className="space-y-0.5">
         {value.map((v, i) => (
-          <li key={i} className="text-sm text-gray-700">{typeof v === 'object' ? JSON.stringify(v) : String(v)}</li>
+          <li key={i} className="text-sm text-gray-700">
+            {typeof v === 'object' ? JSON.stringify(v) : String(v)}
+          </li>
         ))}
       </ul>
     )
   }
   if (typeof value === 'object') {
-    return <pre className="text-xs text-gray-600 whitespace-pre-wrap">{JSON.stringify(value, null, 2)}</pre>
+    return (
+      <pre className="text-xs text-gray-600 whitespace-pre-wrap">
+        {JSON.stringify(value, null, 2)}
+      </pre>
+    )
   }
   return <span className="text-sm text-gray-700">{String(value)}</span>
 }
@@ -48,17 +54,24 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
 
   useEffect(() => {
     if (!entityId) return
-    if (!artefact) { setState({ status: 'unresolved' }); return }
+    if (!artefact) {
+      setState({ status: 'unresolved' })
+      return
+    }
     let cancelled = false
     setState({ status: 'loading' })
     getArtefactData(clientId, versionId, artefact.domain, artefact.abstraction, artefact.id)
-      .then(data => {
+      .then((data) => {
         if (cancelled) return
         const entity = findEntity(data, entityId)
         setState(entity ? { status: 'ready', entity } : { status: 'not-found' })
       })
-      .catch(err => { if (!cancelled) setState({ status: 'error', message: err.message }) })
-    return () => { cancelled = true }
+      .catch((err) => {
+        if (!cancelled) setState({ status: 'error', message: err.message })
+      })
+    return () => {
+      cancelled = true
+    }
   }, [entityId, clientId, versionId, artefact])
 
   const entity = state.status === 'ready' ? state.entity : null
@@ -78,13 +91,20 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
     >
       <div className="px-4 py-4">
         {state.status === 'loading' && (
-          <div className="flex justify-center py-8"><Spinner /></div>
+          <div className="flex justify-center py-8">
+            <Spinner />
+          </div>
         )}
         {state.status === 'unresolved' && (
-          <p className="text-sm text-gray-500">No catalogue is registered for <span className="font-mono">{entityId}</span>.</p>
+          <p className="text-sm text-gray-500">
+            No catalogue is registered for <span className="font-mono">{entityId}</span>.
+          </p>
         )}
         {state.status === 'not-found' && (
-          <p className="text-sm text-gray-500"><span className="font-mono">{entityId}</span> was not found in {nameWithId(artefact?.name, artefact?.id)} for this version.</p>
+          <p className="text-sm text-gray-500">
+            <span className="font-mono">{entityId}</span> was not found in{' '}
+            {nameWithId(artefact?.name, artefact?.id)} for this version.
+          </p>
         )}
         {state.status === 'error' && (
           <p className="text-sm text-error-600">Failed to load: {state.message}</p>
@@ -99,7 +119,9 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
             <dl className="divide-y divide-gray-100 border-t border-gray-100">
               {fields.map(([key, value]) => (
                 <div key={key} className="py-2.5 grid grid-cols-3 gap-3">
-                  <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">{humanize(key)}</dt>
+                  <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                    {humanize(key)}
+                  </dt>
                   <dd className="col-span-2">
                     {RELATION_FIELDS.has(key) && typeof value === 'string' ? (
                       <button

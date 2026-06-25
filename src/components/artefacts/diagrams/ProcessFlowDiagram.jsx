@@ -7,15 +7,29 @@ const LABEL_GAP = 14
 const CHEV_H = 56
 const CHEV_BODY_W = 150
 const CHEV_POINT = 22
-const STEP = CHEV_BODY_W   // chevrons overlap: next starts CHEV_BODY_W from prev
+const STEP = CHEV_BODY_W // chevrons overlap: next starts CHEV_BODY_W from prev
 const ROW_GAP = 8
 const CHEV_X0 = OUTER_PAD + LABEL_W + LABEL_GAP
 
 // Build absolute SVG polygon points for one chevron
 function chevronPts(cx, y, w, h, pt, index) {
-  const p = index === 0
-    ? [[cx, y], [cx + w, y], [cx + w + pt, y + h / 2], [cx + w, y + h], [cx, y + h]]
-    : [[cx, y], [cx + w, y], [cx + w + pt, y + h / 2], [cx + w, y + h], [cx, y + h], [cx + pt, y + h / 2]]
+  const p =
+    index === 0
+      ? [
+          [cx, y],
+          [cx + w, y],
+          [cx + w + pt, y + h / 2],
+          [cx + w, y + h],
+          [cx, y + h],
+        ]
+      : [
+          [cx, y],
+          [cx + w, y],
+          [cx + w + pt, y + h / 2],
+          [cx + w, y + h],
+          [cx, y + h],
+          [cx + pt, y + h / 2],
+        ]
   return p.map(([x, py]) => `${x},${py}`).join(' ')
 }
 
@@ -35,9 +49,12 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
     <svg viewBox={`0 0 ${VIEW_W} ${totalH}`} className="w-full h-auto">
       {/* Vertical separator between label and chevron area */}
       <line
-        x1={sepX} y1={OUTER_PAD / 2}
-        x2={sepX} y2={totalH - OUTER_PAD / 2}
-        strokeWidth={1} className="stroke-gray-200"
+        x1={sepX}
+        y1={OUTER_PAD / 2}
+        x2={sepX}
+        y2={totalH - OUTER_PAD / 2}
+        strokeWidth={1}
+        className="stroke-gray-200"
       />
 
       {rows.map(({ group, items }, rowIndex) => {
@@ -50,9 +67,12 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
             {/* Row divider */}
             {rowIndex > 0 && (
               <line
-                x1={OUTER_PAD} y1={y - ROW_GAP / 2}
-                x2={VIEW_W - OUTER_PAD} y2={y - ROW_GAP / 2}
-                strokeWidth={1} className="stroke-gray-100"
+                x1={OUTER_PAD}
+                y1={y - ROW_GAP / 2}
+                x2={VIEW_W - OUTER_PAD}
+                y2={y - ROW_GAP / 2}
+                strokeWidth={1}
+                className="stroke-gray-100"
               />
             )}
 
@@ -63,7 +83,8 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
             >
               <rect x={OUTER_PAD} y={y} width={LABEL_W} height={CHEV_H} fill="transparent" />
               <text
-                x={OUTER_PAD + 4} y={y + 13}
+                x={OUTER_PAD + 4}
+                y={y + 13}
                 className={`text-[9px] font-mono uppercase tracking-wide ${labelSel ? colors.heading : colors.label}`}
               >
                 {group.id}
@@ -71,7 +92,8 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
               {nameLines.map((line, i) => (
                 <text
                   key={i}
-                  x={OUTER_PAD + 4} y={y + 27 + i * 14}
+                  x={OUTER_PAD + 4}
+                  y={y + 27 + i * 14}
                   className={`text-[11px] font-semibold ${labelSel ? colors.heading : 'fill-gray-700'}`}
                 >
                   {line}
@@ -102,8 +124,10 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                   {/* Mask the previous chevron's point in this chevron's own
                       fill, so the whole arrow reads as one solid colour. */}
                   {i > 0 && (
-                    <polygon points={notchMaskPts(cx, y, CHEV_H, CHEV_POINT)}
-                      className={`transition-colors ${sel ? colors.selectedFill : `${colors.itemFill} ${colors.itemHover}`}`} />
+                    <polygon
+                      points={notchMaskPts(cx, y, CHEV_H, CHEV_POINT)}
+                      className={`transition-colors ${sel ? colors.selectedFill : `${colors.itemFill} ${colors.itemHover}`}`}
+                    />
                   )}
 
                   {/* Chevron polygon */}
@@ -114,7 +138,8 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
 
                   {/* ID */}
                   <text
-                    x={textCX} y={topBaseline}
+                    x={textCX}
+                    y={topBaseline}
                     textAnchor="middle"
                     className={`text-[8px] font-mono uppercase tracking-wide ${sel ? colors.selectedId : colors.label}`}
                   >
@@ -125,7 +150,8 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                   {nameLines.map((line, li) => (
                     <text
                       key={li}
-                      x={textCX} y={topBaseline + 13 + li * 13}
+                      x={textCX}
+                      y={topBaseline + 13 + li * 13}
                       textAnchor="middle"
                       className={`text-[11px] font-medium ${sel ? 'fill-white' : colors.itemText}`}
                     >
@@ -145,10 +171,10 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
 export default function ProcessFlowDiagram({ groups, domain, onItemClick, selectedId }) {
   const colors = getDiagramColors(domain)
 
-  const hasL3 = groups.some(g => g.items?.some(item => item.items?.length))
+  const hasL3 = groups.some((g) => g.items?.some((item) => item.items?.length))
 
   // Overview: rows = L1 groups, items = L2 steps
-  const overviewRows = groups.map(g => ({ group: g, items: g.items ?? [] }))
+  const overviewRows = groups.map((g) => ({ group: g, items: g.items ?? [] }))
 
   return (
     <div>
@@ -156,24 +182,30 @@ export default function ProcessFlowDiagram({ groups, domain, onItemClick, select
         <h4 className="text-sm font-semibold text-gray-800">Overview</h4>
         <span className="text-xs text-gray-400">Level 1 and 2</span>
       </div>
-      <ProcessFlowSVG rows={overviewRows} colors={colors} onItemClick={onItemClick} selectedId={selectedId} />
+      <ProcessFlowSVG
+        rows={overviewRows}
+        colors={colors}
+        onItemClick={onItemClick}
+        selectedId={selectedId}
+      />
 
-      {hasL3 && groups.map(group => (
-        <div key={group.id} className="mt-6 pt-5 border-t border-gray-200">
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="font-mono text-xs text-gray-400">{group.id}</span>
-            <h4 className="text-sm font-semibold text-gray-800">{group.name}</h4>
-            <span className="text-xs text-gray-400">Level 2 and 3</span>
+      {hasL3 &&
+        groups.map((group) => (
+          <div key={group.id} className="mt-6 pt-5 border-t border-gray-200">
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="font-mono text-xs text-gray-400">{group.id}</span>
+              <h4 className="text-sm font-semibold text-gray-800">{group.name}</h4>
+              <span className="text-xs text-gray-400">Level 2 and 3</span>
+            </div>
+            {/* Drill-down: rows = L2 steps, items = L3 steps */}
+            <ProcessFlowSVG
+              rows={(group.items ?? []).map((item) => ({ group: item, items: item.items ?? [] }))}
+              colors={colors}
+              onItemClick={onItemClick}
+              selectedId={selectedId}
+            />
           </div>
-          {/* Drill-down: rows = L2 steps, items = L3 steps */}
-          <ProcessFlowSVG
-            rows={(group.items ?? []).map(item => ({ group: item, items: item.items ?? [] }))}
-            colors={colors}
-            onItemClick={onItemClick}
-            selectedId={selectedId}
-          />
-        </div>
-      ))}
+        ))}
     </div>
   )
 }
