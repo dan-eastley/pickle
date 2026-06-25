@@ -294,7 +294,7 @@ export default function DecisionEditorPage() {
           </div>
 
           {/* Scope */}
-          <div>
+          <div className="border border-gray-200 bg-gray-50 p-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
             <ScopeSelector
               domain={scopeDomain}

@@ -7,8 +7,13 @@ export function toggleInSet(set, id) {
   return next
 }
 
-// The first array-valued property of a catalogue payload — the row collection.
+// Metadata arrays that can sit alongside the content array on any artefact
+// instance — not the row collection. Excluded from root-array detection.
+export const META_ARRAY_KEYS = new Set(['audience', 'author', 'activity'])
+
+// The first content array-valued property of a catalogue payload — the row
+// collection — skipping metadata arrays (audience / author / activity).
 export function getRootArrayKey(data) {
   if (!data) return undefined
-  return Object.keys(data).find(k => Array.isArray(data[k]))
+  return Object.keys(data).find(k => !META_ARRAY_KEYS.has(k) && Array.isArray(data[k]))
 }

@@ -67,7 +67,7 @@ export default function DiscoveryEditorPage() {
           <button
             onClick={handleSave}
             disabled={!canSave || saving || result?.ok}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <RobotIcon className="w-4 h-4" />
             {saving ? 'Creating…' : 'New Architecture Discovery'}
@@ -132,7 +132,7 @@ export default function DiscoveryEditorPage() {
           </div>
 
           {/* Scope */}
-          <div>
+          <div className="border border-gray-200 bg-gray-50 p-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
             <ScopeSelector
               domain={scopeDomain}

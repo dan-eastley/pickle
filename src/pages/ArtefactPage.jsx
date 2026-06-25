@@ -51,7 +51,7 @@ function AdrActionBar({ artefact, documents, selectedDocument, clientId, version
               New Decision
             </button>
             <button
-              className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 transition-opacity"
+              className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors"
               onClick={() => setDiscoveryOpen(true)}
             >
               <RobotIcon className="w-3.5 h-3.5" />

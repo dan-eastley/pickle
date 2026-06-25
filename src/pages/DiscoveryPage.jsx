@@ -120,12 +120,7 @@ export default function DiscoveryPage() {
         title="Architecture Discovery"
         strapline={`${clientName} · v${versionId}`}
         primary={
-          <Button
-            to={`/clients/${clientId}/${versionId}/discovery/new`}
-            size="lg"
-            variant="custom"
-            className="bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 text-white"
-          >
+          <Button to={`/clients/${clientId}/${versionId}/discovery/new`} size="lg" variant="primary">
             <RobotIcon className="w-4 h-4" />
             New Architecture Discovery
           </Button>
