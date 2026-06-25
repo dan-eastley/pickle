@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-015",
     "title": "Contractor Driven Work",
-    "status": "proposed",
+    "status": "accepted",
     "context": "All our work is carried out by the internal workforce",
     "problem": "We don't have enough capacity or capability",
     "proposal": "We need to start working with contractors (external) to deliver field services",
