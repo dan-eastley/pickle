@@ -74,9 +74,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ## Epic: Architecture Model & Content
 
 ### AMC-1 · 🟡 Artefact registry in config (i18n) · Low
-**Context:** User-facing names/descriptions live in `config/i18n/en.json`, overlaid onto the structural registry.
-**Gap:** Inline English fallbacks still duplicate the locale; per-client terminology overrides aren't supported.
-**Proposed fix:** Prune the inline fallbacks; add a per-client overlay.
+**Context:** User-facing names/descriptions live in `config/i18n/en.json`, overlaid onto the structural registry. The inline English in `artefacts.js` is kept as an intentional fallback (robustness if a key is missing); a coverage test (`lib/i18n.test.js`) now enforces that the locale covers every registry id, so the two can't drift and a new artefact can't ship without a locale entry.
+**Gap:** Per-client terminology overrides aren't supported.
+**Proposed fix:** Add a per-client locale overlay.
 
 ### AMC-2 · ✅ Derived-artefact cascade on apply · High
 **Context:** `config/artefact-relationships.json` maps each artefact to the artefacts `derived` from it. The Apply Changes prompt reads it and regenerates derivatives in the same PR when a source catalogue changes. **Verified live (ADR-015):** a `BUS-PRO` edit regenerated both `BUS-BPM` (diagram) and `BUS-CAP-PRO` (matrix).
