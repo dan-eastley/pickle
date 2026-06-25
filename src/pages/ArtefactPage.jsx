@@ -10,7 +10,7 @@ import DocumentView, { DocumentSelector } from '../components/artefacts/Document
 import NewDecisionModal from '../components/decisions/NewDecisionModal'
 import NewDiscoveryModal from '../components/decisions/NewDiscoveryModal'
 import EmptyState from '../components/ui/EmptyState'
-import Spinner from '../components/ui/Spinner'
+import Skeleton from '../components/ui/Skeleton'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
@@ -266,9 +266,12 @@ export default function ArtefactPage() {
       />
 
       {loading && (
-        <div className="flex items-center justify-center py-16">
-          <Spinner />
-        </div>
+        <>
+          <span className="sr-only" role="status">
+            Loading artefact…
+          </span>
+          <Skeleton />
+        </>
       )}
 
       {!loading && error && (
