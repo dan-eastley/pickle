@@ -25,4 +25,13 @@ describe('getRootArrayKey', () => {
     expect(getRootArrayKey({ a: 1, b: 'two' })).toBeUndefined()
     expect(getRootArrayKey(null)).toBeUndefined()
   })
+  // Regression: metadata arrays (audience/author/activity) must not be mistaken
+  // for the content collection, even when they appear first.
+  it('skips metadata arrays and returns the content array', () => {
+    const data = { $schema: 'x', audience: ['Enterprise Architect'], author: ['Business Architect'], capabilities: [1, 2], activity: [{}] }
+    expect(getRootArrayKey(data)).toBe('capabilities')
+  })
+  it('returns undefined when only metadata arrays are present', () => {
+    expect(getRootArrayKey({ $schema: 'x', audience: ['X'], activity: [{}] })).toBeUndefined()
+  })
 })

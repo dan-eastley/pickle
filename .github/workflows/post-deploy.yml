@@ -1,0 +1,53 @@
+name: Post-deploy tests
+
+# Runs browser tests against the actual Vercel deployment once it's ready:
+#   - L6 smoke: every route renders without tripping the error boundary
+#   - L7 use-case subset: XS + Must Have acceptance checks
+#
+# Fires on Vercel's deployment_status event, so it covers both per-PR preview
+# deployments and production (main). No data server or secrets needed — it hits
+# the deployed URL directly. No Claude.
+
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-tests:
+    name: Smoke + use-case subset
+    # Only when the deployment finished successfully and exposed a URL.
+    if: ${{ github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != '' }}
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: src } }
+    env:
+      PLAYWRIGHT_BASE_URL: ${{ github.event.deployment_status.environment_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version-file: src/.nvmrc, cache: npm, cache-dependency-path: src/package-lock.json }
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: L6 — route smoke
+        run: npm run test:e2e
+
+      - name: L7 — use cases (XS + Must Have)
+        working-directory: .
+        env:
+          BASE_URL: ${{ github.event.deployment_status.environment_url }}
+          COMPLEXITY: XS
+          PRIORITY: Must Have
+        run: node tests/run-use-cases.mjs
+
+      - name: Upload use-case outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: use-case-outcomes-${{ github.run_id }}
+          path: |
+            tests/use-case-outcomes.md
+            tests/use-cases.json
+          retention-days: 30
