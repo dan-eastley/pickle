@@ -195,12 +195,14 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Context:** Solution Vision → Solution Intent (fixed vs variable); homepage SAFe table; roles drawn partly from SAFe.
 **Gap:** No Architectural Runway view, Enabler type, WSJF, PI/release labels on versions, Value Stream artefact, or backlog-tool links.
 
-### FW-3 · ⬜ Zachman alignment · Low
+### FW-3 · 🟡 Zachman alignment · Low
+**Done:** Homepage now carries a Zachman alignment card (interrogatives → domains, perspectives → layers) alongside TOGAF/SAFe. **Remaining:** the `docs/` page placing each artefact type in its 6×6 cell, and flagging empty cells as gaps.
 **Context:** Like the TOGAF and SAFe alignments, we should show how Pickle's model maps onto the **Zachman Framework** — the 6×6 ontology of interrogatives (What / How / Where / Who / When / Why) × perspectives (Executive/Contextual, Business Management/Conceptual, Architect/Logical, Engineer/Physical, Technician/Detailed, Enterprise).
 **Gap:** No Zachman framing anywhere; no mapping of our domains/layers/artefacts onto Zachman cells.
 **Proposed fix:** Map the model: **interrogatives → architecture domains** (What→Data, How→Business Process, Where→Integration/locations, Who→Org/roles, When→roadmap/events, Why→Strategy/Principles) and **perspectives → abstraction layers** (Conceptual/Logical/Physical map onto rows 2–4). Produce a homepage Zachman table (mirroring the TOGAF/SAFe tables) and a `docs/` page placing each artefact type in its cell; flag empty cells as gaps that motivate new artefact types ([AMC-3]/[AMC-5]).
 
-### FW-4 · ⬜ UAF (Unified Architecture Framework) alignment · Low
+### FW-4 · 🟡 UAF (Unified Architecture Framework) alignment · Low
+**Done:** Homepage now carries a UAF alignment card (model kinds → Catalogue/Matrix/Diagram formats, UAF domains → our five domains). **Remaining:** the `docs/` page mapping our domains × layers × formats onto the full UAF grid, and the Security/Projects domain candidates.
 **Context:** Like the TOGAF/SAFe alignments, map Pickle onto **UAF** — the OMG Unified Architecture Framework, whose grid crosses **domains** (Strategic, Operational, Services, Personnel, Resources, Security, Projects, Standards, Actual Resources, …) with **model kinds** (Taxonomy, Structure, Connectivity, Processes, States, Sequences, Information, Constraints, Roadmap, Traceability).
 **Gap:** No UAF framing; no mapping of our domains/layers/formats onto UAF's grid.
 **Proposed fix:** Map our five domains + three layers + three formats (Catalogue/Matrix/Diagram) onto the UAF domain × model-kind grid — e.g. Catalogue→Taxonomy, Matrix→Connectivity/Traceability, Diagram→Structure/Processes. Add a homepage UAF table and a `docs/` page; use empty intersections to motivate missing artefacts/matrices ([AMC-5]). Note UAF's first-class **Security** and **Projects** domains as candidate future domains.

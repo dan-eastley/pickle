@@ -641,10 +641,36 @@ const SAFE_ROWS = [
   ['Value Streams', 'Roadmap'],
 ]
 
+// Zachman: interrogatives (rows) map to our domains; perspectives map to the
+// three abstraction layers. See FW-3 in BACKLOG.md for the full cell mapping.
+const ZACHMAN_ROWS = [
+  ['What (Data) — Data domains & concepts', 'Supported'],
+  ['How (Function) — Business processes', 'Supported'],
+  ['Why (Motivation) — Strategy & principles', 'Supported'],
+  ['Perspectives → Conceptual / Logical / Physical', 'Supported'],
+  ['Where (Network) — Integration & locations', 'Partial'],
+  ['Who (People) — Roles, audience & authors', 'Partial'],
+  ['When (Time) — Roadmap & events', 'Roadmap'],
+]
+
+// UAF: model kinds (rows) map to our three artefact formats; UAF domains map
+// onto our five architecture domains. See FW-4 in BACKLOG.md for detail.
+const UAF_ROWS = [
+  ['Taxonomy — Catalogues', 'Supported'],
+  ['Connectivity / Traceability — Matrices', 'Supported'],
+  ['Structure / Processes — Diagrams', 'Supported'],
+  ['Strategic & Operational domains', 'Partial'],
+  ['Information & Constraints — Data & guardrails', 'Partial'],
+  ['Roadmap — Transition architectures', 'Roadmap'],
+  ['Security & Projects domains', 'Roadmap'],
+]
+
 // Text-based framework wordmark badges (not the trademarked logo artwork).
 const FRAMEWORK_WORDMARK = {
   TOGAF: { text: 'TOGAF', sub: 'ADM', className: 'bg-sky-700 text-white' },
   SAFe: { text: 'SAFe', sub: '6.0', className: 'bg-indigo-700 text-white' },
+  Zachman: { text: 'Zachman', sub: '3.0', className: 'bg-teal-700 text-white' },
+  UAF: { text: 'UAF', sub: '1.2', className: 'bg-rose-700 text-white' },
 }
 
 function FrameworkWordmark({ name }) {
@@ -691,10 +717,13 @@ function FrameworkSupport() {
           <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
             Works with your framework
           </p>
-          <h2 className="text-2xl font-bold text-gray-900">Built to slot into TOGAF and SAFe</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Built to slot into TOGAF, SAFe, Zachman & UAF
+          </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Pickle is a TOGAF-shaped architecture repository and a SAFe Solution Intent store — as
-            code. Here's what maps today, and what's on the roadmap.
+            Pickle is a TOGAF-shaped architecture repository and a SAFe Solution Intent store — and
+            its domains, layers, and formats map cleanly onto the Zachman and UAF ontologies. Here's
+            what maps today, and what's on the roadmap.
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -707,6 +736,16 @@ function FrameworkSupport() {
             name="SAFe"
             blurb="Solution Intent and an architectural runway, with enablers raised as Decision Records."
             rows={SAFE_ROWS}
+          />
+          <FrameworkTable
+            name="Zachman"
+            blurb="The six interrogatives map to our architecture domains; the perspectives map to the Conceptual / Logical / Physical layers."
+            rows={ZACHMAN_ROWS}
+          />
+          <FrameworkTable
+            name="UAF"
+            blurb="UAF model kinds map onto our three artefact formats — Catalogue, Matrix, Diagram — across the five architecture domains."
+            rows={UAF_ROWS}
           />
         </div>
       </div>
