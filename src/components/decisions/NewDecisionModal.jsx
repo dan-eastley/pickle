@@ -150,7 +150,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
                 </div>
 
                 {/* Scope */}
-                <div className="pt-2 border-t border-gray-100">
+                <div className="border border-gray-200 bg-gray-50 p-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
                   <ScopeSelector
                     domain={scopeDomain}

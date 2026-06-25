@@ -79,7 +79,7 @@ export default function DomainsPage() {
           <DecisionIcon className="w-4 h-4" />
           New Architecture Decision
         </Button>
-        <Button to={`${base}/discovery/new`} variant="custom" className="bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 text-white px-4 py-1.5">
+        <Button to={`${base}/discovery/new`} variant="primary">
           <RobotIcon className="w-4 h-4" />
           New Architecture Discovery
         </Button>

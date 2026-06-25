@@ -4,7 +4,7 @@ import Badge from '../ui/Badge'
 import EmptyState from '../ui/EmptyState'
 import FullscreenToggle from '../ui/FullscreenToggle'
 import useEscapeKey from '../../hooks/useEscapeKey'
-import { toggleInSet, getRootArrayKey } from '../../lib/collections'
+import { toggleInSet, getRootArrayKey, META_ARRAY_KEYS } from '../../lib/collections'
 
 // ── Schema helpers ───────────────────────────────────────────────────────────
 
@@ -23,15 +23,15 @@ function getColumnsFromProps(itemProps) {
 
 function getSchemaColumns(schema) {
   if (!schema?.properties) return []
-  const arrayEntry = Object.entries(schema.properties).find(([, v]) => v.type === 'array')
+  const arrayEntry = Object.entries(schema.properties).find(([k, v]) => v.type === 'array' && !META_ARRAY_KEYS.has(k))
   if (!arrayEntry) return []
   const itemProps = arrayEntry[1]?.items?.properties ?? {}
   return getColumnsFromProps(itemProps)
 }
 
 function isHierarchical(schema) {
-  const arrayProp = Object.values(schema?.properties ?? {}).find(v => v.type === 'array')
-  return !!arrayProp?.items?.properties?.['parent-id']
+  const arrayEntry = Object.entries(schema?.properties ?? {}).find(([k, v]) => v.type === 'array' && !META_ARRAY_KEYS.has(k))
+  return !!arrayEntry?.[1]?.items?.properties?.['parent-id']
 }
 
 function isGrouped(schema) {
