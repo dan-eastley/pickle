@@ -33,8 +33,23 @@ export default function DiscoveryDetailPage() {
   const [refreshing, setRefreshing] = useState(false)
   const [edit, setEdit] = useState(null) // { title, context, request } while editing
   const [saving, setSaving] = useState(false)
+  const [actionError, setActionError] = useState(null)
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   const canEdit = discovery?.status === 'active'
+
+  // POST to /api/github, throwing on a non-2xx so callers can surface + roll back.
+  async function postAction(body) {
+    const res = await fetch('/api/github', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data.error ?? `Request failed (${res.status})`)
+    }
+    return res.json().catch(() => ({}))
+  }
 
   usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
 
@@ -46,22 +61,21 @@ export default function DiscoveryDetailPage() {
   }, [clientId, versionId, discoveryId])
 
   async function setStatus(status) {
+    const prev = discovery.status
     setArchiving(true)
-    setDiscovery((prev) => (prev ? { ...prev, status } : prev)) // optimistic
+    setActionError(null)
+    setDiscovery((d) => (d ? { ...d, status } : d)) // optimistic
     try {
-      await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'update-discovery',
-          clientId,
-          versionId,
-          discoveryId,
-          updates: { status },
-        }),
+      await postAction({
+        action: 'update-discovery',
+        clientId,
+        versionId,
+        discoveryId,
+        updates: { status },
       })
-    } catch {
-      /* optimistic */
+    } catch (err) {
+      setDiscovery((d) => (d ? { ...d, status: prev } : d)) // roll back
+      setActionError(`Couldn’t update the discovery: ${err.message}`)
     } finally {
       setArchiving(false)
     }
@@ -69,14 +83,12 @@ export default function DiscoveryDetailPage() {
 
   async function refresh() {
     setRefreshing(true)
+    setActionError(null)
     try {
-      await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'refresh-discovery', clientId, versionId, discoveryId }),
-      })
-    } catch {
-      /* surfaced via the banner timing out */
+      await postAction({ action: 'refresh-discovery', clientId, versionId, discoveryId })
+    } catch (err) {
+      setRefreshing(false)
+      setActionError(`Couldn’t start a refresh: ${err.message}`)
     }
   }
 
@@ -93,24 +105,17 @@ export default function DiscoveryDetailPage() {
   // point-in-time view — so we show the regenerating banner.
   async function saveEdit() {
     const updates = edit
+    const prev = { title: discovery.title, context: discovery.context, request: discovery.request }
     setSaving(true)
-    setDiscovery((prev) => (prev ? { ...prev, ...updates } : prev)) // optimistic
+    setActionError(null)
+    setDiscovery((d) => (d ? { ...d, ...updates } : d)) // optimistic
     try {
-      await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'update-discovery',
-          clientId,
-          versionId,
-          discoveryId,
-          updates,
-        }),
-      })
+      await postAction({ action: 'update-discovery', clientId, versionId, discoveryId, updates })
       setEdit(null)
       setRefreshing(true)
-    } catch {
-      /* optimistic; leave edit mode open on failure */
+    } catch (err) {
+      setDiscovery((d) => (d ? { ...d, ...prev } : d)) // roll back; keep edit open
+      setActionError(`Couldn’t save your changes: ${err.message}`)
     } finally {
       setSaving(false)
     }
@@ -175,6 +180,26 @@ export default function DiscoveryDetailPage() {
             </Button>
           }
         />
+      )}
+
+      {actionError && (
+        <div className="mb-5 flex items-start gap-3 px-4 py-3 bg-error-50 border border-error-300 text-sm text-error-700">
+          <span className="flex-1 min-w-0">{actionError}</span>
+          <button
+            onClick={() => setActionError(null)}
+            className="flex-shrink-0 text-error-400 hover:text-error-700 transition-colors"
+            aria-label="Dismiss"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M4 4l8 8M12 4l-8 8"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </div>
       )}
 
       {refreshing && (
