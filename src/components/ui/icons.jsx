@@ -10,6 +10,26 @@ export function ChevronRight({ className = 'w-4 h-4' }) {
   )
 }
 
+// Disclosure chevron that rotates from ▶ to ▼ as a section opens. Shared by the
+// collapsible sections on the document and decision detail views.
+export function DisclosureChevron({ open, className = 'w-3.5 h-3.5' }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      className={`${className} transition-transform ${open ? 'rotate-90' : ''}`}
+    >
+      <path
+        d="M6 4l4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export function ChevronDown({ className = 'w-3.5 h-3.5' }) {
   return (
     <svg className={className} viewBox="0 0 14 14" fill="none">

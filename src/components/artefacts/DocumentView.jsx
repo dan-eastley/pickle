@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getArtefact, resolveRefArtefactId } from '../../lib/artefacts'
 import { getArtefactData } from '../../lib/api'
 import { nameWithId } from '../../lib/format'
+import { DisclosureChevron } from '../ui/icons'
 import { toggleInSet } from '../../lib/collections'
 import useActiveSection from '../../hooks/useActiveSection'
 import usePersistedSet from '../../hooks/usePersistedSet'
@@ -903,26 +904,6 @@ function IspMetaTable({ doc }) {
   )
 }
 
-// ─── Chevron icon ─────────────────────────────────────────────────────────────
-
-function Chevron({ open, className = 'w-3.5 h-3.5' }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      className={`${className} transition-transform ${open ? 'rotate-90' : ''}`}
-    >
-      <path
-        d="M6 4l4 4-4 4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 // ─── Document selector ────────────────────────────────────────────────────────
 
 export function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
@@ -1110,7 +1091,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
                   className="w-full flex items-start gap-2 text-left group"
                 >
                   <span className="text-gray-300 group-hover:text-gray-500 mt-1.5">
-                    <Chevron open={!sectionCollapsed} />
+                    <DisclosureChevron open={!sectionCollapsed} />
                   </span>
                   <h2 className="text-xl font-bold text-gray-900">
                     <span className="text-gray-400 font-mono text-base mr-2">{section.number}</span>
@@ -1151,7 +1132,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
                             className="w-full flex items-start gap-2 text-left group"
                           >
                             <span className="text-gray-300 group-hover:text-gray-500 mt-1">
-                              <Chevron open={!subCollapsed} className="w-3 h-3" />
+                              <DisclosureChevron open={!subCollapsed} className="w-3 h-3" />
                             </span>
                             <h3 className="text-base font-semibold text-gray-900">
                               <span className="text-gray-400 font-mono text-sm mr-2">

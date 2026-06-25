@@ -6,20 +6,7 @@
 //
 // In time these entries are auto-populated by the decision process and
 // workflows; for now they may be seeded directly in the instance JSON.
-
-function formatTimestamp(ts) {
-  try {
-    return new Date(ts).toLocaleString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  } catch {
-    return ts
-  }
-}
+import { formatDateTime } from '../../lib/format'
 
 // Canonical activity actions (enforced by the activity-entry schema enum).
 const ACTION_STYLES = {
@@ -62,7 +49,7 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
             {rows.map((entry, i) => (
               <tr key={i} className="align-top">
                 <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">
-                  {formatTimestamp(entry.timestamp)}
+                  {formatDateTime(entry.timestamp)}
                 </td>
                 <td className="px-4 py-3">
                   <span

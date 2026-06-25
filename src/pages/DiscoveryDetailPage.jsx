@@ -9,6 +9,7 @@ import ActivityHistory from '../components/common/ActivityHistory'
 import Button from '../components/ui/Button'
 import ActionBar from '../components/ui/ActionBar'
 import { RobotIcon } from '../components/ui/icons'
+import { formatDate } from '../lib/format'
 import usePageTitle from '../hooks/usePageTitle'
 
 const STATUS_BADGE = {
@@ -21,18 +22,6 @@ const STATUS_BADGE = {
 function discoveredAt(discovery) {
   const ts = discovery.activity?.map((a) => a.timestamp).sort()
   return ts?.length ? ts[ts.length - 1] : null
-}
-
-function formatDate(ts) {
-  try {
-    return new Date(ts).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    })
-  } catch {
-    return ts
-  }
 }
 
 export default function DiscoveryDetailPage() {
