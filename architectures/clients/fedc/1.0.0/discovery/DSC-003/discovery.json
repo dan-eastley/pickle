@@ -1,0 +1,20 @@
+{
+    "$schema": "urn:pickle:schemas:discovery",
+    "discovery-id": "DSC-003",
+    "title": "Which platforms support Billing & Revenue Management?",
+    "status": "active",
+    "context": "We are reviewing the application landscape supporting retail and billing ahead of the CC&B migration.",
+    "request": "List the application platforms (APP-DAP) that support the Retail & Billing capability (CAP-006) and its level-2 sub-capabilities, and flag any capability with no supporting platform.",
+    "scope": {
+        "domain": "application",
+        "abstraction": "logical",
+        "artefact": "APP-DAP"
+    },
+    "activity": [
+        {
+            "timestamp": "2026-06-25T06:14:44.764Z",
+            "action": "Created",
+            "who": "Joe Bloggs"
+        }
+    ]
+}
