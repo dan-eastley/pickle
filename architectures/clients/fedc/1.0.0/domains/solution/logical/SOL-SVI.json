@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SVI",
+    "audience": [
+        "Enterprise Architect",
+        "Solution Architect",
+        "Product Owner"
+    ],
+    "author": [
+        "Solution Architect"
+    ],
     "documents": [
         {
             "id": "SVI-001",

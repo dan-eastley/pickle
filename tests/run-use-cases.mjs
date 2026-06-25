@@ -83,9 +83,12 @@ Object.assign(CHECKS, {
 
 const data = JSON.parse(readFileSync(JSON_PATH, 'utf8'))
 const all = data['use-cases']
+// COMPLEXITY / PRIORITY accept a comma-separated list (or "all").
+const cset = FILTER_C.split(',').map(s => s.trim())
+const pset = FILTER_P.split(',').map(s => s.trim())
 const selected = all.filter(u =>
-  (FILTER_C === 'all' || u.complexity === FILTER_C) &&
-  (FILTER_P === 'all' || u.priority === FILTER_P),
+  (FILTER_C === 'all' || cset.includes(u.complexity)) &&
+  (FILTER_P === 'all' || pset.includes(u.priority)),
 )
 
 console.log(`Running ${selected.length} use case(s) — complexity=${FILTER_C}, priority=${FILTER_P}\n`)

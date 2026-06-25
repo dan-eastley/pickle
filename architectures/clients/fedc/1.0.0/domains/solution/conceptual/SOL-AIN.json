@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AIN",
+    "audience": [
+        "Enterprise Architect",
+        "Solution Architect",
+        "Product Owner"
+    ],
+    "author": [
+        "Solution Architect"
+    ],
     "documents": [
         {
             "id": "AIN-001",

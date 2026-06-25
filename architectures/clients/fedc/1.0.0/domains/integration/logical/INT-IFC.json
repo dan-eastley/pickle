@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-IFC",
+    "audience": [
+        "Enterprise Architect",
+        "Integration Architect"
+    ],
+    "author": [
+        "Integration Architect",
+        "Systems Analyst"
+    ],
     "interfaces": [
         {
             "id": "INT-IFC-001",

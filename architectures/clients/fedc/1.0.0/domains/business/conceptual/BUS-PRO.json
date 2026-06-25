@@ -1,5 +1,14 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-PRO",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
     "processes": [
         {
             "id": "PROC-001",

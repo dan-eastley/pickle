@@ -1,5 +1,13 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:solution:conceptual:SOL-AVI",
+    "audience": [
+        "Enterprise Architect",
+        "Solution Architect",
+        "Product Owner"
+    ],
+    "author": [
+        "Solution Architect"
+    ],
     "documents": [
         {
             "id": "AVI-001",

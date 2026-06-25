@@ -1,5 +1,14 @@
 {
     "$schema": "urn:pickle:schemas:artefacts:domains:business:physical:BUS-PRN-GRD",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
     "relationships": [],
     "activity": [
         {
