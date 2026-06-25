@@ -35,10 +35,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ## Epic: Discovery (Virtual Architect Agent)
 
-### 🟡 Discovery framework · Medium
-**Context:** Routes, Active/Archived index (with scope filter + expand/collapse), new-discovery form and modal, `discovery`/`discoveries`/shared `scope` schemas, storage, breadcrumb, and homepage entry points all exist. The `discovery-to-active` workflow runs the shared Claude step over a discovery using the `architecture-discovery` prompt to populate `findings`.
-**Gap:** Creating a discovery doesn't persist or dispatch the workflow yet (the form/modal save is a stub); there's no `create-discovery` API action or Archive transition.
-**Proposed fix:** Add `create-discovery` (mirror `create-decision`) to write the record + index and dispatch `discovery-to-active`; add an Archive action.
+### ✅ Discovery (Virtual Architect Agent) · Medium
+**Context:** Full flow works end-to-end. The form/modal call `create-discovery` (writes the record + index on main, seeds activity, dispatches `discovery-to-active`); the self-contained `discovery-to-active` workflow runs the `architecture-discovery` prompt and commits Markdown `findings` back to main; the detail page Archive/Reactivate calls `update-discovery`. **Verified live (DSC-003):** the agent produced a capability-to-platform coverage view.
+**Gap:** No re-run/refresh action on an existing discovery; findings aren't versioned across re-runs.
 
 ---
 
@@ -81,10 +80,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** Inline English fallbacks still duplicate the locale; per-client terminology overrides aren't supported.
 **Proposed fix:** Prune the inline fallbacks; add a per-client overlay.
 
-### 🟡 Derived-artefact cascade on apply · High
-**Context:** `config/artefact-relationships.json` (generated from the registry's `relatedTo` graph) maps each artefact to the artefacts `derived` from it. The Apply Changes prompt now reads it and instructs Claude to regenerate diagram/matrix derivatives (e.g. `BUS-BPM` ← `BUS-PRO`, `BUS-BCM` ← `BUS-CAP`) in the same PR when a source catalogue changes.
-**Gap:** Not yet exercised on a live run; catalogue→catalogue derivatives are left to Claude's judgement.
-**Proposed fix:** Verify on a live STAGED run that derivatives are regenerated; tighten the prompt if needed.
+### ✅ Derived-artefact cascade on apply · High
+**Context:** `config/artefact-relationships.json` (generated from the registry's `relatedTo` graph) maps each artefact to the artefacts `derived` from it. The Apply Changes prompt reads it and regenerates derivatives in the same PR when a source catalogue changes. **Verified live (ADR-015):** a `BUS-PRO` edit regenerated both `BUS-BPM` (diagram) and `BUS-CAP-PRO` (matrix) in the same PR.
+**Gap:** Catalogue→catalogue derivatives are left to Claude's judgement (rare in practice).
 
 ### ⬜ Technology domain + Roadmap/Transition artefacts · Medium
 **Context:** Five domains today; only `APP-DAP` physical hints at technology.
