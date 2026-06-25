@@ -39,19 +39,21 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
     <section className="mt-8">
       <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{title}</h2>
       <div className="border border-gray-200 overflow-x-auto bg-white">
-        <table className="w-full text-sm">
+        {/* Percentage column widths so a longer name fits in "By" while Notes
+            takes the remaining space and wraps. */}
+        <table className="w-full text-sm table-fixed min-w-[640px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">
+              <th className="w-[20%] px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 Date / Time
               </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">
+              <th className="w-[12%] px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 Activity
               </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-40">
+              <th className="w-[23%] px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 By
               </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <th className="w-[45%] px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 Notes
               </th>
             </tr>
@@ -69,8 +71,10 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
                     {entry.action}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-700 text-sm">{entry.who || '—'}</td>
-                <td className="px-4 py-3 text-gray-600 text-xs">{entry.notes || '—'}</td>
+                <td className="px-4 py-3 text-gray-700 text-sm break-words">{entry.who || '—'}</td>
+                <td className="px-4 py-3 text-gray-600 text-xs break-words">
+                  {entry.notes || '—'}
+                </td>
               </tr>
             ))}
           </tbody>
