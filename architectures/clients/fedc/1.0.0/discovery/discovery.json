@@ -27,6 +27,11 @@
                 "abstraction": "logical",
                 "artefact": "APP-DAP"
             }
+        },
+        {
+            "discovery-id": "DSC-004",
+            "title": "What capabilities and platforms support customer offboarding",
+            "status": "active"
         }
     ]
 }
