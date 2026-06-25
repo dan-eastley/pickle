@@ -91,7 +91,7 @@ export default function TopBar() {
         to="/"
         className="flex items-baseline gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
       >
-        <span className="text-lg font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
+        <span className="text-lg font-bold tracking-wide uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
           Pickle
         </span>
         <span className="text-lg text-gray-400 hidden sm:block">

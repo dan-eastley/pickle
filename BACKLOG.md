@@ -29,13 +29,28 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** The app only reads `main`; there's no in-app preview of the staged diff.
 **Proposed fix:** Support `?ref=<branch>` reads so the staged artefact state can be previewed before commit.
 
+### DEC-5 · ⬜ Inline editing of decisions (replace the edit form) · Medium
+**Context:** A draft decision is edited through a separate full-page editor (`/decisions/:id/edit`), away from the recommendations and analysis the workflow produced. This forces a context switch — you can't see the Narrative Review feedback while you revise.
+**Gap:** No way to edit the Title / Context / Problem / Proposal / Requirements / Scope *in place* on the decision detail page, alongside the recommendations they should respond to.
+**Proposed fix:** Add an edit (pencil) affordance per editable field/section on the detail page. Clicking it swaps the rendered Markdown for an `AutoGrowTextarea` (reuse the create-modal inputs); Save calls the existing `edit-decision` API, which already re-composes the narrative and **re-dispatches `decisions-to-draft.yml`** so recommendations refresh. Editing is allowed **only while `status === 'draft'`** (gate the affordance on status; show a read-only note otherwise). This is the preferred approach and **supersedes the standalone edit form** (retire `/edit` once parity is reached). Cross-cutting with [PDL-4] (live refresh once the workflow finishes) and [QV-5] (focus management for the inline editors).
+
+### DEC-6 · ⬜ Multi-party governance & approvals · High
+**Context:** Today a single actor drives a decision through every transition (DRAFT → … → COMMITTED). There is no separation of duties, no notion of *who is allowed* to accept a change, and no link to the owner(s) of the artefacts a decision touches. Roles exist in `config/roles.json` but aren't enforced.
+**Gap:** A change can be self-approved end-to-end. No artefact ownership, no required reviewers, no quorum/approval policy, no audit of who approved what.
+**Proposed fix:** A governance model layered onto the pipeline: (1) **artefact ownership** — each catalogue/document declares owning role(s)/people; (2) **approval policy per transition** — e.g. ACCEPTED requires N approvals from owners of the impacted domains plus an architecture-authority role; (3) **reviewer assignment & sign-off UI** — approvers recorded as activity entries with identity, decision can't advance until policy met; (4) **separation of duties** — the proposer can't be the sole approver. Ties into [RAS-2] (authentication — real identities), [RAS-3] (authorization/RBAC + ACL), and per-artefact owners. High impact, large effort; sequence after authentication lands.
+
 ---
 
 ## Epic: Discovery (Virtual Architect Agent)
 
 ### DSC-1 · ✅ Discovery (Virtual Architect Agent) · Medium
-**Context:** Full flow works end-to-end. The form/modal call `create-discovery`; the self-contained `discovery-to-active` workflow runs the `architecture-discovery` prompt and commits Markdown `findings` back to main; the detail page Archive/Reactivate calls `update-discovery`. **Verified live (DSC-003).**
-**Gap:** No re-run/refresh action on an existing discovery; findings aren't versioned across re-runs.
+**Context:** Full flow works end-to-end. The form/modal call `create-discovery`; the self-contained `discovery-to-active` workflow runs the `architecture-discovery` prompt and commits Markdown `findings` back to main; the detail page Archive/Reactivate calls `update-discovery`. A **Refresh** action re-dispatches `discovery-to-active.yml` to regenerate findings (`refresh-discovery` API), and the header shows an "As at <date>" stamp for the point-in-time view. **Verified live (DSC-003).**
+**Gap:** Findings aren't versioned across re-runs (a refresh overwrites the prior view).
+
+### DSC-2 · ⬜ Inline editing of discoveries (replace the edit form) · Medium
+**Context:** A discovery's Title / Context / Request can only be set at creation; there's no way to refine the question while looking at the findings the agent produced.
+**Gap:** No in-place edit of a discovery on its detail page, alongside the output it should react to.
+**Proposed fix:** Mirror [DEC-5] for discoveries — a per-field edit (pencil) affordance on the discovery detail page that swaps to inline inputs and saves via `update-discovery`, then **kicks off the `discovery-to-active` step** so findings regenerate against the revised request. Editing is allowed **only while `status === 'active'`** (archived discoveries are read-only; reactivate first). Preferred approach; **supersedes any standalone discovery edit form.** Cross-cutting with [PDL-4] (live refresh) and [DSC-1] (findings versioning, so an edit-driven refresh doesn't silently discard the prior view).
 
 ---
 
@@ -71,6 +86,22 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-7 · ⬜ Brand/client-specific diagram theming · Low
 **Proposed fix:** Allow per-client colourways for diagrams.
 
+### UI-8 · ⬜ Folder organisation for decisions & discoveries · Medium
+**Context:** Decisions and discoveries are flat lists within a stage/status. As volume grows (many in-flight ADRs, many discoveries) the lists become unmanageable; there's no way to group related items (e.g. by initiative, domain, or workstream).
+**Gap:** No grouping construct; the index pages are a single flat list per stage.
+**Proposed fix:** A lightweight **folder** tree *within* each stage/status, max **3 levels** deep. Capabilities:
+- **Create / rename / delete folders** at any of the three levels.
+- **Move items** by drag-and-drop — between folders, or up to the parent/root.
+- **Assign on edit** — a decision/discovery's folder is an editable field (set on create or change later).
+- Folders are organisational only: they don't change a decision's branch/path or its stage; an item still belongs to exactly one stage and now optionally one folder path.
+**Design notes:** Model the tree as an index-level concern (e.g. a `folders` array + a `folderPath` on each index entry in `decisions.json` / `discovery.json`), so the architecture record itself is untouched and the tree is cheap to reorganise. Enforce the 3-level cap and prevent cycles in the move logic. Persist folder assignment through the existing index-sync path. Consider a shared `<FolderTree>` component reused by both index pages. Drag-and-drop via the native HTML5 DnD API or a small library; keep keyboard-accessible move actions for [QV-5].
+
+### UI-9 · ⬜ Navigate the architecture (matrix-driven relationship explorer) · High
+**Context:** Artefacts are viewed in isolation; the rich relationships captured in matrices (capability↔process, capability↔application, etc.) aren't browsable. You can't follow the thread "this capability → its processes → their data".
+**Gap:** No way to traverse the architecture graph from one entity to its related entities, and no single place that shows *all* relationships an entity participates in.
+**Proposed fix:** A **slide-out relationship explorer** (reuse/extend `EntityPanel`). When viewing an entity (e.g. a capability) the panel shows a **table of every relationship** that entity participates in, grouped by relationship type and **sourced from the matrices** (each matrix defines a typed mapping between two artefact types). Clicking a related entity (e.g. a process) **slides out a new panel from the right, overlaying** the previous one (a breadcrumb stack); from a process you can step to its data, and so on. Clicking the backdrop/off dismisses the whole stack.
+**Design notes:** Requires a **relationship resolver** that, given an entity id, finds all matrices referencing its artefact type and collects the mapped entities (both directions). Define this over the matrix data model (and `config/artefact-relationships.json`). Cap stack depth for sanity; animate the overlay; make each level independently closeable. Strongly related to [AMC-5] (we can only navigate relationships we actually model — missing matrices = missing edges) and [UI-5] (deep-linkable panel state) and [QV-5] (focus management across stacked panels).
+
 ---
 
 ## Epic: Architecture Model & Content
@@ -90,6 +121,24 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### AMC-4 · ⬜ Matrix/diagram formats beyond current set · Low
 **Proposed fix:** Define the remaining diagram/matrix types in the registry and renderers.
+
+### AMC-5 · ⬜ Matrix coverage review — find the missing mappings · Medium
+**Context:** A handful of matrices exist (e.g. capability↔process `BUS-CAP-PRO`, capability↔application `APP-CAP-DAP`). Matrices are the edges of the architecture graph, so coverage directly limits what [UI-9] can navigate and what governance/impact analysis can reason about.
+**Gap:** No deliberate review of *which* cross-artefact mappings matter. Likely-missing examples: **Data ↔ Process** (which processes create/read/update/delete which data), **Capability ↔ Data** (data owned/used by a capability), **Application ↔ Data** (systems of record), **Process ↔ Application** (which app supports which process step), **Capability ↔ Strategy/Principle** (traceability), **Application ↔ Integration/Interface**, **Capability ↔ Org/Role** (ownership, feeds [DEC-6]).
+**Proposed fix:** Produce a coverage map of artefact-type × artefact-type, mark which mappings are valuable, prioritise, then define the missing matrix types (registry entry + schema + doc + renderer, per `docs/artefacts.md` and [AMC-4]). Start with **Data ↔ Process**.
+
+### AMC-6 · ⬜ Multi-sector sample content · Medium
+**Context:** Demo content should let us exercise the product across a range of regulated-utility sectors, not just one. Naming convention: **"Fictitious &lt;Sector&gt; Company"**.
+**Target sectors / clients:**
+| # | Sector | Client id | State |
+|---|---|---|---|
+| 1 | Energy Transmission | `fetc` | to add |
+| 2 | Energy Distribution | `fedc` | exists, fully populated (reference baseline) |
+| 3 | Water & Wastewater | `fwwc` | exists as `fwdc` "Water Distribution" — **rename** to Water & Wastewater |
+| 4 | Energy Generation | `fegc` | to add |
+| 5 | Energy Retail & Supply | `fersc` | to add |
+**Gap:** Only sectors 2 and 3 exist; 3 is mis-named; the new sectors have no architecture content.
+**Proposed fix:** Add the three missing clients (metadata + `versions.json` + `1.0.0` skeleton) and **synthesise industry-appropriate architecture content for every sector except Energy Distribution** (which is already the populated baseline). Content should be tailored per industry (a generation company's capabilities/processes/data differ from a retailer's) rather than copied. Sequence the synthesis per domain × layer, validating against schemas as we go ([QV-1]/[QV-2]). Large content effort — best done sector-by-sector. **Decide depth before starting** (full parity with `fedc` vs a representative subset of catalogues).
 
 ---
 
@@ -143,6 +192,16 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Context:** Solution Vision → Solution Intent (fixed vs variable); homepage SAFe table; roles drawn partly from SAFe.
 **Gap:** No Architectural Runway view, Enabler type, WSJF, PI/release labels on versions, Value Stream artefact, or backlog-tool links.
 
+### FW-3 · ⬜ Zachman alignment · Low
+**Context:** Like the TOGAF and SAFe alignments, we should show how Pickle's model maps onto the **Zachman Framework** — the 6×6 ontology of interrogatives (What / How / Where / Who / When / Why) × perspectives (Executive/Contextual, Business Management/Conceptual, Architect/Logical, Engineer/Physical, Technician/Detailed, Enterprise).
+**Gap:** No Zachman framing anywhere; no mapping of our domains/layers/artefacts onto Zachman cells.
+**Proposed fix:** Map the model: **interrogatives → architecture domains** (What→Data, How→Business Process, Where→Integration/locations, Who→Org/roles, When→roadmap/events, Why→Strategy/Principles) and **perspectives → abstraction layers** (Conceptual/Logical/Physical map onto rows 2–4). Produce a homepage Zachman table (mirroring the TOGAF/SAFe tables) and a `docs/` page placing each artefact type in its cell; flag empty cells as gaps that motivate new artefact types ([AMC-3]/[AMC-5]).
+
+### FW-4 · ⬜ UAF (Unified Architecture Framework) alignment · Low
+**Context:** Like the TOGAF/SAFe alignments, map Pickle onto **UAF** — the OMG Unified Architecture Framework, whose grid crosses **domains** (Strategic, Operational, Services, Personnel, Resources, Security, Projects, Standards, Actual Resources, …) with **model kinds** (Taxonomy, Structure, Connectivity, Processes, States, Sequences, Information, Constraints, Roadmap, Traceability).
+**Gap:** No UAF framing; no mapping of our domains/layers/formats onto UAF's grid.
+**Proposed fix:** Map our five domains + three layers + three formats (Catalogue/Matrix/Diagram) onto the UAF domain × model-kind grid — e.g. Catalogue→Taxonomy, Matrix→Connectivity/Traceability, Diagram→Structure/Processes. Add a homepage UAF table and a `docs/` page; use empty intersections to motivate missing artefacts/matrices ([AMC-5]). Note UAF's first-class **Security** and **Projects** domains as candidate future domains.
+
 ---
 
 ## Epic: Quality, Validation & CI
@@ -172,6 +231,14 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-7 · ✅ Footer config banner · Low
 **Context:** The footer shows owner/repo only when `/api/github` config is available (it now is in dev via the shim); the raw "not configured" env-var banner is gone.
 
+### QV-8 · ⬜ Productionisation security review · High
+**Context:** Pickle is moving from PoC toward production; before exposure it needs a deliberate security pass. Surfaces of concern: the `/api/github` serverless function (input validation, action allow-listing, injection into commit/branch paths), token/secret handling (`GITHUB_TOKEN`, never client-exposed), the GitHub App/PAT scopes, the `/api/arch` proxy (path traversal — note the existing `startsWith(basePath)` guard), workflow-dispatch authorisation, dependency CVEs, CORS (`Access-Control-Allow-Origin: *`), and XSS via rendered Markdown.
+**Proposed fix:** Run a structured security review (the `/security-review` skill is a starting point) covering authn/z, secret management, input validation, SSRF/path-traversal, dependency audit, and headers/CORS. Capture findings as their own backlog items. **Use the Fable model for the review where possible.** Pairs with [RAS-2]/[RAS-3] (auth/RBAC) and [DEC-6] (governance).
+
+### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
+**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.
+**Proposed fix:** Sweep the tree, land low-risk improvements directly (guarded by lint/format/tests/build), and log larger refactors as their own items. **Use the Fable model for the review/refactor where possible** (mirrors the [PDL-3] Fable-review intent for code changes).
+
 ---
 
 ## Epic: Testing & Tooling
@@ -195,11 +262,21 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### PDL-1 · ⬜ Multi-repository support · Low
 **Proposed fix:** Allow the architecture state to span more than one repository.
 
-### PDL-2 · ⬜ Per-client AI model & credentials · Low
-**Proposed fix:** Let each client choose its model and supply its own credentials.
+### PDL-2 · ⬜ Bring-your-own Anthropic credentials (per-client) · Medium
+**Context:** Workflows call Anthropic with a single shared key. For multi-tenant / customer-hosted use, each customer should run AI under **their own Anthropic account** — their key, their billing, their data boundary — and optionally choose the model.
+**Proposed fix:** Let each client **supply their own Anthropic API key** (and/or authenticate/log in with their Anthropic account) and select a model; store the credential as a per-client secret (never client-exposed) and have the decision/discovery/apply workflows resolve the per-client key at dispatch. Pairs with [RAS-2] (auth) and [QV-8] (secret handling).
 
 ### PDL-3 · ⬜ Features workflow: Fable review → Sonnet apply · Low
 **Proposed fix:** A code-change workflow mirroring the decisions pipeline for non-ADR changes.
+
+### PDL-4 · ⬜ Workflow-completion notifications (live UI updates) · Medium
+**Context:** When a transition dispatches a workflow (narrative review, analysis, apply, discovery), the UI shows a "this takes a couple of minutes — check back" banner and the user must **manually refresh** to see results. There's no signal when the workflow actually finishes.
+**Gap:** No back-end → front-end channel to announce "the workflow has run; new data is on `main`". Polling is wasteful and laggy.
+**Proposed fix:** A notification path so the UI knows when GitHub state has changed: at workflow completion, a final step **calls back to the API** (`repository_dispatch` / a small notify endpoint), which **pushes to the front end** over a **WebSocket** (or SSE) keyed by client/version/record id. The relevant section then flips its banner to **"This is complete — hit refresh to view"** (or auto-refetches). Needs a stateful back end ([RAS-4]) to hold connections. This is the live-update backbone for [DEC-5]/[DSC-2] (inline edits that re-dispatch) and the existing decision/discovery refresh banners. Fallback: lightweight polling of the index `updatedAt` if a socket isn't available.
+
+### PDL-5 · ⬜ Bring-your-own GitHub credentials / login · Medium
+**Context:** The repository is accessed with one configured token (`GITHUB_TOKEN`/`OWNER`/`REPO`). For customer-hosted use, each customer should connect **their own GitHub** — their org/repo, their auth — rather than ours.
+**Proposed fix:** Support **GitHub login (OAuth / GitHub App install)** and/or a customer-supplied PAT, scoping all reads/writes and workflow dispatches to the customer's repo. Store per-tenant; never expose to the client. Pairs with [PDL-1] (multi-repo), [RAS-2] (auth), and [QV-8] (token scopes/secret handling).
 
 ---
 
