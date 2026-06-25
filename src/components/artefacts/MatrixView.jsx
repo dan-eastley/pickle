@@ -34,6 +34,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
       setColumnData(colD)
       setRowData(rowD)
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, colArtefact?.id, rowArtefact?.id])
 
   useEscapeKey(() => setFullscreen(false), fullscreen)

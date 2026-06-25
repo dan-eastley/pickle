@@ -51,6 +51,7 @@ function useArtefactCount(clientId, versionId, artefact, rowRef) {
 
     observer.observe(el)
     return () => observer.disconnect()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, artefact.id])
 
   return count

@@ -29,6 +29,7 @@ const DOMAIN_HEX = {
 
 const BRAND = '#2970FF'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const illustrationNames = Object.keys(SVGS)
 
 export default function Illustration({ name, domain, color, className = '' }) {

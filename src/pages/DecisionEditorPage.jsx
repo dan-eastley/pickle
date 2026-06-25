@@ -243,9 +243,9 @@ export default function DecisionEditorPage() {
         <div className="flex-1 max-w-2xl space-y-5">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Title <span className="text-error-500">*</span>
-            </label>
+            </span>
             <input
               type="text"
               value={title}
@@ -257,9 +257,9 @@ export default function DecisionEditorPage() {
 
           {/* Context */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Context <span className="text-error-500">*</span>
-            </label>
+            </span>
             <AutoGrowTextarea
               value={context}
               onChange={e => setContext(e.target.value)}
@@ -270,9 +270,9 @@ export default function DecisionEditorPage() {
 
           {/* Problem */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Problem <span className="text-error-500">*</span>
-            </label>
+            </span>
             <AutoGrowTextarea
               value={problem}
               onChange={e => setProblem(e.target.value)}
@@ -283,9 +283,9 @@ export default function DecisionEditorPage() {
 
           {/* Proposal */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Proposal <span className="text-error-500">*</span>
-            </label>
+            </span>
             <AutoGrowTextarea
               value={proposal}
               onChange={e => setProposal(e.target.value)}
@@ -296,13 +296,13 @@ export default function DecisionEditorPage() {
 
           {/* Requirements */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
+            <span className="block text-sm font-medium text-gray-700 mb-1">Requirements</span>
             <RequirementsList requirements={requirements} onChange={setRequirements} />
           </div>
 
           {/* Scope */}
           <div className="border border-gray-200 bg-gray-50 p-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+            <span className="block text-sm font-medium text-gray-700 mb-1">Scope</span>
             <ScopeSelector
               domain={scopeDomain}
               abstraction={scopeAbstraction}

@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { DOMAIN_COLORS } from '../../lib/artefacts'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
@@ -17,6 +16,8 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState(null) // { ok, discoveryId } | { ok:false, error }
   const saved = !!result?.ok
+  const titleRef = useRef(null)
+  useEffect(() => { titleRef.current?.focus() }, [])
 
   const canSave = title.trim() && context.trim() && request.trim()
 
@@ -69,17 +70,24 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
 
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
         <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
-          {/* Header — AI gradient to match the Virtual Architect Agent */}
-          <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-50 to-rose-50 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
-                <RobotIcon className="w-4 h-4 text-white" />
+          {/* Header — plain coloured bar, icon, title + purpose */}
+          <div className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
+                <RobotIcon className="w-4 h-4 text-blue-600" />
               </div>
-              <h2 className="text-base font-semibold text-gray-900">New Architecture Discovery</h2>
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold text-gray-900">New Architecture Discovery</h2>
+                <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                  Ask the Virtual Architect Agent a question about your architecture — describe the
+                  situation and what you want to know, and it produces a point-in-time view from the
+                  model as it stands today. It's read-only; nothing is changed.
+                </p>
+              </div>
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors"
+              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -103,29 +111,24 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
               </div>
             ) : (
               <>
-                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3">
-                  A Discovery asks the Virtual Architect Agent a question about your architecture —
-                  describe the situation and what you want to know, and it produces a point-in-time view
-                  from the model as it stands today. It's read-only; nothing is changed.
-                </p>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Title <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <input
+                    ref={titleRef}
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     placeholder="e.g. Which capabilities depend on this platform?"
                     className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
-                    autoFocus
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Context <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <AutoGrowTextarea
                     value={context}
                     onChange={e => setContext(e.target.value)}
@@ -135,9 +138,9 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <span className="block text-sm font-medium text-gray-700 mb-1">
                     Request <span className="text-error-500">*</span>
-                  </label>
+                  </span>
                   <AutoGrowTextarea
                     value={request}
                     onChange={e => setRequest(e.target.value)}
@@ -147,7 +150,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 </div>
 
                 <div className="border border-gray-200 bg-gray-50 p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+                  <span className="block text-sm font-medium text-gray-700 mb-1">Scope</span>
                   <ScopeSelector
                     domain={scopeDomain}
                     abstraction={scopeAbstraction}

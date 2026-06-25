@@ -208,6 +208,7 @@ export default function ArtefactPage() {
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, domain, abstraction, artefactId])
 
   if (!artefact) {

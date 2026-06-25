@@ -99,9 +99,9 @@ export default function DiscoveryEditorPage() {
         <div className="flex-1 max-w-2xl space-y-5">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Title <span className="text-error-500">*</span>
-            </label>
+            </span>
             <input
               type="text"
               value={title}
@@ -113,9 +113,9 @@ export default function DiscoveryEditorPage() {
 
           {/* Context */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Context <span className="text-error-500">*</span>
-            </label>
+            </span>
             <AutoGrowTextarea
               value={context}
               onChange={e => setContext(e.target.value)}
@@ -126,9 +126,9 @@ export default function DiscoveryEditorPage() {
 
           {/* Request */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <span className="block text-sm font-medium text-gray-700 mb-1">
               Request <span className="text-error-500">*</span>
-            </label>
+            </span>
             <AutoGrowTextarea
               value={request}
               onChange={e => setRequest(e.target.value)}
@@ -139,7 +139,7 @@ export default function DiscoveryEditorPage() {
 
           {/* Scope */}
           <div className="border border-gray-200 bg-gray-50 p-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+            <span className="block text-sm font-medium text-gray-700 mb-1">Scope</span>
             <ScopeSelector
               domain={scopeDomain}
               abstraction={scopeAbstraction}
