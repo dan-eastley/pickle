@@ -1,25 +1,27 @@
+import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { DOMAINS, DOMAIN_COLORS, getArtefactsForDomain } from '../lib/artefacts'
+import { loadClientMetrics } from '../lib/metrics'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
 import Button from '../components/ui/Button'
 import { ChevronRight, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
-function DomainCard({ domain, base }) {
+function DomainCard({ domain, base, dm }) {
   const colors = DOMAIN_COLORS[domain.id]
   const accent = colors.accent
   const artefacts = getArtefactsForDomain(domain.id)
-  const catalogues = artefacts.filter((a) => a.format === 'catalogue').length
-  const diagrams = artefacts.filter((a) => a.format === 'diagram').length
-  const matrices = artefacts.filter((a) => a.format === 'matrix').length
-  const documents = artefacts.filter((a) => a.format === 'document').length
+  // Registry counts (artefact *types*) are the placeholder until live metrics
+  // arrive; then we show populated counts, and — crucially — document
+  // *instances* (a document artefact can hold several documents).
+  const reg = (fmt) => artefacts.filter((a) => a.format === fmt).length
 
   const counts = [
-    { format: 'catalogue', n: catalogues, label: 'Catalogue' },
-    { format: 'diagram', n: diagrams, label: 'Diagram' },
-    { format: 'matrix', n: matrices, label: 'Matrix', plural: 'Matrices' },
-    { format: 'document', n: documents, label: 'Document' },
+    { format: 'catalogue', n: dm?.catalogue ?? reg('catalogue'), label: 'Catalogue' },
+    { format: 'diagram', n: dm?.diagram ?? reg('diagram'), label: 'Diagram' },
+    { format: 'matrix', n: dm?.matrix ?? reg('matrix'), label: 'Matrix', plural: 'Matrices' },
+    { format: 'document', n: dm?.documents ?? reg('document'), label: 'Document' },
   ]
 
   return (
@@ -56,13 +58,22 @@ export default function DomainsPage() {
   const base = `/clients/${clientId}/${versionId}`
   usePageTitle('Architecture Domains')
 
+  const [metrics, setMetrics] = useState(null)
+  useEffect(() => {
+    let live = true
+    loadClientMetrics(clientId, versionId).then((m) => live && setMetrics(m))
+    return () => {
+      live = false
+    }
+  }, [clientId, versionId])
+
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-gray-900">Architecture Domains</h1>
         <p className="mt-1 text-sm text-gray-500">
-          The architecture is organised into five domains — Business, Data, Integration,
-          Application, and Solution. Within each domain, content is grouped into three levels of
+          The architecture is organised into five domains — Business, Data, Application,
+          Integration, and Solution. Within each domain, content is grouped into three levels of
           detail: Conceptual (what and why), Logical (how), and Physical (where and with what).
           Select a domain to get started.
         </p>
@@ -70,7 +81,12 @@ export default function DomainsPage() {
 
       <div className="flex flex-col gap-3">
         {DOMAINS.map((domain) => (
-          <DomainCard key={domain.id} domain={domain} base={base} />
+          <DomainCard
+            key={domain.id}
+            domain={domain}
+            base={base}
+            dm={metrics?.perDomain[domain.id]}
+          />
         ))}
       </div>
 
