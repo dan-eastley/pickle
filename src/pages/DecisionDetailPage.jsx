@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useId } from 'react'
-import { useParams, Navigate, useLocation, Link } from 'react-router-dom'
+import { useParams, Navigate, useLocation } from 'react-router-dom'
 import { getDecision } from '../lib/api'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
@@ -8,7 +8,14 @@ import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
-import { CheckIcon, DecisionIcon, ArrowLeft, DisclosureChevron } from '../components/ui/icons'
+import {
+  CheckIcon,
+  DecisionIcon,
+  ArrowLeft,
+  DisclosureChevron,
+  EditIcon,
+} from '../components/ui/icons'
+import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import usePageTitle from '../hooks/usePageTitle'
 import useActiveSection from '../hooks/useActiveSection'
 import usePersistedSet from '../hooks/usePersistedSet'
@@ -697,6 +704,19 @@ function EmptyNote({ title, description }) {
   )
 }
 
+// Inline editor for a Change field (Context / Problem / Proposal). Calls
+// onChange with the raw string value. Used by DEC-5 inline editing.
+function EditField({ value, onChange }) {
+  return (
+    <AutoGrowTextarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      minRows={3}
+      className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
+    />
+  )
+}
+
 // Sub-keys grouped under the "Change" heading.
 const CHANGE_SUB_KEYS = ['context', 'problem', 'proposal', 'narrative', 'scope', 'recommendations']
 
@@ -839,6 +859,8 @@ export default function DecisionDetailPage() {
   const [transitionError, setTransitionError] = useState(null)
   const [pendingWorkflow, setPendingWorkflow] = useState(null) // { label } while a workflow populates the next section
   const [repoSlug, setRepoSlug] = useState(null) // owner/repo, for building a PR URL from pr-number
+  const [edit, setEdit] = useState(null) // { title, context, problem, proposal } while inline-editing a draft
+  const [savingEdit, setSavingEdit] = useState(false)
 
   useEffect(() => {
     fetch('/api/github?action=config')
@@ -953,6 +975,50 @@ export default function DecisionDetailPage() {
       setTransitionError(err.message)
     } finally {
       setTransitioning(false)
+    }
+  }
+
+  function startEdit() {
+    setEdit({
+      title: decision.title ?? '',
+      context: decision.context ?? '',
+      problem: decision.problem ?? '',
+      proposal: decision.proposal ?? '',
+    })
+  }
+
+  // Save inline edits to a draft. edit-decision persists the fields and
+  // re-dispatches decisions-to-draft, which refreshes the recommendations —
+  // so we show the workflow banner. Only available while status === 'draft'.
+  async function saveEdit() {
+    setSavingEdit(true)
+    setTransitionError(null)
+    setDecision((prev) => (prev ? { ...prev, ...edit } : prev)) // optimistic
+    try {
+      const res = await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'edit-decision',
+          clientId,
+          versionId,
+          decisionId,
+          ...edit,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Save failed')
+      setEdit(null)
+      setPendingWorkflow({
+        label: 'reviewing your updated narrative and refreshing recommendations',
+      })
+      getDecision(clientId, versionId, decisionId, undefined, { bust: true })
+        .then(setDecision)
+        .catch(() => {})
+    } catch (err) {
+      setTransitionError(err.message)
+    } finally {
+      setSavingEdit(false)
     }
   }
 
@@ -1085,8 +1151,17 @@ export default function DecisionDetailPage() {
                 <DecisionIcon className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
-                {decision.scope && (
+                {edit ? (
+                  <input
+                    value={edit.title}
+                    onChange={(e) => setEdit((p) => ({ ...p, title: e.target.value }))}
+                    aria-label="Decision title"
+                    className="w-full text-xl font-semibold text-gray-900 border-b border-gray-300 focus:border-brand-500 focus:outline-none pb-1"
+                  />
+                ) : (
+                  <h1 className="text-xl font-semibold text-gray-900">{decision.title}</h1>
+                )}
+                {decision.scope && !edit && (
                   <div className="mt-2">
                     <ScopeChip scope={decision.scope} />
                   </div>
@@ -1099,23 +1174,33 @@ export default function DecisionDetailPage() {
                 {decision['rejection-reason'] && (
                   <span className="text-xs text-gray-400">{decision['rejection-reason']}</span>
                 )}
-                {decision.status === 'draft' && (
-                  <Link
-                    to={`/clients/${clientId}/${versionId}/decisions/${decisionId}/edit`}
-                    className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-colors"
-                  >
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                      <path
-                        d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z"
-                        stroke="currentColor"
-                        strokeWidth="1.25"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                      />
-                    </svg>
-                    Edit
-                  </Link>
-                )}
+                {decision.status === 'draft' &&
+                  (edit ? (
+                    <>
+                      <button
+                        onClick={() => setEdit(null)}
+                        disabled={savingEdit}
+                        className="px-3 py-1 text-gray-500 hover:text-gray-900 text-xs font-medium transition-colors disabled:opacity-40"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={saveEdit}
+                        disabled={savingEdit || !edit.title.trim()}
+                        className="px-3 py-1 bg-brand-600 hover:bg-brand-700 text-white text-xs font-medium transition-colors disabled:opacity-40"
+                      >
+                        {savingEdit ? 'Saving…' : 'Save & re-review'}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={startEdit}
+                      className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-colors"
+                    >
+                      <EditIcon className="w-3.5 h-3.5" />
+                      Edit
+                    </button>
+                  ))}
               </div>
             </div>
           </div>
@@ -1179,12 +1264,17 @@ export default function DecisionDetailPage() {
             {renderSection(
               'change',
               <div className="space-y-8">
-                {decision.context || decision.problem || decision.proposal ? (
+                {edit || decision.context || decision.problem || decision.proposal ? (
                   <>
                     {renderSub(
                       'context',
                       'Context',
-                      decision.context ? (
+                      edit ? (
+                        <EditField
+                          value={edit.context}
+                          onChange={(v) => setEdit((p) => ({ ...p, context: v }))}
+                        />
+                      ) : decision.context ? (
                         <Markdown className="text-sm text-gray-700 leading-relaxed">
                           {decision.context}
                         </Markdown>
@@ -1195,7 +1285,12 @@ export default function DecisionDetailPage() {
                     {renderSub(
                       'problem',
                       'Problem',
-                      decision.problem ? (
+                      edit ? (
+                        <EditField
+                          value={edit.problem}
+                          onChange={(v) => setEdit((p) => ({ ...p, problem: v }))}
+                        />
+                      ) : decision.problem ? (
                         <Markdown className="text-sm text-gray-700 leading-relaxed">
                           {decision.problem}
                         </Markdown>
@@ -1206,7 +1301,12 @@ export default function DecisionDetailPage() {
                     {renderSub(
                       'proposal',
                       'Proposal',
-                      decision.proposal ? (
+                      edit ? (
+                        <EditField
+                          value={edit.proposal}
+                          onChange={(v) => setEdit((p) => ({ ...p, proposal: v }))}
+                        />
+                      ) : decision.proposal ? (
                         <Markdown className="text-sm text-gray-700 leading-relaxed">
                           {decision.proposal}
                         </Markdown>
