@@ -36,6 +36,21 @@ export default function QuickPicker() {
     return () => document.removeEventListener('mousedown', onClick)
   }, [])
 
+  // Command-palette convention: "/" focuses the jump-to box from anywhere,
+  // unless the user is already typing in a field.
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return
+      const t = e.target
+      const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)
+      if (typing) return
+      e.preventDefault()
+      inputRef.current?.focus()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
   useEffect(() => {
     setActive(0)
   }, [query])
@@ -84,9 +99,14 @@ export default function QuickPicker() {
           onFocus={() => setFocused(true)}
           onKeyDown={onKeyDown}
           placeholder={`Jump to ${scopeLabel}…`}
-          title={`Jump to an artefact (${scopeLabel})`}
-          className="w-full pl-9 pr-3 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-400 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
+          title={`Jump to an artefact (${scopeLabel}) — press / to focus`}
+          className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-400 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
         />
+        {!query && (
+          <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:block text-[11px] font-mono text-gray-400 border border-gray-300 px-1 leading-tight">
+            /
+          </kbd>
+        )}
       </div>
 
       {open && (
