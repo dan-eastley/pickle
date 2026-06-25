@@ -1,0 +1,226 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DPM",
+    "audience": [
+        "Enterprise Architect",
+        "Application Architect",
+        "Chief Information Officer"
+    ],
+    "author": [
+        "Application Architect",
+        "Systems Analyst"
+    ],
+    "groups": [
+        {
+            "id": "APP-DOM-CUSTOMER",
+            "name": "Customer Engagement",
+            "items": [
+                {
+                    "id": "PLAT-CRM",
+                    "name": "CRM"
+                },
+                {
+                    "id": "PLAT-DXP",
+                    "name": "Digital Experience Platform"
+                },
+                {
+                    "id": "PLAT-MOBILE-APP",
+                    "name": "Customer Mobile App"
+                },
+                {
+                    "id": "PLAT-CONTACT-CENTRE",
+                    "name": "Contact Centre Platform"
+                },
+                {
+                    "id": "PLAT-MARKETING-AUTOMATION",
+                    "name": "Marketing Automation"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-FIELD",
+            "name": "Field & Asset Ops",
+            "items": [
+                {
+                    "id": "PLAT-EAM",
+                    "name": "Enterprise Asset Management"
+                },
+                {
+                    "id": "PLAT-FSM",
+                    "name": "Field Service Management"
+                },
+                {
+                    "id": "PLAT-IOT",
+                    "name": "Industrial IoT Platform"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-TRADING",
+            "name": "Energy Trading",
+            "items": [
+                {
+                    "id": "PLAT-ETRM",
+                    "name": "ETRM"
+                },
+                {
+                    "id": "PLAT-MARKET-DATA",
+                    "name": "Market Data Platform"
+                },
+                {
+                    "id": "PLAT-RISK-ANALYTICS",
+                    "name": "Trading Risk Analytics"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-NETWORK",
+            "name": "Network Management",
+            "items": [
+                {
+                    "id": "PLAT-ADMS",
+                    "name": "Advanced Generation Management System"
+                },
+                {
+                    "id": "PLAT-EMS",
+                    "name": "Energy Management System"
+                },
+                {
+                    "id": "PLAT-OMS",
+                    "name": "Outage Management System"
+                },
+                {
+                    "id": "PLAT-GIS",
+                    "name": "Geographic Information System"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-BILLING",
+            "name": "Wholesale Settlement",
+            "items": [
+                {
+                    "id": "PLAT-CIS",
+                    "name": "Customer Information System"
+                },
+                {
+                    "id": "PLAT-TARIFF-ENGINE",
+                    "name": "Tariff & Pricing Engine"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-METERING",
+            "name": "Metering",
+            "items": [
+                {
+                    "id": "PLAT-MDM",
+                    "name": "Meter Data Management"
+                },
+                {
+                    "id": "PLAT-HES",
+                    "name": "Head-End System"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-REGULATORY",
+            "name": "Regulatory Reporting",
+            "items": [
+                {
+                    "id": "PLAT-REG-REPORTING",
+                    "name": "Regulatory Reporting Platform"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-SUSTAIN",
+            "name": "Sustainability Analytics",
+            "items": [
+                {
+                    "id": "PLAT-EMISSIONS",
+                    "name": "Emissions Tracking Platform"
+                },
+                {
+                    "id": "PLAT-ESG",
+                    "name": "ESG Reporting Platform"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-DATA",
+            "name": "Data & Analytics",
+            "items": [
+                {
+                    "id": "PLAT-DATA-LAKEHOUSE",
+                    "name": "Data Lakehouse"
+                },
+                {
+                    "id": "PLAT-MDM-MASTER",
+                    "name": "Master Data Management"
+                },
+                {
+                    "id": "PLAT-BI",
+                    "name": "BI & Analytics"
+                },
+                {
+                    "id": "PLAT-ML",
+                    "name": "ML / AI Platform"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-ENTERPRISE",
+            "name": "Enterprise Support",
+            "items": [
+                {
+                    "id": "PLAT-ERP",
+                    "name": "ERP"
+                },
+                {
+                    "id": "PLAT-HRIS",
+                    "name": "HRIS"
+                },
+                {
+                    "id": "PLAT-ITSM",
+                    "name": "ITSM"
+                },
+                {
+                    "id": "PLAT-COLLAB",
+                    "name": "Collaboration Suite"
+                }
+            ]
+        },
+        {
+            "id": "APP-DOM-INTEGRATION",
+            "name": "Integration Backbone",
+            "items": [
+                {
+                    "id": "PLAT-API-GATEWAY",
+                    "name": "API Gateway"
+                },
+                {
+                    "id": "PLAT-EVENT-BROKER",
+                    "name": "Event Broker"
+                },
+                {
+                    "id": "PLAT-IPAAS",
+                    "name": "iPaaS"
+                }
+            ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

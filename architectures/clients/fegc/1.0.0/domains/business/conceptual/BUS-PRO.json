@@ -1,0 +1,1430 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-PRO",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
+    "processes": [
+        {
+            "id": "PROC-001",
+            "name": "Customer Lifecycle Management",
+            "type": "core",
+            "level": 1,
+            "trigger": "Customer enquiry or application received",
+            "outcome": "Customer acquired, served, and retained",
+            "owner": "Chief Customer Officer"
+        },
+        {
+            "id": "PROC-002",
+            "name": "Energy Generation & Dispatch",
+            "type": "core",
+            "level": 1,
+            "trigger": "System dispatch instruction or market signal",
+            "outcome": "Energy generated and delivered to the grid",
+            "owner": "Generation Director"
+        },
+        {
+            "id": "PROC-003",
+            "name": "Energy Trading & Settlement",
+            "type": "core",
+            "level": 1,
+            "trigger": "Market open or trading opportunity identified",
+            "outcome": "Energy position optimised and settlements cleared",
+            "owner": "Head of Energy Trading"
+        },
+        {
+            "id": "PROC-004",
+            "name": "Plant Operations & Control",
+            "type": "core",
+            "level": 1,
+            "trigger": "Network event, schedule, or control instruction",
+            "outcome": "Safe, reliable electricity delivery to customers",
+            "owner": "Plant Operations Director"
+        },
+        {
+            "id": "PROC-005",
+            "name": "Asset Lifecycle Management",
+            "type": "supporting",
+            "level": 1,
+            "trigger": "Asset investment decision or asset condition trigger",
+            "outcome": "Assets available, maintained, and performing to standard",
+            "owner": "Chief Asset Officer"
+        },
+        {
+            "id": "PROC-006",
+            "name": "Wholesale Revenue Management",
+            "type": "core",
+            "level": 1,
+            "trigger": "Billing cycle, meter read, or payment event",
+            "outcome": "Accurate bills issued and revenue collected",
+            "owner": "Head of Retail Operations"
+        },
+        {
+            "id": "PROC-007",
+            "name": "Regulatory Reporting & Compliance",
+            "type": "management",
+            "level": 1,
+            "trigger": "Regulatory obligation, licence condition, or audit notice",
+            "outcome": "Obligations met and licences maintained",
+            "owner": "Head of Regulatory Affairs"
+        },
+        {
+            "id": "PROC-008",
+            "name": "Sustainability & Carbon Management",
+            "type": "management",
+            "level": 1,
+            "trigger": "Emissions data available or sustainability reporting period",
+            "outcome": "Carbon position measured, managed, and disclosed",
+            "owner": "Head of Sustainability"
+        },
+        {
+            "id": "PROC-009",
+            "name": "Enterprise Services Delivery",
+            "type": "supporting",
+            "level": 1,
+            "trigger": "Business request or operational need",
+            "outcome": "Finance, people, technology, and procurement services delivered",
+            "owner": "Chief Operating Officer"
+        },
+        {
+            "id": "PROC-001-01",
+            "name": "Acquire New Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "trigger": "Sales lead or customer enquiry",
+            "outcome": "New customer account activated",
+            "owner": "Sales & Marketing"
+        },
+        {
+            "id": "PROC-001-02",
+            "name": "Onboard Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "trigger": "New customer account approved",
+            "outcome": "Customer fully onboarded with active supply point",
+            "owner": "Customer Operations"
+        },
+        {
+            "id": "PROC-001-03",
+            "name": "Service & Manage Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "trigger": "Customer contact or service request",
+            "outcome": "Customer request resolved",
+            "owner": "Customer Service"
+        },
+        {
+            "id": "PROC-001-04",
+            "name": "Retain & Grow Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "trigger": "Contract renewal date or at-risk signal",
+            "outcome": "Customer contract renewed or upsell completed",
+            "owner": "Customer Retention"
+        },
+        {
+            "id": "PROC-001-05",
+            "name": "Manage Customer Insights",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "trigger": "Data collection cycle or analysis request",
+            "outcome": "Customer insights distributed to business",
+            "owner": "Customer Analytics"
+        },
+        {
+            "id": "PROC-001-06",
+            "name": "Offboard Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-001",
+            "trigger": "Non-payment decision made",
+            "outcome": "Customer offboarded",
+            "owner": "Customer Operations"
+        },
+        {
+            "id": "PROC-002-01",
+            "name": "Plan Generation Capacity",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-002",
+            "trigger": "Planning cycle or capacity gap identified",
+            "outcome": "Approved generation capacity plan",
+            "owner": "Generation Planning"
+        },
+        {
+            "id": "PROC-002-02",
+            "name": "Schedule & Dispatch Generation",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-002",
+            "trigger": "System operator dispatch instruction",
+            "outcome": "Generation units committed and dispatched",
+            "owner": "Generation Control"
+        },
+        {
+            "id": "PROC-002-03",
+            "name": "Operate Generation Assets",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-002",
+            "trigger": "Dispatch schedule received",
+            "outcome": "Assets operated safely within parameters",
+            "owner": "Plant Operations"
+        },
+        {
+            "id": "PROC-002-04",
+            "name": "Manage Fuel & Input Supply",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-002",
+            "trigger": "Fuel consumption forecast or reorder trigger",
+            "outcome": "Fuel available to meet generation schedule",
+            "owner": "Fuel Management"
+        },
+        {
+            "id": "PROC-002-05",
+            "name": "Optimise Generation Portfolio",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-002",
+            "trigger": "Portfolio performance review cycle",
+            "outcome": "Portfolio adjusted for maximum performance",
+            "owner": "Generation Strategy"
+        },
+        {
+            "id": "PROC-003-01",
+            "name": "Forecast Demand & Supply",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-003",
+            "trigger": "Forecast cycle or market data update",
+            "outcome": "Demand and supply forecasts published",
+            "owner": "Forecasting & Analytics"
+        },
+        {
+            "id": "PROC-003-02",
+            "name": "Execute Energy Trades",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-003",
+            "trigger": "Trading opportunity or portfolio position requirement",
+            "outcome": "Trades executed and booked",
+            "owner": "Trading Desk"
+        },
+        {
+            "id": "PROC-003-03",
+            "name": "Manage Trading Risk",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-003",
+            "trigger": "Market movement or risk threshold breach",
+            "outcome": "Exposure managed within risk limits",
+            "owner": "Risk Management"
+        },
+        {
+            "id": "PROC-003-04",
+            "name": "Settle & Clear Trades",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-003",
+            "trigger": "Settlement period close",
+            "outcome": "Trades settled and payments processed",
+            "owner": "Trade Settlement"
+        },
+        {
+            "id": "PROC-004-01",
+            "name": "Plan Generation Investment",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-004",
+            "trigger": "Asset condition assessment or demand growth forecast",
+            "outcome": "Approved network capital investment plan",
+            "owner": "Network Planning"
+        },
+        {
+            "id": "PROC-004-02",
+            "name": "Control & Monitor the Grid",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-004",
+            "trigger": "Real-time network event or control instruction",
+            "outcome": "Network operated within safe parameters",
+            "owner": "Network Control Centre"
+        },
+        {
+            "id": "PROC-004-03",
+            "name": "Maintain Plant Assets",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-004",
+            "trigger": "Scheduled maintenance plan or asset fault",
+            "outcome": "Network assets restored or maintained",
+            "owner": "Network Maintenance"
+        },
+        {
+            "id": "PROC-004-04",
+            "name": "Manage Network Outages",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-004",
+            "trigger": "Network fault detected or planned outage scheduled",
+            "outcome": "Supply restored and customers notified",
+            "owner": "Outage Management"
+        },
+        {
+            "id": "PROC-004-05",
+            "name": "Connect Customers & Distributed Resources",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-004",
+            "trigger": "Customer connection application received",
+            "outcome": "Customer or DER connected to the network",
+            "owner": "Connections"
+        },
+        {
+            "id": "PROC-005-01",
+            "name": "Plan Asset Investment",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-005",
+            "trigger": "Asset condition data or business need",
+            "outcome": "Prioritised and approved asset investment plan",
+            "owner": "Asset Strategy"
+        },
+        {
+            "id": "PROC-005-02",
+            "name": "Acquire & Construct Assets",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-005",
+            "trigger": "Approved capital project authorisation",
+            "outcome": "New asset constructed and ready for commissioning",
+            "owner": "Capital Delivery"
+        },
+        {
+            "id": "PROC-005-03",
+            "name": "Commission & Handover Assets",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-005",
+            "trigger": "Construction completion notification",
+            "outcome": "Asset commissioned and handed to operations",
+            "owner": "Commissioning"
+        },
+        {
+            "id": "PROC-005-04",
+            "name": "Operate & Maintain Assets",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-005",
+            "trigger": "Maintenance schedule or asset failure",
+            "outcome": "Asset operating within performance targets",
+            "owner": "Asset Operations"
+        },
+        {
+            "id": "PROC-005-05",
+            "name": "Decommission & Dispose Assets",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-005",
+            "trigger": "End-of-life determination or disposal instruction",
+            "outcome": "Asset safely decommissioned and removed",
+            "owner": "Decommissioning"
+        },
+        {
+            "id": "PROC-006-01",
+            "name": "Manage Tariffs & Products",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-006",
+            "trigger": "Regulatory change or market review cycle",
+            "outcome": "Approved tariffs and products published",
+            "owner": "Pricing & Products"
+        },
+        {
+            "id": "PROC-006-02",
+            "name": "Read & Validate Meters",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-006",
+            "trigger": "Scheduled billing cycle or on-demand read request",
+            "outcome": "Validated meter reads available for billing",
+            "owner": "Metering Operations"
+        },
+        {
+            "id": "PROC-006-03",
+            "name": "Bill Customers",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-006",
+            "trigger": "Billing cycle close with validated reads",
+            "outcome": "Bills issued to all customers",
+            "owner": "Billing Operations"
+        },
+        {
+            "id": "PROC-006-04",
+            "name": "Collect & Apply Payments",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-006",
+            "trigger": "Payment received or direct debit run",
+            "outcome": "Payments applied to accounts and reconciled",
+            "owner": "Cash Management"
+        },
+        {
+            "id": "PROC-006-05",
+            "name": "Manage Debt & Arrears",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-006",
+            "trigger": "Overdue account identified",
+            "outcome": "Debt collected or escalated",
+            "owner": "Collections"
+        },
+        {
+            "id": "PROC-007-01",
+            "name": "Manage Regulatory Licensing",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-007",
+            "trigger": "Licence renewal date or condition change",
+            "outcome": "All licences current and conditions met",
+            "owner": "Regulatory Affairs"
+        },
+        {
+            "id": "PROC-007-02",
+            "name": "Report to Regulators",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-007",
+            "trigger": "Regulatory reporting deadline",
+            "outcome": "Regulatory reports submitted on time",
+            "owner": "Regulatory Reporting"
+        },
+        {
+            "id": "PROC-007-03",
+            "name": "Manage Audits & Investigations",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-007",
+            "trigger": "Audit notice or investigation trigger",
+            "outcome": "Audit completed with remediation actions tracked",
+            "owner": "Compliance"
+        },
+        {
+            "id": "PROC-007-04",
+            "name": "Manage Safety & Environmental Compliance",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-007",
+            "trigger": "Safety event, environmental obligation, or inspection",
+            "outcome": "Safety and environmental obligations met",
+            "owner": "HSE"
+        },
+        {
+            "id": "PROC-008-01",
+            "name": "Measure & Track Emissions",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-008",
+            "trigger": "Emissions data collection cycle",
+            "outcome": "Emissions measured, verified, and recorded",
+            "owner": "Sustainability Team"
+        },
+        {
+            "id": "PROC-008-02",
+            "name": "Integrate Renewable Generation",
+            "type": "core",
+            "level": 2,
+            "parent-id": "PROC-008",
+            "trigger": "Renewable capacity opportunity or policy mandate",
+            "outcome": "Renewable generation connected and operational",
+            "owner": "Renewables Development"
+        },
+        {
+            "id": "PROC-008-03",
+            "name": "Manage Carbon Credits & Offsets",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-008",
+            "trigger": "Carbon obligation or credit purchase opportunity",
+            "outcome": "Carbon credits purchased, retired, and obligations met",
+            "owner": "Carbon Management"
+        },
+        {
+            "id": "PROC-008-04",
+            "name": "Report ESG Performance",
+            "type": "management",
+            "level": 2,
+            "parent-id": "PROC-008",
+            "trigger": "ESG reporting period or investor request",
+            "outcome": "ESG performance disclosed and filed",
+            "owner": "Sustainability Reporting"
+        },
+        {
+            "id": "PROC-009-01",
+            "name": "Manage Finance & Accounts",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-009",
+            "trigger": "Financial transaction, period close, or audit event",
+            "outcome": "Accurate financial records and reports produced",
+            "owner": "Finance"
+        },
+        {
+            "id": "PROC-009-02",
+            "name": "Manage People & HR",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-009",
+            "trigger": "Recruitment need, HR event, or payroll cycle",
+            "outcome": "Workforce hired, paid, and supported",
+            "owner": "Human Resources"
+        },
+        {
+            "id": "PROC-009-03",
+            "name": "Manage Technology & Systems",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-009",
+            "trigger": "System request, incident, or change event",
+            "outcome": "IT systems available, secure, and fit for purpose",
+            "owner": "IT"
+        },
+        {
+            "id": "PROC-009-04",
+            "name": "Manage Procurement & Supply Chain",
+            "type": "supporting",
+            "level": 2,
+            "parent-id": "PROC-009",
+            "trigger": "Purchase requisition or contract renewal",
+            "outcome": "Goods and services procured on time at best value",
+            "owner": "Procurement"
+        },
+        {
+            "id": "PROC-001-01-01",
+            "name": "Generate Sales Leads",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-01"
+        },
+        {
+            "id": "PROC-001-01-02",
+            "name": "Process Customer Applications",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-01"
+        },
+        {
+            "id": "PROC-001-01-03",
+            "name": "Activate Customer Accounts",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-01"
+        },
+        {
+            "id": "PROC-001-02-01",
+            "name": "Verify Identity & Address",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-02"
+        },
+        {
+            "id": "PROC-001-02-02",
+            "name": "Register Supply Point & Meter",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-02"
+        },
+        {
+            "id": "PROC-001-02-03",
+            "name": "Communicate Welcome & Setup",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-02"
+        },
+        {
+            "id": "PROC-001-03-01",
+            "name": "Handle Customer Enquiries",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-03"
+        },
+        {
+            "id": "PROC-001-03-02",
+            "name": "Process Account Changes",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-03"
+        },
+        {
+            "id": "PROC-001-03-03",
+            "name": "Resolve Complaints & Disputes",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-03"
+        },
+        {
+            "id": "PROC-001-04-01",
+            "name": "Identify At-Risk Customers",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-001-04"
+        },
+        {
+            "id": "PROC-001-04-02",
+            "name": "Execute Retention Campaigns",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-04"
+        },
+        {
+            "id": "PROC-001-04-03",
+            "name": "Manage Contract Renewals",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-04"
+        },
+        {
+            "id": "PROC-001-05-01",
+            "name": "Collect & Analyse Customer Data",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-001-05"
+        },
+        {
+            "id": "PROC-001-05-02",
+            "name": "Segment Customer Base",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-001-05"
+        },
+        {
+            "id": "PROC-001-05-03",
+            "name": "Distribute Insights to Business",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-001-05"
+        },
+        {
+            "id": "PROC-001-06-01",
+            "name": "Identify Offboarding Candidates",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-06",
+            "description": "Identify non-paying customers and initiate offboarding workflow."
+        },
+        {
+            "id": "PROC-001-06-02",
+            "name": "Issue Customer Notice",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-06",
+            "description": "Notify customer of impending account suspension, including timeline and next steps."
+        },
+        {
+            "id": "PROC-001-06-03",
+            "name": "Process Data Requests & Deletion",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-06",
+            "description": "Handle GDPR/CCPA data deletion requests and execute data retention/deletion per regulatory requirements."
+        },
+        {
+            "id": "PROC-001-06-04",
+            "name": "Close Account & Settle Payment",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-06",
+            "description": "Close account in core systems, suspend supply/access, and process final payment settlement."
+        },
+        {
+            "id": "PROC-001-06-05",
+            "name": "Notify Compliance & Audit",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-001-06",
+            "description": "Notify compliance, legal, and audit of offboarding completion, including audit trail logging."
+        },
+        {
+            "id": "PROC-002-01-01",
+            "name": "Assess Future Demand & Capacity",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-002-01"
+        },
+        {
+            "id": "PROC-002-01-02",
+            "name": "Evaluate Generation Options",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-002-01"
+        },
+        {
+            "id": "PROC-002-01-03",
+            "name": "Submit Capacity Plans & Bids",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-01"
+        },
+        {
+            "id": "PROC-002-02-01",
+            "name": "Receive & Confirm Dispatch Instructions",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-02"
+        },
+        {
+            "id": "PROC-002-02-02",
+            "name": "Schedule Unit Commitment",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-02"
+        },
+        {
+            "id": "PROC-002-02-03",
+            "name": "Report Actuals to System Operator",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-02"
+        },
+        {
+            "id": "PROC-002-03-01",
+            "name": "Start Up & Shut Down Units",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-03"
+        },
+        {
+            "id": "PROC-002-03-02",
+            "name": "Monitor Real-Time Performance",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-03"
+        },
+        {
+            "id": "PROC-002-03-03",
+            "name": "Respond to Alarms & Incidents",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-03"
+        },
+        {
+            "id": "PROC-002-04-01",
+            "name": "Forecast Fuel Consumption",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-002-04"
+        },
+        {
+            "id": "PROC-002-04-02",
+            "name": "Procure & Deliver Fuel",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-002-04"
+        },
+        {
+            "id": "PROC-002-04-03",
+            "name": "Manage Fuel Inventory",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-002-04"
+        },
+        {
+            "id": "PROC-002-05-01",
+            "name": "Analyse Portfolio Performance",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-002-05"
+        },
+        {
+            "id": "PROC-002-05-02",
+            "name": "Identify Optimisation Opportunities",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-002-05"
+        },
+        {
+            "id": "PROC-002-05-03",
+            "name": "Execute Portfolio Adjustments",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-002-05"
+        },
+        {
+            "id": "PROC-003-01-01",
+            "name": "Build Short-Term Load Forecasts",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-01"
+        },
+        {
+            "id": "PROC-003-01-02",
+            "name": "Build Long-Term Supply Forecasts",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-01"
+        },
+        {
+            "id": "PROC-003-01-03",
+            "name": "Publish & Share Forecasts",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-01"
+        },
+        {
+            "id": "PROC-003-02-01",
+            "name": "Identify Trading Opportunities",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-02"
+        },
+        {
+            "id": "PROC-003-02-02",
+            "name": "Execute Trades on Market",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-02"
+        },
+        {
+            "id": "PROC-003-02-03",
+            "name": "Confirm & Book Trades",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-02"
+        },
+        {
+            "id": "PROC-003-03-01",
+            "name": "Monitor Market Exposure",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-003-03"
+        },
+        {
+            "id": "PROC-003-03-02",
+            "name": "Calculate Value-at-Risk",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-003-03"
+        },
+        {
+            "id": "PROC-003-03-03",
+            "name": "Execute Hedging Strategies",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-03"
+        },
+        {
+            "id": "PROC-003-04-01",
+            "name": "Reconcile Trade Positions",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-04"
+        },
+        {
+            "id": "PROC-003-04-02",
+            "name": "Submit Settlement Data to Market",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-04"
+        },
+        {
+            "id": "PROC-003-04-03",
+            "name": "Process Settlement Invoices & Payments",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-003-04"
+        },
+        {
+            "id": "PROC-004-01-01",
+            "name": "Assess Network Capacity & Constraints",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-004-01"
+        },
+        {
+            "id": "PROC-004-01-02",
+            "name": "Develop Capital Investment Plans",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-004-01"
+        },
+        {
+            "id": "PROC-004-01-03",
+            "name": "Obtain Regulatory Approval for Investment",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-004-01"
+        },
+        {
+            "id": "PROC-004-02-01",
+            "name": "Monitor Network Status in Real Time",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-02"
+        },
+        {
+            "id": "PROC-004-02-02",
+            "name": "Issue Control Instructions to Field",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-02"
+        },
+        {
+            "id": "PROC-004-02-03",
+            "name": "Manage Voltage & Frequency",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-02"
+        },
+        {
+            "id": "PROC-004-03-01",
+            "name": "Schedule Preventive Maintenance",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-004-03"
+        },
+        {
+            "id": "PROC-004-03-02",
+            "name": "Execute Maintenance Works",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-004-03"
+        },
+        {
+            "id": "PROC-004-03-03",
+            "name": "Record & Close Maintenance Jobs",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-004-03"
+        },
+        {
+            "id": "PROC-004-04-01",
+            "name": "Detect & Log Network Faults",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-04"
+        },
+        {
+            "id": "PROC-004-04-02",
+            "name": "Dispatch Field Crews",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-04"
+        },
+        {
+            "id": "PROC-004-04-03",
+            "name": "Restore Supply & Notify Customers",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-04"
+        },
+        {
+            "id": "PROC-004-05-01",
+            "name": "Assess Connection Feasibility",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-05"
+        },
+        {
+            "id": "PROC-004-05-02",
+            "name": "Design & Quote Connection",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-05"
+        },
+        {
+            "id": "PROC-004-05-03",
+            "name": "Build & Commission Connection",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-004-05"
+        },
+        {
+            "id": "PROC-005-01-01",
+            "name": "Assess Asset Condition & Remaining Life",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-01"
+        },
+        {
+            "id": "PROC-005-01-02",
+            "name": "Develop Asset Investment Plan",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-01"
+        },
+        {
+            "id": "PROC-005-01-03",
+            "name": "Prioritise & Approve Investment",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-005-01"
+        },
+        {
+            "id": "PROC-005-02-01",
+            "name": "Source & Tender for Contractors",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-02"
+        },
+        {
+            "id": "PROC-005-02-02",
+            "name": "Manage Construction & Delivery",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-02"
+        },
+        {
+            "id": "PROC-005-02-03",
+            "name": "Inspect & Accept Completed Works",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-02"
+        },
+        {
+            "id": "PROC-005-03-01",
+            "name": "Test & Certify New Assets",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-03"
+        },
+        {
+            "id": "PROC-005-03-02",
+            "name": "Register Asset in Asset Register",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-03"
+        },
+        {
+            "id": "PROC-005-03-03",
+            "name": "Hand Over Asset to Operations",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-03"
+        },
+        {
+            "id": "PROC-005-04-01",
+            "name": "Execute Preventive Maintenance Schedule",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-04"
+        },
+        {
+            "id": "PROC-005-04-02",
+            "name": "Respond to Asset Failures",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-04"
+        },
+        {
+            "id": "PROC-005-04-03",
+            "name": "Track Asset Performance & KPIs",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-005-04"
+        },
+        {
+            "id": "PROC-005-05-01",
+            "name": "Plan Safe Decommissioning",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-05"
+        },
+        {
+            "id": "PROC-005-05-02",
+            "name": "Execute Asset Removal",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-05"
+        },
+        {
+            "id": "PROC-005-05-03",
+            "name": "Update Asset Register & Dispose",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-005-05"
+        },
+        {
+            "id": "PROC-006-01-01",
+            "name": "Design Tariff Structures & Products",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-01"
+        },
+        {
+            "id": "PROC-006-01-02",
+            "name": "Obtain Regulatory Approval for Tariffs",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-006-01"
+        },
+        {
+            "id": "PROC-006-01-03",
+            "name": "Publish & Activate New Tariffs",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-01"
+        },
+        {
+            "id": "PROC-006-02-01",
+            "name": "Schedule & Execute Meter Reads",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-02"
+        },
+        {
+            "id": "PROC-006-02-02",
+            "name": "Validate & Estimate Reads",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-02"
+        },
+        {
+            "id": "PROC-006-02-03",
+            "name": "Distribute Validated Metering Data",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-02"
+        },
+        {
+            "id": "PROC-006-03-01",
+            "name": "Calculate Charges & Taxes",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-03"
+        },
+        {
+            "id": "PROC-006-03-02",
+            "name": "Generate & Distribute Bills",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-03"
+        },
+        {
+            "id": "PROC-006-03-03",
+            "name": "Handle Bill Queries & Disputes",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-03"
+        },
+        {
+            "id": "PROC-006-04-01",
+            "name": "Process Inbound Payments",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-04"
+        },
+        {
+            "id": "PROC-006-04-02",
+            "name": "Apply Payments to Customer Accounts",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-04"
+        },
+        {
+            "id": "PROC-006-04-03",
+            "name": "Reconcile Payment Accounts",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-006-04"
+        },
+        {
+            "id": "PROC-006-05-01",
+            "name": "Identify & Prioritise Debt Cases",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-006-05"
+        },
+        {
+            "id": "PROC-006-05-02",
+            "name": "Execute Collections Activities",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-05"
+        },
+        {
+            "id": "PROC-006-05-03",
+            "name": "Manage Disconnections & Reconnections",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-006-05"
+        },
+        {
+            "id": "PROC-007-01-01",
+            "name": "Track Licence Conditions & Obligations",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-01"
+        },
+        {
+            "id": "PROC-007-01-02",
+            "name": "Apply for & Renew Licences",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-01"
+        },
+        {
+            "id": "PROC-007-01-03",
+            "name": "Monitor & Report Licence Compliance",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-01"
+        },
+        {
+            "id": "PROC-007-02-01",
+            "name": "Gather Regulatory Reporting Data",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-02"
+        },
+        {
+            "id": "PROC-007-02-02",
+            "name": "Prepare & Validate Regulatory Reports",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-02"
+        },
+        {
+            "id": "PROC-007-02-03",
+            "name": "Submit Reports to Regulator",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-02"
+        },
+        {
+            "id": "PROC-007-03-01",
+            "name": "Prepare for Regulatory Audits",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-03"
+        },
+        {
+            "id": "PROC-007-03-02",
+            "name": "Respond to Audit Findings",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-03"
+        },
+        {
+            "id": "PROC-007-03-03",
+            "name": "Track & Close Remediation Actions",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-03"
+        },
+        {
+            "id": "PROC-007-04-01",
+            "name": "Manage Health & Safety Obligations",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-04"
+        },
+        {
+            "id": "PROC-007-04-02",
+            "name": "Monitor & Report Environmental Conditions",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-04"
+        },
+        {
+            "id": "PROC-007-04-03",
+            "name": "Manage Environmental Incidents",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-007-04"
+        },
+        {
+            "id": "PROC-008-01-01",
+            "name": "Collect Emissions Activity Data",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-01"
+        },
+        {
+            "id": "PROC-008-01-02",
+            "name": "Calculate Scope 1, 2 & 3 Emissions",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-01"
+        },
+        {
+            "id": "PROC-008-01-03",
+            "name": "Maintain Emissions Register",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-01"
+        },
+        {
+            "id": "PROC-008-02-01",
+            "name": "Assess Renewable Capacity Opportunities",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-008-02"
+        },
+        {
+            "id": "PROC-008-02-02",
+            "name": "Connect & Commission Renewables",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-008-02"
+        },
+        {
+            "id": "PROC-008-02-03",
+            "name": "Manage Intermittency & Battery Storage",
+            "type": "core",
+            "level": 3,
+            "parent-id": "PROC-008-02"
+        },
+        {
+            "id": "PROC-008-03-01",
+            "name": "Purchase Carbon Credits & Offsets",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-03"
+        },
+        {
+            "id": "PROC-008-03-02",
+            "name": "Retire Credits Against Obligations",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-03"
+        },
+        {
+            "id": "PROC-008-03-03",
+            "name": "Maintain Carbon Portfolio Register",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-03"
+        },
+        {
+            "id": "PROC-008-04-01",
+            "name": "Compile ESG Metrics & Data",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-04"
+        },
+        {
+            "id": "PROC-008-04-02",
+            "name": "Prepare ESG Reports & Narratives",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-04"
+        },
+        {
+            "id": "PROC-008-04-03",
+            "name": "Publish & File ESG Disclosures",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-008-04"
+        },
+        {
+            "id": "PROC-009-01-01",
+            "name": "Process Accounts Payable & Receivable",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-01"
+        },
+        {
+            "id": "PROC-009-01-02",
+            "name": "Manage General Ledger & Period Close",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-01"
+        },
+        {
+            "id": "PROC-009-01-03",
+            "name": "Manage Budgeting & Financial Forecasting",
+            "type": "management",
+            "level": 3,
+            "parent-id": "PROC-009-01"
+        },
+        {
+            "id": "PROC-009-02-01",
+            "name": "Recruit & Onboard Employees",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-02"
+        },
+        {
+            "id": "PROC-009-02-02",
+            "name": "Manage Payroll & Benefits",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-02"
+        },
+        {
+            "id": "PROC-009-02-03",
+            "name": "Support Performance & Development",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-02"
+        },
+        {
+            "id": "PROC-009-03-01",
+            "name": "Operate & Maintain IT Systems",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-03"
+        },
+        {
+            "id": "PROC-009-03-02",
+            "name": "Manage Cybersecurity & Risk",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-03"
+        },
+        {
+            "id": "PROC-009-03-03",
+            "name": "Deliver Technology Change Projects",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-03"
+        },
+        {
+            "id": "PROC-009-04-01",
+            "name": "Source & Evaluate Suppliers",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-04"
+        },
+        {
+            "id": "PROC-009-04-02",
+            "name": "Manage Contracts & Supplier Performance",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-04"
+        },
+        {
+            "id": "PROC-009-04-03",
+            "name": "Process Purchase Orders & Invoices",
+            "type": "supporting",
+            "level": 3,
+            "parent-id": "PROC-009-04"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

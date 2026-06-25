@@ -126,10 +126,17 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** No deliberate review of *which* cross-artefact mappings matter. Likely-missing examples: **Data ↔ Process** (which processes create/read/update/delete which data), **Capability ↔ Data** (data owned/used by a capability), **Application ↔ Data** (systems of record), **Process ↔ Application** (which app supports which process step), **Capability ↔ Strategy/Principle** (traceability), **Application ↔ Integration/Interface**, **Capability ↔ Org/Role** (ownership, feeds [DEC-6]).
 **Proposed fix:** Produce a coverage map of artefact-type × artefact-type, mark which mappings are valuable, prioritise, then define the missing matrix types (registry entry + schema + doc + renderer, per `docs/artefacts.md` and [AMC-4]). Start with **Data ↔ Process**.
 
-### AMC-6 · 🟡 Multi-sector sample content · Medium
-**Done:** Water client renamed `fwdc`→`fwwc` (Water & Wastewater) and brought to **full parity with fedc** — all 45 catalogues across 5 domains × 3 layers, validated (L1/L2 + build). This is the proven **exemplar**. `clients.json` lists all five clients; `fetc`/`fegc`/`fersc` scaffolded (metadata + 1.0.0 skeleton, no content yet).
-**Method (reusable):** preserve fedc's id graph and **retheme prose per sector** so matrices/diagrams stay referentially valid by construction; hand-author the flagship BUS-CAP/BUS-STR, **generate BUS-BCM/BUS-BPM from the rethemed catalogues**, reuse sector-neutral operating-model principles/governance, then sweep for sector accuracy (regulator, company id, sector-only concepts). A throwaway term-map generator drove the bulk (kept out of the repo).
-**Remaining (deferred):** full parity for the three energy sectors — `fetc` (Energy Transmission), `fegc` (Energy Generation), `fersc` (Energy Retail & Supply). ~27k lines; sequence per domain, validate each, commit incrementally, following the established method. Each sector needs a genuine retheme of the term map (a transmission TSO, a generator, and a retailer have materially different capabilities/processes/data from a distributor).
+### AMC-6 · ✅ Multi-sector sample content · Medium
+**Done:** All five sample clients now exist at **full parity with fedc** (45–46 catalogues each across 5 domains × 3 layers, L1/L2 + build green):
+- `fedc` — Energy Distribution (original baseline)
+- `fwwc` — Water & Wastewater (renamed from `fwdc`)
+- `fetc` — Energy Transmission (Transmission System Operations, Connection & Charging)
+- `fegc` — Energy Generation (Energy Generation core, Plant Operations, Wholesale Settlement)
+- `fersc` — Energy Retail & Supply (Customer Management, Power Purchasing, Retail & Billing)
+
+All carry the new DAT-PRO-DAC CRUD matrix too. `clients.json` lists all five with sector logos ([ClientLogo]).
+**Method (reusable):** preserve fedc's id graph and **retheme prose per sector** (term-map generator) so matrices/diagrams stay referentially valid by construction; **generate BUS-BCM/BUS-BPM from the rethemed catalogues**; reuse sector-neutral operating-model principles/governance; sweep for sector accuracy (company id, regulator, sector-only concepts).
+**Note:** content is **retheme-based** — sector identity lives in capability/process/data *names and emphasis* while the structural skeleton (an integrated-utility shape) is shared. Deeper per-sector restructuring (e.g. dropping generation from a pure retailer) is a future refinement, not required for demo/test content.
 **Context:** Demo content should let us exercise the product across a range of regulated-utility sectors, not just one. Naming convention: **"Fictitious &lt;Sector&gt; Company"**.
 **Target sectors / clients:**
 | # | Sector | Client id | State |

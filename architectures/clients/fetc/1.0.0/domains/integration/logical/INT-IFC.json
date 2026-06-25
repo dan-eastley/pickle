@@ -1,0 +1,219 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-IFC",
+    "audience": [
+        "Enterprise Architect",
+        "Integration Architect"
+    ],
+    "author": [
+        "Integration Architect",
+        "Systems Analyst"
+    ],
+    "interfaces": [
+        {
+            "id": "INT-IFC-001",
+            "name": "Customer & Account Sync",
+            "description": "New and updated customer and account records are pushed from CRM to the Customer Information System to keep billing accounts in sync with sales and service records.",
+            "source": "PLAT-CRM",
+            "target": "PLAT-CIS",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-002",
+            "name": "Self-Service Account & Billing Data",
+            "description": "The customer self-service portal reads account and billing data from the Customer Information System, and writes back customer-submitted contact and preference updates.",
+            "source": "PLAT-CIS",
+            "target": "PLAT-DXP",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-003",
+            "name": "Validated Consumption Feed",
+            "description": "Validated and estimated consumption data is sent from Meter Data Management to the Customer Information System for bill generation.",
+            "source": "PLAT-MDM",
+            "target": "PLAT-CIS",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-004",
+            "name": "Raw Meter Read Collection",
+            "description": "Raw interval reads are collected from the Head-End System and passed to Meter Data Management for validation and estimation.",
+            "source": "PLAT-HES",
+            "target": "PLAT-MDM",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-005",
+            "name": "Tariff Rating Exchange",
+            "description": "The Customer Information System sends consumption and account context to the Tariff & Pricing Engine for rating, and receives calculated charges back.",
+            "source": "PLAT-CIS",
+            "target": "PLAT-TARIFF-ENGINE",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-006",
+            "name": "Revenue Postings to GL",
+            "description": "Billed revenue and associated cost-centre allocations are posted from the Customer Information System to the ERP general ledger.",
+            "source": "PLAT-CIS",
+            "target": "PLAT-ERP",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-007",
+            "name": "Work Order Dispatch & Completion",
+            "description": "Maintenance work orders raised in the asset register are dispatched to Field Service Management for scheduling, and completion status is returned.",
+            "source": "PLAT-EAM",
+            "target": "PLAT-FSM",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-008",
+            "name": "Asset Location Reference Feed",
+            "description": "Asset location and network-topology reference data is supplied from the GIS to the asset register to keep asset records spatially located.",
+            "source": "PLAT-EAM",
+            "target": "PLAT-GIS",
+            "direction": "target-to-source"
+        },
+        {
+            "id": "INT-IFC-009",
+            "name": "Network Model Synchronisation",
+            "description": "The transmission network model is built from GIS connectivity data, with as-built changes from network operations synchronised back to the GIS.",
+            "source": "PLAT-ADMS",
+            "target": "PLAT-GIS",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-010",
+            "name": "Outage Detection & Switching Coordination",
+            "description": "The ADMS detects network outages and notifies the OMS, which returns switching and restoration orders for execution.",
+            "source": "PLAT-ADMS",
+            "target": "PLAT-OMS",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-011",
+            "name": "Outage Status Notifications",
+            "description": "Outage status and estimated restoration times are pushed from the OMS to the Contact Centre Platform for customer communications.",
+            "source": "PLAT-OMS",
+            "target": "PLAT-CONTACT-CENTRE",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-012",
+            "name": "Restoration Crew Dispatch",
+            "description": "Outage restoration jobs are dispatched from the OMS to Field Service Management for crew assignment.",
+            "source": "PLAT-OMS",
+            "target": "PLAT-FSM",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-013",
+            "name": "Grid Constraint Feed for Trading",
+            "description": "Real-time grid state and constraint information from the EMS feeds the Market Data Platform to inform trading decisions.",
+            "source": "PLAT-MARKET-DATA",
+            "target": "PLAT-EMS",
+            "direction": "target-to-source"
+        },
+        {
+            "id": "INT-IFC-014",
+            "name": "Market Price & Curve Feed",
+            "description": "Wholesale market prices and forward curves are fed from the Market Data Platform into the ETRM for trade valuation.",
+            "source": "PLAT-MARKET-DATA",
+            "target": "PLAT-ETRM",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-015",
+            "name": "Position & Risk Exchange",
+            "description": "Trade and position data is sent from the ETRM to Trading Risk Analytics, which returns risk metrics and limit utilisation.",
+            "source": "PLAT-ETRM",
+            "target": "PLAT-RISK-ANALYTICS",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-016",
+            "name": "Trade Settlement Postings",
+            "description": "Settled trade financials are posted from the ETRM to the ERP general ledger.",
+            "source": "PLAT-ETRM",
+            "target": "PLAT-ERP",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-017",
+            "name": "Customer & Billing Data Ingestion",
+            "description": "Customer, account, and billing data is replicated from the Customer Information System into the Data Lakehouse for analytics.",
+            "source": "PLAT-CIS",
+            "target": "PLAT-DATA-LAKEHOUSE",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-018",
+            "name": "Consumption Data Ingestion",
+            "description": "Validated consumption data is replicated from Meter Data Management into the Data Lakehouse for analytics and modelling.",
+            "source": "PLAT-MDM",
+            "target": "PLAT-DATA-LAKEHOUSE",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-019",
+            "name": "Curated Data for Reporting",
+            "description": "Curated datasets are made available from the Data Lakehouse to BI & Analytics for dashboards and reporting.",
+            "source": "PLAT-DATA-LAKEHOUSE",
+            "target": "PLAT-BI",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-020",
+            "name": "Feature Data for Model Training",
+            "description": "Feature data is made available from the Data Lakehouse to the ML / AI Platform for model training.",
+            "source": "PLAT-DATA-LAKEHOUSE",
+            "target": "PLAT-ML",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-021",
+            "name": "Customer Master Data Sync",
+            "description": "Golden customer and account records are distributed from Master Data Management to the Customer Information System, with local updates fed back for matching and survivorship.",
+            "source": "PLAT-MDM-MASTER",
+            "target": "PLAT-CIS",
+            "direction": "bi-directional"
+        },
+        {
+            "id": "INT-IFC-022",
+            "name": "Customer Master Transmission to CRM",
+            "description": "Golden customer records are distributed from Master Data Management to the CRM.",
+            "source": "PLAT-MDM-MASTER",
+            "target": "PLAT-CRM",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-023",
+            "name": "Emissions Data for ESG Disclosure",
+            "description": "Calculated emissions data is fed from the Emissions Tracking Platform into the ESG Reporting Platform for disclosure aggregation.",
+            "source": "PLAT-EMISSIONS",
+            "target": "PLAT-ESG",
+            "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-024",
+            "name": "ESG Metrics for Regulatory Filings",
+            "description": "ESG metrics and disclosures are fed from the ESG Reporting Platform into the Regulatory Reporting Platform for statutory filings.",
+            "source": "PLAT-ESG",
+            "target": "PLAT-REG-REPORTING",
+            "direction": "source-to-target"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

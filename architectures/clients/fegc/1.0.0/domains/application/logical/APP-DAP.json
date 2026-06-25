@@ -1,0 +1,360 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DAP",
+    "audience": [
+        "Enterprise Architect",
+        "Application Architect",
+        "Chief Information Officer"
+    ],
+    "author": [
+        "Application Architect",
+        "Systems Analyst"
+    ],
+    "domains": [
+        {
+            "id": "APP-DOM-CUSTOMER",
+            "name": "Customer Engagement",
+            "description": "Applications customers interact with — digital channels, CRM and self-service.",
+            "owner": "Chief Customer Officer"
+        },
+        {
+            "id": "APP-DOM-FIELD",
+            "name": "Field & Asset Ops",
+            "description": "Applications for field workforce and physical asset management.",
+            "owner": "Head of Field Operations"
+        },
+        {
+            "id": "APP-DOM-TRADING",
+            "name": "Energy Trading",
+            "description": "Applications for wholesale trading, risk management, and market data.",
+            "owner": "Head of Trading"
+        },
+        {
+            "id": "APP-DOM-NETWORK",
+            "name": "Network Management",
+            "description": "Applications operating and managing the transmission and generation fleet.",
+            "owner": "Head of Plant Operations"
+        },
+        {
+            "id": "APP-DOM-BILLING",
+            "name": "Wholesale Settlement",
+            "description": "Customer-information system, billing engine, and tariff management.",
+            "owner": "Head of Retail Operations"
+        },
+        {
+            "id": "APP-DOM-METERING",
+            "name": "Metering",
+            "description": "Smart-meter management, meter-reading collection, and meter operations.",
+            "owner": "Head of Metering"
+        },
+        {
+            "id": "APP-DOM-REGULATORY",
+            "name": "Regulatory Reporting",
+            "description": "Applications producing regulatory and statutory reports.",
+            "owner": "Head of Regulatory Affairs"
+        },
+        {
+            "id": "APP-DOM-SUSTAIN",
+            "name": "Sustainability Analytics",
+            "description": "Emissions tracking, renewable integration, and ESG reporting platforms.",
+            "owner": "Chief Sustainability Officer"
+        },
+        {
+            "id": "APP-DOM-DATA",
+            "name": "Data & Analytics",
+            "description": "Shared data platform, MDM, and analytics tooling.",
+            "owner": "Chief Data Officer"
+        },
+        {
+            "id": "APP-DOM-ENTERPRISE",
+            "name": "Enterprise Support",
+            "description": "Finance, HR, IT service management, and shared corporate services.",
+            "owner": "Chief Information Officer"
+        },
+        {
+            "id": "APP-DOM-INTEGRATION",
+            "name": "Integration Backbone",
+            "description": "API gateway, messaging broker, and integration tooling shared across domains.",
+            "owner": "Head of Integration"
+        }
+    ],
+    "platforms": [
+        {
+            "id": "PLAT-CRM",
+            "name": "CRM",
+            "description": "Customer relationship management — sales, service, and case management.",
+            "domain-id": "APP-DOM-CUSTOMER",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-DXP",
+            "name": "Digital Experience Platform",
+            "description": "Self-service customer portal and content management.",
+            "domain-id": "APP-DOM-CUSTOMER",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-MOBILE-APP",
+            "name": "Customer Mobile App",
+            "description": "Mobile self-service for residential and SME customers.",
+            "domain-id": "APP-DOM-CUSTOMER",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-CONTACT-CENTRE",
+            "name": "Contact Centre Platform",
+            "description": "Voice, chat, and email routing and agent desktop.",
+            "domain-id": "APP-DOM-CUSTOMER",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-MARKETING-AUTOMATION",
+            "name": "Marketing Automation",
+            "description": "Campaign management, lead nurturing, and customer journey orchestration.",
+            "domain-id": "APP-DOM-CUSTOMER",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-EAM",
+            "name": "Enterprise Asset Management",
+            "description": "Asset register, work order management, and asset lifecycle.",
+            "domain-id": "APP-DOM-FIELD",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-FSM",
+            "name": "Field Service Management",
+            "description": "Scheduling, dispatch, and mobile execution for field crews.",
+            "domain-id": "APP-DOM-FIELD",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-IOT",
+            "name": "Industrial IoT Platform",
+            "description": "Edge-to-cloud telemetry from sensors, generators, and grid devices.",
+            "domain-id": "APP-DOM-FIELD",
+            "type": "system-of-insight",
+            "lifecycle": "trial"
+        },
+        {
+            "id": "PLAT-ETRM",
+            "name": "ETRM",
+            "description": "Energy trading and risk management — deal capture, position, P&L, settlement.",
+            "domain-id": "APP-DOM-TRADING",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-MARKET-DATA",
+            "name": "Market Data Platform",
+            "description": "Wholesale price feeds, forward curves, and reference data for trading.",
+            "domain-id": "APP-DOM-TRADING",
+            "type": "system-of-insight",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-RISK-ANALYTICS",
+            "name": "Trading Risk Analytics",
+            "description": "VaR, stress testing, and credit risk for the trading book.",
+            "domain-id": "APP-DOM-TRADING",
+            "type": "system-of-insight",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-ADMS",
+            "name": "Advanced Generation Management System",
+            "description": "Real-time monitoring and control of the generation fleet.",
+            "domain-id": "APP-DOM-NETWORK",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-EMS",
+            "name": "Energy Management System",
+            "description": "Transmission-grid real-time monitoring and control.",
+            "domain-id": "APP-DOM-NETWORK",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-OMS",
+            "name": "Outage Management System",
+            "description": "Outage prediction, dispatch, and customer communication.",
+            "domain-id": "APP-DOM-NETWORK",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-GIS",
+            "name": "Geographic Information System",
+            "description": "Spatial register of network assets, topology and connectivity.",
+            "domain-id": "APP-DOM-NETWORK",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-CIS",
+            "name": "Customer Information System",
+            "description": "Customer, account, and contract master plus billing engine.",
+            "domain-id": "APP-DOM-BILLING",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-TARIFF-ENGINE",
+            "name": "Tariff & Pricing Engine",
+            "description": "Tariff modelling, pricing, and rating.",
+            "domain-id": "APP-DOM-BILLING",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-MDM",
+            "name": "Meter Data Management",
+            "description": "Validation, estimation and editing of meter reads; metering point register.",
+            "domain-id": "APP-DOM-METERING",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-HES",
+            "name": "Head-End System",
+            "description": "Smart-meter communications and command-and-control.",
+            "domain-id": "APP-DOM-METERING",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-REG-REPORTING",
+            "name": "Regulatory Reporting Platform",
+            "description": "Compliance, statutory and regulatory report generation and submission.",
+            "domain-id": "APP-DOM-REGULATORY",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-EMISSIONS",
+            "name": "Emissions Tracking Platform",
+            "description": "Scope 1/2/3 emissions data capture, calculation, and reporting.",
+            "domain-id": "APP-DOM-SUSTAIN",
+            "type": "system-of-insight",
+            "lifecycle": "trial"
+        },
+        {
+            "id": "PLAT-ESG",
+            "name": "ESG Reporting Platform",
+            "description": "ESG disclosure aggregation and reporting against frameworks.",
+            "domain-id": "APP-DOM-SUSTAIN",
+            "type": "system-of-insight",
+            "lifecycle": "trial"
+        },
+        {
+            "id": "PLAT-DATA-LAKEHOUSE",
+            "name": "Data Lakehouse",
+            "description": "Unified storage and compute for data products and analytics workloads.",
+            "domain-id": "APP-DOM-DATA",
+            "type": "system-of-insight",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-MDM-MASTER",
+            "name": "Master Data Management",
+            "description": "Master data for customers, assets, and reference data.",
+            "domain-id": "APP-DOM-DATA",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-BI",
+            "name": "BI & Analytics",
+            "description": "Self-service analytics, dashboards, and reporting.",
+            "domain-id": "APP-DOM-DATA",
+            "type": "system-of-insight",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-ML",
+            "name": "ML / AI Platform",
+            "description": "Model training, deployment, and feature store for ML workloads.",
+            "domain-id": "APP-DOM-DATA",
+            "type": "system-of-innovation",
+            "lifecycle": "trial"
+        },
+        {
+            "id": "PLAT-ERP",
+            "name": "ERP",
+            "description": "Finance, procurement, project accounting, and cost management.",
+            "domain-id": "APP-DOM-ENTERPRISE",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-HRIS",
+            "name": "HRIS",
+            "description": "Core HR, payroll, talent and learning.",
+            "domain-id": "APP-DOM-ENTERPRISE",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-ITSM",
+            "name": "ITSM",
+            "description": "IT service management, incident, problem, change, and asset.",
+            "domain-id": "APP-DOM-ENTERPRISE",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-COLLAB",
+            "name": "Collaboration Suite",
+            "description": "Email, messaging, documents and meetings for the workforce.",
+            "domain-id": "APP-DOM-ENTERPRISE",
+            "type": "system-of-engagement",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-API-GATEWAY",
+            "name": "API Gateway",
+            "description": "Managed gateway for all inter-system API traffic — auth, rate, audit.",
+            "domain-id": "APP-DOM-INTEGRATION",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-EVENT-BROKER",
+            "name": "Event Broker",
+            "description": "Shared event-driven messaging backbone for state-change events.",
+            "domain-id": "APP-DOM-INTEGRATION",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        },
+        {
+            "id": "PLAT-IPAAS",
+            "name": "iPaaS",
+            "description": "Integration platform for low-code orchestrations and SaaS integrations.",
+            "domain-id": "APP-DOM-INTEGRATION",
+            "type": "system-of-record",
+            "lifecycle": "adopt"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}
