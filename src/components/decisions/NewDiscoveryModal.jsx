@@ -103,6 +103,11 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
               </div>
             ) : (
               <>
+                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3">
+                  A Discovery asks the Virtual Architect Agent a question about your architecture —
+                  describe the situation and what you want to know, and it produces a point-in-time view
+                  from the model as it stands today. It's read-only; nothing is changed.
+                </p>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Title <span className="text-error-500">*</span>
