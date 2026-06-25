@@ -270,7 +270,7 @@ async function editDecision({ clientId, versionId, decisionId, title, context, p
   // Append an activity entry for the edit.
   updated.activity = [
     ...(current.activity ?? []),
-    { timestamp: new Date().toISOString(), action: 'Updated', who: 'Joe Bloggs' },
+    { timestamp: new Date().toISOString(), action: 'Updated', who: 'Joe B' },
   ]
   if (scope !== undefined) {
     if (scope) updated.scope = scope
@@ -359,7 +359,7 @@ async function createDiscovery({ clientId, versionId, discovery }, token, owner,
     context: discovery.context,
     request: discovery.request,
     ...(discovery.scope ? { scope: discovery.scope } : {}),
-    activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe Bloggs' }],
+    activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
   }
   // Write the record on main, then index, then dispatch the agent workflow.
   await writeFile(discoveryPath(clientId, versionId, discoveryId), record, `Add ${discoveryId}: ${record.title}`, null, BASE, token, owner, repo)
@@ -374,7 +374,7 @@ async function updateDiscovery({ clientId, versionId, discoveryId, updates }, to
   const updated = { ...current, ...updates }
   updated.activity = [
     ...(current.activity ?? []),
-    { timestamp: new Date().toISOString(), action: updates.status === 'archived' ? 'Archived' : 'Updated', who: 'Joe Bloggs' },
+    { timestamp: new Date().toISOString(), action: updates.status === 'archived' ? 'Archived' : 'Updated', who: 'Joe B' },
   ]
   await writeFile(dPath, updated, `Update ${discoveryId}${updates.status ? `: status → ${updates.status}` : ''}`, sha, BASE, token, owner, repo)
   await syncDiscoveryIndex(clientId, versionId, discoveryId, { title: updated.title, status: updated.status, scope: updated.scope }, token, owner, repo)

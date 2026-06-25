@@ -7,6 +7,6 @@
     "request": "Interrogate the business capability catalogue and application landscape to list the Level 2 capabilities whose supporting platform is Oracle CC&B, and flag any with no documented alternative.",
     "scope": { "domain": "business", "abstraction": "conceptual", "artefact": "BUS-CAP" },
     "activity": [
-        { "timestamp": "2026-05-12T10:00:00Z", "action": "Created", "who": "Joe Bloggs" }
+        { "timestamp": "2026-05-12T10:00:00Z", "action": "Created", "who": "Joe B" }
     ]
 }

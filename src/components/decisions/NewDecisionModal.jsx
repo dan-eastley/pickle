@@ -63,7 +63,7 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
           proposal && `## Proposal\n\n${proposal}`,
         ].filter(Boolean).join('\n\n'),
         ...(scope && { scope }),
-        activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe Bloggs' }],
+        activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
       }
       const res = await fetch('/api/github', {
         method: 'POST',

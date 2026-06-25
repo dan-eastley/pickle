@@ -1394,7 +1394,7 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders with \"Joe Bloggs\"",
+        "note": "renders with \"Joe B\"",
         "checkedAt": "2026-06-25T08:27:34.297Z"
       }
     },
@@ -1412,7 +1412,7 @@
       ],
       "outcome": {
         "status": "passed",
-        "note": "renders with \"Joe Bloggs\"",
+        "note": "renders with \"Joe B\"",
         "checkedAt": "2026-06-25T08:27:34.297Z"
       }
     },
