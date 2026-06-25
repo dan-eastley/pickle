@@ -6,6 +6,8 @@ import Markdown from '../components/ui/Markdown'
 import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
+import Button from '../components/ui/Button'
+import ActionBar from '../components/ui/ActionBar'
 import { RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -18,6 +20,7 @@ export default function DiscoveryDetailPage() {
   const { clientId, versionId, discoveryId } = useParams()
   const { clientsMetadata } = useArchitecture()
   const [discovery, setDiscovery] = useState(undefined)
+  const [archiving, setArchiving] = useState(false)
   const clientName = clientsMetadata[clientId]?.name ?? clientId
 
   usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
@@ -28,6 +31,19 @@ export default function DiscoveryDetailPage() {
       .then(setDiscovery)
       .catch(() => setDiscovery(null))
   }, [clientId, versionId, discoveryId])
+
+  async function setStatus(status) {
+    setArchiving(true)
+    setDiscovery(prev => prev ? { ...prev, status } : prev) // optimistic
+    try {
+      await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update-discovery', clientId, versionId, discoveryId, updates: { status } }),
+      })
+    } catch { /* optimistic */ }
+    finally { setArchiving(false) }
+  }
 
   if (discovery === undefined) {
     return <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
@@ -45,6 +61,15 @@ export default function DiscoveryDetailPage() {
 
   return (
     <div>
+      <ActionBar
+        className="mb-5"
+        secondary={
+          <Button variant="secondary" onClick={() => setStatus(discovery.status === 'archived' ? 'active' : 'archived')} disabled={archiving}>
+            {archiving ? '…' : discovery.status === 'archived' ? 'Reactivate' : 'Archive'}
+          </Button>
+        }
+      />
+
       <article className="bg-white shadow-xl px-8 py-7">
         <div className="mb-6 pb-5 border-b border-gray-200">
           <div className="flex items-start gap-4">
@@ -78,8 +103,8 @@ export default function DiscoveryDetailPage() {
             <Markdown className="text-sm text-gray-700 leading-relaxed">{discovery.findings}</Markdown>
           ) : (
             <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-400">
-              No findings yet. The Virtual Architect Agent will produce a point-in-time view here once the discovery
-              workflow is implemented.
+              No findings yet. The Virtual Architect Agent is interrogating the architecture to produce a
+              point-in-time view — this takes a couple of minutes. Refresh to check.
             </div>
           )}
         </Section>

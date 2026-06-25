@@ -14,7 +14,9 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   const [scopeDomain, setScopeDomain] = useState(artefact.domain)
   const [scopeAbstraction, setScopeAbstraction] = useState(artefact.abstraction)
   const [scopeArtefact, setScopeArtefact] = useState(artefact.id)
-  const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [result, setResult] = useState(null) // { ok, discoveryId } | { ok:false, error }
+  const saved = !!result?.ok
 
   const canSave = title.trim() && context.trim() && request.trim()
 
@@ -25,9 +27,32 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   }
   useEscapeKey(requestClose)
 
-  function handleSave() {
-    // TODO: persist to repo and dispatch the Virtual Architect Agent workflow.
-    setSaved(true)
+  async function handleSave() {
+    setSaving(true)
+    setResult(null)
+    const scope = scopeDomain ? {
+      domain: scopeDomain,
+      ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+      ...(scopeArtefact && { artefact: scopeArtefact }),
+    } : null
+    try {
+      const res = await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create-discovery',
+          clientId, versionId,
+          discovery: { title, context, request, ...(scope && { scope }) },
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Failed to create discovery')
+      setResult({ ok: true, discoveryId: data.discoveryId })
+    } catch (err) {
+      setResult({ ok: false, error: err.message })
+    } finally {
+      setSaving(false)
+    }
   }
 
   const scopeParams = [
@@ -66,10 +91,15 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
           <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
             {saved ? (
               <div className="py-6 text-center">
-                <div className="text-success-700 font-medium text-sm mb-1">Discovery captured.</div>
-                <p className="text-xs text-gray-400">
-                  The Virtual Architect Agent workflow will run it in a future release.
+                <div className="text-success-700 font-medium text-sm mb-1">
+                  {result.discoveryId} created.
+                </div>
+                <p className="text-xs text-gray-400 mb-3">
+                  The Virtual Architect Agent is running to produce its findings.
                 </p>
+                <TextLink to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`} onClick={onClose} className="text-sm font-medium">
+                  Open {result.discoveryId} →
+                </TextLink>
               </div>
             ) : (
               <>
@@ -142,13 +172,18 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 </button>
                 <button
                   onClick={handleSave}
-                  disabled={!canSave}
+                  disabled={!canSave || saving}
                   className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <RobotIcon className="w-4 h-4" />
-                  New Architecture Discovery
+                  {saving ? 'Creating…' : 'New Architecture Discovery'}
                 </button>
               </div>
+            </div>
+          )}
+          {result?.ok === false && (
+            <div className="px-5 py-2.5 border-t border-error-200 bg-error-50 text-error-700 text-xs flex-shrink-0">
+              {result.error}
             </div>
           )}
         </div>

@@ -23,13 +23,38 @@ export default function DiscoveryEditorPage() {
   const [scopeDomain, setScopeDomain] = useState(searchParams.get('domain') ?? '')
   const [scopeAbstraction, setScopeAbstraction] = useState(searchParams.get('abstraction') ?? '')
   const [scopeArtefact, setScopeArtefact] = useState(searchParams.get('artefact') ?? '')
-  const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [result, setResult] = useState(null) // { ok, discoveryId } | { ok:false, error }
 
   const canSave = title.trim() && context.trim() && request.trim()
 
-  function handleSave() {
-    // TODO: persist to repo and dispatch the Virtual Architect Agent workflow.
-    setSaved(true)
+  const scope = scopeDomain ? {
+    domain: scopeDomain,
+    ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+    ...(scopeArtefact && { artefact: scopeArtefact }),
+  } : null
+
+  async function handleSave() {
+    setSaving(true)
+    setResult(null)
+    try {
+      const res = await fetch('/api/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create-discovery',
+          clientId, versionId,
+          discovery: { title, context, request, ...(scope && { scope }) },
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Failed to create discovery')
+      setResult({ ok: true, discoveryId: data.discoveryId })
+    } catch (err) {
+      setResult({ ok: false, error: err.message })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -41,21 +66,26 @@ export default function DiscoveryEditorPage() {
         primary={
           <button
             onClick={handleSave}
-            disabled={!canSave || saved}
+            disabled={!canSave || saving || result?.ok}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-red-600 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
           >
             <RobotIcon className="w-4 h-4" />
-            New Architecture Discovery
+            {saving ? 'Creating…' : 'New Architecture Discovery'}
           </button>
         }
       />
 
-      {saved && (
+      {result?.ok && (
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
-          Discovery captured. The Virtual Architect Agent workflow will run it in a future release.{' '}
-          <TextLink to={`/clients/${clientId}/${versionId}/discovery`} className="font-medium">
-            Back to Discovery →
+          <span className="font-semibold">{result.discoveryId}</span> created. The Virtual Architect Agent is running to produce its findings.{' '}
+          <TextLink to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`} className="font-medium">
+            Open {result.discoveryId} →
           </TextLink>
+        </div>
+      )}
+      {result?.ok === false && (
+        <div className="mb-4 px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
+          {result.error}
         </div>
       )}
 
