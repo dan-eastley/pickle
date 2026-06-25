@@ -597,6 +597,54 @@ async function updateDiscovery({ clientId, versionId, discoveryId, updates }, to
   return { ok: true, discoveryId, status: updated.status }
 }
 
+// ── Action: refresh-discovery ─────────────────────────────────────────────────
+// Re-runs the Virtual Architect Agent against the current architecture to
+// regenerate the point-in-time findings, and re-activates the record.
+async function refreshDiscovery({ clientId, versionId, discoveryId }, token, owner, repo) {
+  const dPath = discoveryPath(clientId, versionId, discoveryId)
+  const { content: current, sha } = await readFile(dPath, BASE, token, owner, repo)
+  const updated = {
+    ...current,
+    status: 'active',
+    activity: [
+      ...(current.activity ?? []),
+      {
+        timestamp: new Date().toISOString(),
+        action: 'Updated',
+        who: 'Joe B',
+        notes: 'Refresh requested',
+      },
+    ],
+  }
+  await writeFile(
+    dPath,
+    updated,
+    `Refresh ${discoveryId}: regenerate findings`,
+    sha,
+    BASE,
+    token,
+    owner,
+    repo
+  )
+  await syncDiscoveryIndex(
+    clientId,
+    versionId,
+    discoveryId,
+    { title: updated.title, status: updated.status, scope: updated.scope },
+    token,
+    owner,
+    repo
+  )
+  await dispatch(
+    'discovery-to-active.yml',
+    { 'client-id': clientId, 'version-id': versionId, 'discovery-id': discoveryId },
+    token,
+    owner,
+    repo
+  )
+  return { ok: true, discoveryId }
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
@@ -648,6 +696,8 @@ export default async function handler(req, res) {
         return res.json(await createDiscovery(params, token, owner, repo))
       if (action === 'update-discovery')
         return res.json(await updateDiscovery(params, token, owner, repo))
+      if (action === 'refresh-discovery')
+        return res.json(await refreshDiscovery(params, token, owner, repo))
       return res.status(400).json({ error: `Unknown POST action: ${action}` })
     }
 
