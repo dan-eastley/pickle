@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useId } from 'react'
 import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
+import { githubAction, getNextDecisionId } from '../../lib/api'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
@@ -66,11 +67,7 @@ export default function NewDecisionModal({
         }
       : null
     try {
-      const idRes = await fetch(
-        `/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`
-      )
-      const { nextId, error: idError } = await idRes.json()
-      if (idError) throw new Error(idError)
+      const nextId = await getNextDecisionId(clientId, versionId)
       const decision = {
         'decision-id': nextId,
         title,
@@ -88,13 +85,7 @@ export default function NewDecisionModal({
         ...(scope && { scope }),
         activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
       }
-      const res = await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create-decision', clientId, versionId, decision }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
+      await githubAction({ action: 'create-decision', clientId, versionId, decision })
       setResult({ ok: true, decisionId: nextId })
     } catch (err) {
       setResult({ ok: false, error: err.message })

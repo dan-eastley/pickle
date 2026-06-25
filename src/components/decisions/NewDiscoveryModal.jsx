@@ -6,6 +6,7 @@ import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
 import { RobotIcon } from '../ui/icons'
+import { githubAction } from '../../lib/api'
 
 export default function NewDiscoveryModal({ artefact, clientId, versionId, onClose }) {
   const fid = useId() // base for associating field labels with their inputs
@@ -45,18 +46,12 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
         }
       : null
     try {
-      const res = await fetch('/api/github', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'create-discovery',
-          clientId,
-          versionId,
-          discovery: { title, context, request, ...(scope && { scope }) },
-        }),
+      const data = await githubAction({
+        action: 'create-discovery',
+        clientId,
+        versionId,
+        discovery: { title, context, request, ...(scope && { scope }) },
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Failed to create discovery')
       setResult({ ok: true, discoveryId: data.discoveryId })
     } catch (err) {
       setResult({ ok: false, error: err.message })
