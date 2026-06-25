@@ -82,6 +82,50 @@
             "rationale": "Big-bang contractor rollouts risk duplicating delivery models and architectural patterns without evidence of fit. MVP framing aligns the decision with solution strategy and creates a learning feedback loop."
         }
     ],
+    "principles-alignment": [
+        {
+            "finding": "*Outcome over output* (**Business Principles**, `BUS-PRN-002`) — Silent. The ADR proposes contractor-driven field services but provides no outcome metrics. No KPIs, SLAs, or success criteria are defined for contractor delivery (e.g., cost per transaction, response time, customer satisfaction).",
+            "impact": "Without outcome measures, contractor work cannot be evaluated or governed. Teams may optimise for activity (deliverables) rather than business outcomes. The proposal risks becoming a headcount solution rather than a capability or outcome one.",
+            "recommendation": "**Add outcome criteria to the narrative.** Define success measures (e.g., 90% SLA compliance, cost-per-unit within X%, customer satisfaction >8/10) before contractor engagement begins. Link these to the business case and governance gates.",
+            "rationale": "FEDC's operating model measures teams on outcomes created for the business or customer, not volume of activity. Contractors must operate under the same measurement discipline as internal teams, otherwise contractor work becomes a shadow delivery model with different rules."
+        },
+        {
+            "finding": "*Decide where the work happens* (**Business Principles**, `BUS-PRN-003`) — Silent. The ADR does not clarify decision authority for contractor work: Who approves contractor actions? Who owns escalation? Who decides field service routing or prioritisation?",
+            "impact": "Absent explicit decision rights, contractor field workers may escalate routine decisions up the chain or make decisions without sufficient authority. This creates operational friction, slows response, and undermines the principle that teams closest to the customer should decide.",
+            "recommendation": "**Clarify decision rights.** Document which decisions are delegated to contractors (e.g., field diagnostics, scheduling within SLA), which require internal approval (e.g., scope changes, asset write-offs), and how escalation flows. Bind this to team decision-right matrices in the operating model.",
+            "rationale": "Field service delivery is inherently time-sensitive. Contractors embedded in the customer journey must have clear authority to act on routine decisions. Absence of clarity pushes decisions up the chain, slowing response and degrading customer experience."
+        },
+        {
+            "finding": "*Customer journey as the unit of design* (**Business Principles**, `BUS-PRN-005`) — Silent. The ADR mentions 'field services' but does not describe the customer journey. Are contractors designing or executing? Who owns the end-to-end journey?",
+            "impact": "Without a journey owner spanning contractor and internal teams, accountability fragments. Customers see the seams: a contractor performs work, but follow-up or resolution may require internal escalation with no single accountable owner. This contradicts the principle that journeys are designed end-to-end from the customer's point of view.",
+            "recommendation": "**Name a journey owner.** Identify the customer-facing journey(s) affected by contractor work (e.g., fault resolution, asset maintenance) and name a single owner (internal or contractor-embedded) accountable for end-to-end experience. Update **Business Processes** (`BUS-PRO`) to show contractor touchpoints within the owned journey.",
+            "rationale": "Customers experience journeys, not departmental silos. A journey owner prevents the contractor-internal seam from becoming a service gap. This principle ensures accountability and consistent customer experience."
+        },
+        {
+            "finding": "*Privacy by design* (**Data Principles**, `DAT-PRN-004`) — Violated. Contractor field services will require access to customer or asset data. The ADR does not specify data classifications, consent frameworks, or access boundaries. No personal-data governance is mentioned.",
+            "impact": "Contractors accessing customer or operational data without explicit privacy constraints creates regulatory (GDPR, industry-specific) and operational risk. Data access boundaries not designed upfront will be added ad-hoc, creating shadow data governance and non-compliance risk. FEDC is accountable for data even when contractors process it.",
+            "recommendation": "**Add data-governance requirements.** (1) List which data classifications contractors may access (e.g., *public*, *internal*, *sensitive*). (2) Specify whether personal data is accessed and under which consent basis. (3) Document access controls (e.g., role-based, field-location-based) and audit trails. (4) Update **Data Architecture Guardrails** (`DAT-GRD`) to embed contractor-access constraints.",
+            "rationale": "In regulated industries, data governance is non-negotiable. Contractors must operate within published guardrails from day one. Designing data access upfront prevents compliance violations, supports audit, and protects customer trust."
+        },
+        {
+            "finding": "*Mediated through the gateway* (**Integration Principles**, `INT-PRN-004`) — Silent. If contractors access internal systems from field locations, the ADR does not state whether traffic routes through the managed gateway/broker or connects directly.",
+            "impact": "Contractor field devices connecting directly to internal systems (e.g., asset-management systems, operational networks) bypass the gateway/broker control point. This violates observability, rate-limiting, and security enforcement. Direct connections create attack surface and audit blind spots.",
+            "recommendation": "**Specify network architecture for contractor access.** Document whether contractor systems (field devices, mobile apps, external platforms) connect via the managed gateway/broker. If not, identify why and what compensating controls exist. Update **Integration Architecture** (`INT-IFC`) to show contractor connectivity patterns and trust boundaries.",
+            "rationale": "The gateway/broker is FEDC's centralised control point for auth, rate limiting, observability, and audit across trust boundaries. Contractors operating outside this control point undermine the integration strategy and create unmanaged security and observability risk."
+        },
+        {
+            "finding": "*Observability is built in* (**Application Principles**, `APP-PRN-005`) — Silent. Contractor-delivered services have no specified observability: No health checks, structured logs, RED metrics, or distributed traces mentioned.",
+            "impact": "When contractor field services fail or degrade, FEDC has no visibility into root cause. Response is delayed. Operational and customer incidents lack telemetry context. This contradicts the principle that observability is mandatory from day one.",
+            "recommendation": "**Add observability requirements.** Specify what signals contractor field services must expose: (1) Health/heartbeat (is the contractor on-site, online, responsive?). (2) Business metrics (tasks completed, SLA compliance, customer satisfaction). (3) Technical metrics (API latency, error rates if contractor systems integrate). (4) Audit log (who accessed what data, when). Bind these to contractor SLAs.",
+            "rationale": "Contractor work is customer-facing and operationally critical. Without telemetry, FEDC cannot detect problems early, validate contractor performance, or investigate incidents. Observability is the foundation for trust and governance."
+        },
+        {
+            "finding": "*Architecture review gates cross-domain solutions* (**Solution Principles**, `SOL-PRN-002`) — Silent. This decision touches Business, Data, Integration, Application, and Solution domains (contractor capability sourcing, data governance, connectivity, application scope, team ownership). No mention of Architecture Council sign-off.",
+            "impact": "Cross-domain risk is not visible to single-domain reviewers. The decision may proceed without alignment on contractor data access (Data domain), network connectivity (Integration domain), or team ownership (Solution domain). Unaligned cross-domain commitments create rework and governance debt.",
+            "recommendation": "**Escalate to the Architecture Council.** This decision affects five domains and requires cross-domain sign-off per the principle. Ensure Business, Data, Integration, Application, and Solution architects review before commitment.",
+            "rationale": "Cross-domain decisions have interdependencies invisible to single-domain analysis. The Architecture Council is the forum for surfacing these tensions and recording agreed trade-offs. Proceeding without Council alignment risks downstream rework and architectural inconsistency."
+        }
+    ],
     "referential-integrity": [
         {
             "finding": "Referential integrity checks passed across all scoped catalogues. All parent-id and domain-id foreign keys resolve to defined entities; no orphaned items detected.",
