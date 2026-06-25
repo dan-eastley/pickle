@@ -7,8 +7,12 @@ export default function PublicLayout() {
     <div className="min-h-screen bg-white flex flex-col">
       <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-6 gap-6 sticky top-0 z-40">
         <NavLink to="/" className="flex items-baseline gap-3 flex-shrink-0">
-          <span className="text-lg font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">Pickle</span>
-          <span className="text-lg text-gray-400 hidden sm:block">Agentic Architecture as a Service</span>
+          <span className="text-lg font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
+            Pickle
+          </span>
+          <span className="text-lg text-gray-400 hidden sm:block">
+            Agentic Architecture as a Service
+          </span>
         </NavLink>
         <div className="flex-1" />
         <NavLink

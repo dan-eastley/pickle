@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useParams, useMatch } from 'react-router-dom'
 import {
-  DOMAINS, ABSTRACTIONS, DOMAIN_COLORS, ABSTRACTION_COLORS,
-  getArtefactsForDomain, FORMAT_ORDER, getFormat,
+  DOMAINS,
+  ABSTRACTIONS,
+  DOMAIN_COLORS,
+  ABSTRACTION_COLORS,
+  getArtefactsForDomain,
+  FORMAT_ORDER,
+  getFormat,
 } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
@@ -12,16 +17,18 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
   const fmt = getFormat(format)
   if (!fmt || !artefacts.length) return null
 
-  const sorted = [...artefacts.filter(a => a.key), ...artefacts.filter(a => !a.key)]
+  const sorted = [...artefacts.filter((a) => a.key), ...artefacts.filter((a) => !a.key)]
 
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex items-center gap-1.5 px-2 py-1 mb-1 bg-gray-50">
         <FormatIcon format={format} className="w-3 h-3 text-gray-400" />
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{fmt.label}</span>
+        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          {fmt.label}
+        </span>
       </div>
       <div className="space-y-px">
-        {sorted.map(artefact => (
+        {sorted.map((artefact) => (
           <Link
             key={artefact.id}
             to={`${base}/domains/${domainId}/${abstractionId}/${artefact.id}`}
@@ -47,7 +54,6 @@ function DomainDropdown({ domain, base, onClose }) {
   return (
     <div className="absolute left-0 right-0 top-full bg-white border-b-2 border-gray-200 shadow-lg z-40">
       <div className="max-w-[1400px] mx-auto px-6 py-5">
-
         {/* Domain header — links to the domain overview page */}
         <Link
           to={`${base}/domains/${domain.id}`}
@@ -70,7 +76,7 @@ function DomainDropdown({ domain, base, onClose }) {
 
         {/* Three abstraction columns */}
         <div className="grid grid-cols-3 gap-6">
-          {ABSTRACTIONS.map(abstraction => {
+          {ABSTRACTIONS.map((abstraction) => {
             const artefacts = getArtefactsForDomain(domain.id, abstraction.id)
             if (!artefacts.length) return null
             const abColors = ABSTRACTION_COLORS[abstraction.id]
@@ -92,11 +98,11 @@ function DomainDropdown({ domain, base, onClose }) {
                 </Link>
 
                 {/* Format-grouped artefacts */}
-                {FORMAT_ORDER.map(fmt => (
+                {FORMAT_ORDER.map((fmt) => (
                   <FormatGroup
                     key={fmt}
                     format={fmt}
-                    artefacts={artefacts.filter(a => a.format === fmt)}
+                    artefacts={artefacts.filter((a) => a.format === fmt)}
                     base={base}
                     domainId={domain.id}
                     abstractionId={abstraction.id}
@@ -131,11 +137,13 @@ export default function DomainNav() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  useEffect(() => { setActiveDropdown(null) }, [activeDomain])
+  useEffect(() => {
+    setActiveDropdown(null)
+  }, [activeDomain])
 
   if (!clientId || !versionId) return null
 
-  const activeDomainData = DOMAINS.find(d => d.id === activeDropdown)
+  const activeDomainData = DOMAINS.find((d) => d.id === activeDropdown)
 
   return (
     <div ref={navRef} className="relative bg-white border-b border-gray-200 z-30">
@@ -155,7 +163,7 @@ export default function DomainNav() {
           </Link>
 
           {/* Domain tabs */}
-          {DOMAINS.map(domain => {
+          {DOMAINS.map((domain) => {
             const isActive = activeDomain === domain.id
             const isOpen = activeDropdown === domain.id
             const ac = DOMAIN_COLORS[domain.id].nav
@@ -163,14 +171,16 @@ export default function DomainNav() {
             return (
               <button
                 key={domain.id}
-                onClick={() => setActiveDropdown(prev => prev === domain.id ? null : domain.id)}
+                onClick={() => setActiveDropdown((prev) => (prev === domain.id ? null : domain.id))}
                 className={`flex items-center gap-2 px-4 text-sm font-medium border-b-2 transition-colors ${
                   isActive || isOpen
                     ? `${ac.border} ${ac.text} ${ac.bg}`
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                <span className={`flex-shrink-0 ${isActive || isOpen ? ac.icon : DOMAIN_COLORS[domain.id].text}`}>
+                <span
+                  className={`flex-shrink-0 ${isActive || isOpen ? ac.icon : DOMAIN_COLORS[domain.id].text}`}
+                >
                   <DomainIcon domain={domain.id} className="w-3.5 h-3.5" />
                 </span>
                 {domain.name}

@@ -19,31 +19,43 @@ export default function QuickPicker() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     const list = q
-      ? items.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q))
+      ? items.filter((a) => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q))
       : items
     return list.slice(0, 50)
   }, [items, query])
 
   useEffect(() => {
-    function onClick(e) { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    function onClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
     document.addEventListener('mousedown', onClick)
     return () => document.removeEventListener('mousedown', onClick)
   }, [])
 
-  useEffect(() => { if (open) inputRef.current?.focus(); setActive(0) }, [open, query])
+  useEffect(() => {
+    if (open) inputRef.current?.focus()
+    setActive(0)
+  }, [open, query])
 
   if (!clientId || !versionId) return null
 
   const go = (a) => {
-    setOpen(false); setQuery('')
+    setOpen(false)
+    setQuery('')
     navigate(`/clients/${clientId}/${versionId}/domains/${a.domain}/${a.abstraction}/${a.id}`)
   }
 
   const onKeyDown = (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); setActive(i => Math.min(i + 1, filtered.length - 1)) }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(i => Math.max(i - 1, 0)) }
-    else if (e.key === 'Enter' && filtered[active]) { e.preventDefault(); go(filtered[active]) }
-    else if (e.key === 'Escape') setOpen(false)
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActive((i) => Math.min(i + 1, filtered.length - 1))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActive((i) => Math.max(i - 1, 0))
+    } else if (e.key === 'Enter' && filtered[active]) {
+      e.preventDefault()
+      go(filtered[active])
+    } else if (e.key === 'Escape') setOpen(false)
   }
 
   const scopeLabel = domain ? `${getDomain(domain)?.name ?? domain} artefacts` : 'all artefacts'
@@ -51,7 +63,7 @@ export default function QuickPicker() {
   return (
     <div ref={ref} className="relative">
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-600 transition-colors"
         title={`Jump to an artefact (${scopeLabel})`}
       >
@@ -67,13 +79,15 @@ export default function QuickPicker() {
           <input
             ref={inputRef}
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={`Filter ${scopeLabel}…`}
             className="px-3 py-2 text-sm border-b border-gray-200 focus:outline-none"
           />
           <div className="overflow-y-auto">
-            {filtered.length === 0 && <div className="px-3 py-3 text-xs text-gray-400">No matches</div>}
+            {filtered.length === 0 && (
+              <div className="px-3 py-3 text-xs text-gray-400">No matches</div>
+            )}
             {filtered.map((a, i) => {
               const c = DOMAIN_COLORS[a.domain]
               return (
@@ -83,7 +97,9 @@ export default function QuickPicker() {
                   onClick={() => go(a)}
                   className={`w-full text-left flex items-center gap-2 px-3 py-2 transition-colors ${i === active ? 'bg-brand-50' : 'hover:bg-gray-50'}`}
                 >
-                  <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-400'}`}><DomainIcon domain={a.domain} className="w-3.5 h-3.5" /></span>
+                  <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-400'}`}>
+                    <DomainIcon domain={a.domain} className="w-3.5 h-3.5" />
+                  </span>
                   <span className="min-w-0 flex-1 truncate text-sm text-gray-700">{a.name}</span>
                   <span className="font-mono text-xs text-gray-400 flex-shrink-0">{a.id}</span>
                 </button>

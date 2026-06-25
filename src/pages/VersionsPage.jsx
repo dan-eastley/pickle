@@ -19,10 +19,10 @@ export default function VersionsPage() {
   usePageTitle(`${clientName} — Versions`)
 
   useEffect(() => {
-    getVersions(clientId).then(async list => {
+    getVersions(clientId).then(async (list) => {
       setVersions(list)
       const metas = await Promise.all(
-        list.map(v => getVersion(clientId, v['version-id']).then(m => [v['version-id'], m]))
+        list.map((v) => getVersion(clientId, v['version-id']).then((m) => [v['version-id'], m]))
       )
       setVersionMeta(Object.fromEntries(metas.filter(([, m]) => m)))
       setLoading(false)
@@ -47,9 +47,7 @@ export default function VersionsPage() {
       <div className="mb-8 flex items-center justify-between gap-8">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Select a version to browse its architecture.
-          </p>
+          <p className="mt-1 text-sm text-gray-500">Select a version to browse its architecture.</p>
         </div>
         <Illustration name="timeline" className="hidden md:block w-52 flex-shrink-0" />
       </div>
@@ -63,43 +61,43 @@ export default function VersionsPage() {
           </p>
         </div>
       ) : (
-      <div className="border border-gray-200 bg-white divide-y divide-gray-100">
-        {/* empty handled above */}
-        {versions.map(v => {
-          const vId = v['version-id']
-          const meta = versionMeta[vId]
-          const statusStyle = versionStatusBadge(meta?.status)
-          return (
-            <Link
-              key={vId}
-              to={`/clients/${clientId}/${vId}/domains`}
-              className="group flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
-                      {meta?.name ?? vId}
-                    </span>
-                    {meta?.status && (
-                      <span className={`text-xs font-medium px-2 py-0.5 ${statusStyle}`}>
-                        {meta.status}
+        <div className="border border-gray-200 bg-white divide-y divide-gray-100">
+          {/* empty handled above */}
+          {versions.map((v) => {
+            const vId = v['version-id']
+            const meta = versionMeta[vId]
+            const statusStyle = versionStatusBadge(meta?.status)
+            return (
+              <Link
+                key={vId}
+                to={`/clients/${clientId}/${vId}/domains`}
+                className="group flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+                        {meta?.name ?? vId}
                       </span>
+                      {meta?.status && (
+                        <span className={`text-xs font-medium px-2 py-0.5 ${statusStyle}`}>
+                          {meta.status}
+                        </span>
+                      )}
+                    </div>
+                    {meta?.description && (
+                      <p className="text-xs text-gray-400 mt-0.5">{meta.description}</p>
                     )}
                   </div>
-                  {meta?.description && (
-                    <p className="text-xs text-gray-400 mt-0.5">{meta.description}</p>
-                  )}
                 </div>
-              </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <span className="text-xs font-mono text-gray-400">{vId}</span>
-                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <span className="text-xs font-mono text-gray-400">{vId}</span>
+                  <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
+                </div>
+              </Link>
+            )
+          })}
+        </div>
       )}
     </div>
   )

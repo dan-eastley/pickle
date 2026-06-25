@@ -9,10 +9,14 @@ describe('ActivityHistory', () => {
   })
 
   it('renders an entry per activity item with its action and author', () => {
-    render(<ActivityHistory activity={[
-      { timestamp: '2026-01-15T09:30:00Z', action: 'Created', who: 'Joe B' },
-      { timestamp: '2026-03-04T14:10:00Z', action: 'Updated', who: 'Jane Doe' },
-    ]} />)
+    render(
+      <ActivityHistory
+        activity={[
+          { timestamp: '2026-01-15T09:30:00Z', action: 'Created', who: 'Joe B' },
+          { timestamp: '2026-03-04T14:10:00Z', action: 'Updated', who: 'Jane Doe' },
+        ]}
+      />
+    )
     expect(screen.getByText('Created')).toBeInTheDocument()
     expect(screen.getByText('Updated')).toBeInTheDocument()
     expect(screen.getByText('Joe B')).toBeInTheDocument()
@@ -20,11 +24,15 @@ describe('ActivityHistory', () => {
   })
 
   it('orders entries most-recent first', () => {
-    render(<ActivityHistory activity={[
-      { timestamp: '2026-01-15T09:30:00Z', action: 'Created', who: 'A' },
-      { timestamp: '2026-03-04T14:10:00Z', action: 'Updated', who: 'B' },
-    ]} />)
-    const actions = screen.getAllByText(/Created|Updated/).map(el => el.textContent)
+    render(
+      <ActivityHistory
+        activity={[
+          { timestamp: '2026-01-15T09:30:00Z', action: 'Created', who: 'A' },
+          { timestamp: '2026-03-04T14:10:00Z', action: 'Updated', who: 'B' },
+        ]}
+      />
+    )
+    const actions = screen.getAllByText(/Created|Updated/).map((el) => el.textContent)
     expect(actions[0]).toBe('Updated') // newer first
   })
 })

@@ -102,7 +102,9 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
         </div>
       )}
       <div className="flex items-start gap-4">
-        <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}>
+        <div
+          className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}
+        >
           <span className={colors?.text ?? 'text-gray-500'}>
             <DomainIcon domain={artefact.domain} className="w-5 h-5" />
           </span>
@@ -116,9 +118,18 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                 onClick={togglePurpose}
                 className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
               >
-                <svg viewBox="0 0 16 16" fill="none"
-                  className={`w-3 h-3 transition-transform ${purposeCollapsed ? '' : 'rotate-90'}`}>
-                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className={`w-3 h-3 transition-transform ${purposeCollapsed ? '' : 'rotate-90'}`}
+                >
+                  <path
+                    d="M6 4l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Artefact Purpose
               </button>
@@ -140,9 +151,18 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                 onClick={toggleRelated}
                 className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
               >
-                <svg viewBox="0 0 16 16" fill="none"
-                  className={`w-3 h-3 transition-transform ${relatedCollapsed ? '' : 'rotate-90'}`}>
-                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className={`w-3 h-3 transition-transform ${relatedCollapsed ? '' : 'rotate-90'}`}
+                >
+                  <path
+                    d="M6 4l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Related Artefacts
               </button>
@@ -206,13 +226,15 @@ export default function ArtefactPage() {
         setData(artefactData)
         setSchema(schemaData)
       })
-      .catch(err => setError(err.message))
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, domain, abstraction, artefactId])
 
   if (!artefact) {
-    return <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
+    return (
+      <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
+    )
   }
 
   const isDocument = artefact.format === 'document'
@@ -221,11 +243,27 @@ export default function ArtefactPage() {
 
   return (
     <div>
-      <ArtefactHeader artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+      <ArtefactHeader
+        artefact={artefact}
+        schema={schema}
+        clientId={clientId ?? selectedClientId}
+        versionId={versionId ?? selectedVersionId}
+      />
       {isDocument && documents.length > 0 && (
-        <DocumentSelector artefact={artefact} documents={documents} selectedIdx={docIdx} onSelect={setDocIdx} />
+        <DocumentSelector
+          artefact={artefact}
+          documents={documents}
+          selectedIdx={docIdx}
+          onSelect={setDocIdx}
+        />
       )}
-      <AdrActionBar artefact={artefact} documents={documents} selectedDocument={selectedDocument} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+      <AdrActionBar
+        artefact={artefact}
+        documents={documents}
+        selectedDocument={selectedDocument}
+        clientId={clientId ?? selectedClientId}
+        versionId={versionId ?? selectedVersionId}
+      />
 
       {loading && (
         <div className="flex items-center justify-center py-16">
@@ -242,7 +280,15 @@ export default function ArtefactPage() {
       {!loading && !error && data === null && (
         <div className="border border-gray-200 bg-white">
           <EmptyState
-            illustration={artefact.format === 'matrix' ? 'matrix' : artefact.format === 'diagram' ? 'diagram' : artefact.format === 'document' ? 'catalogue' : 'catalogue'}
+            illustration={
+              artefact.format === 'matrix'
+                ? 'matrix'
+                : artefact.format === 'diagram'
+                  ? 'diagram'
+                  : artefact.format === 'document'
+                    ? 'catalogue'
+                    : 'catalogue'
+            }
             title="Nothing here yet"
             description="No content has been added for this version. Use the button above to raise an Architecture Decision Record and propose changes."
           />
@@ -257,17 +303,33 @@ export default function ArtefactPage() {
 
       {!loading && !error && data !== null && data !== undefined && (
         <>
-          {artefact.format === 'catalogue' && (
-            <CatalogueView data={data} schema={schema} />
-          )}
+          {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
           {artefact.format === 'matrix' && (
-            <MatrixView data={data} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+            <MatrixView
+              data={data}
+              schema={schema}
+              clientId={clientId ?? selectedClientId}
+              versionId={versionId ?? selectedVersionId}
+            />
           )}
           {artefact.format === 'diagram' && (
-            <DiagramView data={data} artefact={artefact} schema={schema} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+            <DiagramView
+              data={data}
+              artefact={artefact}
+              schema={schema}
+              clientId={clientId ?? selectedClientId}
+              versionId={versionId ?? selectedVersionId}
+            />
           )}
           {artefact.format === 'document' && (
-            <DocumentView data={data} artefact={artefact} schema={schema} selectedIdx={docIdx} clientId={clientId ?? selectedClientId} versionId={versionId ?? selectedVersionId} />
+            <DocumentView
+              data={data}
+              artefact={artefact}
+              schema={schema}
+              selectedIdx={docIdx}
+              clientId={clientId ?? selectedClientId}
+              versionId={versionId ?? selectedVersionId}
+            />
           )}
           <ActivityHistory activity={data.activity} />
         </>

@@ -54,37 +54,47 @@ const FEATURE_CARDS = [
 // Strategy / Principles / Guardrails ↔ Conceptual / Logical / Physical.
 const ANALYSIS_DIMENSIONS = [
   {
-    n: '01', name: 'Impact Assessment',
+    n: '01',
+    name: 'Impact Assessment',
     question: 'What does this change actually touch?',
     text: 'Identifies the artefacts, domains and abstraction layers affected — the full blast radius of the decision.',
   },
   {
-    n: '02', name: 'Referential Integrity',
+    n: '02',
+    name: 'Referential Integrity',
     question: 'Does the model stay consistent?',
     text: 'Checks every reference, ID and index the change relies on, so the architecture model never silently breaks.',
   },
   {
-    n: '03', name: 'Strategy Alignment', layer: 'Conceptual',
+    n: '03',
+    name: 'Strategy Alignment',
+    layer: 'Conceptual',
     question: 'Does it serve the strategy?',
     text: 'Tests the decision against each affected domain’s documented strategic goals — the what and why.',
   },
   {
-    n: '04', name: 'Principles Alignment', layer: 'Logical',
+    n: '04',
+    name: 'Principles Alignment',
+    layer: 'Logical',
     question: 'Does it follow the principles?',
     text: 'Assesses the decision against the architecture principles that guide how design choices are made.',
   },
   {
-    n: '05', name: 'Guardrails Alignment', layer: 'Physical',
+    n: '05',
+    name: 'Guardrails Alignment',
+    layer: 'Physical',
     question: 'Does it stay inside the guardrails?',
     text: 'Verifies compliance with each domain’s non-negotiable rules and minimum standards. A breach is a blocking issue.',
   },
   {
-    n: '06', name: 'Proponent Analysis',
+    n: '06',
+    name: 'Proponent Analysis',
     question: 'What is the strongest case for?',
     text: 'An agent argues for the change at its best — benefits, opportunities, and the cost of not acting.',
   },
   {
-    n: '07', name: 'Challenger Analysis',
+    n: '07',
+    name: 'Challenger Analysis',
     question: 'What is the strongest case against?',
     text: 'A second agent stress-tests the change — risks, gaps and unstated assumptions — before a human ever has to.',
   },
@@ -92,24 +102,54 @@ const ANALYSIS_DIMENSIONS = [
 
 const LAYER_BADGES = {
   Conceptual: 'bg-blue-100 text-blue-700',
-  Logical:    'bg-amber-100 text-amber-700',
-  Physical:   'bg-rose-100 text-rose-700',
+  Logical: 'bg-amber-100 text-amber-700',
+  Physical: 'bg-rose-100 text-rose-700',
 }
 
 // The solution document chain — each step adds detail and moves from
 // conceptual to physical, with the audience shifting from exec to engineer.
 const DOCUMENT_CHAIN = [
-  { id: 'SOL-AVI', name: 'Architecture Vision',        layer: 'Conceptual', audience: 'Executive & leadership', adds: 'Strategic direction and the high-level target architecture.' },
-  { id: 'SOL-AIN', name: 'Architecture Intent',        layer: 'Conceptual', audience: 'Architecture board',     adds: 'The decided direction — options weighed and rationale recorded.' },
-  { id: 'SOL-SVI', name: 'Solution Intent',            layer: 'Logical',    audience: 'Solution architects',    adds: 'Per-initiative problem, approach, capabilities and platforms — fixed and variable intent.' },
-  { id: 'SOL-SDE', name: 'Solution Design',            layer: 'Logical',    audience: 'Designers & tech leads', adds: 'Logical design across the four domains, NFRs and flows.' },
-  { id: 'SOL-ISP', name: 'Interface Spec & LLD',       layer: 'Physical',   audience: 'Engineers',              adds: 'Concrete protocols, endpoints and contracts to build against.' },
+  {
+    id: 'SOL-AVI',
+    name: 'Architecture Vision',
+    layer: 'Conceptual',
+    audience: 'Executive & leadership',
+    adds: 'Strategic direction and the high-level target architecture.',
+  },
+  {
+    id: 'SOL-AIN',
+    name: 'Architecture Intent',
+    layer: 'Conceptual',
+    audience: 'Architecture board',
+    adds: 'The decided direction — options weighed and rationale recorded.',
+  },
+  {
+    id: 'SOL-SVI',
+    name: 'Solution Intent',
+    layer: 'Logical',
+    audience: 'Solution architects',
+    adds: 'Per-initiative problem, approach, capabilities and platforms — fixed and variable intent.',
+  },
+  {
+    id: 'SOL-SDE',
+    name: 'Solution Design',
+    layer: 'Logical',
+    audience: 'Designers & tech leads',
+    adds: 'Logical design across the four domains, NFRs and flows.',
+  },
+  {
+    id: 'SOL-ISP',
+    name: 'Interface Spec & LLD',
+    layer: 'Physical',
+    audience: 'Engineers',
+    adds: 'Concrete protocols, endpoints and contracts to build against.',
+  },
 ]
 
 const LAYER_ACCENT = {
   Conceptual: 'border-t-blue-500',
-  Logical:    'border-t-amber-500',
-  Physical:   'border-t-rose-500',
+  Logical: 'border-t-amber-500',
+  Physical: 'border-t-rose-500',
 }
 
 function DocumentChain() {
@@ -124,18 +164,25 @@ function DocumentChain() {
             From vision to build, one step at a time
           </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Solution documents form a chain — each one elaborates the last. As you move along it, detail
-            increases and the architecture moves from conceptual to physical, while the audience shifts from
-            executives to engineers.
+            Solution documents form a chain — each one elaborates the last. As you move along it,
+            detail increases and the architecture moves from conceptual to physical, while the
+            audience shifts from executives to engineers.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {DOCUMENT_CHAIN.map((doc, i) => (
-            <div key={doc.id} className={`relative bg-white border border-gray-200 border-t-2 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col hover:shadow-md transition-shadow`}>
+            <div
+              key={doc.id}
+              className={`relative bg-white border border-gray-200 border-t-2 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col hover:shadow-md transition-shadow`}
+            >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono text-gray-300">{String(i + 1).padStart(2, '0')}</span>
-                <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[doc.layer]}`}>{doc.layer}</span>
+                <span className="text-xs font-mono text-gray-300">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[doc.layer]}`}>
+                  {doc.layer}
+                </span>
               </div>
               <h3 className="text-sm font-bold text-gray-900">{doc.name}</h3>
               <p className="text-xs font-mono text-gray-400 mt-0.5">{doc.id}</p>
@@ -169,7 +216,9 @@ function Hero() {
             <span className="w-1.5 h-1.5 bg-brand-500" />
             Architecture as Code · Agentic
           </span>
-          <h1 className="text-5xl font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">Pickle</h1>
+          <h1 className="text-5xl font-bold tracking-tight uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
+            Pickle
+          </h1>
           <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
           <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Your TOGAF Architecture Repository — as code. Enterprise architecture as structured,
@@ -188,7 +237,12 @@ function Hero() {
         </div>
         {/* Real product window */}
         <div className="hidden lg:block border border-gray-200 shadow-2xl bg-white overflow-hidden">
-          <img src={capabilityShot} alt="Pickle — the business capability model rendered as a diagram" className="w-full h-auto" loading="eager" />
+          <img
+            src={capabilityShot}
+            alt="Pickle — the business capability model rendered as a diagram"
+            className="w-full h-auto"
+            loading="eager"
+          />
         </div>
       </div>
 
@@ -198,7 +252,7 @@ function Hero() {
           Five architecture domains · Three abstraction layers
         </p>
         <div className="mt-4 flex items-center justify-center gap-x-8 gap-y-3 flex-wrap">
-          {DOMAINS.map(d => (
+          {DOMAINS.map((d) => (
             <span key={d.id} className="flex items-center gap-2 text-sm text-gray-500">
               <DomainIcon domain={d.id} className="w-4 h-4 text-gray-400" />
               {d.name}
@@ -214,10 +268,13 @@ function FeatureCards() {
   return (
     <section className="max-w-[1400px] mx-auto px-6 py-16">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {FEATURE_CARDS.map(card => {
+        {FEATURE_CARDS.map((card) => {
           const Icon = card.icon
           return (
-            <div key={card.title} className="bg-white border-l-4 border-brand-600 flex flex-col shadow-sm hover:shadow-xl transition-shadow duration-200">
+            <div
+              key={card.title}
+              className="bg-white border-l-4 border-brand-600 flex flex-col shadow-sm hover:shadow-xl transition-shadow duration-200"
+            >
               {/* Header */}
               <div className="p-6 border-b border-gray-100">
                 <div className="w-10 h-10 bg-brand-50 flex items-center justify-center mb-4">
@@ -252,23 +309,54 @@ function FeatureCards() {
 }
 
 const ABSTRACTION_META = {
-  conceptual: { label: 'Conceptual', sub: 'The what & why', desc: 'Sets direction and intent — what the architecture needs to achieve and why, without any technology choices.', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', accent: 'border-l-blue-500' },
-  logical:    { label: 'Logical',    sub: 'The how',         desc: 'Defines the rules and principles that guide design decisions, without committing to any specific tool or product.', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', accent: 'border-l-amber-500' },
-  physical:   { label: 'Physical',   sub: 'The where & with what', desc: 'Specifies the concrete standards and technology decisions that govern how the architecture is built and operated.', bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', accent: 'border-l-rose-500' },
+  conceptual: {
+    label: 'Conceptual',
+    sub: 'The what & why',
+    desc: 'Sets direction and intent — what the architecture needs to achieve and why, without any technology choices.',
+    bg: 'bg-blue-50',
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    accent: 'border-l-blue-500',
+  },
+  logical: {
+    label: 'Logical',
+    sub: 'The how',
+    desc: 'Defines the rules and principles that guide design decisions, without committing to any specific tool or product.',
+    bg: 'bg-amber-50',
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    accent: 'border-l-amber-500',
+  },
+  physical: {
+    label: 'Physical',
+    sub: 'The where & with what',
+    desc: 'Specifies the concrete standards and technology decisions that govern how the architecture is built and operated.',
+    bg: 'bg-rose-50',
+    text: 'text-rose-700',
+    border: 'border-rose-200',
+    accent: 'border-l-rose-500',
+  },
 }
 
 const FORMAT_META = {
-  catalogue: { desc: 'A structured list of architecture entities of a single type — capabilities, processes, applications. Hierarchical, machine-readable, schema-validated.' },
-  diagram:   { desc: 'A visual representation of entities and their relationships — capability models, process flows, wiring diagrams. Derived from catalogue content and rendered by the UI.' },
-  document:  { desc: 'Structured narrative content with multiple named instances — vision documents, solution designs, interface specifications. Sections follow the JSON schema structure.' },
-  matrix:    { desc: 'A grid mapping relationships between two sets of entities — capabilities to platforms, interfaces to data concepts. Spans abstraction layers and domains.' },
+  catalogue: {
+    desc: 'A structured list of architecture entities of a single type — capabilities, processes, applications. Hierarchical, machine-readable, schema-validated.',
+  },
+  diagram: {
+    desc: 'A visual representation of entities and their relationships — capability models, process flows, wiring diagrams. Derived from catalogue content and rendered by the UI.',
+  },
+  document: {
+    desc: 'Structured narrative content with multiple named instances — vision documents, solution designs, interface specifications. Sections follow the JSON schema structure.',
+  },
+  matrix: {
+    desc: 'A grid mapping relationships between two sets of entities — capabilities to platforms, interfaces to data concepts. Spans abstraction layers and domains.',
+  },
 }
 
 function ArchitectureModel() {
   return (
     <section className="border-b border-gray-200 bg-white">
       <div className="max-w-[1400px] mx-auto px-6 py-16">
-
         {/* Section header */}
         <div className="mb-12 flex items-start justify-between gap-10">
           <div className="max-w-3xl">
@@ -279,30 +367,47 @@ function ArchitectureModel() {
               Five domains · Three abstraction layers · Four output formats
             </h2>
             <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-              Every piece of architecture content in Pickle sits at the intersection of these three axes.
-              Domain answers "which part of the organisation", abstraction layer answers "how much detail",
-              and format answers "what kind of content".
+              Every piece of architecture content in Pickle sits at the intersection of these three
+              axes. Domain answers "which part of the organisation", abstraction layer answers "how
+              much detail", and format answers "what kind of content".
             </p>
           </div>
-          <Illustration name="building-blocks" className="hidden xl:block w-72 flex-shrink-0 self-center" />
+          <Illustration
+            name="building-blocks"
+            className="hidden xl:block w-72 flex-shrink-0 self-center"
+          />
         </div>
 
         {/* Domains */}
         <div className="mb-12">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Architecture Domains</h3>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            Architecture Domains
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {DOMAINS.map(domain => {
+            {DOMAINS.map((domain) => {
               const colors = DOMAIN_COLORS[domain.id]
               return (
-                <div key={domain.id} className={`border border-gray-200 border-l-4 bg-white p-5 flex flex-col gap-3 hover:shadow-md transition-shadow ${colors?.accent ?? 'border-l-gray-400'}`}>
-                  <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}>
-                    <DomainIcon domain={domain.id} className={`w-4 h-4 ${colors?.text ?? 'text-gray-500'}`} />
+                <div
+                  key={domain.id}
+                  className={`border border-gray-200 border-l-4 bg-white p-5 flex flex-col gap-3 hover:shadow-md transition-shadow ${colors?.accent ?? 'border-l-gray-400'}`}
+                >
+                  <div
+                    className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}
+                  >
+                    <DomainIcon
+                      domain={domain.id}
+                      className={`w-4 h-4 ${colors?.text ?? 'text-gray-500'}`}
+                    />
                   </div>
                   <div>
                     <div className="text-sm font-bold text-gray-900">{domain.name}</div>
-                    <div className={`text-xs font-mono mt-0.5 ${colors?.text ?? 'text-gray-400'}`}>{domain.acronym}-*</div>
+                    <div className={`text-xs font-mono mt-0.5 ${colors?.text ?? 'text-gray-400'}`}>
+                      {domain.acronym}-*
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-500 leading-relaxed flex-1">{domain.description}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed flex-1">
+                    {domain.description}
+                  </p>
                 </div>
               )
             })}
@@ -317,7 +422,8 @@ function ArchitectureModel() {
               <div className="text-sm font-bold text-gray-900">Architecture Discovery</div>
               <div className="text-xs font-medium text-blue-700">Virtual Architect Agent</div>
               <p className="mt-1 text-xs text-gray-500 leading-relaxed">
-                Ask a question and have the agent interrogate the architecture to produce a point-in-time view.
+                Ask a question and have the agent interrogate the architecture to produce a
+                point-in-time view.
               </p>
             </div>
             <Button to="/clients" variant="secondary" className="flex-shrink-0">
@@ -329,12 +435,17 @@ function ArchitectureModel() {
 
         {/* Abstraction Layers */}
         <div className="mb-12">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Abstraction Layers</h3>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            Abstraction Layers
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {ABSTRACTIONS.map(layer => {
+            {ABSTRACTIONS.map((layer) => {
               const m = ABSTRACTION_META[layer.id]
               return (
-                <div key={layer.id} className={`border ${m.border} border-l-4 ${m.accent} p-5 ${m.bg}`}>
+                <div
+                  key={layer.id}
+                  className={`border ${m.border} border-l-4 ${m.accent} p-5 ${m.bg}`}
+                >
                   <div className={`text-sm font-bold ${m.text}`}>{m.label}</div>
                   <div className="text-xs text-gray-500 font-medium mt-0.5">{m.sub}</div>
                   <p className="mt-3 text-xs text-gray-600 leading-relaxed">{m.desc}</p>
@@ -343,19 +454,25 @@ function ArchitectureModel() {
             })}
           </div>
           <p className="mt-3 text-xs text-gray-400 leading-relaxed">
-            Layers are progressive — Logical artefacts build on Conceptual ones; Physical artefacts make Logical ones concrete.
-            Relationships that cross layers are captured in <strong>Matrix</strong> artefact types.
+            Layers are progressive — Logical artefacts build on Conceptual ones; Physical artefacts
+            make Logical ones concrete. Relationships that cross layers are captured in{' '}
+            <strong>Matrix</strong> artefact types.
           </p>
         </div>
 
         {/* Output Formats */}
         <div>
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Output Formats</h3>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            Output Formats
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {FORMATS.map(fmt => {
+            {FORMATS.map((fmt) => {
               const m = FORMAT_META[fmt.id]
               return (
-                <div key={fmt.id} className="border border-gray-200 bg-white p-5 flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div
+                  key={fmt.id}
+                  className="border border-gray-200 bg-white p-5 flex flex-col gap-3 hover:shadow-md transition-shadow"
+                >
                   <div className="w-8 h-8 flex items-center justify-center bg-brand-50 flex-shrink-0">
                     <FormatIcon format={fmt.id} className="w-4 h-4 text-brand-600" />
                   </div>
@@ -368,7 +485,6 @@ function ArchitectureModel() {
             })}
           </div>
         </div>
-
       </div>
     </section>
   )
@@ -387,19 +503,25 @@ function SevenDimensions() {
               Every decision, analysed across seven dimensions
             </h2>
             <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-              When a decision is proposed, seven AI analysis steps run in sequence against the current
-              architecture state. Each one writes structured findings — finding, impact, recommendation
-              and rationale — into the Decision Record, for architects to accept or decline.
-              Nothing merges until a human says so.
+              When a decision is proposed, seven AI analysis steps run in sequence against the
+              current architecture state. Each one writes structured findings — finding, impact,
+              recommendation and rationale — into the Decision Record, for architects to accept or
+              decline. Nothing merges until a human says so.
             </p>
           </div>
-          <Illustration name="code-review" className="hidden xl:block w-72 flex-shrink-0 self-center" />
+          <Illustration
+            name="code-review"
+            className="hidden xl:block w-72 flex-shrink-0 self-center"
+          />
         </div>
 
         {/* Pipeline cards — numbered, in execution order */}
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {ANALYSIS_DIMENSIONS.map(dim => (
-            <div key={dim.n} className="border border-gray-200 border-t-2 border-t-brand-600 bg-white p-5 hover:shadow-md transition-shadow">
+          {ANALYSIS_DIMENSIONS.map((dim) => (
+            <div
+              key={dim.n}
+              className="border border-gray-200 border-t-2 border-t-brand-600 bg-white p-5 hover:shadow-md transition-shadow"
+            >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono text-gray-300">{dim.n}</span>
                 {dim.layer && (
@@ -423,8 +545,8 @@ function SevenDimensions() {
               <h3 className="text-sm font-bold text-gray-900">Human review</h3>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed">
-              Architects review every finding, then accept, reject or return the decision.
-              AI informs — people decide.
+              Architects review every finding, then accept, reject or return the decision. AI
+              informs — people decide.
             </p>
           </div>
         </div>
@@ -432,8 +554,8 @@ function SevenDimensions() {
         {/* Meta-model note — ties the three alignment steps to the layers */}
         <div className="mt-8 bg-gray-50 border-l-2 border-gray-300 px-5 py-4 max-w-3xl">
           <p className="text-sm text-gray-600 leading-relaxed">
-            <span className="font-semibold text-gray-900">Strategy, Principles and Guardrails</span> are
-            the three foundation artefacts every domain carries — one per abstraction layer
+            <span className="font-semibold text-gray-900">Strategy, Principles and Guardrails</span>{' '}
+            are the three foundation artefacts every domain carries — one per abstraction layer
             (Conceptual, Logical, Physical). The matching analysis steps test every decision against
             all three, in every domain it touches.
           </p>
@@ -444,9 +566,21 @@ function SevenDimensions() {
 }
 
 const SHOWCASE = [
-  { src: documentShot,  title: 'Architecture as documents',  desc: 'Visions, intents, and designs render as structured, navigable documents — straight from the repository.' },
-  { src: decisionShot,  title: 'Every change, AI-analysed',  desc: 'A decision runs a seven-step analysis pipeline before a human accepts or declines it.' },
-  { src: catalogueShot, title: 'Models as structured data',  desc: 'Capabilities, processes, and platforms are schema-validated catalogues you can query and diff.' },
+  {
+    src: documentShot,
+    title: 'Architecture as documents',
+    desc: 'Visions, intents, and designs render as structured, navigable documents — straight from the repository.',
+  },
+  {
+    src: decisionShot,
+    title: 'Every change, AI-analysed',
+    desc: 'A decision runs a seven-step analysis pipeline before a human accepts or declines it.',
+  },
+  {
+    src: catalogueShot,
+    title: 'Models as structured data',
+    desc: 'Capabilities, processes, and platforms are schema-validated catalogues you can query and diff.',
+  },
 ]
 
 function Showcase() {
@@ -454,15 +588,19 @@ function Showcase() {
     <section className="border-b border-gray-200 bg-gray-50">
       <div className="max-w-[1400px] mx-auto px-6 py-16">
         <div className="max-w-3xl mb-10">
-          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">See it in action</p>
-          <h2 className="text-2xl font-bold text-gray-900">A working architecture repository, not slideware</h2>
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
+            See it in action
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            A working architecture repository, not slideware
+          </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Every artefact is live, structured, and rendered directly from the Git repository — diagrams,
-            documents, catalogues, and AI-analysed decisions.
+            Every artefact is live, structured, and rendered directly from the Git repository —
+            diagrams, documents, catalogues, and AI-analysed decisions.
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {SHOWCASE.map(s => (
+          {SHOWCASE.map((s) => (
             <div key={s.title} className="flex flex-col">
               <div className="border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow overflow-hidden bg-white">
                 <img src={s.src} alt={s.title} className="w-full h-auto" loading="lazy" />
@@ -506,15 +644,19 @@ const SAFE_ROWS = [
 // Text-based framework wordmark badges (not the trademarked logo artwork).
 const FRAMEWORK_WORDMARK = {
   TOGAF: { text: 'TOGAF', sub: 'ADM', className: 'bg-sky-700 text-white' },
-  SAFe:  { text: 'SAFe', sub: '6.0', className: 'bg-indigo-700 text-white' },
+  SAFe: { text: 'SAFe', sub: '6.0', className: 'bg-indigo-700 text-white' },
 }
 
 function FrameworkWordmark({ name }) {
   const mark = FRAMEWORK_WORDMARK[name] ?? { text: name, className: 'bg-gray-800 text-white' }
   return (
-    <span className={`inline-flex items-baseline gap-1 px-2.5 py-1 text-sm font-bold tracking-tight ${mark.className}`}>
+    <span
+      className={`inline-flex items-baseline gap-1 px-2.5 py-1 text-sm font-bold tracking-tight ${mark.className}`}
+    >
       {mark.text}
-      {mark.sub && <span className="text-[10px] font-semibold opacity-70 tracking-wider">{mark.sub}</span>}
+      {mark.sub && (
+        <span className="text-[10px] font-semibold opacity-70 tracking-wider">{mark.sub}</span>
+      )}
       <span className="text-[10px] font-normal opacity-70 align-super">®</span>
     </span>
   )
@@ -529,7 +671,11 @@ function FrameworkTable({ name, blurb, rows }) {
         {rows.map(([label, status]) => (
           <li key={label} className="flex items-center gap-3 py-2">
             <span className="text-sm text-gray-700 flex-1">{label}</span>
-            <span className={`text-xs font-medium px-2 py-0.5 flex-shrink-0 ${SUPPORT_STYLES[status]}`}>{status}</span>
+            <span
+              className={`text-xs font-medium px-2 py-0.5 flex-shrink-0 ${SUPPORT_STYLES[status]}`}
+            >
+              {status}
+            </span>
           </li>
         ))}
       </ul>
@@ -545,12 +691,10 @@ function FrameworkSupport() {
           <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-2">
             Works with your framework
           </p>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Built to slot into TOGAF and SAFe
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900">Built to slot into TOGAF and SAFe</h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Pickle is a TOGAF-shaped architecture repository and a SAFe Solution Intent store — as code.
-            Here's what maps today, and what's on the roadmap.
+            Pickle is a TOGAF-shaped architecture repository and a SAFe Solution Intent store — as
+            code. Here's what maps today, and what's on the roadmap.
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -610,11 +754,12 @@ function VirtualArchitectAgent() {
               Architecture Discovery — interrogate your architecture
             </h2>
             <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-              Discovery turns the repository into something you can question. Raise a discovery, and the
-              Virtual Architect Agent reads the model to answer it — producing a view you can keep.
+              Discovery turns the repository into something you can question. Raise a discovery, and
+              the Virtual Architect Agent reads the model to answer it — producing a view you can
+              keep.
             </p>
             <ul className="mt-6 space-y-3">
-              {AGENT_BULLETS.map(b => (
+              {AGENT_BULLETS.map((b) => (
                 <li key={b} className="flex items-start gap-2 text-sm text-gray-700">
                   <CheckIcon className="w-4 h-4 mt-0.5 text-blue-600 flex-shrink-0" />
                   <span className="min-w-0">{b}</span>

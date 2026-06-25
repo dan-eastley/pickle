@@ -27,9 +27,13 @@ function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onTo
           <span className={`text-xs font-semibold px-2 py-0.5 ${decisionStatusBadge(status)}`}>
             {decisionStatusLabel(status)}
           </span>
-          <span className="text-xs text-gray-400">{decisions.length} {decisions.length === 1 ? 'Decision' : 'Decisions'}</span>
+          <span className="text-xs text-gray-400">
+            {decisions.length} {decisions.length === 1 ? 'Decision' : 'Decisions'}
+          </span>
         </div>
-        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {open && decisions.length === 0 && (
@@ -85,22 +89,25 @@ export default function DecisionsPage() {
   // non-empty group); Expand/Collapse all replaces it with an explicit set.
   const [collapsedOverride, setCollapsedOverride] = useState(null)
 
-  const filterDomain      = searchParams.get('domain')      ?? ''
+  const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
-  const filterArtefact    = searchParams.get('artefact')    ?? ''
+  const filterArtefact = searchParams.get('artefact') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Decisions`)
 
   useEffect(() => {
     fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/decisions.json`)
-      .then(r => r.ok ? r.json() : { decisions: [] })
-      .then(data => { setDecisions(data.decisions ?? []); setLoading(false) })
+      .then((r) => (r.ok ? r.json() : { decisions: [] }))
+      .then((data) => {
+        setDecisions(data.decisions ?? [])
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [clientId, versionId])
 
   const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
-  const filtered = decisions.filter(d => {
+  const filtered = decisions.filter((d) => {
     if (filterDomain && d.scope?.domain !== filterDomain) return false
     if (filterAbstraction && d.scope?.abstraction !== filterAbstraction) return false
     if (filterArtefact && d.scope?.artefact !== filterArtefact) return false
@@ -108,26 +115,29 @@ export default function DecisionsPage() {
   })
   const hiddenByFilter = decisions.length - filtered.length
 
-  const grouped = DECISION_STATUS_ORDER.map(status => ({
+  const grouped = DECISION_STATUS_ORDER.map((status) => ({
     status,
-    decisions: filtered.filter(d => (d.status ?? 'draft') === status),
+    decisions: filtered.filter((d) => (d.status ?? 'draft') === status),
   }))
   const knownStatuses = new Set(DECISION_STATUS_ORDER)
-  const unknown = filtered.filter(d => !knownStatuses.has(d.status ?? 'draft'))
+  const unknown = filtered.filter((d) => !knownStatuses.has(d.status ?? 'draft'))
   if (unknown.length > 0) grouped.push({ status: 'unknown', decisions: unknown })
 
   const isCollapsed = (status, count) =>
     collapsedOverride
       ? collapsedOverride.has(status)
-      : (count === 0 || !STATUS_DEFAULT_OPEN.has(status))
+      : count === 0 || !STATUS_DEFAULT_OPEN.has(status)
   const toggleGroup = (status) =>
-    setCollapsedOverride(prev => {
-      const next = new Set(prev ?? grouped.filter(g => isCollapsed(g.status, g.decisions.length)).map(g => g.status))
+    setCollapsedOverride((prev) => {
+      const next = new Set(
+        prev ??
+          grouped.filter((g) => isCollapsed(g.status, g.decisions.length)).map((g) => g.status)
+      )
       next.has(status) ? next.delete(status) : next.add(status)
       return next
     })
-  const expandAll   = () => setCollapsedOverride(new Set())
-  const collapseAll = () => setCollapsedOverride(new Set(grouped.map(g => g.status)))
+  const expandAll = () => setCollapsedOverride(new Set())
+  const collapseAll = () => setCollapsedOverride(new Set(grouped.map((g) => g.status)))
 
   return (
     <div>
@@ -150,7 +160,8 @@ export default function DecisionsPage() {
       {isFiltered && (
         <div className="mb-5 flex items-center justify-between gap-3 px-4 py-2.5 bg-brand-50 border border-brand-200 text-sm text-brand-800">
           <span>
-            Showing {filtered.length} of {decisions.length} decision{decisions.length === 1 ? '' : 's'}
+            Showing {filtered.length} of {decisions.length} decision
+            {decisions.length === 1 ? '' : 's'}
             {hiddenByFilter > 0 && ` — ${hiddenByFilter} hidden by the scope filter`}.
           </span>
           <button
@@ -163,7 +174,9 @@ export default function DecisionsPage() {
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
+        <div className="flex items-center justify-center py-20">
+          <Spinner size="lg" />
+        </div>
       ) : (
         <>
           <div className="mb-2 flex justify-end">
@@ -187,7 +200,14 @@ export default function DecisionsPage() {
 
       {/* JSON preview of decisions.json index — for debugging */}
       <JsonPreview
-        data={{ decisions: decisions.map(d => ({ 'decision-id': d['decision-id'], title: d.title, status: d.status, scope: d.scope })) }}
+        data={{
+          decisions: decisions.map((d) => ({
+            'decision-id': d['decision-id'],
+            title: d.title,
+            status: d.status,
+            scope: d.scope,
+          })),
+        }}
         label="decisions.json"
       />
     </div>

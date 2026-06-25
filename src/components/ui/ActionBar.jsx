@@ -9,17 +9,31 @@
 //   - Primary   — domain/stage colour, always with an icon on the left.
 //   - Secondary — white, never an icon.
 //   - Tertiary  — link styled (blue underline).
-export default function ActionBar({ title, strapline, tertiary, secondary, primary, tint, className = '' }) {
+export default function ActionBar({
+  title,
+  strapline,
+  tertiary,
+  secondary,
+  primary,
+  tint,
+  className = '',
+}) {
   const hasHeading = title || strapline
   const hasActions = tertiary || secondary || primary
   return (
-    <div className={`flex items-center justify-between gap-4 ${tint ? `px-5 py-3 ${tint}` : ''} ${className}`}>
+    <div
+      className={`flex items-center justify-between gap-4 ${tint ? `px-5 py-3 ${tint}` : ''} ${className}`}
+    >
       {hasHeading ? (
         <div className="min-w-0">
           {title && <h1 className="text-xl font-semibold text-gray-900">{title}</h1>}
-          {strapline && <p className={`text-sm text-gray-500 ${title ? 'mt-1' : ''}`}>{strapline}</p>}
+          {strapline && (
+            <p className={`text-sm text-gray-500 ${title ? 'mt-1' : ''}`}>{strapline}</p>
+          )}
         </div>
-      ) : <div />}
+      ) : (
+        <div />
+      )}
       {hasActions && (
         <div className="flex items-center gap-2 flex-shrink-0">
           {tertiary}

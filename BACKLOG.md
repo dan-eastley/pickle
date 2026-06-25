@@ -157,19 +157,18 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 **Context:** `ci.yml` runs only the touched areas; browser tests run against the Vercel deployment (`post-deploy.yml`); nightly full corpus + screenshots (`nightly.yml`).
 **Gap:** The dormant `validate-context.yml` is still `if: false` — fold into validate-data or retire.
 
-### QV-4 · 🟡 Lint to zero · Low
-**Context:** 0 errors; ~40+ warnings (mostly `jsx-a11y/label-has-associated-control`, `no-autofocus`).
-**Proposed fix:** Associate labels with controls; managed focus; drive warnings to zero.
+### QV-4 · ✅ Lint to zero · Low
+**Context:** ESLint reports **0 problems**. Removed unused vars, switched modal autofocus to refs, justified the intentional exhaustive-deps/react-refresh cases, and converted false-association form labels to spans. `format:check` also gates CI.
 
-### QV-5 · ⬜ Accessibility pass · Medium
-**Proposed fix:** Focus trap + return focus on modal/slide-panel close; audit contrast and keyboard order.
+### QV-5 · 🟡 Accessibility pass · Medium
+**Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (now `role=dialog`/`aria-modal`).
+**Gap:** Slide panel focus management, real `htmlFor` label association, and a contrast/keyboard-order audit remain.
 
-### QV-6 · ⬜ Formatting + coverage · Low
-**Proposed fix:** Run Prettier across the tree and add `format:check` to CI; keep widening use-case checks.
+### QV-6 · ✅ Formatting + coverage · Low
+**Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.
 
-### QV-7 · ⬜ Footer mis-reports config · Low
-**Context:** The footer shows "GITHUB_OWNER/REPO not configured" in dev even though data loads.
-**Proposed fix:** Fix the check or remove the banner.
+### QV-7 · ✅ Footer config banner · Low
+**Context:** The footer shows owner/repo only when `/api/github` config is available (it now is in dev via the shim); the raw "not configured" env-var banner is gone.
 
 ---
 

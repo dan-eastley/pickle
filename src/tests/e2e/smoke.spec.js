@@ -9,10 +9,25 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const CLIENT = 'fedc'
 const VERSION = '1.0.0'
 const ROUTE_BASE = `/clients/${CLIENT}/${VERSION}`
-const DOMAINS_ROOT = resolve(__dirname, '../../../architectures', `clients/${CLIENT}/${VERSION}`, 'domains')
+const DOMAINS_ROOT = resolve(
+  __dirname,
+  '../../../architectures',
+  `clients/${CLIENT}/${VERSION}`,
+  'domains'
+)
 
-const dirs = (p) => existsSync(p) ? readdirSync(p, { withFileTypes: true }).filter(e => e.isDirectory()).map(e => e.name) : []
-const jsons = (p) => existsSync(p) ? readdirSync(p).filter(f => f.endsWith('.json')).map(f => f.replace(/\.json$/, '')) : []
+const dirs = (p) =>
+  existsSync(p)
+    ? readdirSync(p, { withFileTypes: true })
+        .filter((e) => e.isDirectory())
+        .map((e) => e.name)
+    : []
+const jsons = (p) =>
+  existsSync(p)
+    ? readdirSync(p)
+        .filter((f) => f.endsWith('.json'))
+        .map((f) => f.replace(/\.json$/, ''))
+    : []
 
 // Build the full route list from the architecture data on disk: the overview,
 // each domain, each abstraction, and every artefact.
@@ -32,12 +47,16 @@ function architectureRoutes() {
 
 test('homepage renders its key sections', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', {
-    name: 'A working architecture repository, not slideware',
-  })).toBeVisible()
-  await expect(page.getByRole('heading', {
-    name: 'From vision to build, one step at a time',
-  })).toBeVisible()
+  await expect(
+    page.getByRole('heading', {
+      name: 'A working architecture repository, not slideware',
+    })
+  ).toBeVisible()
+  await expect(
+    page.getByRole('heading', {
+      name: 'From vision to build, one step at a time',
+    })
+  ).toBeVisible()
   await expect(page.getByText('This page failed to load.')).toHaveCount(0)
 })
 

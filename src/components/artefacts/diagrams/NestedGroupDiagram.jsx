@@ -1,4 +1,9 @@
-import { getDiagramColors, IMPORTANCE_COLORS, DIAGRAM_VARIANTS, wrapText } from '../../../lib/diagramTheme'
+import {
+  getDiagramColors,
+  IMPORTANCE_COLORS,
+  DIAGRAM_VARIANTS,
+  wrapText,
+} from '../../../lib/diagramTheme'
 
 const VIEW_WIDTH = 1200
 const OUTER_PADDING = 20
@@ -15,7 +20,9 @@ function WrappedText({ text, x, y, maxChars, maxLines, lineHeight, className }) 
   return (
     <text x={x} y={y} className={className}>
       {lines.map((line, i) => (
-        <tspan key={i} x={x} dy={i === 0 ? 0 : lineHeight}>{line}</tspan>
+        <tspan key={i} x={x} dy={i === 0 ? 0 : lineHeight}>
+          {line}
+        </tspan>
       ))}
     </text>
   )
@@ -30,7 +37,12 @@ function ImportanceBadge({ importance, right, top }) {
     <g>
       <title>{`Importance: ${label}`}</title>
       <rect x={right - width} y={top} width={width} height={16} className={colors.fill} />
-      <text x={right - width / 2} y={top + 11} textAnchor="middle" className={`text-[9px] font-medium ${colors.text}`}>
+      <text
+        x={right - width / 2}
+        y={top + 11}
+        textAnchor="middle"
+        className={`text-[9px] font-medium ${colors.text}`}
+      >
         {label}
       </text>
     </g>
@@ -40,14 +52,21 @@ function ImportanceBadge({ importance, right, top }) {
 function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
   const groupCols = Math.min(4, Math.max(2, Math.ceil(Math.sqrt(groups.length || 1))))
   const groupWidth = (VIEW_WIDTH - OUTER_PADDING * 2 - GROUP_GAP * (groupCols - 1)) / groupCols
-  const itemCols = Math.max(1, Math.floor((groupWidth - GROUP_PADDING * 2 + ITEM_GAP) / (ITEM_MIN_WIDTH + ITEM_GAP)))
+  const itemCols = Math.max(
+    1,
+    Math.floor((groupWidth - GROUP_PADDING * 2 + ITEM_GAP) / (ITEM_MIN_WIDTH + ITEM_GAP))
+  )
   const itemWidth = (groupWidth - GROUP_PADDING * 2 - ITEM_GAP * (itemCols - 1)) / itemCols
   const itemMaxChars = Math.floor((itemWidth - ITEM_PADDING * 2) / 5.5)
   const groupMaxChars = Math.floor((groupWidth - GROUP_PADDING * 2) / 6.5)
 
   const groupHeight = (group) => {
     const rows = group.items?.length ? Math.ceil(group.items.length / itemCols) : 0
-    return GROUP_HEADER_HEIGHT + GROUP_PADDING * 2 + (rows > 0 ? rows * ITEM_HEIGHT + (rows - 1) * ITEM_GAP : 0)
+    return (
+      GROUP_HEADER_HEIGHT +
+      GROUP_PADDING * 2 +
+      (rows > 0 ? rows * ITEM_HEIGHT + (rows - 1) * ITEM_GAP : 0)
+    )
   }
 
   const rows = []
@@ -58,7 +77,12 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
   for (const row of rows) {
     const rowHeight = Math.max(...row.map(groupHeight))
     row.forEach((group, i) => {
-      positioned.push({ group, x: OUTER_PADDING + i * (groupWidth + GROUP_GAP), y, height: rowHeight })
+      positioned.push({
+        group,
+        x: OUTER_PADDING + i * (groupWidth + GROUP_GAP),
+        y,
+        height: rowHeight,
+      })
     })
     y += rowHeight + GROUP_GAP
   }
@@ -70,15 +94,28 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
         const groupSelected = selectedId === group.id
         return (
           <g key={group.id}>
-            <rect x={x} y={y} width={groupWidth} height={height} rx={variant.groupRadius}
+            <rect
+              x={x}
+              y={y}
+              width={groupWidth}
+              height={height}
+              rx={variant.groupRadius}
               className={`${groupSelected ? colors.itemFill : colors.groupFill} ${onItemClick ? 'cursor-pointer' : ''}`}
               onClick={onItemClick ? () => onItemClick(group.id) : undefined}
             />
-            <text x={x + GROUP_PADDING} y={y + 18} className={`text-[9px] font-mono uppercase tracking-wide ${colors.label}`}>
+            <text
+              x={x + GROUP_PADDING}
+              y={y + 18}
+              className={`text-[9px] font-mono uppercase tracking-wide ${colors.label}`}
+            >
               {group.id}
             </text>
             {group.meta?.importance && (
-              <ImportanceBadge importance={group.meta.importance} right={x + groupWidth - GROUP_PADDING} top={y + 10} />
+              <ImportanceBadge
+                importance={group.meta.importance}
+                right={x + groupWidth - GROUP_PADDING}
+                top={y + 10}
+              />
             )}
             <WrappedText
               text={group.name}
@@ -96,15 +133,33 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
               const iy = y + GROUP_HEADER_HEIGHT + row * (ITEM_HEIGHT + ITEM_GAP)
               const itemSelected = selectedId === item.id
               return (
-                <g key={item.id}
+                <g
+                  key={item.id}
                   className="group"
                   style={{ cursor: onItemClick ? 'pointer' : 'default' }}
-                  onClick={onItemClick ? (e) => { e.stopPropagation(); onItemClick(item.id) } : undefined}>
+                  onClick={
+                    onItemClick
+                      ? (e) => {
+                          e.stopPropagation()
+                          onItemClick(item.id)
+                        }
+                      : undefined
+                  }
+                >
                   <title>{`${item.id}: ${item.name}`}</title>
-                  <rect x={ix} y={iy} width={itemWidth} height={ITEM_HEIGHT} rx={variant.itemRadius}
-                    className={`transition-colors ${itemSelected ? colors.selectedFill : `${colors.itemFill} ${onItemClick ? colors.itemHover : ''}`}`} />
-                  <text x={ix + ITEM_PADDING} y={iy + 13}
-                    className={`text-[8px] font-mono uppercase tracking-wide ${itemSelected ? colors.selectedId : 'fill-gray-400'}`}>
+                  <rect
+                    x={ix}
+                    y={iy}
+                    width={itemWidth}
+                    height={ITEM_HEIGHT}
+                    rx={variant.itemRadius}
+                    className={`transition-colors ${itemSelected ? colors.selectedFill : `${colors.itemFill} ${onItemClick ? colors.itemHover : ''}`}`}
+                  />
+                  <text
+                    x={ix + ITEM_PADDING}
+                    y={iy + 13}
+                    className={`text-[8px] font-mono uppercase tracking-wide ${itemSelected ? colors.selectedId : 'fill-gray-400'}`}
+                  >
                     {item.id}
                   </text>
                   <WrappedText
@@ -126,16 +181,25 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
   )
 }
 
-export default function NestedGroupDiagram({ groups, domain, diagramType, onItemClick, selectedId }) {
+export default function NestedGroupDiagram({
+  groups,
+  domain,
+  diagramType,
+  onItemClick,
+  selectedId,
+}) {
   const colors = getDiagramColors(domain)
   const variant = DIAGRAM_VARIANTS[diagramType] ?? DIAGRAM_VARIANTS['card-based']
-  const hasThirdLevel = groups.some(g => g.items?.some(item => item.items?.length))
+  const hasThirdLevel = groups.some((g) => g.items?.some((item) => item.items?.length))
 
   if (!hasThirdLevel) {
     return (
       <GroupGrid
-        groups={groups} colors={colors} variant={variant}
-        onItemClick={onItemClick} selectedId={selectedId}
+        groups={groups}
+        colors={colors}
+        variant={variant}
+        onItemClick={onItemClick}
+        selectedId={selectedId}
       />
     )
   }
@@ -147,10 +211,13 @@ export default function NestedGroupDiagram({ groups, domain, diagramType, onItem
         <span className="text-xs text-gray-400">Level 1 and 2</span>
       </div>
       <GroupGrid
-        groups={groups} colors={colors} variant={variant}
-        onItemClick={onItemClick} selectedId={selectedId}
+        groups={groups}
+        colors={colors}
+        variant={variant}
+        onItemClick={onItemClick}
+        selectedId={selectedId}
       />
-      {groups.map(group => (
+      {groups.map((group) => (
         <div key={group.id} className="mt-6 pt-5 border-t border-gray-200">
           <div className="flex items-baseline gap-2 mb-3">
             <span className="font-mono text-xs text-gray-400">{group.id}</span>
@@ -158,7 +225,7 @@ export default function NestedGroupDiagram({ groups, domain, diagramType, onItem
             <span className="text-xs text-gray-400">Level 2 and 3</span>
           </div>
           <GroupGrid
-            groups={(group.items ?? []).map(item => ({ ...item, items: item.items ?? [] }))}
+            groups={(group.items ?? []).map((item) => ({ ...item, items: item.items ?? [] }))}
             colors={colors}
             variant={variant}
             onItemClick={onItemClick}

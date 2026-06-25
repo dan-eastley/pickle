@@ -54,37 +54,37 @@ function AppRoutes() {
     <>
       <NavigationProgress />
       <Routes>
-      {/* Public / marketing pages */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/clients" element={<ClientsPage />} />
-        <Route path="/clients/:clientId/versions" element={<VersionsPage />} />
-      </Route>
+        {/* Public / marketing pages */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/clients" element={<ClientsPage />} />
+          <Route path="/clients/:clientId/versions" element={<VersionsPage />} />
+        </Route>
 
-      {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
-      <Route path="/clients/:clientId/:versionId" element={<Layout />}>
-        <Route index element={<Navigate to="domains" replace />} />
-        <Route path="domains" element={<DomainsPage />} />
-        <Route path="domains/:domain" element={<DomainPage />} />
-        <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
-        <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
-        <Route path="decisions" element={<DecisionsPage />} />
-        <Route path="decisions/new" element={<DecisionEditorPage />} />
-        <Route path="decisions/:decisionId/edit" element={<DecisionEditorPage />} />
-        <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
-        <Route path="discovery" element={<DiscoveryPage />} />
-        <Route path="discovery/new" element={<DiscoveryEditorPage />} />
-        <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
-      </Route>
+        {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
+        <Route path="/clients/:clientId/:versionId" element={<Layout />}>
+          <Route index element={<Navigate to="domains" replace />} />
+          <Route path="domains" element={<DomainsPage />} />
+          <Route path="domains/:domain" element={<DomainPage />} />
+          <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
+          <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
+          <Route path="decisions" element={<DecisionsPage />} />
+          <Route path="decisions/new" element={<DecisionEditorPage />} />
+          <Route path="decisions/:decisionId/edit" element={<DecisionEditorPage />} />
+          <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
+          <Route path="discovery" element={<DiscoveryPage />} />
+          <Route path="discovery/new" element={<DiscoveryEditorPage />} />
+          <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
+        </Route>
 
-      {/* Docs */}
-      <Route path="/docs" element={<DocsLayout />}>
-        <Route index element={<Navigate to="/docs/index" replace />} />
-        <Route path="*" element={<DocsPage />} />
-      </Route>
+        {/* Docs */}
+        <Route path="/docs" element={<DocsLayout />}>
+          <Route index element={<Navigate to="/docs/index" replace />} />
+          <Route path="*" element={<DocsPage />} />
+        </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   )
 }

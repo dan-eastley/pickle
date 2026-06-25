@@ -15,9 +15,9 @@ describe('ActionBar', () => {
         primary={<button>Primary</button>}
         secondary={<button>Secondary</button>}
         tertiary={<button>Tertiary</button>}
-      />,
+      />
     )
-    const order = screen.getAllByRole('button').map(b => b.textContent)
+    const order = screen.getAllByRole('button').map((b) => b.textContent)
     expect(order).toEqual(['Tertiary', 'Secondary', 'Primary'])
   })
 

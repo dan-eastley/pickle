@@ -4,10 +4,10 @@ import SlidePanel from '../../ui/SlidePanel'
 
 // Grid placement of the 11 APP-DOM domains — arranged to minimise cross-domain edge lengths
 const DOMAIN_GRID = [
-  ['APP-DOM-CUSTOMER',   'APP-DOM-BILLING',      'APP-DOM-DATA'],
-  ['APP-DOM-NETWORK',    'APP-DOM-METERING',     'APP-DOM-ENTERPRISE'],
-  ['APP-DOM-FIELD',      'APP-DOM-SUSTAIN',      'APP-DOM-TRADING'],
-  ['APP-DOM-REGULATORY', 'APP-DOM-INTEGRATION',  null],
+  ['APP-DOM-CUSTOMER', 'APP-DOM-BILLING', 'APP-DOM-DATA'],
+  ['APP-DOM-NETWORK', 'APP-DOM-METERING', 'APP-DOM-ENTERPRISE'],
+  ['APP-DOM-FIELD', 'APP-DOM-SUSTAIN', 'APP-DOM-TRADING'],
+  ['APP-DOM-REGULATORY', 'APP-DOM-INTEGRATION', null],
 ]
 
 const COLS = 3
@@ -19,7 +19,7 @@ const HEADER_H = 28
 const DOM_PAD = 10
 const PLAT_H = 28
 const PLAT_GAP = 5
-const SVG_W = OUTER_PAD * 2 + COLS * COL_W + (COLS - 1) * COL_GAP  // 1100
+const SVG_W = OUTER_PAD * 2 + COLS * COL_W + (COLS - 1) * COL_GAP // 1100
 
 const DIRECTION_ICONS = {
   'source-to-target': '→',
@@ -47,17 +47,20 @@ function domHeight(nPlats) {
 }
 
 function buildLayout(orderedDomains) {
-  const domById = Object.fromEntries(orderedDomains.map(d => [d.id, d]))
+  const domById = Object.fromEntries(orderedDomains.map((d) => [d.id, d]))
 
   // Row heights = max domain height per row
-  const rowHeights = DOMAIN_GRID.map(row =>
-    Math.max(...row.map(id => (id && domById[id] ? domHeight(domById[id].platforms.length) : 0)))
+  const rowHeights = DOMAIN_GRID.map((row) =>
+    Math.max(...row.map((id) => (id && domById[id] ? domHeight(domById[id].platforms.length) : 0)))
   )
 
   // Accumulate y offsets per row
   const rowY = []
   let y = OUTER_PAD
-  rowHeights.forEach(h => { rowY.push(y); y += h + ROW_GAP })
+  rowHeights.forEach((h) => {
+    rowY.push(y)
+    y += h + ROW_GAP
+  })
   const svgH = y - ROW_GAP + OUTER_PAD
 
   // Domain box positions
@@ -81,7 +84,10 @@ function buildLayout(orderedDomains) {
       const py = by + HEADER_H + DOM_PAD + pi * (PLAT_H + PLAT_GAP)
       const pw = w - DOM_PAD * 2
       platBoxes[platId] = {
-        x: px, y: py, w: pw, h: PLAT_H,
+        x: px,
+        y: py,
+        w: pw,
+        h: PLAT_H,
         cx: px + pw / 2,
         cy: py + PLAT_H / 2,
         domId: dom.id,
@@ -98,11 +104,11 @@ function PlatformDetail({ plat, domName }) {
     { label: 'Type', value: plat?.type },
     { label: 'Lifecycle', value: plat?.lifecycle },
     { label: 'Description', value: plat?.description },
-  ].filter(f => f.value)
+  ].filter((f) => f.value)
 
   return (
     <div className="p-4 space-y-3">
-      {fields.map(f => (
+      {fields.map((f) => (
         <div key={f.label}>
           <dt className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{f.label}</dt>
           <dd className="mt-0.5 text-sm text-gray-800">{f.value}</dd>
@@ -113,7 +119,6 @@ function PlatformDetail({ plat, domName }) {
 }
 
 function PairDetail({ pair, platformsById }) {
-
   return (
     <div>
       <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
@@ -127,7 +132,7 @@ function PairDetail({ pair, platformsById }) {
         </p>
       </div>
       <div className="divide-y divide-gray-100">
-        {pair.interfaces.map(iface => {
+        {pair.interfaces.map((iface) => {
           const icon = DIRECTION_ICONS[iface.direction] ?? '—'
           const ifcSrc = platformsById[iface.source]?.name ?? iface.source
           const ifcTgt = platformsById[iface.target]?.name ?? iface.target
@@ -162,24 +167,27 @@ export default function WiringDiagram({ clientId, versionId }) {
   useEffect(() => {
     const base = `/api/arch/clients/${clientId}/${versionId}/domains`
     Promise.all([
-      fetch(`${base}/integration/logical/INT-IFC.json`).then(r => r.ok ? r.json() : null),
-      fetch(`${base}/application/logical/APP-DAP.json`).then(r => r.ok ? r.json() : null),
+      fetch(`${base}/integration/logical/INT-IFC.json`).then((r) => (r.ok ? r.json() : null)),
+      fetch(`${base}/application/logical/APP-DAP.json`).then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([ifcData, dapData]) => { setIfc(ifcData); setDap(dapData) })
-      .catch(e => setError(e.message))
+      .then(([ifcData, dapData]) => {
+        setIfc(ifcData)
+        setDap(dapData)
+      })
+      .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
   }, [clientId, versionId])
 
   const derived = useMemo(() => {
     if (!ifc || !dap) return null
 
-    const platformsById = Object.fromEntries(dap.platforms.map(p => [p.id, p]))
-    const domainsById = Object.fromEntries(dap.domains.map(d => [d.id, d]))
+    const platformsById = Object.fromEntries(dap.platforms.map((p) => [p.id, p]))
+    const domainsById = Object.fromEntries(dap.domains.map((d) => [d.id, d]))
 
-    const orderedDomains = dap.domains.map(d => ({
+    const orderedDomains = dap.domains.map((d) => ({
       ...d,
       colorIndex: dap.domains.indexOf(d),
-      platforms: dap.platforms.filter(p => p['domain-id'] === d.id).map(p => p.id),
+      platforms: dap.platforms.filter((p) => p['domain-id'] === d.id).map((p) => p.id),
     }))
 
     const pairMap = {}
@@ -192,19 +200,28 @@ export default function WiringDiagram({ clientId, versionId }) {
 
     const layout = buildLayout(orderedDomains)
 
-    const edges = Object.entries(pairMap).map(([key, pair]) => {
-      const sp = layout.platBoxes[pair.src]
-      const tp = layout.platBoxes[pair.tgt]
-      if (!sp || !tp) return null
-      return { key, ...pair, sp, tp }
-    }).filter(Boolean)
+    const edges = Object.entries(pairMap)
+      .map(([key, pair]) => {
+        const sp = layout.platBoxes[pair.src]
+        const tp = layout.platBoxes[pair.tgt]
+        if (!sp || !tp) return null
+        return { key, ...pair, sp, tp }
+      })
+      .filter(Boolean)
 
     return { platformsById, domainsById, orderedDomains, pairMap, edges, layout }
   }, [ifc, dap])
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
-  if (error) return <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-200">{error}</div>
-  if (!derived) return <div className="p-4 text-sm text-gray-500">No integration data available.</div>
+  if (loading)
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Spinner size="lg" />
+      </div>
+    )
+  if (error)
+    return <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-200">{error}</div>
+  if (!derived)
+    return <div className="p-4 text-sm text-gray-500">No integration data available.</div>
 
   const { platformsById, domainsById, orderedDomains, pairMap, edges, layout } = derived
   const { domBoxes, platBoxes, svgH } = layout
@@ -253,18 +270,19 @@ export default function WiringDiagram({ clientId, versionId }) {
           style={{ maxHeight: '680px' }}
         >
           {/* Edges — drawn first so they appear beneath boxes */}
-          {edges.map(edge => {
+          {edges.map((edge) => {
             const { key, sp, tp } = edge
             const isSel = selection?.type === 'pair' && selection.id === key
-            const isRelated = selectedPair && (
-              edge.src === selectedPair.src || edge.src === selectedPair.tgt ||
-              edge.tgt === selectedPair.src || edge.tgt === selectedPair.tgt
-            )
-            const isPlatRelated = selectedPlatId && (edge.src === selectedPlatId || edge.tgt === selectedPlatId)
+            const isRelated =
+              selectedPair &&
+              (edge.src === selectedPair.src ||
+                edge.src === selectedPair.tgt ||
+                edge.tgt === selectedPair.src ||
+                edge.tgt === selectedPair.tgt)
+            const isPlatRelated =
+              selectedPlatId && (edge.src === selectedPlatId || edge.tgt === selectedPlatId)
 
-            const opacity = selection
-              ? (isSel ? 1 : (isRelated || isPlatRelated) ? 0.6 : 0.1)
-              : 0.55
+            const opacity = selection ? (isSel ? 1 : isRelated || isPlatRelated ? 0.6 : 0.1) : 0.55
 
             const stroke = isSel ? '#2563eb' : '#94a3b8'
             const strokeW = isSel ? 2.5 : 1.5
@@ -283,23 +301,50 @@ export default function WiringDiagram({ clientId, versionId }) {
             const midY = (sp.cy + tp.cy) / 2
 
             return (
-              <g key={key} style={{ cursor: 'pointer' }}
-                onClick={() => setSelection(isSel ? null : { type: 'pair', id: key })}>
+              <g
+                key={key}
+                style={{ cursor: 'pointer' }}
+                onClick={() => setSelection(isSel ? null : { type: 'pair', id: key })}
+              >
                 {/* Wide invisible hit area */}
-                {sameDomain
-                  ? <path d={d} stroke="transparent" strokeWidth="14" fill="none" />
-                  : <line x1={sp.cx} y1={sp.cy} x2={tp.cx} y2={tp.cy} stroke="transparent" strokeWidth="14" />
-                }
-                {sameDomain
-                  ? <path d={d} stroke={stroke} strokeWidth={strokeW} fill="none" opacity={opacity} />
-                  : <line x1={sp.cx} y1={sp.cy} x2={tp.cx} y2={tp.cy} stroke={stroke} strokeWidth={strokeW} opacity={opacity} />
-                }
+                {sameDomain ? (
+                  <path d={d} stroke="transparent" strokeWidth="14" fill="none" />
+                ) : (
+                  <line
+                    x1={sp.cx}
+                    y1={sp.cy}
+                    x2={tp.cx}
+                    y2={tp.cy}
+                    stroke="transparent"
+                    strokeWidth="14"
+                  />
+                )}
+                {sameDomain ? (
+                  <path d={d} stroke={stroke} strokeWidth={strokeW} fill="none" opacity={opacity} />
+                ) : (
+                  <line
+                    x1={sp.cx}
+                    y1={sp.cy}
+                    x2={tp.cx}
+                    y2={tp.cy}
+                    stroke={stroke}
+                    strokeWidth={strokeW}
+                    opacity={opacity}
+                  />
+                )}
                 {edge.interfaces.length > 1 && !sameDomain && (
                   <g opacity={opacity}>
                     <rect x={midX - 8} y={midY - 7} width="16" height="14" fill="white" rx="2" />
-                    <text x={midX} y={midY} textAnchor="middle" dominantBaseline="middle"
-                      fontSize="9" fontWeight="700" fill={isSel ? '#2563eb' : '#64748b'}
-                      fontFamily="system-ui, sans-serif">
+                    <text
+                      x={midX}
+                      y={midY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize="9"
+                      fontWeight="700"
+                      fill={isSel ? '#2563eb' : '#64748b'}
+                      fontFamily="system-ui, sans-serif"
+                    >
                       {edge.interfaces.length}
                     </text>
                   </g>
@@ -315,16 +360,35 @@ export default function WiringDiagram({ clientId, versionId }) {
             return (
               <g key={domId}>
                 {/* Domain border */}
-                <rect x={box.x} y={box.y} width={box.w} height={box.h}
-                  fill="white" stroke={color} strokeWidth="1.5" strokeOpacity="0.35" />
+                <rect
+                  x={box.x}
+                  y={box.y}
+                  width={box.w}
+                  height={box.h}
+                  fill="white"
+                  stroke={color}
+                  strokeWidth="1.5"
+                  strokeOpacity="0.35"
+                />
                 {/* Domain header */}
-                <rect x={box.x} y={box.y} width={box.w} height={HEADER_H}
-                  fill={color} fillOpacity="0.1" />
-                <text x={box.x + DOM_PAD} y={box.y + HEADER_H / 2}
+                <rect
+                  x={box.x}
+                  y={box.y}
+                  width={box.w}
+                  height={HEADER_H}
+                  fill={color}
+                  fillOpacity="0.1"
+                />
+                <text
+                  x={box.x + DOM_PAD}
+                  y={box.y + HEADER_H / 2}
                   dominantBaseline="middle"
-                  fontSize="9.5" fontWeight="700" fill={color}
+                  fontSize="9.5"
+                  fontWeight="700"
+                  fill={color}
                   fontFamily="system-ui, -apple-system, sans-serif"
-                  letterSpacing="0.025em">
+                  letterSpacing="0.025em"
+                >
                   {dom.name.toUpperCase()}
                 </text>
 
@@ -334,31 +398,54 @@ export default function WiringDiagram({ clientId, versionId }) {
                   if (!pb) return null
                   const plat = platformsById[platId]
                   const isSel = selectedPlatId === platId
-                  const isRelated = selectedPair && (platId === selectedPair.src || platId === selectedPair.tgt)
+                  const isRelated =
+                    selectedPair && (platId === selectedPair.src || platId === selectedPair.tgt)
                   const dim = selection && !isSel && !isRelated ? 0.25 : 1
                   const shortId = platId.replace(/^PLAT-/, '')
 
                   return (
-                    <g key={platId} style={{ cursor: 'pointer' }}
-                      onClick={() => setSelection(isSel ? null : { type: 'platform', id: platId })}>
-                      <title>{plat?.name ?? platId}{plat?.description ? `\n${plat.description}` : ''}</title>
-                      <rect x={pb.x} y={pb.y} width={pb.w} height={pb.h}
+                    <g
+                      key={platId}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setSelection(isSel ? null : { type: 'platform', id: platId })}
+                    >
+                      <title>
+                        {plat?.name ?? platId}
+                        {plat?.description ? `\n${plat.description}` : ''}
+                      </title>
+                      <rect
+                        x={pb.x}
+                        y={pb.y}
+                        width={pb.w}
+                        height={pb.h}
                         fill={isSel ? color : '#f9fafb'}
                         fillOpacity={isSel ? 0.15 : 1}
                         stroke={isSel ? color : '#e2e8f0'}
                         strokeWidth={isSel ? 1.5 : 1}
                         opacity={dim}
                       />
-                      <text x={pb.x + 6} y={pb.cy}
+                      <text
+                        x={pb.x + 6}
+                        y={pb.cy}
                         dominantBaseline="middle"
-                        fontSize="8" fontWeight="700" fill="#94a3b8"
-                        fontFamily="system-ui, sans-serif" opacity={dim}>
+                        fontSize="8"
+                        fontWeight="700"
+                        fill="#94a3b8"
+                        fontFamily="system-ui, sans-serif"
+                        opacity={dim}
+                      >
                         {shortId}
                       </text>
-                      <text x={pb.x + 6 + shortId.length * 5.5 + 6} y={pb.cy}
+                      <text
+                        x={pb.x + 6 + shortId.length * 5.5 + 6}
+                        y={pb.cy}
                         dominantBaseline="middle"
-                        fontSize="10" fontWeight="500" fill={isSel ? color : '#374151'}
-                        fontFamily="system-ui, -apple-system, sans-serif" opacity={dim}>
+                        fontSize="10"
+                        fontWeight="500"
+                        fill={isSel ? color : '#374151'}
+                        fontFamily="system-ui, -apple-system, sans-serif"
+                        opacity={dim}
+                      >
                         {plat?.name ?? platId}
                       </text>
                     </g>
@@ -380,9 +467,7 @@ export default function WiringDiagram({ clientId, versionId }) {
         title={panelTitle}
         subtitle={panelSubtitle}
       >
-        {selectedPair && (
-          <PairDetail pair={selectedPair} platformsById={platformsById} />
-        )}
+        {selectedPair && <PairDetail pair={selectedPair} platformsById={platformsById} />}
         {selectedPlatId && platformsById[selectedPlatId] && (
           <PlatformDetail
             plat={platformsById[selectedPlatId]}

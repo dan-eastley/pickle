@@ -8,7 +8,12 @@ function BusinessIcon({ className }) {
       <rect x="6" y="1" width="8" height="5" stroke="currentColor" strokeWidth="1.5" />
       <rect x="1" y="14" width="7" height="5" stroke="currentColor" strokeWidth="1.5" />
       <rect x="12" y="14" width="7" height="5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M10 6v4.5M10 10.5H4.5M10 10.5H15.5M4.5 10.5V14M15.5 10.5V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+      <path
+        d="M10 6v4.5M10 10.5H4.5M10 10.5H15.5M4.5 10.5V14M15.5 10.5V14"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="square"
+      />
     </svg>
   )
 }
@@ -33,7 +38,12 @@ function IntegrationIcon({ className }) {
       <rect x="1" y="7.5" width="5" height="5" stroke="currentColor" strokeWidth="1.5" />
       <rect x="14" y="1" width="5" height="5" stroke="currentColor" strokeWidth="1.5" />
       <rect x="14" y="14" width="5" height="5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M6 9.5L14 4M6 11L14 15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+      <path
+        d="M6 9.5L14 4M6 11L14 15.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="square"
+      />
     </svg>
   )
 }
@@ -62,11 +72,11 @@ function SolutionIcon({ className }) {
 }
 
 const ICONS = {
-  business:    BusinessIcon,
-  data:        DataIcon,
+  business: BusinessIcon,
+  data: DataIcon,
   integration: IntegrationIcon,
   application: ApplicationIcon,
-  solution:    SolutionIcon,
+  solution: SolutionIcon,
 }
 
 export default function DomainIcon({ domain, className = 'w-5 h-5' }) {

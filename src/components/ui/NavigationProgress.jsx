@@ -13,7 +13,11 @@ export default function NavigationProgress() {
     const t1 = setTimeout(() => setWidth(75), 80)
     const t2 = setTimeout(() => setWidth(100), 200)
     const t3 = setTimeout(() => setWidth(0), 380)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
   }, [location.pathname])
 
   if (width === 0) return null

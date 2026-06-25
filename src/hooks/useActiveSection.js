@@ -16,7 +16,9 @@ export default function useActiveSection(refsRef, deps = []) {
       },
       { rootMargin: '-10% 0px -75% 0px' }
     )
-    Object.values(refsRef.current).forEach(el => { if (el) observer.observe(el) })
+    Object.values(refsRef.current).forEach((el) => {
+      if (el) observer.observe(el)
+    })
     return () => observer.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)

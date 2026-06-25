@@ -5,12 +5,18 @@ export default function useCollapsed(storageKey, defaultCollapsed = false) {
     try {
       const stored = localStorage.getItem(storageKey)
       return stored === null ? defaultCollapsed : stored === 'true'
-    } catch { return defaultCollapsed }
+    } catch {
+      return defaultCollapsed
+    }
   })
   const toggle = useCallback(() => {
-    setCollapsed(prev => {
+    setCollapsed((prev) => {
       const next = !prev
-      try { localStorage.setItem(storageKey, String(next)) } catch { /* storage unavailable */ }
+      try {
+        localStorage.setItem(storageKey, String(next))
+      } catch {
+        /* storage unavailable */
+      }
       return next
     })
   }, [storageKey])

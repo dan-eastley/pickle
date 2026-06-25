@@ -13,11 +13,15 @@ import { PlusIcon, CloseIcon, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function RequirementsList({ requirements, onChange }) {
-  function add() { onChange([...requirements, { title: '', description: '', type: 'Functional' }]) }
-  function update(i, field, val) {
-    onChange(requirements.map((r, j) => j === i ? { ...r, [field]: val } : r))
+  function add() {
+    onChange([...requirements, { title: '', description: '', type: 'Functional' }])
   }
-  function remove(i) { onChange(requirements.filter((_, j) => j !== i)) }
+  function update(i, field, val) {
+    onChange(requirements.map((r, j) => (j === i ? { ...r, [field]: val } : r)))
+  }
+  function remove(i) {
+    onChange(requirements.filter((_, j) => j !== i))
+  }
 
   return (
     <div className="space-y-3">
@@ -27,25 +31,29 @@ function RequirementsList({ requirements, onChange }) {
             <input
               type="text"
               value={req.title ?? ''}
-              onChange={e => update(i, 'title', e.target.value)}
+              onChange={(e) => update(i, 'title', e.target.value)}
               placeholder="Requirement title"
               className="flex-1 px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
             <select
               value={req.type ?? 'Functional'}
-              onChange={e => update(i, 'type', e.target.value)}
+              onChange={(e) => update(i, 'type', e.target.value)}
               className="px-2 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             >
               <option>Functional</option>
               <option>Non-Functional</option>
             </select>
-            <button onClick={() => remove(i)} className="p-1.5 text-gray-400 hover:text-error-600 transition-colors flex-shrink-0" title="Remove">
+            <button
+              onClick={() => remove(i)}
+              className="p-1.5 text-gray-400 hover:text-error-600 transition-colors flex-shrink-0"
+              title="Remove"
+            >
               <CloseIcon className="w-4 h-4" />
             </button>
           </div>
           <textarea
             value={req.description ?? ''}
-            onChange={e => update(i, 'description', e.target.value)}
+            onChange={(e) => update(i, 'description', e.target.value)}
             rows={2}
             placeholder="What must the system do or achieve? Be specific and testable."
             className="w-full px-3 py-1.5 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white resize-none"
@@ -88,7 +96,7 @@ export default function DecisionEditorPage() {
   useEffect(() => {
     if (!isEdit) return
     getDecision(clientId, versionId, decisionId)
-      .then(d => {
+      .then((d) => {
         if (!d) return
         setTitle(d.title ?? '')
         // Prefer the split fields; fall back to legacy narrative → Context
@@ -103,11 +111,13 @@ export default function DecisionEditorPage() {
       .finally(() => setLoadingExisting(false))
   }, [isEdit, clientId, versionId, decisionId])
 
-  const scope = scopeDomain ? {
-    domain: scopeDomain,
-    ...(scopeAbstraction && { abstraction: scopeAbstraction }),
-    ...(scopeArtefact    && { artefact: scopeArtefact }),
-  } : null
+  const scope = scopeDomain
+    ? {
+        domain: scopeDomain,
+        ...(scopeAbstraction && { abstraction: scopeAbstraction }),
+        ...(scopeArtefact && { artefact: scopeArtefact }),
+      }
+    : null
 
   async function handleSave() {
     setSaving(true)
@@ -120,9 +130,14 @@ export default function DecisionEditorPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'edit-decision',
-            clientId, versionId, decisionId,
-            title, context, problem, proposal,
-            requirements: requirements.filter(r => r.description?.trim()),
+            clientId,
+            versionId,
+            decisionId,
+            title,
+            context,
+            problem,
+            proposal,
+            requirements: requirements.filter((r) => r.description?.trim()),
             scope,
           }),
         })
@@ -131,7 +146,9 @@ export default function DecisionEditorPage() {
         setSaveResult({ ok: true, edit: true, decisionId })
       } else {
         // Create mode — get next ID, create decision, open PR
-        const idRes = await fetch(`/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`)
+        const idRes = await fetch(
+          `/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`
+        )
         const { nextId, error: idError } = await idRes.json()
         if (idError) throw new Error(idError)
 
@@ -143,15 +160,15 @@ export default function DecisionEditorPage() {
           problem,
           proposal,
           narrative: [
-            context  && `## Context\n\n${context}`,
-            problem  && `## Problem\n\n${problem}`,
+            context && `## Context\n\n${context}`,
+            problem && `## Problem\n\n${problem}`,
             proposal && `## Proposal\n\n${proposal}`,
-          ].filter(Boolean).join('\n\n'),
-          activity: [
-            { timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' },
-          ],
-          ...(requirements.filter(r => r.description?.trim()).length > 0 && {
-            requirements: requirements.filter(r => r.description?.trim()),
+          ]
+            .filter(Boolean)
+            .join('\n\n'),
+          activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
+          ...(requirements.filter((r) => r.description?.trim()).length > 0 && {
+            requirements: requirements.filter((r) => r.description?.trim()),
           }),
           ...(scope && { scope }),
         }
@@ -163,7 +180,13 @@ export default function DecisionEditorPage() {
         })
         const data = await res.json()
         if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
-        setSaveResult({ ok: true, edit: false, prUrl: data.prUrl, prNumber: data.prNumber, decisionId: nextId })
+        setSaveResult({
+          ok: true,
+          edit: false,
+          prUrl: data.prUrl,
+          prNumber: data.prNumber,
+          decisionId: nextId,
+        })
       }
     } catch (err) {
       setSaveResult({ ok: false, error: err.message })
@@ -173,7 +196,11 @@ export default function DecisionEditorPage() {
   }
 
   if (loadingExisting) {
-    return <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Spinner size="lg" />
+      </div>
+    )
   }
 
   return (
@@ -182,21 +209,33 @@ export default function DecisionEditorPage() {
         className="mb-6"
         title={isEdit ? `Edit ${decisionId}` : 'New Architecture Decision'}
         strapline={`${clientName} · v${versionId}`}
-        secondary={isEdit && (
-          <Button to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`} variant="secondary" size="lg">
-            Cancel
-          </Button>
-        )}
+        secondary={
+          isEdit && (
+            <Button
+              to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
+              variant="secondary"
+              size="lg"
+            >
+              Cancel
+            </Button>
+          )
+        }
         primary={
           <button
             onClick={handleSave}
-            disabled={!title.trim() || !context.trim() || !problem.trim() || !proposal.trim() || saving}
+            disabled={
+              !title.trim() || !context.trim() || !problem.trim() || !proposal.trim() || saving
+            }
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <DecisionIcon className="w-4 h-4" />
             {saving
-              ? (isEdit ? 'Saving…' : 'Creating…')
-              : (isEdit ? 'Save Changes' : 'New Architecture Decision')}
+              ? isEdit
+                ? 'Saving…'
+                : 'Creating…'
+              : isEdit
+                ? 'Save Changes'
+                : 'New Architecture Decision'}
           </button>
         }
       />
@@ -235,8 +274,8 @@ export default function DecisionEditorPage() {
       <p className="max-w-2xl mb-6 text-sm text-gray-500 leading-relaxed border-l-2 border-brand-200 pl-3">
         An Architecture Decision is how a change to the architecture gets proposed and governed.
         Capture the context, the problem, and your proposed direction — the agents then analyse its
-        impact and alignment, and once accepted the change is applied through a reviewed pull request.
-        Every change stays auditable.
+        impact and alignment, and once accepted the change is applied through a reviewed pull
+        request. Every change stays auditable.
       </p>
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -249,7 +288,7 @@ export default function DecisionEditorPage() {
             <input
               type="text"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Adopt event-driven integration for real-time data flows"
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -262,7 +301,7 @@ export default function DecisionEditorPage() {
             </span>
             <AutoGrowTextarea
               value={context}
-              onChange={e => setContext(e.target.value)}
+              onChange={(e) => setContext(e.target.value)}
               placeholder="Today we..."
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -275,7 +314,7 @@ export default function DecisionEditorPage() {
             </span>
             <AutoGrowTextarea
               value={problem}
-              onChange={e => setProblem(e.target.value)}
+              onChange={(e) => setProblem(e.target.value)}
               placeholder="This is a problem because..."
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -288,7 +327,7 @@ export default function DecisionEditorPage() {
             </span>
             <AutoGrowTextarea
               value={proposal}
-              onChange={e => setProposal(e.target.value)}
+              onChange={(e) => setProposal(e.target.value)}
               placeholder="We propose to..."
               className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white"
             />
@@ -320,11 +359,23 @@ export default function DecisionEditorPage() {
           title="Writing a good decision"
           tips={[
             ['Title', 'A short, plain-language summary — the headline, not the detail.'],
-            ['Context', 'Set the scene: what’s happening today that makes this worth deciding? Write it for a business reader.'],
+            [
+              'Context',
+              'Set the scene: what’s happening today that makes this worth deciding? Write it for a business reader.',
+            ],
             ['Problem', 'Name the gap or the pain. What hurts if nothing changes?'],
-            ['Proposal', 'The direction you’re leaning, at a business level — the “how”, not the implementation.'],
-            ['Requirements', 'Optional. The testable things this must achieve — the “what”, never the “how”.'],
-            ['Scope', 'Optional. Pin it to a domain, layer, or artefact so the agents analyse just that slice.'],
+            [
+              'Proposal',
+              'The direction you’re leaning, at a business level — the “how”, not the implementation.',
+            ],
+            [
+              'Requirements',
+              'Optional. The testable things this must achieve — the “what”, never the “how”.',
+            ],
+            [
+              'Scope',
+              'Optional. Pin it to a domain, layer, or artefact so the agents analyse just that slice.',
+            ],
           ]}
           footer="Don’t overthink it — the agents will review your draft and suggest improvements."
         />

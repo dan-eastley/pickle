@@ -28,9 +28,13 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onTo
       >
         <div className="flex items-center gap-3">
           <span className={`text-xs font-semibold px-2 py-0.5 ${pot.badge}`}>{pot.label}</span>
-          <span className="text-xs text-gray-400">{discoveries.length} {discoveries.length === 1 ? 'Discovery' : 'Discoveries'}</span>
+          <span className="text-xs text-gray-400">
+            {discoveries.length} {discoveries.length === 1 ? 'Discovery' : 'Discoveries'}
+          </span>
         </div>
-        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {open && discoveries.length === 0 && (
@@ -39,7 +43,7 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onTo
 
       {open && discoveries.length > 0 && (
         <div className="divide-y divide-gray-100">
-          {discoveries.map(d => (
+          {discoveries.map((d) => (
             <Link
               key={d['discovery-id']}
               to={`/clients/${clientId}/${versionId}/discovery/${d['discovery-id']}`}
@@ -74,22 +78,25 @@ export default function DiscoveryPage() {
   const [discoveries, setDiscoveries] = useState([])
   const [collapsedOverride, setCollapsedOverride] = useState(null)
 
-  const filterDomain      = searchParams.get('domain')      ?? ''
+  const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
-  const filterArtefact    = searchParams.get('artefact')    ?? ''
+  const filterArtefact = searchParams.get('artefact') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Discovery`)
 
   useEffect(() => {
     fetch(`/api/arch/clients/${clientId}/${versionId}/discovery/discovery.json`)
-      .then(r => r.ok ? r.json() : { discoveries: [] })
-      .then(data => { setDiscoveries(data.discoveries ?? []); setLoading(false) })
+      .then((r) => (r.ok ? r.json() : { discoveries: [] }))
+      .then((data) => {
+        setDiscoveries(data.discoveries ?? [])
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [clientId, versionId])
 
   const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
-  const filtered = discoveries.filter(d => {
+  const filtered = discoveries.filter((d) => {
     if (filterDomain && d.scope?.domain !== filterDomain) return false
     if (filterAbstraction && d.scope?.abstraction !== filterAbstraction) return false
     if (filterArtefact && d.scope?.artefact !== filterArtefact) return false
@@ -97,21 +104,26 @@ export default function DiscoveryPage() {
   })
   const hiddenByFilter = discoveries.length - filtered.length
 
-  const grouped = POTS.map(pot => ({
+  const grouped = POTS.map((pot) => ({
     pot,
-    discoveries: filtered.filter(d => (d.status ?? 'active') === pot.status),
+    discoveries: filtered.filter((d) => (d.status ?? 'active') === pot.status),
   }))
 
   const isCollapsed = (status, count) =>
-    collapsedOverride ? collapsedOverride.has(status) : (status !== 'active' && count === 0)
+    collapsedOverride ? collapsedOverride.has(status) : status !== 'active' && count === 0
   const toggleGroup = (status) =>
-    setCollapsedOverride(prev => {
-      const next = new Set(prev ?? grouped.filter(g => isCollapsed(g.pot.status, g.discoveries.length)).map(g => g.pot.status))
+    setCollapsedOverride((prev) => {
+      const next = new Set(
+        prev ??
+          grouped
+            .filter((g) => isCollapsed(g.pot.status, g.discoveries.length))
+            .map((g) => g.pot.status)
+      )
       next.has(status) ? next.delete(status) : next.add(status)
       return next
     })
-  const expandAll   = () => setCollapsedOverride(new Set())
-  const collapseAll = () => setCollapsedOverride(new Set(POTS.map(p => p.status)))
+  const expandAll = () => setCollapsedOverride(new Set())
+  const collapseAll = () => setCollapsedOverride(new Set(POTS.map((p) => p.status)))
 
   return (
     <div>
@@ -120,7 +132,11 @@ export default function DiscoveryPage() {
         title="Architecture Discovery"
         strapline={`${clientName} · v${versionId}`}
         primary={
-          <Button to={`/clients/${clientId}/${versionId}/discovery/new`} size="lg" variant="primary">
+          <Button
+            to={`/clients/${clientId}/${versionId}/discovery/new`}
+            size="lg"
+            variant="primary"
+          >
             <RobotIcon className="w-4 h-4" />
             New Architecture Discovery
           </Button>
@@ -128,8 +144,8 @@ export default function DiscoveryPage() {
       />
 
       <div className="mb-5 px-4 py-3 bg-blue-50 border border-blue-200 text-sm text-blue-800">
-        Discovery is a preview. The Virtual Architect Agent that produces point-in-time views from your
-        questions is not yet wired up — this is the framework for it.
+        Discovery is a preview. The Virtual Architect Agent that produces point-in-time views from
+        your questions is not yet wired up — this is the framework for it.
       </div>
 
       <div className="mb-5 p-4 bg-gray-50 border border-gray-200">
@@ -139,7 +155,8 @@ export default function DiscoveryPage() {
       {isFiltered && (
         <div className="mb-5 flex items-center justify-between gap-3 px-4 py-2.5 bg-brand-50 border border-brand-200 text-sm text-brand-800">
           <span>
-            Showing {filtered.length} of {discoveries.length} discover{discoveries.length === 1 ? 'y' : 'ies'}
+            Showing {filtered.length} of {discoveries.length} discover
+            {discoveries.length === 1 ? 'y' : 'ies'}
             {hiddenByFilter > 0 && ` — ${hiddenByFilter} hidden by the scope filter`}.
           </span>
           <button
@@ -152,7 +169,9 @@ export default function DiscoveryPage() {
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
+        <div className="flex items-center justify-center py-20">
+          <Spinner size="lg" />
+        </div>
       ) : discoveries.length === 0 ? (
         <div className="border border-gray-200 bg-white">
           <EmptyState

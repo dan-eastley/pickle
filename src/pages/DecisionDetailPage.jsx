@@ -16,8 +16,18 @@ import { toggleInSet } from '../lib/collections'
 
 function Chevron({ open }) {
   return (
-    <svg viewBox="0 0 16 16" fill="none" className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-90' : ''}`}>
-      <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-90' : ''}`}
+    >
+      <path
+        d="M6 4l4 4-4 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }
@@ -63,12 +73,12 @@ const STATUS_STEPS = ['draft', 'proposed', 'accepted', 'staged', 'committed']
 const STATUS_TERMINAL = { rejected: 'error' }
 
 const STATUS_TOOLTIPS = {
-  draft:     'The decision is being drafted. Not yet submitted for analysis.',
-  proposed:  'Submitted for AI analysis. Findings are generated at this stage.',
-  accepted:  'Reviewed and accepted. Ready to be staged for application.',
-  staged:    'Architecture changes are being applied via a pull request.',
+  draft: 'The decision is being drafted. Not yet submitted for analysis.',
+  proposed: 'Submitted for AI analysis. Findings are generated at this stage.',
+  accepted: 'Reviewed and accepted. Ready to be staged for application.',
+  staged: 'Architecture changes are being applied via a pull request.',
   committed: 'Merged to main. Architecture changes are live.',
-  rejected:  'This decision has been rejected and will not proceed.',
+  rejected: 'This decision has been rejected and will not proceed.',
 }
 
 // Blue → red gradient across the five steps (matches the AI/Claude colourway),
@@ -107,7 +117,13 @@ function StatusProgress({ status }) {
             {i < STATUS_STEPS.length - 1 && (
               <div
                 className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
-                style={i < activeStep && !isTerminal ? { backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})` } : undefined}
+                style={
+                  i < activeStep && !isTerminal
+                    ? {
+                        backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})`,
+                      }
+                    : undefined
+                }
               />
             )}
           </div>
@@ -117,7 +133,9 @@ function StatusProgress({ status }) {
         <>
           <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
           <div className="flex flex-col items-center" title={STATUS_TOOLTIPS.rejected}>
-            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">!</div>
+            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">
+              !
+            </div>
             <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
           </div>
         </>
@@ -129,7 +147,10 @@ function StatusProgress({ status }) {
 // ── Status transition actions ─────────────────────────────────────────────────
 
 const REJECTION_REASONS = [
-  { value: 'duplicate',  label: 'Duplicate — a similar decision already exists or has been accepted' },
+  {
+    value: 'duplicate',
+    label: 'Duplicate — a similar decision already exists or has been accepted',
+  },
   { value: 'superseded', label: 'Superseded — replaced by a newer or broader decision' },
 ]
 
@@ -143,20 +164,35 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         <div className="flex items-center justify-between gap-4 bg-brand-50 px-5 py-4">
           <div>
             <p className="text-sm font-semibold text-brand-900">Ready to propose this decision?</p>
-            <p className="text-xs text-brand-600 mt-0.5">Moving to Proposed submits it for analysis and opens a pull request.</p>
+            <p className="text-xs text-brand-600 mt-0.5">
+              Moving to Proposed submits it for analysis and opens a pull request.
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button disabled={transitioning} onClick={() => setRejectOpen(r => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40">
+            <button
+              disabled={transitioning}
+              onClick={() => setRejectOpen((r) => !r)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40"
+            >
               Reject
             </button>
-            <button disabled={transitioning} onClick={() => onTransition('proposed')}
-              className="flex items-center gap-2 px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
-              {transitioning ? <Spinner size="sm" className="text-white" /> : (
+            <button
+              disabled={transitioning}
+              onClick={() => onTransition('proposed')}
+              className="flex items-center gap-2 px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
+            >
+              {transitioning ? (
+                <Spinner size="sm" className="text-white" />
+              ) : (
                 <>
                   Propose
                   <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                    <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                    <path
+                      d="M3 7h8M8 4l3 3-3 3"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="square"
+                    />
                   </svg>
                 </>
               )}
@@ -166,18 +202,37 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
-              <span className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</span>
-              <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
-                {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+              <span className="block text-xs font-semibold text-error-700 mb-1">
+                Reason for rejection
+              </span>
+              <select
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none"
+              >
+                {REJECTION_REASONS.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
               </select>
             </div>
-            <button disabled={transitioning}
-              onClick={() => { setRejectOpen(false); onTransition('rejected', { 'rejection-reason': rejectReason }) }}
-              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
+            <button
+              disabled={transitioning}
+              onClick={() => {
+                setRejectOpen(false)
+                onTransition('rejected', { 'rejection-reason': rejectReason })
+              }}
+              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
+            >
               Confirm Rejection
             </button>
-            <button onClick={() => setRejectOpen(false)} className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+            <button
+              onClick={() => setRejectOpen(false)}
+              className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
           </div>
         )}
       </div>
@@ -189,26 +244,46 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
       <div className="mb-6">
         <div className="flex items-center justify-between gap-4 bg-success-50 px-5 py-4">
           <div>
-            <p className="text-sm font-semibold text-success-700">Accept, reject, or return this decision?</p>
-            <p className="text-xs text-success-600 mt-0.5">Accepting approves the change, ready to be staged for application.</p>
+            <p className="text-sm font-semibold text-success-700">
+              Accept, reject, or return this decision?
+            </p>
+            <p className="text-xs text-success-600 mt-0.5">
+              Accepting approves the change, ready to be staged for application.
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button disabled={transitioning} onClick={() => onTransition('draft')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40">
+            <button
+              disabled={transitioning}
+              onClick={() => onTransition('draft')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40"
+            >
               <ArrowLeft className="w-3.5 h-3.5" />
               Back to Draft
             </button>
-            <button disabled={transitioning} onClick={() => setRejectOpen(r => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40">
+            <button
+              disabled={transitioning}
+              onClick={() => setRejectOpen((r) => !r)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40"
+            >
               Reject
             </button>
-            <button disabled={transitioning} onClick={() => onTransition('accepted')}
-              className="flex items-center gap-2 px-4 py-1.5 bg-success-500 hover:bg-success-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
-              {transitioning ? <Spinner size="sm" className="text-white" /> : (
+            <button
+              disabled={transitioning}
+              onClick={() => onTransition('accepted')}
+              className="flex items-center gap-2 px-4 py-1.5 bg-success-500 hover:bg-success-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
+            >
+              {transitioning ? (
+                <Spinner size="sm" className="text-white" />
+              ) : (
                 <>
                   Accept
                   <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                    <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                    <path
+                      d="M2 7l3.5 3.5L12 3"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="square"
+                    />
                   </svg>
                 </>
               )}
@@ -218,18 +293,37 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
         {rejectOpen && (
           <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
             <div className="flex-1">
-              <span className="block text-xs font-semibold text-error-700 mb-1">Reason for rejection</span>
-              <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none">
-                {REJECTION_REASONS.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+              <span className="block text-xs font-semibold text-error-700 mb-1">
+                Reason for rejection
+              </span>
+              <select
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none"
+              >
+                {REJECTION_REASONS.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
               </select>
             </div>
-            <button disabled={transitioning}
-              onClick={() => { setRejectOpen(false); onTransition('rejected', { 'rejection-reason': rejectReason }) }}
-              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40">
+            <button
+              disabled={transitioning}
+              onClick={() => {
+                setRejectOpen(false)
+                onTransition('rejected', { 'rejection-reason': rejectReason })
+              }}
+              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
+            >
               Confirm Rejection
             </button>
-            <button onClick={() => setRejectOpen(false)} className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+            <button
+              onClick={() => setRejectOpen(false)}
+              className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
           </div>
         )}
       </div>
@@ -240,22 +334,40 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
     return (
       <div className="flex items-center justify-between gap-4 bg-emerald-50 px-5 py-4 mb-6">
         <div>
-          <p className="text-sm font-semibold text-emerald-800">Stage this decision for application?</p>
-          <p className="text-xs text-emerald-600 mt-0.5">Staging applies the artefact changes on the decision branch and opens a pull request for review.</p>
+          <p className="text-sm font-semibold text-emerald-800">
+            Stage this decision for application?
+          </p>
+          <p className="text-xs text-emerald-600 mt-0.5">
+            Staging applies the artefact changes on the decision branch and opens a pull request for
+            review.
+          </p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button disabled={transitioning} onClick={() => onTransition('proposed')}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40">
+          <button
+            disabled={transitioning}
+            onClick={() => onTransition('proposed')}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40"
+          >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Proposed
           </button>
-          <button disabled={transitioning} onClick={() => onTransition('staged')}
-            className="flex items-center gap-2 px-4 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium transition-colors disabled:opacity-40">
-            {transitioning ? <Spinner size="sm" className="text-white" /> : (
+          <button
+            disabled={transitioning}
+            onClick={() => onTransition('staged')}
+            className="flex items-center gap-2 px-4 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium transition-colors disabled:opacity-40"
+          >
+            {transitioning ? (
+              <Spinner size="sm" className="text-white" />
+            ) : (
               <>
                 Stage
                 <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                  <path
+                    d="M2 7l3.5 3.5L12 3"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="square"
+                  />
                 </svg>
               </>
             )}
@@ -270,15 +382,27 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
       <div className="flex items-center justify-between gap-4 bg-gray-800 px-5 py-4 mb-6">
         <div>
           <p className="text-sm font-semibold text-white">Ready to commit?</p>
-          <p className="text-xs text-gray-300 mt-0.5">Committing merges the pull request into main and closes the decision branch.</p>
+          <p className="text-xs text-gray-300 mt-0.5">
+            Committing merges the pull request into main and closes the decision branch.
+          </p>
         </div>
-        <button disabled={transitioning} onClick={() => onTransition('committed', { prNumber: decision?.['pr-number'] })}
-          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold hover:bg-gray-100 transition-colors disabled:opacity-40">
-          {transitioning ? <Spinner size="sm" className="text-gray-700" /> : (
+        <button
+          disabled={transitioning}
+          onClick={() => onTransition('committed', { prNumber: decision?.['pr-number'] })}
+          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold hover:bg-gray-100 transition-colors disabled:opacity-40"
+        >
+          {transitioning ? (
+            <Spinner size="sm" className="text-gray-700" />
+          ) : (
             <>
               {`Commit to v${versionId}`}
               <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                <path
+                  d="M2 7l3.5 3.5L12 3"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="square"
+                />
               </svg>
             </>
           )}
@@ -297,14 +421,21 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
 // left accent + tint shows the state); the analysis locks once Accepted.
 function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving, locked }) {
   if (!rows?.length) return <p className="text-sm text-gray-400">No findings recorded.</p>
-  const toggle = (i, isAccepted) => { if (!locked) onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted') }
+  const toggle = (i, isAccepted) => {
+    if (!locked) onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted')
+  }
   return (
     <div className="border border-gray-200 overflow-x-auto">
       <table className="w-full min-w-[640px] text-sm table-fixed">
         <thead>
           <tr className="bg-gray-50 border-b border-gray-200">
-            {['Finding', 'Impact', 'Recommendation', 'Rationale'].map(h => (
-              <th key={h} className="w-1/4 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+            {['Finding', 'Impact', 'Recommendation', 'Rationale'].map((h) => (
+              <th
+                key={h}
+                className="w-1/4 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide"
+              >
+                {h}
+              </th>
             ))}
           </tr>
         </thead>
@@ -319,17 +450,34 @@ function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving, locked })
               <tr
                 key={i}
                 onClick={() => toggle(i, isAccepted)}
-                onKeyDown={e => { if (!locked && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(i, isAccepted) } }}
+                onKeyDown={(e) => {
+                  if (!locked && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault()
+                    toggle(i, isAccepted)
+                  }
+                }}
                 tabIndex={locked ? undefined : 0}
                 role={locked ? undefined : 'button'}
                 aria-pressed={!locked ? isAccepted : undefined}
-                title={locked ? 'Analysis is locked once the decision is Accepted' : `Click to ${isAccepted ? 'decline' : 'accept'} this finding`}
+                title={
+                  locked
+                    ? 'Analysis is locked once the decision is Accepted'
+                    : `Click to ${isAccepted ? 'decline' : 'accept'} this finding`
+                }
                 className={`align-top border-l-4 ${isAccepted ? 'bg-success-50 border-success-400' : 'bg-error-50 border-error-400'} ${locked ? '' : 'cursor-pointer hover:brightness-[0.98]'} ${isSaving ? 'opacity-60' : ''}`}
               >
-                <td className="px-3 py-2.5 text-gray-700 break-words">{row.finding ? <Markdown>{row.finding}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-700 break-words">{row.impact ? <Markdown>{row.impact}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-700 break-words">{row.recommendation ? <Markdown>{row.recommendation}</Markdown> : '—'}</td>
-                <td className="px-3 py-2.5 text-gray-700 break-words">{row.rationale ? <Markdown>{row.rationale}</Markdown> : '—'}</td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">
+                  {row.finding ? <Markdown>{row.finding}</Markdown> : '—'}
+                </td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">
+                  {row.impact ? <Markdown>{row.impact}</Markdown> : '—'}
+                </td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">
+                  {row.recommendation ? <Markdown>{row.recommendation}</Markdown> : '—'}
+                </td>
+                <td className="px-3 py-2.5 text-gray-700 break-words">
+                  {row.rationale ? <Markdown>{row.rationale}</Markdown> : '—'}
+                </td>
               </tr>
             )
           })}
@@ -359,13 +507,13 @@ function ReviewSection({ decision }) {
 // ── Analysis tabs (Untitled UI underline style) ───────────────────────────────
 
 const ANALYSIS_SECTIONS = [
-  { key: 'impact-assessment',     label: 'Impact Assessment' },
+  { key: 'impact-assessment', label: 'Impact Assessment' },
   { key: 'referential-integrity', label: 'Referential Integrity' },
-  { key: 'strategy-alignment',    label: 'Strategy Alignment' },
-  { key: 'principles-alignment',  label: 'Principles Alignment' },
-  { key: 'guardrails-alignment',  label: 'Guardrails Alignment' },
-  { key: 'proponent-analysis',    label: 'Proponent Analysis' },
-  { key: 'challenger-analysis',   label: 'Challenger Analysis' },
+  { key: 'strategy-alignment', label: 'Strategy Alignment' },
+  { key: 'principles-alignment', label: 'Principles Alignment' },
+  { key: 'guardrails-alignment', label: 'Guardrails Alignment' },
+  { key: 'proponent-analysis', label: 'Proponent Analysis' },
+  { key: 'challenger-analysis', label: 'Challenger Analysis' },
 ]
 
 // Architecture-change artefact IDs are prefixed by domain (BUS-, DAT-, …).
@@ -384,10 +532,18 @@ function ArchitectureChangeTable({ changes, indices, accepted, onAccept, saving,
       <table className="w-full text-sm table-fixed">
         <thead>
           <tr className="bg-gray-50 border-b border-gray-200">
-            <th className="w-1/4 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Artefact</th>
-            <th className="w-1/6 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Change</th>
-            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Description</th>
-            <th className="w-32 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Review</th>
+            <th className="w-1/4 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Artefact
+            </th>
+            <th className="w-1/6 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Change
+            </th>
+            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Description
+            </th>
+            <th className="w-32 px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Review
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -400,26 +556,43 @@ function ArchitectureChangeTable({ changes, indices, accepted, onAccept, saving,
             return (
               <tr key={i} className={`align-top ${isAccepted ? 'bg-success-50' : 'bg-error-50'}`}>
                 <td className="px-3 py-2.5">
-                  <span className="font-mono text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5">{c['artefact-id']}</span>
+                  <span className="font-mono text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5">
+                    {c['artefact-id']}
+                  </span>
                   <span className="text-xs text-gray-500 ml-1.5">{c['artefact-name']}</span>
                 </td>
                 <td className="px-3 py-2.5">
-                  <span className={`text-xs font-medium px-2 py-0.5 capitalize ${CHANGE_TYPE_STYLES[c['change-type']] ?? 'bg-gray-100 text-gray-600'}`}>
+                  <span
+                    className={`text-xs font-medium px-2 py-0.5 capitalize ${CHANGE_TYPE_STYLES[c['change-type']] ?? 'bg-gray-100 text-gray-600'}`}
+                  >
                     {c['change-type']}
                   </span>
                 </td>
-                <td className="px-3 py-2.5 text-gray-700">{c.description ? <Markdown>{c.description}</Markdown> : '—'}</td>
+                <td className="px-3 py-2.5 text-gray-700">
+                  {c.description ? <Markdown>{c.description}</Markdown> : '—'}
+                </td>
                 <td className="px-3 py-2.5">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => canReview && onAccept('architecture-changes', i, isAccepted ? 'declined' : 'accepted')}
+                      onClick={() =>
+                        canReview &&
+                        onAccept('architecture-changes', i, isAccepted ? 'declined' : 'accepted')
+                      }
                       disabled={isSaving || !canReview}
                       className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none ${isAccepted ? 'bg-success-500' : 'bg-gray-300'}`}
-                      title={canReview ? '' : 'Accept/decline is only available while the decision is Accepted'}
+                      title={
+                        canReview
+                          ? ''
+                          : 'Accept/decline is only available while the decision is Accepted'
+                      }
                     >
-                      <span className={`inline-block h-4 w-4 bg-white transition-transform ${isAccepted ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
+                      <span
+                        className={`inline-block h-4 w-4 bg-white transition-transform ${isAccepted ? 'translate-x-[18px]' : 'translate-x-[2px]'}`}
+                      />
                     </button>
-                    <span className={`text-xs font-medium whitespace-nowrap ${isAccepted ? 'text-success-700' : 'text-error-700'}`}>
+                    <span
+                      className={`text-xs font-medium whitespace-nowrap ${isAccepted ? 'text-success-700' : 'text-error-700'}`}
+                    >
                       {isSaving ? <Spinner size="sm" /> : isAccepted ? 'Accepted' : 'Declined'}
                     </span>
                   </div>
@@ -437,25 +610,28 @@ function ArchitectureChanges({ changes, accepted, onAccept, saving, canReview })
   if (!changes?.length) return null
   // Keep original indices so review writes target the right array element.
   const withIndex = changes.map((c, i) => ({ c, i }))
-  const groups = CHANGE_DOMAINS
-    .map(d => ({ ...d, items: withIndex.filter(({ c }) => changeDomainPrefix(c) === d.prefix) }))
-    .filter(d => d.items.length)
+  const groups = CHANGE_DOMAINS.map((d) => ({
+    ...d,
+    items: withIndex.filter(({ c }) => changeDomainPrefix(c) === d.prefix),
+  })).filter((d) => d.items.length)
   // Anything that doesn't match a known prefix falls into an "Other" group.
-  const known = new Set(CHANGE_DOMAINS.map(d => d.prefix))
+  const known = new Set(CHANGE_DOMAINS.map((d) => d.prefix))
   const other = withIndex.filter(({ c }) => !known.has(changeDomainPrefix(c)))
   if (other.length) groups.push({ prefix: 'OTHER', label: 'Other Changes', items: other })
 
   return (
     <div className="space-y-6">
-      {groups.map(g => (
+      {groups.map((g) => (
         <div key={g.prefix}>
           <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2 mb-3">
             {g.label}
-            <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{g.items.length}</span>
+            <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">
+              {g.items.length}
+            </span>
           </h3>
           <ArchitectureChangeTable
-            changes={g.items.map(x => x.c)}
-            indices={g.items.map(x => x.i)}
+            changes={g.items.map((x) => x.c)}
+            indices={g.items.map((x) => x.i)}
             accepted={accepted}
             onAccept={onAccept}
             saving={saving}
@@ -467,43 +643,61 @@ function ArchitectureChanges({ changes, accepted, onAccept, saving, canReview })
   )
 }
 
-const ANALYSIS_KEYS = ANALYSIS_SECTIONS.map(s => s.key)
+const ANALYSIS_KEYS = ANALYSIS_SECTIONS.map((s) => s.key)
 
 // ── History section ───────────────────────────────────────────────────────────
 
 function formatTs(ts) {
   try {
     const d = new Date(ts)
-    return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-  } catch { return ts }
+    return d.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch {
+    return ts
+  }
 }
 
 function HistorySection({ history }) {
   if (!history?.length) return null
   return (
     <div className="border border-gray-200 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">Date / Time</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">Event</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</th>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-gray-50 border-b border-gray-200">
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">
+              Date / Time
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">
+              Event
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Notes
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {history.map((entry, i) => (
+            <tr key={i} className="align-top">
+              <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">
+                {formatTs(entry.timestamp)}
+              </td>
+              <td className="px-4 py-3">
+                <span
+                  className={`text-xs font-medium px-2 py-0.5 capitalize ${HISTORY_EVENT_STYLES[entry.event] ?? 'bg-gray-100 text-gray-600'}`}
+                >
+                  {entry.event}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-gray-600 text-xs">{entry.notes || '—'}</td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {history.map((entry, i) => (
-              <tr key={i} className="align-top">
-                <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">{formatTs(entry.timestamp)}</td>
-                <td className="px-4 py-3">
-                  <span className={`text-xs font-medium px-2 py-0.5 capitalize ${HISTORY_EVENT_STYLES[entry.event] ?? 'bg-gray-100 text-gray-600'}`}>
-                    {entry.event}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-gray-600 text-xs">{entry.notes || '—'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -516,11 +710,21 @@ function EmptyNote({ title, description }) {
   return (
     <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-4 text-center">
       <svg className="w-5 h-5 mx-auto mb-1.5 text-gray-300" viewBox="0 0 24 24" fill="none">
-        <path d="M5 4h11l3 3v13H5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M5 4h11l3 3v13H5z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
         <path d="M9 12h6M9 15h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
       <p className="text-sm font-medium text-gray-500">{title}</p>
-      {description && <p className="text-xs text-gray-400 mt-0.5 max-w-md mx-auto leading-relaxed">{description}</p>}
+      {description && (
+        <p className="text-xs text-gray-400 mt-0.5 max-w-md mx-auto leading-relaxed">
+          {description}
+        </p>
+      )}
     </div>
   )
 }
@@ -530,11 +734,19 @@ const CHANGE_SUB_KEYS = ['context', 'problem', 'proposal', 'narrative', 'scope',
 
 function buildNavSections(decision) {
   const hasSplit = decision.context || decision.problem || decision.proposal
-  const changeSubs = (hasSplit
-    ? [{ key: 'context', label: 'Context' }, { key: 'problem', label: 'Problem' }, { key: 'proposal', label: 'Proposal' }]
-    : [{ key: 'narrative', label: 'Narrative' }])
+  const changeSubs = hasSplit
+    ? [
+        { key: 'context', label: 'Context' },
+        { key: 'problem', label: 'Problem' },
+        { key: 'proposal', label: 'Proposal' },
+      ]
+    : [{ key: 'narrative', label: 'Narrative' }]
   changeSubs.push({ key: 'scope', label: 'Scope' })
-  changeSubs.push({ key: 'recommendations', label: 'Recommendations', count: decision['recommendations']?.length ?? 0 })
+  changeSubs.push({
+    key: 'recommendations',
+    label: 'Recommendations',
+    count: decision['recommendations']?.length ?? 0,
+  })
 
   const analysisTotal = ANALYSIS_SECTIONS.reduce((n, s) => n + (decision[s.key]?.length ?? 0), 0)
 
@@ -545,18 +757,36 @@ function buildNavSections(decision) {
       key: 'analysis',
       label: 'Analysis',
       count: analysisTotal,
-      subs: ANALYSIS_SECTIONS.map(s => ({ key: s.key, label: s.label, count: decision[s.key]?.length ?? 0 })),
+      subs: ANALYSIS_SECTIONS.map((s) => ({
+        key: s.key,
+        label: s.label,
+        count: decision[s.key]?.length ?? 0,
+      })),
     },
-    decision['architecture-changes']?.length && { key: 'architecture-changes', label: 'Architecture Changes', count: decision['architecture-changes'].length },
-    decision.history?.length && { key: 'history', label: 'History', count: decision.history.length },
+    decision['architecture-changes']?.length && {
+      key: 'architecture-changes',
+      label: 'Architecture Changes',
+      count: decision['architecture-changes'].length,
+    },
+    decision.history?.length && {
+      key: 'history',
+      label: 'History',
+      count: decision.history.length,
+    },
   ].filter(Boolean)
 }
 
 function NavCount({ n, active }) {
   return (
-    <span className={`text-xs px-1.5 py-0.5 font-medium tabular-nums flex-shrink-0 ${
-      active ? 'bg-rose-100 text-rose-700' : n > 0 ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-300'
-    }`}>
+    <span
+      className={`text-xs px-1.5 py-0.5 font-medium tabular-nums flex-shrink-0 ${
+        active
+          ? 'bg-rose-100 text-rose-700'
+          : n > 0
+            ? 'bg-gray-100 text-gray-600'
+            : 'bg-gray-50 text-gray-300'
+      }`}
+    >
       {n}
     </span>
   )
@@ -569,9 +799,19 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Contents</p>
           <div className="flex items-center gap-2">
-            <button onClick={onExpandAll} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">Expand all</button>
+            <button
+              onClick={onExpandAll}
+              className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+            >
+              Expand all
+            </button>
             <span className="text-gray-300">·</span>
-            <button onClick={onCollapseAll} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">Collapse all</button>
+            <button
+              onClick={onCollapseAll}
+              className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+            >
+              Collapse all
+            </button>
           </div>
         </div>
         <ul className="space-y-0.5">
@@ -587,12 +827,14 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
               >
                 <span className="font-mono text-xs text-gray-400">{i + 1}</span>
                 <span className="min-w-0 flex-1 truncate">{s.label}</span>
-                {typeof s.count === 'number' && <NavCount n={s.count} active={activeKey === s.key} />}
+                {typeof s.count === 'number' && (
+                  <NavCount n={s.count} active={activeKey === s.key} />
+                )}
                 {AI_SECTIONS.has(s.key) && <AiRobotIcon className="w-4 h-4 flex-shrink-0" />}
               </button>
               {s.subs && (
                 <ul className="mt-0.5 space-y-0.5">
-                  {s.subs.map(sub => (
+                  {s.subs.map((sub) => (
                     <li key={sub.key}>
                       <button
                         onClick={() => onJump(sub.key)}
@@ -623,17 +865,19 @@ export default function DecisionDetailPage() {
   const { clientId, versionId, decisionId } = useParams()
   const location = useLocation()
   const [decision, setDecision] = useState(undefined)
-  const [accepted, setAccepted] = useState({})    // local overrides for finding review state
-  const [saving, setSaving] = useState(null)       // key of the finding being saved, e.g. 'impact-assessment-0'
+  const [accepted, setAccepted] = useState({}) // local overrides for finding review state
+  const [saving, setSaving] = useState(null) // key of the finding being saved, e.g. 'impact-assessment-0'
   const [transitioning, setTransitioning] = useState(false)
   const [transitionError, setTransitionError] = useState(null)
   const [pendingWorkflow, setPendingWorkflow] = useState(null) // { label } while a workflow populates the next section
-  const [repoSlug, setRepoSlug] = useState(null)   // owner/repo, for building a PR URL from pr-number
+  const [repoSlug, setRepoSlug] = useState(null) // owner/repo, for building a PR URL from pr-number
 
   useEffect(() => {
     fetch('/api/github?action=config')
-      .then(r => r.ok ? r.json() : null)
-      .then(c => { if (c?.owner && c?.repo) setRepoSlug(`${c.owner}/${c.repo}`) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((c) => {
+        if (c?.owner && c?.repo) setRepoSlug(`${c.owner}/${c.repo}`)
+      })
       .catch(() => {})
   }, [])
 
@@ -641,11 +885,15 @@ export default function DecisionDetailPage() {
 
   const sectionRefs = useRef({})
   const [activeSection] = useActiveSection(sectionRefs, [decision])
-  const [collapsed, setCollapsed] = usePersistedSet(`decision-collapsed:${clientId}/${versionId}/${decisionId}`)
-  const setSectionRef = (key) => (el) => { sectionRefs.current[key] = el }
-  const toggleSection = (key) => setCollapsed(prev => toggleInSet(prev, key))
+  const [collapsed, setCollapsed] = usePersistedSet(
+    `decision-collapsed:${clientId}/${versionId}/${decisionId}`
+  )
+  const setSectionRef = (key) => (el) => {
+    sectionRefs.current[key] = el
+  }
+  const toggleSection = (key) => setCollapsed((prev) => toggleInSet(prev, key))
   const scrollToSection = (key) => {
-    setCollapsed(prev => {
+    setCollapsed((prev) => {
       const n = new Set(prev)
       n.delete(key)
       // Analysis sub-sections live under the collapsible 'analysis' parent
@@ -653,9 +901,11 @@ export default function DecisionDetailPage() {
       if (CHANGE_SUB_KEYS.includes(key)) n.delete('change')
       return n
     })
-    requestAnimationFrame(() => requestAnimationFrame(() =>
-      sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    ))
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() =>
+        sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      )
+    )
   }
 
   // Use branch-then-main fallback via getDecision helper.
@@ -665,14 +915,18 @@ export default function DecisionDetailPage() {
     getDecision(clientId, versionId, decisionId, undefined, { bust })
       .then(setDecision)
       .catch(() => setDecision(null))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, decisionId])
 
   async function handleAccept(sectionKey, findingIndex, review) {
     const key = `${sectionKey}-${findingIndex}`
     // Optimistic update
-    setAccepted(prev => {
-      if (review === null) { const n = { ...prev }; delete n[key]; return n }
+    setAccepted((prev) => {
+      if (review === null) {
+        const n = { ...prev }
+        delete n[key]
+        return n
+      }
       return { ...prev, [key]: review }
     })
     setSaving(key)
@@ -680,22 +934,34 @@ export default function DecisionDetailPage() {
       await fetch('/api/github', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update-finding', clientId, versionId, decisionId, sectionKey, findingIndex, review }),
+        body: JSON.stringify({
+          action: 'update-finding',
+          clientId,
+          versionId,
+          decisionId,
+          sectionKey,
+          findingIndex,
+          review,
+        }),
       })
-    } catch { /* optimistic — failure leaves local state changed */ }
-    finally { setSaving(null) }
+    } catch {
+      /* optimistic — failure leaves local state changed */
+    } finally {
+      setSaving(null)
+    }
   }
 
   async function handleTransition(newStatus, extraFields = {}) {
     setTransitioning(true)
     setTransitionError(null)
     const updates = { status: newStatus, ...extraFields }
-    setDecision(prev => prev ? { ...prev, ...updates } : prev)
+    setDecision((prev) => (prev ? { ...prev, ...updates } : prev))
     try {
       const action = newStatus === 'committed' ? 'commit-decision' : 'update-decision'
-      const body = action === 'commit-decision'
-        ? { action, clientId, versionId, decisionId, prNumber: decision?.['pr-number'] }
-        : { action, clientId, versionId, decisionId, updates }
+      const body =
+        action === 'commit-decision'
+          ? { action, clientId, versionId, decisionId, prNumber: decision?.['pr-number'] }
+          : { action, clientId, versionId, decisionId, updates }
       const res = await fetch('/api/github', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -708,11 +974,13 @@ export default function DecisionDetailPage() {
       const WORKFLOW_LABELS = {
         proposed: 'running the seven analysis streams over your decision',
         accepted: 'working out the architecture changes',
-        staged:   'applying the accepted changes and opening the pull request',
+        staged: 'applying the accepted changes and opening the pull request',
       }
       if (WORKFLOW_LABELS[newStatus]) setPendingWorkflow({ label: WORKFLOW_LABELS[newStatus] })
       // Re-fetch busting CDN cache so the new status is immediately visible
-      getDecision(clientId, versionId, decisionId, newStatus, { bust: true }).then(setDecision).catch(() => {})
+      getDecision(clientId, versionId, decisionId, newStatus, { bust: true })
+        .then(setDecision)
+        .catch(() => {})
     } catch (err) {
       setTransitionError(err.message)
     } finally {
@@ -721,7 +989,11 @@ export default function DecisionDetailPage() {
   }
 
   if (decision === undefined) {
-    return <div className="flex items-center justify-center py-20"><Spinner size="lg" /></div>
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Spinner size="lg" />
+      </div>
+    )
   }
   if (decision === null) {
     return <Navigate to={`/clients/${clientId}/${versionId}/decisions`} replace />
@@ -730,23 +1002,31 @@ export default function DecisionDetailPage() {
   const navSections = buildNavSections(decision)
   const sectionNumber = Object.fromEntries(navSections.map((s, i) => [s.key, i + 1]))
   const expandAll = () => setCollapsed(new Set())
-  const collapseAll = () => setCollapsed(new Set(navSections.map(s => s.key)))
+  const collapseAll = () => setCollapsed(new Set(navSections.map((s) => s.key)))
 
   const renderSection = (key, children) => {
     const isCollapsed = collapsed.has(key)
-    const navItem = navSections.find(s => s.key === key)
+    const navItem = navSections.find((s) => s.key === key)
     const label = navItem?.label ?? key
     const count = navItem?.count
     return (
       <section ref={setSectionRef(key)} data-section={key} className="scroll-mt-20">
-        <button onClick={() => toggleSection(key)} className="w-full flex items-start gap-2 text-left group">
-          <span className="text-gray-300 group-hover:text-gray-500 mt-1.5"><Chevron open={!isCollapsed} /></span>
+        <button
+          onClick={() => toggleSection(key)}
+          className="w-full flex items-start gap-2 text-left group"
+        >
+          <span className="text-gray-300 group-hover:text-gray-500 mt-1.5">
+            <Chevron open={!isCollapsed} />
+          </span>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2.5 flex-wrap">
             <span>
-              <span className="text-gray-400 font-mono text-base mr-2">{sectionNumber[key]}</span>{label}
+              <span className="text-gray-400 font-mono text-base mr-2">{sectionNumber[key]}</span>
+              {label}
             </span>
             {typeof count === 'number' && (
-              <span className="text-sm px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{count}</span>
+              <span className="text-sm px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">
+                {count}
+              </span>
             )}
             {AI_SECTIONS.has(key) && <AiBadge />}
           </h2>
@@ -767,12 +1047,19 @@ export default function DecisionDetailPage() {
     const subCollapsed = collapsed.has(key)
     return (
       <section key={key} ref={setSectionRef(key)} data-section={key} className="scroll-mt-20">
-        <button onClick={() => toggleSection(key)} className="w-full flex items-center gap-2 text-left group">
-          <span className="text-gray-300 group-hover:text-gray-500"><Chevron open={!subCollapsed} /></span>
+        <button
+          onClick={() => toggleSection(key)}
+          className="w-full flex items-center gap-2 text-left group"
+        >
+          <span className="text-gray-300 group-hover:text-gray-500">
+            <Chevron open={!subCollapsed} />
+          </span>
           <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2">
             {label}
             {typeof count === 'number' && (
-              <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">{count}</span>
+              <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">
+                {count}
+              </span>
             )}
             {hint && <span className="text-xs font-normal text-gray-400">· {hint}</span>}
           </h3>
@@ -787,10 +1074,25 @@ export default function DecisionDetailPage() {
     return renderSub(
       s.key,
       s.label,
-      rows.length > 0
-        ? <AnalysisTable rows={rows} sectionKey={s.key} accepted={accepted} onAccept={handleAccept} saving={saving} locked={analysisLocked} />
-        : <EmptyNote title="No findings yet" description="Populated when the analysis workflow runs — it can take a few minutes." />,
-      { count: rows.length, hint: !analysisLocked && rows.length > 0 ? 'click a row to accept / decline' : null },
+      rows.length > 0 ? (
+        <AnalysisTable
+          rows={rows}
+          sectionKey={s.key}
+          accepted={accepted}
+          onAccept={handleAccept}
+          saving={saving}
+          locked={analysisLocked}
+        />
+      ) : (
+        <EmptyNote
+          title="No findings yet"
+          description="Populated when the analysis workflow runs — it can take a few minutes."
+        />
+      ),
+      {
+        count: rows.length,
+        hint: !analysisLocked && rows.length > 0 ? 'click a row to accept / decline' : null,
+      }
     )
   }
 
@@ -798,7 +1100,13 @@ export default function DecisionDetailPage() {
     <div>
       <div className="flex gap-8">
         {/* Contents nav — document-style left rail */}
-        <ContentsNav sections={navSections} activeKey={activeSection} onJump={scrollToSection} onExpandAll={expandAll} onCollapseAll={collapseAll} />
+        <ContentsNav
+          sections={navSections}
+          activeKey={activeSection}
+          onJump={scrollToSection}
+          onExpandAll={expandAll}
+          onCollapseAll={collapseAll}
+        />
 
         {/* Document surface */}
         <article className="flex-1 min-w-0 bg-white shadow-xl px-8 py-7">
@@ -829,7 +1137,13 @@ export default function DecisionDetailPage() {
                     className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-medium transition-colors"
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                      <path d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="square" strokeLinejoin="miter" />
+                      <path
+                        d="M9.5 1.5l3 3-8 8H1.5v-3l8-8z"
+                        stroke="currentColor"
+                        strokeWidth="1.25"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                      />
                     </svg>
                     Edit
                   </Link>
@@ -842,7 +1156,13 @@ export default function DecisionDetailPage() {
 
           {/* Status actions + any error — above the sections */}
           <div className="mb-2">
-            <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
+            <StatusActions
+              status={decision.status}
+              onTransition={handleTransition}
+              transitioning={transitioning}
+              decision={decision}
+              versionId={versionId}
+            />
             {transitionError && (
               <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
                 Failed to update: {transitionError}
@@ -856,10 +1176,15 @@ export default function DecisionDetailPage() {
             <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-rose-50 border border-blue-200 text-sm text-gray-700">
               <Spinner size="sm" />
               <span className="flex-1 min-w-0">
-                🤖 The agents are {pendingWorkflow.label}. This usually takes a couple of minutes — grab a coffee, then check back.
+                🤖 The agents are {pendingWorkflow.label}. This usually takes a couple of minutes —
+                grab a coffee, then check back.
               </span>
               <button
-                onClick={() => getDecision(clientId, versionId, decisionId, undefined, { bust: true }).then(setDecision).catch(() => {})}
+                onClick={() =>
+                  getDecision(clientId, versionId, decisionId, undefined, { bust: true })
+                    .then(setDecision)
+                    .catch(() => {})
+                }
                 className="flex-shrink-0 px-3 py-1 text-xs font-medium text-blue-700 bg-white border border-blue-200 hover:bg-blue-50 transition-colors"
               >
                 Check for updates
@@ -869,43 +1194,98 @@ export default function DecisionDetailPage() {
                 className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
                 title="Dismiss"
               >
-                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M4 4l8 8M12 4l-8 8"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </button>
             </div>
           )}
 
           <div className="space-y-8">
             {/* Change: the proposal narrative, scope and recommendations */}
-            {renderSection('change',
+            {renderSection(
+              'change',
               <div className="space-y-8">
-                {(decision.context || decision.problem || decision.proposal) ? (
+                {decision.context || decision.problem || decision.proposal ? (
                   <>
-                    {renderSub('context', 'Context', decision.context
-                      ? <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.context}</Markdown>
-                      : <EmptyNote title="Not provided" />)}
-                    {renderSub('problem', 'Problem', decision.problem
-                      ? <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.problem}</Markdown>
-                      : <EmptyNote title="Not provided" />)}
-                    {renderSub('proposal', 'Proposal', decision.proposal
-                      ? <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.proposal}</Markdown>
-                      : <EmptyNote title="Not provided" />)}
+                    {renderSub(
+                      'context',
+                      'Context',
+                      decision.context ? (
+                        <Markdown className="text-sm text-gray-700 leading-relaxed">
+                          {decision.context}
+                        </Markdown>
+                      ) : (
+                        <EmptyNote title="Not provided" />
+                      )
+                    )}
+                    {renderSub(
+                      'problem',
+                      'Problem',
+                      decision.problem ? (
+                        <Markdown className="text-sm text-gray-700 leading-relaxed">
+                          {decision.problem}
+                        </Markdown>
+                      ) : (
+                        <EmptyNote title="Not provided" />
+                      )
+                    )}
+                    {renderSub(
+                      'proposal',
+                      'Proposal',
+                      decision.proposal ? (
+                        <Markdown className="text-sm text-gray-700 leading-relaxed">
+                          {decision.proposal}
+                        </Markdown>
+                      ) : (
+                        <EmptyNote title="Not provided" />
+                      )
+                    )}
                   </>
                 ) : (
-                  renderSub('narrative', 'Narrative',
-                    <Markdown className="text-sm text-gray-700 leading-relaxed">{decision.narrative}</Markdown>)
+                  renderSub(
+                    'narrative',
+                    'Narrative',
+                    <Markdown className="text-sm text-gray-700 leading-relaxed">
+                      {decision.narrative}
+                    </Markdown>
+                  )
                 )}
-                {renderSub('scope', 'Scope', decision.scope
-                  ? <ScopeChip scope={decision.scope} />
-                  : <EmptyNote title="No scope set" description="This decision applies to the whole architecture." />)}
-                {renderSub('recommendations', 'Recommendations',
-                  decision['recommendations']?.length
-                    ? <ReviewSection decision={decision} />
-                    : <EmptyNote title="No findings yet" description="Narrative Review runs when the decision is created and suggests improvements here." />,
-                  { count: decision['recommendations']?.length ?? 0 })}
+                {renderSub(
+                  'scope',
+                  'Scope',
+                  decision.scope ? (
+                    <ScopeChip scope={decision.scope} />
+                  ) : (
+                    <EmptyNote
+                      title="No scope set"
+                      description="This decision applies to the whole architecture."
+                    />
+                  )
+                )}
+                {renderSub(
+                  'recommendations',
+                  'Recommendations',
+                  decision['recommendations']?.length ? (
+                    <ReviewSection decision={decision} />
+                  ) : (
+                    <EmptyNote
+                      title="No findings yet"
+                      description="Narrative Review runs when the decision is created and suggests improvements here."
+                    />
+                  ),
+                  { count: decision['recommendations']?.length ?? 0 }
+                )}
               </div>
             )}
 
-            {renderSection('requirements',
+            {renderSection(
+              'requirements',
               decision.requirements?.length > 0 ? (
                 <div className="border border-gray-200 divide-y divide-gray-100">
                   {decision.requirements.map((req, i) => {
@@ -915,8 +1295,14 @@ export default function DecisionDetailPage() {
                     return (
                       <div key={i} className="px-4 py-3">
                         <div className="flex items-center gap-2 mb-0.5">
-                          {title && <span className="text-sm font-medium text-gray-900">{title}</span>}
-                          {type && <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">{type}</span>}
+                          {title && (
+                            <span className="text-sm font-medium text-gray-900">{title}</span>
+                          )}
+                          {type && (
+                            <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500">
+                              {type}
+                            </span>
+                          )}
                         </div>
                         <Markdown className="text-sm text-gray-600">{description}</Markdown>
                       </div>
@@ -924,34 +1310,43 @@ export default function DecisionDetailPage() {
                   })}
                 </div>
               ) : (
-                <EmptyNote title="No requirements" description="Add requirements on the full editor to record what this decision must achieve." />
+                <EmptyNote
+                  title="No requirements"
+                  description="Add requirements on the full editor to record what this decision must achieve."
+                />
               )
             )}
 
-            {renderSection('analysis',
-              <div className="space-y-8">
-                {ANALYSIS_SECTIONS.map(renderAnalysisSub)}
-              </div>
+            {renderSection(
+              'analysis',
+              <div className="space-y-8">{ANALYSIS_SECTIONS.map(renderAnalysisSub)}</div>
             )}
 
-            {decision['architecture-changes']?.length > 0 && renderSection('architecture-changes',
-              <ArchitectureChanges
-                changes={decision['architecture-changes']}
-                accepted={accepted}
-                onAccept={handleAccept}
-                saving={saving}
-                canReview={canReviewChanges}
-              />
-            )}
+            {decision['architecture-changes']?.length > 0 &&
+              renderSection(
+                'architecture-changes',
+                <ArchitectureChanges
+                  changes={decision['architecture-changes']}
+                  accepted={accepted}
+                  onAccept={handleAccept}
+                  saving={saving}
+                  canReview={canReviewChanges}
+                />
+              )}
 
-            {decision.history?.length > 0 && renderSection('history',
-              <HistorySection history={decision.history} />
-            )}
+            {decision.history?.length > 0 &&
+              renderSection('history', <HistorySection history={decision.history} />)}
           </div>
 
           {/* Status actions — repeated below the sections for convenience */}
           <div className="mt-8">
-            <StatusActions status={decision.status} onTransition={handleTransition} transitioning={transitioning} decision={decision} versionId={versionId} />
+            <StatusActions
+              status={decision.status}
+              onTransition={handleTransition}
+              transitioning={transitioning}
+              decision={decision}
+              versionId={versionId}
+            />
           </div>
         </article>
       </div>
@@ -962,7 +1357,12 @@ export default function DecisionDetailPage() {
       <JsonPreview
         data={decision}
         label={`${decision['decision-id']}.json`}
-        prUrl={decision['pr-url'] ?? (decision['pr-number'] ? `https://github.com/${repoSlug ?? ''}/pull/${decision['pr-number']}` : null)}
+        prUrl={
+          decision['pr-url'] ??
+          (decision['pr-number']
+            ? `https://github.com/${repoSlug ?? ''}/pull/${decision['pr-number']}`
+            : null)
+        }
       />
     </div>
   )

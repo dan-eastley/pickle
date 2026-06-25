@@ -15,7 +15,7 @@
 
   body {
     margin: 0;
-    background-color: #F9FAFB;
+    background-color: #f9fafb;
     color: #101828;
   }
 }
@@ -23,6 +23,6 @@
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #D0D5DD transparent;
+    scrollbar-color: #d0d5dd transparent;
   }
 }

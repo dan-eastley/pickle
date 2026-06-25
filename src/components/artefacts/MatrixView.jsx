@@ -28,13 +28,25 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     setRowData(undefined)
 
     Promise.all([
-      getArtefactData(clientId, versionId, colArtefact.domain, colArtefact.abstraction, colArtefact.id),
-      getArtefactData(clientId, versionId, rowArtefact.domain, rowArtefact.abstraction, rowArtefact.id),
+      getArtefactData(
+        clientId,
+        versionId,
+        colArtefact.domain,
+        colArtefact.abstraction,
+        colArtefact.id
+      ),
+      getArtefactData(
+        clientId,
+        versionId,
+        rowArtefact.domain,
+        rowArtefact.abstraction,
+        rowArtefact.id
+      ),
     ]).then(([colD, rowD]) => {
       setColumnData(colD)
       setRowData(rowD)
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, colArtefact?.id, rowArtefact?.id])
 
   useEscapeKey(() => setFullscreen(false), fullscreen)
@@ -64,8 +76,8 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
   const { columns, rows } = matrixMeta
   const applyFilter = (items, filter) => {
     if (!filter) return items
-    if (filter.in) return items.filter(item => filter.in.includes(item[filter.field]))
-    return items.filter(item => item[filter.field] === filter.equals)
+    if (filter.in) return items.filter((item) => filter.in.includes(item[filter.field]))
+    return items.filter((item) => item[filter.field] === filter.equals)
   }
   const columnItems = applyFilter(columnData?.[columns.array] ?? [], columns.filter)
   const rowItems = applyFilter(rowData?.[rows.array] ?? [], rows.filter)
@@ -96,15 +108,21 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     <div className="px-4 py-2 border-b border-gray-200 flex items-center gap-3 bg-gray-50 flex-shrink-0">
       <span className="text-xs text-gray-500">{summary}</span>
       <div className="flex items-center gap-3 text-xs">
-        <Link to={artefactUrl(colArtefact, clientId, versionId)} className="text-brand-600 hover:text-brand-700 font-mono">
+        <Link
+          to={artefactUrl(colArtefact, clientId, versionId)}
+          className="text-brand-600 hover:text-brand-700 font-mono"
+        >
           {columns.artefact}
         </Link>
         <span className="text-gray-300">·</span>
-        <Link to={artefactUrl(rowArtefact, clientId, versionId)} className="text-brand-600 hover:text-brand-700 font-mono">
+        <Link
+          to={artefactUrl(rowArtefact, clientId, versionId)}
+          className="text-brand-600 hover:text-brand-700 font-mono"
+        >
           {rows.artefact}
         </Link>
       </div>
-      <FullscreenToggle fullscreen={fullscreen} onToggle={() => setFullscreen(f => !f)} />
+      <FullscreenToggle fullscreen={fullscreen} onToggle={() => setFullscreen((f) => !f)} />
     </div>
   )
 
@@ -122,12 +140,15 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
                 <span>→</span>
               </div>
             </th>
-            {columnItems.map(col => (
-              <th key={col[columns.idField]}
+            {columnItems.map((col) => (
+              <th
+                key={col[columns.idField]}
                 className="sticky top-0 z-20 bg-gray-50 border-b border-gray-200 px-2 py-2 text-center align-bottom min-w-[120px] max-w-[160px]"
                 title={col[columns.tooltipField]}
               >
-                <div className="font-mono text-xs font-semibold text-gray-600">{col[columns.idField]}</div>
+                <div className="font-mono text-xs font-semibold text-gray-600">
+                  {col[columns.idField]}
+                </div>
                 <div className="text-xs text-gray-400 font-normal mt-0.5 line-clamp-2 leading-tight">
                   {col[columns.labelField ?? columns.tooltipField]}
                 </div>
@@ -136,26 +157,30 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {rowItems.map(row => (
+          {rowItems.map((row) => (
             <tr key={row[rows.idField]} className="group">
-              <td className="sticky left-0 z-10 bg-white group-hover:bg-gray-50 border-r border-gray-200 px-4 py-2.5 align-top transition-colors"
+              <td
+                className="sticky left-0 z-10 bg-white group-hover:bg-gray-50 border-r border-gray-200 px-4 py-2.5 align-top transition-colors"
                 title={row[rows.tooltipField]}
               >
                 <div className="font-mono text-xs text-gray-400">{row[rows.idField]}</div>
                 <div className="text-sm text-gray-700">{row[rows.labelField]}</div>
               </td>
-              {columnItems.map(col => {
+              {columnItems.map((col) => {
                 const key = `${col[columns.idField]}|${row[rows.idField]}`
                 const rationale = relMap.get(key)
                 const checked = relMap.has(key)
                 return (
-                  <td key={key}
+                  <td
+                    key={key}
                     className="px-2 py-2.5 text-center group-hover:bg-gray-50 transition-colors"
                     title={rationale}
                   >
-                    {checked
-                      ? <CheckSquare className="w-4 h-4 text-brand-600 mx-auto" />
-                      : <Square className="w-4 h-4 text-gray-200 mx-auto" />}
+                    {checked ? (
+                      <CheckSquare className="w-4 h-4 text-brand-600 mx-auto" />
+                    ) : (
+                      <Square className="w-4 h-4 text-gray-200 mx-auto" />
+                    )}
                   </td>
                 )
               })}
@@ -169,8 +194,11 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
   if (fullscreen) {
     return createPortal(
       <div className="fixed inset-0 z-[200] bg-white flex flex-col">
-        {toolbar}{table}
-        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
+        {toolbar}
+        {table}
+        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+          {summary}
+        </div>
       </div>,
       document.body
     )
@@ -180,7 +208,9 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     <div className="bg-white overflow-hidden flex flex-col shadow-xl">
       {toolbar}
       {table}
-      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">{summary}</div>
+      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+        {summary}
+      </div>
     </div>
   )
 }
