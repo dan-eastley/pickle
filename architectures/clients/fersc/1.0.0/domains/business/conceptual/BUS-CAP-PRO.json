@@ -1,0 +1,283 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-CAP-PRO",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "CAP-001",
+            "row-id": "PROC-001",
+            "rationale": "Customer Management capability is delivered through the Customer Lifecycle Management process group"
+        },
+        {
+            "column-id": "CAP-002",
+            "row-id": "PROC-002",
+            "rationale": "Power Purchasing capability is realised through the Power Purchasing & Dispatch process group"
+        },
+        {
+            "column-id": "CAP-003",
+            "row-id": "PROC-003",
+            "rationale": "Energy Trading & Risk Management capability is realised through the Trading & Settlement process group"
+        },
+        {
+            "column-id": "CAP-004",
+            "row-id": "PROC-004",
+            "rationale": "Supply Operations capability is realised through the Supply Operations & Control process group"
+        },
+        {
+            "column-id": "CAP-005",
+            "row-id": "PROC-005",
+            "rationale": "Asset Management capability is realised through the Asset Lifecycle Management process group"
+        },
+        {
+            "column-id": "CAP-006",
+            "row-id": "PROC-006",
+            "rationale": "Retail & Billing capability is realised through the Retail & Revenue Management process group"
+        },
+        {
+            "column-id": "CAP-007",
+            "row-id": "PROC-007",
+            "rationale": "Regulatory & Compliance capability is realised through the Regulatory Reporting & Compliance process group"
+        },
+        {
+            "column-id": "CAP-008",
+            "row-id": "PROC-008",
+            "rationale": "Sustainability & Decarbonisation capability is realised through the Sustainability & Carbon Management process group"
+        },
+        {
+            "column-id": "CAP-009",
+            "row-id": "PROC-009",
+            "rationale": "Enterprise Support capability is realised through the Enterprise Services Delivery process group"
+        },
+        {
+            "column-id": "CAP-001-01",
+            "row-id": "PROC-001-01",
+            "rationale": "Acquire Customer capability is enacted through the Acquire New Customers process"
+        },
+        {
+            "column-id": "CAP-001-01",
+            "row-id": "PROC-001-02",
+            "rationale": "Customer acquisition includes onboarding the customer after account approval"
+        },
+        {
+            "column-id": "CAP-001-02",
+            "row-id": "PROC-001-03",
+            "rationale": "Service Customer capability is enacted through the Service & Manage Customers process"
+        },
+        {
+            "column-id": "CAP-001-03",
+            "row-id": "PROC-001-05",
+            "rationale": "Manage Customer Insight capability is enacted through the Manage Customer Insights process"
+        },
+        {
+            "column-id": "CAP-001-04",
+            "row-id": "PROC-001-04",
+            "rationale": "Retain Customer capability is enacted through the Retain & Grow Customers process"
+        },
+        {
+            "column-id": "CAP-002-01",
+            "row-id": "PROC-002-01",
+            "rationale": "Plan Power Purchasing Capacity capability is enacted through the Plan Power Purchasing Capacity process"
+        },
+        {
+            "column-id": "CAP-002-02",
+            "row-id": "PROC-002-02",
+            "rationale": "Operating generation assets includes scheduling and dispatch based on system instructions"
+        },
+        {
+            "column-id": "CAP-002-02",
+            "row-id": "PROC-002-03",
+            "rationale": "Operate Power Purchasing Assets capability is enacted through the Operate Power Purchasing Assets process"
+        },
+        {
+            "column-id": "CAP-002-03",
+            "row-id": "PROC-002-04",
+            "rationale": "Manage Fuel & Inputs capability is enacted through the Manage Fuel & Input Supply process"
+        },
+        {
+            "column-id": "CAP-002-04",
+            "row-id": "PROC-002-05",
+            "rationale": "Optimise Power Purchasing Portfolio capability is enacted through the Optimise Power Purchasing Portfolio process"
+        },
+        {
+            "column-id": "CAP-003-01",
+            "row-id": "PROC-003-01",
+            "rationale": "Forecast Demand & Supply capability is enacted through the Forecast Demand & Supply process"
+        },
+        {
+            "column-id": "CAP-003-02",
+            "row-id": "PROC-003-02",
+            "rationale": "Trade Energy & Products capability is enacted through the Execute Energy Trades process"
+        },
+        {
+            "column-id": "CAP-003-03",
+            "row-id": "PROC-003-03",
+            "rationale": "Manage Trading Risk capability is enacted through the Manage Trading Risk process"
+        },
+        {
+            "column-id": "CAP-003-04",
+            "row-id": "PROC-003-04",
+            "rationale": "Settle Trades capability is enacted through the Settle & Clear Trades process"
+        },
+        {
+            "column-id": "CAP-004-01",
+            "row-id": "PROC-004-01",
+            "rationale": "Plan Supply Portfolio capability is enacted through the Plan Supply Portfolio process"
+        },
+        {
+            "column-id": "CAP-004-02",
+            "row-id": "PROC-004-02",
+            "rationale": "Operate Supply Book capability is enacted through the Control & Monitor the Grid process"
+        },
+        {
+            "column-id": "CAP-004-03",
+            "row-id": "PROC-004-03",
+            "rationale": "Manage Supply Continuity capability is enacted through the Manage Supply Continuity Assets process"
+        },
+        {
+            "column-id": "CAP-004-04",
+            "row-id": "PROC-004-04",
+            "rationale": "Manage Outages capability is enacted through the Manage Network Outages process"
+        },
+        {
+            "column-id": "CAP-004-05",
+            "row-id": "PROC-004-05",
+            "rationale": "Connect Customers & Generators capability is enacted through the Connect Customers & Distributed Resources process"
+        },
+        {
+            "column-id": "CAP-005-01",
+            "row-id": "PROC-005-01",
+            "rationale": "Plan Assets capability is enacted through the Plan Asset Investment process"
+        },
+        {
+            "column-id": "CAP-005-02",
+            "row-id": "PROC-005-02",
+            "rationale": "Acquire & Construct Assets capability is enacted through the Acquire & Construct Assets process"
+        },
+        {
+            "column-id": "CAP-005-02",
+            "row-id": "PROC-005-03",
+            "rationale": "Asset acquisition includes commissioning and formal handover to operations"
+        },
+        {
+            "column-id": "CAP-005-03",
+            "row-id": "PROC-005-04",
+            "rationale": "Operate Assets capability is enacted through the Operate & Maintain Assets process"
+        },
+        {
+            "column-id": "CAP-005-04",
+            "row-id": "PROC-005-04",
+            "rationale": "Maintain Assets capability is co-enacted through the same Operate & Maintain Assets process"
+        },
+        {
+            "column-id": "CAP-005-05",
+            "row-id": "PROC-005-05",
+            "rationale": "Decommission Assets capability is enacted through the Decommission & Dispose Assets process"
+        },
+        {
+            "column-id": "CAP-006-01",
+            "row-id": "PROC-006-01",
+            "rationale": "Manage Tariffs & Products capability is enacted through the Manage Tariffs & Products process"
+        },
+        {
+            "column-id": "CAP-006-02",
+            "row-id": "PROC-006-02",
+            "rationale": "Read & Validate Meters capability is enacted through the Read & Validate Meters process"
+        },
+        {
+            "column-id": "CAP-006-03",
+            "row-id": "PROC-006-03",
+            "rationale": "Generate Bills capability is enacted through the Bill Customers process"
+        },
+        {
+            "column-id": "CAP-006-04",
+            "row-id": "PROC-006-04",
+            "rationale": "Collect Payment capability is enacted through the Collect & Apply Payments process"
+        },
+        {
+            "column-id": "CAP-006-05",
+            "row-id": "PROC-006-05",
+            "rationale": "Manage Arrears capability is enacted through the Manage Debt & Arrears process"
+        },
+        {
+            "column-id": "CAP-007-01",
+            "row-id": "PROC-007-01",
+            "rationale": "Manage Licensing capability is enacted through the Manage Regulatory Licensing process"
+        },
+        {
+            "column-id": "CAP-007-02",
+            "row-id": "PROC-007-02",
+            "rationale": "Report to Regulators capability is enacted through the Report to Regulators process"
+        },
+        {
+            "column-id": "CAP-007-03",
+            "row-id": "PROC-007-03",
+            "rationale": "Manage Audits & Investigations capability is enacted through the Manage Audits & Investigations process"
+        },
+        {
+            "column-id": "CAP-007-04",
+            "row-id": "PROC-007-04",
+            "rationale": "Manage Safety & Environment capability is enacted through the Manage Safety & Environmental Compliance process"
+        },
+        {
+            "column-id": "CAP-008-01",
+            "row-id": "PROC-008-01",
+            "rationale": "Measure Emissions capability is enacted through the Measure & Track Emissions process"
+        },
+        {
+            "column-id": "CAP-008-02",
+            "row-id": "PROC-008-02",
+            "rationale": "Integrate Renewable Power Purchasing capability is enacted through the Integrate Renewable Power Purchasing process"
+        },
+        {
+            "column-id": "CAP-008-03",
+            "row-id": "PROC-008-03",
+            "rationale": "Manage Carbon Credits & Offsets capability is enacted through the Manage Carbon Credits & Offsets process"
+        },
+        {
+            "column-id": "CAP-008-04",
+            "row-id": "PROC-008-04",
+            "rationale": "Report ESG Performance capability is enacted through the Report ESG Performance process"
+        },
+        {
+            "column-id": "CAP-009-01",
+            "row-id": "PROC-009-01",
+            "rationale": "Manage Finance capability is enacted through the Manage Finance & Accounts process"
+        },
+        {
+            "column-id": "CAP-009-02",
+            "row-id": "PROC-009-02",
+            "rationale": "Manage People capability is enacted through the Manage People & HR process"
+        },
+        {
+            "column-id": "CAP-009-03",
+            "row-id": "PROC-009-03",
+            "rationale": "Manage Technology capability is enacted through the Manage Technology & Systems process"
+        },
+        {
+            "column-id": "CAP-009-04",
+            "row-id": "PROC-009-04",
+            "rationale": "Manage Procurement capability is enacted through the Manage Procurement & Supply Chain process"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}
