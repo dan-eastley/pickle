@@ -1,0 +1,16 @@
+{
+    "decision-id": "ADR-015",
+    "title": "Contractor Driven Work",
+    "status": "draft",
+    "context": "All our work is carried out by the internal workforce",
+    "problem": "We don't have enough capacity or capability",
+    "proposal": "We need to start working with contractors (external) to deliver field services",
+    "narrative": "## Context\n\nAll our work is carried out by the internal workforce\n\n## Problem\n\nWe don't have enough capacity or capability\n\n## Proposal\n\nWe need to start working with contractors (external) to deliver field services",
+    "activity": [
+        {
+            "timestamp": "2026-06-25T08:08:28.355Z",
+            "action": "Created",
+            "who": "Joe Bloggs"
+        }
+    ]
+}
