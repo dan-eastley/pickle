@@ -69,17 +69,24 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
 
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
         <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
-          {/* Header — AI gradient to match the Virtual Architect Agent */}
-          <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-50 to-rose-50 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
-                <RobotIcon className="w-4 h-4 text-white" />
+          {/* Header — plain coloured bar, icon, title + purpose */}
+          <div className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
+                <RobotIcon className="w-4 h-4 text-blue-600" />
               </div>
-              <h2 className="text-base font-semibold text-gray-900">New Architecture Discovery</h2>
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold text-gray-900">New Architecture Discovery</h2>
+                <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                  Ask the Virtual Architect Agent a question about your architecture — describe the
+                  situation and what you want to know, and it produces a point-in-time view from the
+                  model as it stands today. It's read-only; nothing is changed.
+                </p>
+              </div>
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors"
+              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -103,11 +110,6 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
               </div>
             ) : (
               <>
-                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3">
-                  A Discovery asks the Virtual Architect Agent a question about your architecture —
-                  describe the situation and what you want to know, and it produces a point-in-time view
-                  from the model as it stands today. It's read-only; nothing is changed.
-                </p>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Title <span className="text-error-500">*</span>

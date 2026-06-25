@@ -97,14 +97,24 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
         <div className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]">
-          {/* Header */}
-          <div className={`flex items-center justify-between px-5 py-4 ${colors.bg} flex-shrink-0`}>
-            <div>
-              <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
+          {/* Header — plain coloured bar, icon, title + purpose */}
+          <div className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}>
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
+                <DecisionIcon className={`w-4 h-4 ${colors?.text ?? 'text-brand-700'}`} />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
+                <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                  How a change to the architecture gets proposed and governed — capture the context,
+                  problem, and proposed direction; the agents analyse it and, once accepted, the change
+                  is applied through a reviewed pull request.
+                </p>
+              </div>
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors"
+              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -125,11 +135,6 @@ export default function NewDecisionModal({ artefact, documents = [], selectedDoc
               </div>
             ) : (
               <>
-                <p className="text-sm text-gray-500 leading-relaxed border-l-2 border-brand-200 pl-3">
-                  An Architecture Decision is how a change to the architecture gets proposed and governed —
-                  capture the context, problem, and proposed direction; the agents analyse it and, once
-                  accepted, the change is applied through a reviewed pull request.
-                </p>
                 {/* Title */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
