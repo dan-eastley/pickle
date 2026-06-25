@@ -176,6 +176,14 @@
                 "scope": {
                     "type": "string",
                     "description": "The interface or initiative this specification covers."
+                },
+                "audience": {
+                    "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+                    "description": "Roles this document is written for (its readers)."
+                },
+                "author": {
+                    "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+                    "description": "Roles this document is responsible for authoring and maintaining."
                 }
             },
             "additionalProperties": false

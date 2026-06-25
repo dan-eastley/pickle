@@ -62,6 +62,35 @@ const ADHERENCE_STYLES = {
   deviation: 'bg-red-50 text-red-600',
 }
 
+// Audience / author roles for a document, rendered as labelled chips. Roles are
+// drawn from config/roles.json (validated by L2), aligning documents with the
+// same role vocabulary as every other artefact.
+function DocumentRoles({ doc }) {
+  const groups = [
+    ['Author', doc.author],
+    ['Audience', doc.audience],
+  ].filter(([, roles]) => roles?.length)
+  if (groups.length === 0) return null
+  return (
+    <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2">
+      {groups.map(([label, roles]) => (
+        <div key={label} className="flex items-baseline gap-2">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+            {label}
+          </span>
+          <span className="flex flex-wrap gap-1.5">
+            {roles.map((r) => (
+              <span key={r} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5">
+                {r}
+              </span>
+            ))}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── Sub-renderers ─────────────────────────────────────────────────────────────
 
 function ProseSection({ text }) {
@@ -1075,6 +1104,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
             {doc.description && (
               <p className="mt-2 text-gray-600 leading-relaxed">{doc.description}</p>
             )}
+            <DocumentRoles doc={doc} />
           </header>
 
           {visible.map((section) => {
@@ -1257,6 +1287,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{doc.title}</h2>
           {doc.description && <p className="text-gray-600 leading-relaxed">{doc.description}</p>}
+          <DocumentRoles doc={doc} />
           {doc.overview && (
             <p className="mt-3 text-gray-700 leading-relaxed whitespace-pre-line">{doc.overview}</p>
           )}

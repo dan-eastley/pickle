@@ -289,6 +289,14 @@
                 "200+ business users self-serving analytics without IT-mediated report production.",
                 "Auditable data lineage that satisfies Ofgem digital reporting obligations.",
                 "An ML-ready foundation enabling churn prediction and predictive asset maintenance."
+            ],
+            "audience": [
+                "Chief Information Officer",
+                "Chief Technology Officer",
+                "Enterprise Architect"
+            ],
+            "author": [
+                "Enterprise Architect"
             ]
         },
         {
@@ -471,6 +479,14 @@
                 "Proactive Consumer Duty communications within 4 hours of a triggering billing event.",
                 "A single, real-time customer view across web, app, phone, and field channels.",
                 "Coordinated smart-meter field scheduling tied to customer communications."
+            ],
+            "audience": [
+                "Chief Information Officer",
+                "Chief Technology Officer",
+                "Enterprise Architect"
+            ],
+            "author": [
+                "Enterprise Architect"
             ]
         }
     ],

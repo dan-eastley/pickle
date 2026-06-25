@@ -179,6 +179,14 @@
                     "question": "What is the agreed Databricks workspace tiering model — will operational and commercial teams share a single workspace with Unity Catalog namespace separation, or require separate workspaces?",
                     "raised-by": "Data Engineering Lead"
                 }
+            ],
+            "audience": [
+                "Architecture Review Board",
+                "Enterprise Architect"
+            ],
+            "author": [
+                "Enterprise Architect",
+                "Solution Architect"
             ]
         },
         {
@@ -293,6 +301,14 @@
                     "question": "Should Oracle Data Integrator (ODI) be retained for any ongoing batch ETL use cases (e.g. ERP period-end extracts), or is OIC capable of replacing all ODI patterns within the programme scope?",
                     "raised-by": "Data Engineering Lead"
                 }
+            ],
+            "audience": [
+                "Architecture Review Board",
+                "Enterprise Architect"
+            ],
+            "author": [
+                "Enterprise Architect",
+                "Solution Architect"
             ]
         }
     ],
