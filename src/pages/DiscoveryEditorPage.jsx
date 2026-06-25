@@ -89,6 +89,12 @@ export default function DiscoveryEditorPage() {
         </div>
       )}
 
+      <p className="max-w-2xl mb-6 text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3">
+        A Discovery asks the Virtual Architect Agent a question about your architecture. Describe the
+        situation and what you want to know, and it interrogates the model as it stands today to produce
+        a point-in-time view you can keep — it's read-only, nothing is changed.
+      </p>
+
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1 max-w-2xl space-y-5">
           {/* Title */}

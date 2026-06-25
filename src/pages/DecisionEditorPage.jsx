@@ -232,6 +232,13 @@ export default function DecisionEditorPage() {
         </div>
       )}
 
+      <p className="max-w-2xl mb-6 text-sm text-gray-500 leading-relaxed border-l-2 border-brand-200 pl-3">
+        An Architecture Decision is how a change to the architecture gets proposed and governed.
+        Capture the context, the problem, and your proposed direction — the agents then analyse its
+        impact and alignment, and once accepted the change is applied through a reviewed pull request.
+        Every change stays auditable.
+      </p>
+
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1 max-w-2xl space-y-5">
           {/* Title */}
