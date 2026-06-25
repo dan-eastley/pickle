@@ -14,5 +14,15 @@
             "change-type": "create",
             "description": "Add a new level-1 business process 'Customer Offboarding' with a suitable PROC id (next available at level 1), description 'Manage the end-to-end departure of a customer from the portfolio, covering offboarding request, final settlement, and account closure.', realising capability CAP-001-05. Add level-2 sub-processes for 'Capture Offboarding Request', 'Perform Final Settlement', and 'Close Account' with sequential PROC ids under the new level-1 process."
         }
+    ],
+    "narrative": null,
+    "requirements": null,
+    "recommendations": [
+        {
+            "recommendation": "**Add a `narrative` field** describing the business problem and opportunity in plain language. This should explain why customer offboarding is currently inconsistent, the impact on customers and the business, and why this business process definition will resolve it. Target a senior business audience with no architecture background."
+        },
+        {
+            "recommendation": "**Add a `requirements` array** with measurable, testable obligations that the business process must satisfy. Examples might include: 'Offboarding must complete within 30 days', 'All customer data must be archived before account closure', or 'Settlement must reconcile to zero outstanding balances'. Each requirement should have a `type` field (Functional or Non-Functional) and be written in business language, not implementation detail."
+        }
     ]
 }
