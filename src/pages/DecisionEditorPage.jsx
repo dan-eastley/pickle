@@ -1,7 +1,7 @@
 import { useState, useEffect, useId } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getDecision } from '../lib/api'
+import { getDecision, githubAction, getNextDecisionId } from '../lib/api'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import Button from '../components/ui/Button'
@@ -126,32 +126,22 @@ export default function DecisionEditorPage() {
     try {
       if (isEdit) {
         // Edit mode — update existing decision on branch, re-run narrative review
-        const res = await fetch('/api/github', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'edit-decision',
-            clientId,
-            versionId,
-            decisionId,
-            title,
-            context,
-            problem,
-            proposal,
-            requirements: requirements.filter((r) => r.description?.trim()),
-            scope,
-          }),
+        await githubAction({
+          action: 'edit-decision',
+          clientId,
+          versionId,
+          decisionId,
+          title,
+          context,
+          problem,
+          proposal,
+          requirements: requirements.filter((r) => r.description?.trim()),
+          scope,
         })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error ?? 'Failed to save changes')
         setSaveResult({ ok: true, edit: true, decisionId })
       } else {
         // Create mode — get next ID, create decision, open PR
-        const idRes = await fetch(
-          `/api/github?action=next-id&clientId=${clientId}&versionId=${versionId}`
-        )
-        const { nextId, error: idError } = await idRes.json()
-        if (idError) throw new Error(idError)
+        const nextId = await getNextDecisionId(clientId, versionId)
 
         const decision = {
           'decision-id': nextId,
@@ -174,13 +164,12 @@ export default function DecisionEditorPage() {
           ...(scope && { scope }),
         }
 
-        const res = await fetch('/api/github', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'create-decision', clientId, versionId, decision }),
+        const data = await githubAction({
+          action: 'create-decision',
+          clientId,
+          versionId,
+          decision,
         })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error ?? 'Failed to create decision')
         setSaveResult({
           ok: true,
           edit: false,

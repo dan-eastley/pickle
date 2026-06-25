@@ -19,6 +19,15 @@ export async function githubAction(body) {
   return data
 }
 
+// The next available decision ID (e.g. "ADR-016") for a client/version.
+export async function getNextDecisionId(clientId, versionId) {
+  const q = `clientId=${encodeURIComponent(clientId)}&versionId=${encodeURIComponent(versionId)}`
+  const res = await fetch(`/api/github?action=next-id&${q}`)
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok || data.error) throw new Error(data.error ?? `Request failed (${res.status})`)
+  return data.nextId
+}
+
 export async function getClients() {
   const data = await fetchJson('/api/arch/clients/clients.json')
   return data?.clients ?? []
