@@ -1,6 +1,9 @@
 {
     "clients": [
+        { "client-id": "fetc" },
         { "client-id": "fedc" },
-        { "client-id": "fwdc" }
+        { "client-id": "fwwc" },
+        { "client-id": "fegc" },
+        { "client-id": "fersc" }
     ]
 }
