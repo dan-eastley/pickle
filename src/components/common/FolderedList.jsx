@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import useFolders from '../../hooks/useFolders'
 import { CloseIcon, PlusIcon } from '../ui/icons'
 
 // UI-8 — organise a list of items into nested folders (max 3 levels) with
 // drag-and-drop. `items` is [{ id, node }] where `node` renders the item.
-// Folder structure is client-persisted via useFolders (see that hook for the
-// server-persistence follow-up).
-export default function FolderedList({ storageKey, items, itemLabel = 'item' }) {
-  const f = useFolders(storageKey)
+// `controller` is a folder controller (useServerFolders / useFolders) that owns
+// the folder state and persistence — this component is agnostic to where
+// folders are stored.
+export default function FolderedList({ controller, items, itemLabel = 'item' }) {
+  const f = controller
   const [collapsed, setCollapsed] = useState(new Set())
   const [renamingId, setRenamingId] = useState(null)
   const [drop, setDrop] = useState(null) // folderId hovered as a drop target ('' = root)

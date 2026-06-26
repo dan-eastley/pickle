@@ -10,6 +10,7 @@ import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
 import FolderedList from '../components/common/FolderedList'
+import useServerFolders from '../hooks/useServerFolders'
 import { ChevronRight, ChevronDown, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -107,10 +108,19 @@ export default function DecisionsPage() {
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
   const [decisions, setDecisions] = useState([])
+  const [indexFolders, setIndexFolders] = useState([])
   // Collapsed group keys. null = "use the default" (open draft/proposed + any
   // non-empty group); Expand/Collapse all replaces it with an explicit set.
   const [collapsedOverride, setCollapsedOverride] = useState(null)
   const [view, setView] = useState('stage') // 'stage' | 'folders'
+
+  // UI-8 folders, seeded from the index and persisted server-side.
+  const folders = useServerFolders(clientId, versionId, 'decisions', {
+    folders: indexFolders,
+    assign: Object.fromEntries(
+      decisions.filter((d) => d.folderId).map((d) => [d['decision-id'], d.folderId])
+    ),
+  })
 
   const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
@@ -124,6 +134,7 @@ export default function DecisionsPage() {
       .then((r) => (r.ok ? r.json() : { decisions: [] }))
       .then((data) => {
         setDecisions(data.decisions ?? [])
+        setIndexFolders(data.folders ?? [])
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -222,7 +233,7 @@ export default function DecisionsPage() {
 
           {view === 'folders' ? (
             <FolderedList
-              storageKey={`folders:decisions:${clientId}:${versionId}`}
+              controller={folders}
               itemLabel="decision"
               items={filtered.map((d) => ({
                 id: d['decision-id'],
