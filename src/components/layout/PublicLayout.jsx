@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import Footer from './Footer'
 import RouteContent from './RouteContent'
+import UserMenu from '../auth/UserMenu'
 
 export default function PublicLayout() {
   return (
@@ -31,6 +32,8 @@ export default function PublicLayout() {
         >
           Docs
         </NavLink>
+        <div className="h-5 w-px bg-gray-200 flex-shrink-0" />
+        <UserMenu />
       </header>
       <main className="relative flex-1 bg-gray-50">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-brand-50 to-transparent" />

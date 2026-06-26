@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import { ChevronDown } from '../ui/icons'
 import QuickPicker from './QuickPicker'
+import UserMenu from '../auth/UserMenu'
 
 function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
   const [open, setOpen] = useState(false)
@@ -152,6 +153,9 @@ export default function TopBar() {
           getId={(o) => o['version-id']}
         />
       </div>
+
+      <div className="h-5 w-px bg-gray-200 flex-shrink-0" />
+      <UserMenu />
     </header>
   )
 }

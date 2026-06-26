@@ -29,6 +29,12 @@ async function handleApiRequest(req, res, next, server) {
 
   const url = new URL(req.url, 'http://localhost')
 
+  // /api/auth/** → Better Auth Node handler (sign-up/in/out, session).
+  if (url.pathname.startsWith('/api/auth/')) {
+    const { authNodeHandler } = await server.ssrLoadModule('/lib/auth.ts')
+    return authNodeHandler(req, res)
+  }
+
   // /api/arch/** → always fetch live from GitHub
   if (url.pathname.startsWith('/api/arch/')) {
     const relPath = decodeURIComponent(url.pathname.slice('/api/arch/'.length))

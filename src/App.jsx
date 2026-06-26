@@ -3,6 +3,8 @@
 import { lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
+import { AuthProvider } from './context/AuthContext'
+import RequireAuth from './components/auth/RequireAuth'
 import NavigationProgress from './components/ui/NavigationProgress'
 import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
@@ -27,6 +29,8 @@ const DomainPage = lazy(() => import('./pages/DomainPage'))
 const AbstractionPage = lazy(() => import('./pages/AbstractionPage'))
 const ArtefactPage = lazy(() => import('./pages/ArtefactPage'))
 const DocsPage = lazy(() => import('./pages/DocsPage'))
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const RegisterPage = lazy(() => import('./pages/RegisterPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
@@ -54,15 +58,40 @@ function AppRoutes() {
     <>
       <NavigationProgress />
       <Routes>
+        {/* Authentication (full-screen, no app chrome) */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
         {/* Public / marketing pages */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/clients" element={<ClientsPage />} />
-          <Route path="/clients/:clientId/versions" element={<VersionsPage />} />
+          <Route
+            path="/clients"
+            element={
+              <RequireAuth>
+                <ClientsPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/clients/:clientId/versions"
+            element={
+              <RequireAuth>
+                <VersionsPage />
+              </RequireAuth>
+            }
+          />
         </Route>
 
         {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
-        <Route path="/clients/:clientId/:versionId" element={<Layout />}>
+        <Route
+          path="/clients/:clientId/:versionId"
+          element={
+            <RequireAuth>
+              <Layout />
+            </RequireAuth>
+          }
+        >
           <Route index element={<Navigate to="domains" replace />} />
           <Route path="domains" element={<DomainsPage />} />
           <Route path="domains/:domain" element={<DomainPage />} />
@@ -91,9 +120,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <ArchitectureProvider>
-        <AppRoutes />
-      </ArchitectureProvider>
+      <AuthProvider>
+        <ArchitectureProvider>
+          <AppRoutes />
+        </ArchitectureProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
