@@ -1,0 +1,162 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-PRO-DAP",
+    "audience": [
+        "Enterprise Architect",
+        "Application Architect",
+        "Business Architect"
+    ],
+    "author": [
+        "Application Architect",
+        "Business Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "PROC-001",
+            "row-id": "PLAT-CRM"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "PLAT-DXP"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "PLAT-MOBILE-APP"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "PLAT-CONTACT-CENTRE"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "PLAT-MARKETING-AUTOMATION"
+        },
+        {
+            "column-id": "PROC-001",
+            "row-id": "PLAT-CIS"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "PLAT-EAM"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "PLAT-IOT"
+        },
+        {
+            "column-id": "PROC-002",
+            "row-id": "PLAT-EMS"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "PLAT-ETRM"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "PLAT-MARKET-DATA"
+        },
+        {
+            "column-id": "PROC-003",
+            "row-id": "PLAT-RISK-ANALYTICS"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "PLAT-ADMS"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "PLAT-EMS"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "PLAT-OMS"
+        },
+        {
+            "column-id": "PROC-004",
+            "row-id": "PLAT-GIS"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "PLAT-EAM"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "PLAT-FSM"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "PLAT-GIS"
+        },
+        {
+            "column-id": "PROC-005",
+            "row-id": "PLAT-IOT"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "PLAT-CIS"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "PLAT-TARIFF-ENGINE"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "PLAT-MDM"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "PLAT-HES"
+        },
+        {
+            "column-id": "PROC-006",
+            "row-id": "PLAT-CRM"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "PLAT-REG-REPORTING"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "PLAT-BI"
+        },
+        {
+            "column-id": "PROC-007",
+            "row-id": "PLAT-DATA-LAKEHOUSE"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "PLAT-EMISSIONS"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "PLAT-ESG"
+        },
+        {
+            "column-id": "PROC-008",
+            "row-id": "PLAT-BI"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "PLAT-ERP"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "PLAT-HRIS"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "PLAT-ITSM"
+        },
+        {
+            "column-id": "PROC-009",
+            "row-id": "PLAT-COLLAB"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial process-to-platform support matrix for the 1.0.0 baseline."
+        }
+    ]
+}

@@ -19,18 +19,16 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### DEC-2 · ✅ "New Decision" modal persistence · Medium
 **Context:** The artefact-page modal collects Title + Context/Problem/Proposal + Scope and now POSTs `create-decision` (same path as the full editor), then links to the created draft.
 
-### DEC-3 · 🟡 Decision narrative migration · Low
-**Context:** New decisions use Context/Problem/Proposal; the detail view renders these (falling back to legacy `narrative`).
-**Gap:** Older decisions on branches still carry only `narrative`.
-**Proposed fix:** Backfill on next edit, or a one-off migration.
+### DEC-3 · ✅ Decision narrative migration · Low
+**Done:** `lib/narrative.parseNarrative` is the inverse of the compose step (splits `## Context … ## Problem … ## Proposal` back into the three fields; an un-headed narrative becomes Context). `decisionChangeFields(d)` prefers the split fields and falls back to parsing the narrative. Wired into the full editor load and the inline-edit start, so any legacy narrative-only decision is **backfilled into the split fields on next edit** (and persisted on save). Unit-tested.
 
 ### DEC-4 · ⬜ Branch preview for STAGED decisions · Medium
 **Context:** Staged changes live on the decision branch / PR.
 **Gap:** The app only reads `main`; there's no in-app preview of the staged diff.
 **Proposed fix:** Support `?ref=<branch>` reads so the staged artefact state can be previewed before commit.
 
-### DEC-5 · 🟡 Inline editing of decisions (replace the edit form) · Medium
-**Done:** Draft decisions have an inline **Edit** mode on the detail page (the header Edit button now toggles in-place editing instead of routing to `/edit`): Title and the Context / Problem / Proposal Change fields swap to inline inputs; **Save & re-review** calls `edit-decision`, which recomposes the narrative and **re-dispatches `decisions-to-draft`** so recommendations refresh (workflow banner shown). Editing is gated on `status === 'draft'`. **Remaining:** inline editing of Requirements and Scope, then retire the standalone `/edit` form/route once at parity.
+### DEC-5 · ✅ Inline editing of decisions (replaces the edit form) · Medium
+**Done:** Full inline editing on the decision detail page (draft-only): Title, Context/Problem/Proposal, **Requirements** (shared RequirementsList) and **Scope** (ScopeSelector) all edit in place; Save & re-review calls edit-decision and re-dispatches decisions-to-draft. The standalone `/edit` route is **retired** (removed from the router; RequirementsList extracted to a shared component). DEC-3 backfill applies on edit for legacy records.
 **Context:** A draft decision is edited through a separate full-page editor (`/decisions/:id/edit`), away from the recommendations and analysis the workflow produced. This forces a context switch — you can't see the Narrative Review feedback while you revise.
 **Gap:** No way to edit the Title / Context / Problem / Proposal / Requirements / Scope *in place* on the decision detail page, alongside the recommendations they should respond to.
 **Proposed fix:** Add an edit (pencil) affordance per editable field/section on the detail page. Clicking it swaps the rendered Markdown for an `AutoGrowTextarea` (reuse the create-modal inputs); Save calls the existing `edit-decision` API, which already re-composes the narrative and **re-dispatches `decisions-to-draft.yml`** so recommendations refresh. Editing is allowed **only while `status === 'draft'`** (gate the affordance on status; show a read-only note otherwise). This is the preferred approach and **supersedes the standalone edit form** (retire `/edit` once parity is reached). Cross-cutting with [PDL-4] (live refresh once the workflow finishes) and [QV-5] (focus management for the inline editors).
@@ -66,15 +64,14 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-3 · ✅ Auto-grow fields, terminology, help panels · Low
 **Context:** Context/Problem/Proposal/Request auto-grow; count casing; "New Architecture Decision/Discovery" titles + primary buttons; confirm-on-discard; friendly help panels.
 
-### UI-4 · 🟡 Global search / command palette · High
-**Done:** Header **QuickPicker** — a wide always-visible jump-to box (`components/layout/QuickPicker.jsx`) scoped to the current client + version (and current domain when active). Type to filter artefacts by name/id; ↑/↓/Enter to navigate; results dropdown only on typing; **`/` shortcut focuses it from anywhere** (command-palette convention) with a visible `/` hint.
-**Remaining:** broaden the index beyond artefact *types* to **entities** (individual capabilities/processes/platforms by id) and to **decisions/discoveries** and navigation actions, for a true global command palette. Pairs with [UI-9] (relationship navigation) and [UI-5] (deep links).
+### UI-4 · ✅ Global search / command palette · High
+**Done:** Header **QuickPicker** — a wide always-visible jump-to box (`components/layout/QuickPicker.jsx`) scoped to the current client + version (and current domain when active). Type to filter artefacts by name/id; ↑/↓/Enter to navigate; results dropdown only on typing; **`/` shortcut focuses it from anywhere** (command-palette convention) with a visible `/` hint. Now also indexes the client's **decisions and discoveries** (loaded lazily on first focus) with per-kind icons, so you can jump to any artefact, decision, or discovery by name/id. **Optional later:** index individual entities (each capability/process by id).
 
-### UI-5 · 🟡 Responsiveness, loading skeletons, entity deep-linking · Low
+### UI-5 · ✅ Responsiveness, loading skeletons, entity deep-linking · Low
 **Context:** Desktop-first; some routes flash a bare spinner; the entity panel has no shareable URL.
 **Proposed fix:** A mobile pass, skeleton loaders, and deep-linkable entity URLs.
 **Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface. **Deep-linkable entity-panel URLs** — the entity panel selection now lives in the URL (`?entity=…`) via a reusable `useSearchParamState` hook, so an open entity is shareable, survives refresh, and is restorable from a link.
-**Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Remaining: a deeper device-by-device QA sweep if needed.
+**Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Done: contents-nav rails hide on mobile (hidden lg:block), the 5-step decision status bar scrolls rather than squishing, header + document surfaces use mobile padding. A deep device-by-device QA sweep remains optional.
 
 ### UI-6 · ⬜ Diagram export / download · Medium
 **Context:** Diagrams render as SVG in-app.
@@ -84,7 +81,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-7 · ⬜ Brand/client-specific diagram theming · Low
 **Proposed fix:** Allow per-client colourways for diagrams.
 
-### UI-8 · ⬜ Folder organisation for decisions & discoveries · Medium
+### UI-8 · 🟡 Folder organisation for decisions & discoveries · Medium
+**Done (MVP):** A "Folders" view toggle on the Decisions and Discovery index pages renders a nested folder tree (max 3 levels) with **create / rename (double-click) / delete** folders and **drag-and-drop** to file items into folders, nest folders, or drop back to Unfiled. Built on a reusable `FolderedList` + `useFolders` hook, **client-persisted (localStorage)** per client/version. **Follow-up:** promote persistence to the architecture index (a `folders` array + `folderPath` on each entry, written via the API) so folders are shared, and optionally nest folders within each stage.
+**ORIG:
 **Context:** Decisions and discoveries are flat lists within a stage/status. As volume grows (many in-flight ADRs, many discoveries) the lists become unmanageable; there's no way to group related items (e.g. by initiative, domain, or workstream).
 **Gap:** No grouping construct; the index pages are a single flat list per stage.
 **Proposed fix:** A lightweight **folder** tree *within* each stage/status, max **3 levels** deep. Capabilities:
@@ -94,7 +93,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 - Folders are organisational only: they don't change a decision's branch/path or its stage; an item still belongs to exactly one stage and now optionally one folder path.
 **Design notes:** Model the tree as an index-level concern (e.g. a `folders` array + a `folderPath` on each index entry in `decisions.json` / `discovery.json`), so the architecture record itself is untouched and the tree is cheap to reorganise. Enforce the 3-level cap and prevent cycles in the move logic. Persist folder assignment through the existing index-sync path. Consider a shared `<FolderTree>` component reused by both index pages. Drag-and-drop via the native HTML5 DnD API or a small library; keep keyboard-accessible move actions for [QV-5].
 
-### UI-9 · ⬜ Navigate the architecture (matrix-driven relationship explorer) · High
+### UI-9 · 🟡 Navigate the architecture (matrix-driven relationship explorer) · High
 **Context:** Artefacts are viewed in isolation; the rich relationships captured in matrices (capability↔process, capability↔application, etc.) aren't browsable. You can't follow the thread "this capability → its processes → their data".
 **Gap:** No way to traverse the architecture graph from one entity to its related entities, and no single place that shows *all* relationships an entity participates in.
 **Proposed fix:** A **slide-out relationship explorer** (reuse/extend `EntityPanel`). When viewing an entity (e.g. a capability) the panel shows a **table of every relationship** that entity participates in, grouped by relationship type and **sourced from the matrices** (each matrix defines a typed mapping between two artefact types). Clicking a related entity (e.g. a process) **slides out a new panel from the right, overlaying** the previous one (a breadcrumb stack); from a process you can step to its data, and so on. Clicking the backdrop/off dismisses the whole stack.
@@ -121,7 +120,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Proposed fix:** Define the remaining diagram/matrix types in the registry and renderers.
 
 ### AMC-5 · 🟡 Matrix coverage review — find the missing mappings · Medium
-**Done:** Coverage review published in [docs/artefacts.md](docs/artefacts.md#matrix-coverage-amc-5) (concept × concept map + prioritised gaps). Defined the first missing matrix end-to-end — **DAT-PRO-DAC** (Process ↔ Data, the classic **CRUD** matrix): schema + schema-index + i18n + registry + schema-doc + registry row, instances for fedc & fwwc, and a small reusable MatrixView enhancement to render an optional `operation` (CRUD) value per cell. **Remaining:** the next prioritised matrices — Process↔Application, Capability↔Data, Application↔Data, Capability↔Strategy/Principle.
+**Done:** Coverage review published in [docs/artefacts.md](docs/artefacts.md#matrix-coverage-amc-5) (concept × concept map + prioritised gaps). Defined the first missing matrix end-to-end — **DAT-PRO-DAC** (Process ↔ Data, the classic **CRUD** matrix): schema + schema-index + i18n + registry + schema-doc + registry row, instances for fedc & fwwc, and a small reusable MatrixView enhancement to render an optional `operation` (CRUD) value per cell. Also defined **APP-PRO-DAP** (Process↔Application) end-to-end � schema, index, i18n, registry, doc, registry row, and instances for all five clients. **Remaining:** Capability↔Data, Application↔Data, Capability↔Strategy/Principle.
 **Context:** A handful of matrices exist (e.g. capability↔process `BUS-CAP-PRO`, capability↔application `APP-CAP-DAP`). Matrices are the edges of the architecture graph, so coverage directly limits what [UI-9] can navigate and what governance/impact analysis can reason about.
 **Gap:** No deliberate review of *which* cross-artefact mappings matter. Likely-missing examples: **Data ↔ Process** (which processes create/read/update/delete which data), **Capability ↔ Data** (data owned/used by a capability), **Application ↔ Data** (systems of record), **Process ↔ Application** (which app supports which process step), **Capability ↔ Strategy/Principle** (traceability), **Application ↔ Integration/Interface**, **Capability ↔ Org/Role** (ownership, feeds [DEC-6]).
 **Proposed fix:** Produce a coverage map of artefact-type × artefact-type, mark which mappings are valuable, prioritise, then define the missing matrix types (registry entry + schema + doc + renderer, per `docs/artefacts.md` and [AMC-4]). Start with **Data ↔ Process**.
@@ -235,7 +234,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-5 · 🟡 Accessibility pass · Medium
 **Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (`role=dialog`/`aria-modal`).
 **Done:** `SlidePanel` (entity panel) now has full focus management — `role=dialog`/`aria-modal`/`aria-label`, focus moves in on open and returns to the trigger on close (`useFocusTrap`), and the off-screen closed panel is `inert` so its controls leave the tab order. Real `htmlFor`/`id` label association added to the New Decision and New Discovery create forms (replacing the `<span>` pseudo-labels).
-**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). **Remaining:** a deliberate contrast + keyboard-order audit.
+**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). Keyboard: a consistent always-visible :focus-visible ring (box-shadow, survives focus:outline-none) now applies to every interactive element. **Remaining:** a colour-contrast remediation pass (some text-gray-400 secondary text is below AA).
 
 ### QV-6 · ✅ Formatting + coverage · Low
 **Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.
@@ -256,7 +255,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
 | 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
 
-**Remaining:** finding #1 (auth + CORS) is the headline production blocker — sequence with [RAS-2]/[RAS-3] and [DEC-6]. #4 proxy guard. A deeper review (ideally with the **Fable** model and the `/security-review` skill) should follow once auth is in.
+**Status:** all non-auth hardening is complete (CORS allow-list, id validation, proxy prefix/traversal guards, secret handling, no stored XSS). The npm-audit vulns are dev-tooling only (vite/esbuild build step, not in the runtime bundle) � deferred to the next Vite major. The **only** remaining item is finding #1, authentication, which is its own High backlog item [RAS-2] (deliberately out of scope here).
 
 ### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
 **Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.

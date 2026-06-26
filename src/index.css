@@ -18,6 +18,22 @@
     background-color: #f9fafb;
     color: #101828;
   }
+
+  /* Consistent, always-visible keyboard focus ring (QV-5). A box-shadow ring is
+     used so it survives Tailwind's `focus:outline-none` on inputs, and
+     :focus-visible keeps it off mouse/programmatic focus. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:not([tabindex='-1']):focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px #ffffff,
+      0 0 0 4px #2970ff;
+    border-radius: 1px;
+  }
 }
 
 @layer utilities {
