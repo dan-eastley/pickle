@@ -546,6 +546,19 @@ const ARTEFACTS_BASE = [
     ],
   },
   {
+    id: 'APP-PRO-DAP',
+    domain: 'application',
+    abstraction: 'logical',
+    format: 'matrix',
+    key: false,
+    name: 'Business Processes ↔ Application Domains & Platforms',
+    description: 'Maps which application platforms support which Level 1 business processes.',
+    relatedTo: [
+      { artefactId: 'BUS-PRO', relationship: 'derived-from' },
+      { artefactId: 'APP-DAP', relationship: 'derived-from' },
+    ],
+  },
+  {
     id: 'APP-PRN',
     domain: 'application',
     abstraction: 'logical',
