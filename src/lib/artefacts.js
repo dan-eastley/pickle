@@ -780,6 +780,7 @@ export const resolveRefArtefactId = (entityId) => {
   if (!entityId) return null
   if (entityId.startsWith('CAP-')) return 'BUS-CAP'
   if (entityId.startsWith('PROC-')) return 'BUS-PRO'
+  if (entityId.startsWith('CON-') || entityId.startsWith('DAT-DOM-')) return 'DAT-DAC'
   if (entityId.startsWith('APP-DOM-') || entityId.startsWith('PLAT-')) return 'APP-DAP'
   if (entityId.startsWith('INT-IFC')) return 'INT-IFC'
   const prn = entityId.match(/^([A-Z]+)-PRN/)
