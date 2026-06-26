@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["api/**/*.ts", "db/**/*.ts", "lib/**/*.ts", "drizzle.config.ts"]
+}
