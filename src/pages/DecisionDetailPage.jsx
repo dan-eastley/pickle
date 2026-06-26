@@ -84,56 +84,59 @@ function StatusProgress({ status }) {
   const activeStep = STATUS_STEPS.indexOf(status)
 
   return (
-    <div className="mb-8 flex items-center gap-0">
-      {STATUS_STEPS.map((step, i) => {
-        const isPast = !isTerminal && i < activeStep
-        const isCurrent = !isTerminal && i === activeStep
-        const reached = isPast || isCurrent
+    // Scrolls rather than squishing the 5 steps on narrow screens.
+    <div className="mb-8 overflow-x-auto">
+      <div className="flex items-center gap-0 min-w-[460px]">
+        {STATUS_STEPS.map((step, i) => {
+          const isPast = !isTerminal && i < activeStep
+          const isCurrent = !isTerminal && i === activeStep
+          const reached = isPast || isCurrent
 
-        return (
-          <div key={step} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
-              <div
-                className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
-                  reached ? '' : 'bg-gray-100 !text-gray-400'
-                } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
-                style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
-              >
-                {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
+          return (
+            <div key={step} className="flex items-center flex-1 last:flex-none">
+              <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
+                <div
+                  className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
+                    reached ? '' : 'bg-gray-100 !text-gray-400'
+                  } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
+                  style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
+                >
+                  {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
+                </div>
+                <span
+                  className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
+                  style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
+                >
+                  {step}
+                </span>
               </div>
-              <span
-                className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
-                style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
-              >
-                {step}
-              </span>
+              {i < STATUS_STEPS.length - 1 && (
+                <div
+                  className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
+                  style={
+                    i < activeStep && !isTerminal
+                      ? {
+                          backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})`,
+                        }
+                      : undefined
+                  }
+                />
+              )}
             </div>
-            {i < STATUS_STEPS.length - 1 && (
-              <div
-                className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
-                style={
-                  i < activeStep && !isTerminal
-                    ? {
-                        backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})`,
-                      }
-                    : undefined
-                }
-              />
-            )}
-          </div>
-        )
-      })}
-      {isTerminal && (
-        <>
-          <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
-          <div className="flex flex-col items-center" title={STATUS_TOOLTIPS.rejected}>
-            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">
-              !
+          )
+        })}
+        {isTerminal && (
+          <>
+            <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
+            <div className="flex flex-col items-center" title={STATUS_TOOLTIPS.rejected}>
+              <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">
+                !
+              </div>
+              <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
             </div>
-            <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

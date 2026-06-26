@@ -67,11 +67,11 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-4 · ✅ Global search / command palette · High
 **Done:** Header **QuickPicker** — a wide always-visible jump-to box (`components/layout/QuickPicker.jsx`) scoped to the current client + version (and current domain when active). Type to filter artefacts by name/id; ↑/↓/Enter to navigate; results dropdown only on typing; **`/` shortcut focuses it from anywhere** (command-palette convention) with a visible `/` hint. Now also indexes the client's **decisions and discoveries** (loaded lazily on first focus) with per-kind icons, so you can jump to any artefact, decision, or discovery by name/id. **Optional later:** index individual entities (each capability/process by id).
 
-### UI-5 · 🟡 Responsiveness, loading skeletons, entity deep-linking · Low
+### UI-5 · ✅ Responsiveness, loading skeletons, entity deep-linking · Low
 **Context:** Desktop-first; some routes flash a bare spinner; the entity panel has no shareable URL.
 **Proposed fix:** A mobile pass, skeleton loaders, and deep-linkable entity URLs.
 **Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface. **Deep-linkable entity-panel URLs** — the entity panel selection now lives in the URL (`?entity=…`) via a reusable `useSearchParamState` hook, so an open entity is shareable, survives refresh, and is restorable from a link.
-**Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Remaining: a deeper device-by-device QA sweep if needed.
+**Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Done: contents-nav rails hide on mobile (hidden lg:block), the 5-step decision status bar scrolls rather than squishing, header + document surfaces use mobile padding. A deep device-by-device QA sweep remains optional.
 
 ### UI-6 · ⬜ Diagram export / download · Medium
 **Context:** Diagrams render as SVG in-app.
