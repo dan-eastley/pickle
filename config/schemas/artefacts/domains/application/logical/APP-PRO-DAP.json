@@ -1,0 +1,124 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-PRO-DAP",
+    "title": "Business Processes ↔ Application Domains & Platforms",
+    "description": "Many-to-many mapping between BUS-PRO business processes (Level 1) and the APP-DAP application platforms that support them. Answers: which systems does each business process run on, and which processes depend on each platform?",
+    "meta": {
+        "domain": "application",
+        "abstraction": "logical",
+        "format": "matrix",
+        "description": "Maps each application platform to the business processes it supports — the systems-support view of the operating model.",
+        "purpose": [
+            "Show which platforms support each business process — exposing system dependencies.",
+            "Find process gaps (a process no platform supports) and platform sprawl (overlapping support).",
+            "Support rationalisation, resilience, and impact analysis: changing a platform, read off the processes affected.",
+            "Pair with DAT-PRO-DAC (process↔data) to give each process its full 'what data, what system' picture."
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "BUS-PRO",
+                "array": "processes",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "outcome",
+                "filter": {
+                    "field": "level",
+                    "in": [
+                        1
+                    ]
+                }
+            },
+            "rows": {
+                "artefact": "APP-DAP",
+                "array": "platforms",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description"
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "relationships"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
+        "relationships": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
+                "properties": {
+                    "column-id": {
+                        "type": "string",
+                        "description": "BUS-PRO process ID"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "APP-DAP platform ID"
+                    },
+                    "rationale": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "activity": {
+            "type": "array",
+            "description": "Chronological activity / change-history log.",
+            "items": {
+                "$ref": "#/$defs/activity-entry"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "activity-entry": {
+            "type": "object",
+            "required": [
+                "timestamp",
+                "action",
+                "who"
+            ],
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "description": "ISO 8601 datetime."
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "Created",
+                        "Updated",
+                        "Archived",
+                        "Deleted"
+                    ],
+                    "description": "The kind of change."
+                },
+                "who": {
+                    "type": "string",
+                    "description": "Display name of the person or agent."
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

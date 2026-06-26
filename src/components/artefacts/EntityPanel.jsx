@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getArtefact, resolveRefArtefactId } from '../../lib/artefacts'
 import { getArtefactData } from '../../lib/api'
+import { loadEntityRelationships } from '../../lib/relationships'
 import { nameWithId } from '../../lib/format'
 import SlidePanel from '../ui/SlidePanel'
 import Spinner from '../ui/Spinner'
@@ -48,9 +49,24 @@ function FieldValue({ value }) {
 
 export default function EntityPanel({ entityId, clientId, versionId, onOpenEntity, onClose }) {
   const [state, setState] = useState({ status: 'idle' })
+  const [rels, setRels] = useState(null) // UI-9 matrix relationships (null = loading)
 
   const targetArtefactId = resolveRefArtefactId(entityId)
   const artefact = targetArtefactId ? getArtefact(targetArtefactId) : null
+
+  // UI-9 — load the entity's relationships across all matrices so you can step
+  // from here to related capabilities / processes / data / platforms.
+  useEffect(() => {
+    if (!entityId) return
+    let cancelled = false
+    setRels(null)
+    loadEntityRelationships(entityId, clientId, versionId)
+      .then((r) => !cancelled && setRels(r))
+      .catch(() => !cancelled && setRels([]))
+    return () => {
+      cancelled = true
+    }
+  }, [entityId, clientId, versionId])
 
   useEffect(() => {
     if (!entityId) return
@@ -137,6 +153,40 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
                 </div>
               ))}
             </dl>
+
+            {/* UI-9 — related entities, resolved from the matrices. Click to
+                navigate to that entity in this same panel. */}
+            {rels === null ? (
+              <p className="text-xs text-gray-400">Finding relationships…</p>
+            ) : rels.length > 0 ? (
+              <div className="space-y-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                  Related
+                </p>
+                {rels.map((group) => (
+                  <div key={group.artefact?.id ?? 'x'}>
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      {group.artefact?.name ?? 'Related'}
+                    </p>
+                    <div className="border border-gray-200 divide-y divide-gray-100">
+                      {group.entities.map((e) => (
+                        <button
+                          key={e.id}
+                          onClick={() => onOpenEntity?.(e.id)}
+                          title={`via ${e.via.join(', ')}`}
+                          className="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 transition-colors"
+                        >
+                          <span className="font-mono text-[11px] px-1.5 py-0.5 bg-gray-100 text-gray-500 flex-shrink-0">
+                            {e.id}
+                          </span>
+                          <span className="text-sm text-gray-700 min-w-0 truncate">{e.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
 
             {artefact && (
               <Link
