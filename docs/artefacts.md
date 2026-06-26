@@ -73,6 +73,7 @@ This table is the authoritative registry of every defined artefact type. Every r
 | APP-DAP | Application | Logical | Catalogue | Application Domains & Platforms | Two-tier catalogue of application groupings and the platforms that sit within them |
 | APP-DPM | Application | Logical | Diagram | Domains & Platforms Model | Visual map of the Application Domains & Platforms Catalogue (APP-DAP) |
 | APP-CAP-DAP | Application | Logical | Matrix | Business Capabilities ↔ Application Domains & Platforms | Maps each APP-DAP platform to the Level 2 business capabilities it supports |
+| APP-PRO-DAP | Application | Logical | Matrix | Business Processes ↔ Application Domains & Platforms | Maps which application platforms support which Level 1 business processes |
 | APP-PRN | Application | Logical | Catalogue | Application Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Application domain |
 | APP-STR-PRN | Application | Logical | Matrix | Application Architecture Strategy ↔ Principles | Many-to-many mapping between APP-STR strategies and APP-PRN principles |
 | APP-GRD | Application | Physical | Catalogue | Application Architecture Guardrails | Non-negotiable constraints and mandatory standards for the Application domain |
@@ -94,20 +95,21 @@ Matrices are the **edges of the architecture graph** — they're what makes the 
 | From ↓ \ To → | Capability | Process | Data | Application | Interface |
 |---|---|---|---|---|---|
 | **Capability** | — | ✅ BUS-CAP-PRO | ⬜ gap | ✅ APP-CAP-DAP | ⬜ |
-| **Process** | (above) | — | ✅ **DAT-PRO-DAC** (new) | ⬜ gap | ⬜ |
+| **Process** | (above) | — | ✅ **DAT-PRO-DAC** | ✅ **APP-PRO-DAP** | ⬜ |
 | **Data** | (Cap↔Data gap) | (above) | — | ⬜ gap | ✅ INT-DAC-IFC |
-| **Application** | (above) | (Proc↔App gap) | (Data↔App gap) | — | ⬜ |
+| **Application** | (above) | ✅ APP-PRO-DAP | (Data↔App gap) | — | ⬜ |
 | **Interface** | | | (above) | | — |
 
 **Existing content matrices:** BUS-CAP-PRO (capability↔process), APP-CAP-DAP (capability↔platform), APP-DAP-CAT (platform↔physical app), INT-DAC-IFC (data↔interface), and now **DAT-PRO-DAC** (process↔data, CRUD).
 
+**Done:** ✅ **Process ↔ Application** (`APP-PRO-DAP`) — which platforms support each Level 1 process. Pairs with DAT-PRO-DAC to complete the process's "what data, what system" picture.
+
 **Prioritised gaps** (next candidates, in rough order of value):
 
-1. **Process ↔ Application** — which application supports which process (step). Pairs with DAT-PRO-DAC to complete the process's "what data, what system" picture.
-2. **Capability ↔ Data** — the data a capability owns/uses; supports data-ownership by capability.
-3. **Application ↔ Data** — systems of record; which application masters which entity.
-4. **Capability ↔ Strategy / Principle** — traceability from motivation to capability.
-5. **Capability ↔ Org / Role** — ownership (feeds DEC-6 governance); needs an Org artefact first.
+1. **Capability ↔ Data** — the data a capability owns/uses; supports data-ownership by capability.
+2. **Application ↔ Data** — systems of record; which application masters which entity.
+3. **Capability ↔ Strategy / Principle** — traceability from motivation to capability.
+4. **Capability ↔ Org / Role** — ownership (feeds DEC-6 governance); needs an Org artefact first.
 
 Each new matrix follows the [Adding a new artefact type](#adding-a-new-artefact-type) procedure and [Matrix placement](output-formats.md#matrix-placement) rules. DAT-PRO-DAC is the worked example.
 

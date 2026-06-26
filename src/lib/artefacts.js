@@ -546,6 +546,19 @@ const ARTEFACTS_BASE = [
     ],
   },
   {
+    id: 'APP-PRO-DAP',
+    domain: 'application',
+    abstraction: 'logical',
+    format: 'matrix',
+    key: false,
+    name: 'Business Processes ↔ Application Domains & Platforms',
+    description: 'Maps which application platforms support which Level 1 business processes.',
+    relatedTo: [
+      { artefactId: 'BUS-PRO', relationship: 'derived-from' },
+      { artefactId: 'APP-DAP', relationship: 'derived-from' },
+    ],
+  },
+  {
     id: 'APP-PRN',
     domain: 'application',
     abstraction: 'logical',
@@ -767,6 +780,7 @@ export const resolveRefArtefactId = (entityId) => {
   if (!entityId) return null
   if (entityId.startsWith('CAP-')) return 'BUS-CAP'
   if (entityId.startsWith('PROC-')) return 'BUS-PRO'
+  if (entityId.startsWith('CON-') || entityId.startsWith('DAT-DOM-')) return 'DAT-DAC'
   if (entityId.startsWith('APP-DOM-') || entityId.startsWith('PLAT-')) return 'APP-DAP'
   if (entityId.startsWith('INT-IFC')) return 'INT-IFC'
   const prn = entityId.match(/^([A-Z]+)-PRN/)

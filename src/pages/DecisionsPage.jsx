@@ -9,10 +9,32 @@ import ActionBar from '../components/ui/ActionBar'
 import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
+import FolderedList from '../components/common/FolderedList'
 import { ChevronRight, ChevronDown, DecisionIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 const STATUS_DEFAULT_OPEN = new Set(['draft', 'proposed'])
+
+// Compact decision row used inside the folder view.
+function DecisionRow({ d, clientId, versionId }) {
+  return (
+    <Link
+      to={`/clients/${clientId}/${versionId}/decisions/${d['decision-id']}`}
+      className="group flex items-center gap-3 px-3 py-2 bg-white border border-gray-200 hover:border-gray-400 transition-colors"
+    >
+      <DecisionIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+      <span className="min-w-0 flex-1 truncate text-sm text-gray-800 group-hover:text-brand-700">
+        {d.title}
+      </span>
+      <span
+        className={`text-[11px] font-semibold px-1.5 py-0.5 flex-shrink-0 ${decisionStatusBadge(d.status ?? 'draft')}`}
+      >
+        {decisionStatusLabel(d.status ?? 'draft')}
+      </span>
+      <span className="text-xs font-mono text-gray-400 flex-shrink-0">{d['decision-id']}</span>
+    </Link>
+  )
+}
 
 function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onToggle }) {
   const open = !collapsed
@@ -88,6 +110,7 @@ export default function DecisionsPage() {
   // Collapsed group keys. null = "use the default" (open draft/proposed + any
   // non-empty group); Expand/Collapse all replaces it with an explicit set.
   const [collapsedOverride, setCollapsedOverride] = useState(null)
+  const [view, setView] = useState('stage') // 'stage' | 'folders'
 
   const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
@@ -179,22 +202,48 @@ export default function DecisionsPage() {
         </div>
       ) : (
         <>
-          <div className="mb-2 flex justify-end">
-            <ExpandCollapseAll onExpandAll={expandAll} onCollapseAll={collapseAll} />
+          <div className="mb-2 flex items-center justify-between">
+            {/* View toggle: group by stage, or organise into folders (UI-8) */}
+            <div className="inline-flex border border-gray-200 text-xs">
+              {['stage', 'folders'].map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className={`px-3 py-1 capitalize transition-colors ${view === v ? 'bg-brand-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                >
+                  {v === 'stage' ? 'By stage' : 'Folders'}
+                </button>
+              ))}
+            </div>
+            {view === 'stage' && (
+              <ExpandCollapseAll onExpandAll={expandAll} onCollapseAll={collapseAll} />
+            )}
           </div>
-          <div className="space-y-3">
-            {grouped.map(({ status, decisions: group }) => (
-              <DecisionGroup
-                key={status}
-                status={status}
-                decisions={group}
-                clientId={clientId}
-                versionId={versionId}
-                collapsed={isCollapsed(status, group.length)}
-                onToggle={() => toggleGroup(status, group.length)}
-              />
-            ))}
-          </div>
+
+          {view === 'folders' ? (
+            <FolderedList
+              storageKey={`folders:decisions:${clientId}:${versionId}`}
+              itemLabel="decision"
+              items={filtered.map((d) => ({
+                id: d['decision-id'],
+                node: <DecisionRow d={d} clientId={clientId} versionId={versionId} />,
+              }))}
+            />
+          ) : (
+            <div className="space-y-3">
+              {grouped.map(({ status, decisions: group }) => (
+                <DecisionGroup
+                  key={status}
+                  status={status}
+                  decisions={group}
+                  clientId={clientId}
+                  versionId={versionId}
+                  collapsed={isCollapsed(status, group.length)}
+                  onToggle={() => toggleGroup(status, group.length)}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
 

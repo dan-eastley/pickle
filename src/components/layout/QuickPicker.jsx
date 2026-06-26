@@ -2,30 +2,82 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getArtefactsForDomain, ARTEFACTS, getDomain, DOMAIN_COLORS } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
+import { DecisionIcon, RobotIcon } from '../ui/icons'
 
-// Header quick-jump. A wide always-visible search box, scoped to the current
-// client + version, and to the current domain when one is active (otherwise the
-// whole client). The results dropdown only appears once you start typing, and
-// matches the input width. Enter/click navigates to the artefact.
+// Header quick-jump / command palette. A wide always-visible search box, scoped
+// to the current client + version (and current domain for artefacts). It indexes
+// artefact types plus the client's decisions and discoveries (loaded lazily on
+// first focus). Type to filter by name/id; ↑/↓/Enter navigates; "/" focuses it.
 export default function QuickPicker() {
   const { clientId, versionId, domain } = useParams()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [focused, setFocused] = useState(false)
   const [active, setActive] = useState(0)
+  const [extra, setExtra] = useState(null) // { decisions, discoveries } once loaded
   const ref = useRef(null)
   const inputRef = useRef(null)
 
-  const items = useMemo(() => (domain ? getArtefactsForDomain(domain) : ARTEFACTS), [domain])
+  const base = `/clients/${clientId}/${versionId}`
+
+  // Lazily load decisions + discoveries the first time the box is focused.
+  useEffect(() => {
+    if (!focused || extra || !clientId || !versionId) return
+    let live = true
+    const get = (p) =>
+      fetch(`/api/arch/clients/${clientId}/${versionId}/${p}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null)
+    Promise.all([get('decisions/decisions.json'), get('discovery/discovery.json')]).then(
+      ([dec, dsc]) => {
+        if (live) setExtra({ decisions: dec?.decisions ?? [], discoveries: dsc?.discoveries ?? [] })
+      }
+    )
+    return () => {
+      live = false
+    }
+  }, [focused, extra, clientId, versionId])
+
+  // Reset the loaded index when the client/version changes.
+  useEffect(() => {
+    setExtra(null)
+  }, [clientId, versionId])
+
+  const items = useMemo(() => {
+    const artefacts = (domain ? getArtefactsForDomain(domain) : ARTEFACTS).map((a) => ({
+      key: `art:${a.id}`,
+      kind: 'artefact',
+      label: a.name,
+      id: a.id,
+      domain: a.domain,
+      to: `${base}/domains/${a.domain}/${a.abstraction}/${a.id}`,
+    }))
+    const decisions = (extra?.decisions ?? []).map((d) => ({
+      key: `dec:${d['decision-id']}`,
+      kind: 'decision',
+      label: d.title ?? d['decision-id'],
+      id: d['decision-id'],
+      to: `${base}/decisions/${d['decision-id']}`,
+    }))
+    const discoveries = (extra?.discoveries ?? []).map((d) => ({
+      key: `dsc:${d['discovery-id']}`,
+      kind: 'discovery',
+      label: d.title ?? d['discovery-id'],
+      id: d['discovery-id'],
+      to: `${base}/discovery/${d['discovery-id']}`,
+    }))
+    return [...artefacts, ...decisions, ...discoveries]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [domain, extra, clientId, versionId])
+
   const q = query.trim().toLowerCase()
   const filtered = useMemo(() => {
     if (!q) return []
     return items
-      .filter((a) => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q))
+      .filter((a) => a.label.toLowerCase().includes(q) || a.id.toLowerCase().includes(q))
       .slice(0, 50)
   }, [items, q])
 
-  // The dropdown shows only while focused and the user has typed something.
   const open = focused && q.length > 0
 
   useEffect(() => {
@@ -36,8 +88,7 @@ export default function QuickPicker() {
     return () => document.removeEventListener('mousedown', onClick)
   }, [])
 
-  // Command-palette convention: "/" focuses the jump-to box from anywhere,
-  // unless the user is already typing in a field.
+  // "/" focuses the box from anywhere, unless already typing in a field.
   useEffect(() => {
     function onKey(e) {
       if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return
@@ -57,10 +108,10 @@ export default function QuickPicker() {
 
   if (!clientId || !versionId) return null
 
-  const go = (a) => {
+  const go = (item) => {
     setFocused(false)
     setQuery('')
-    navigate(`/clients/${clientId}/${versionId}/domains/${a.domain}/${a.abstraction}/${a.id}`)
+    navigate(item.to)
   }
 
   const onKeyDown = (e) => {
@@ -81,6 +132,20 @@ export default function QuickPicker() {
 
   const scopeLabel = domain ? `${getDomain(domain)?.name ?? domain} artefacts` : 'all artefacts'
 
+  // Leading icon per item kind.
+  const ItemIcon = ({ item }) => {
+    if (item.kind === 'decision')
+      return <DecisionIcon className="w-3.5 h-3.5 text-brand-600 flex-shrink-0" />
+    if (item.kind === 'discovery')
+      return <RobotIcon className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+    const c = DOMAIN_COLORS[item.domain]
+    return (
+      <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-400'}`}>
+        <DomainIcon domain={item.domain} className="w-3.5 h-3.5" />
+      </span>
+    )
+  }
+
   return (
     <div ref={ref} className="relative w-48 sm:w-80 lg:w-96">
       <div className="relative">
@@ -98,8 +163,8 @@ export default function QuickPicker() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onKeyDown={onKeyDown}
-          placeholder={`Jump to ${scopeLabel}…`}
-          title={`Jump to an artefact (${scopeLabel}) — press / to focus`}
+          placeholder={`Jump to ${scopeLabel}, decisions…`}
+          title={`Jump to ${scopeLabel}, decisions or discoveries — press / to focus`}
           className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-400 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
         />
         {!query && (
@@ -114,23 +179,18 @@ export default function QuickPicker() {
           {filtered.length === 0 && (
             <div className="px-3 py-3 text-xs text-gray-400">No matches</div>
           )}
-          {filtered.map((a, i) => {
-            const c = DOMAIN_COLORS[a.domain]
-            return (
-              <button
-                key={a.id}
-                onMouseEnter={() => setActive(i)}
-                onClick={() => go(a)}
-                className={`w-full text-left flex items-center gap-2 px-3 py-2 transition-colors ${i === active ? 'bg-brand-50' : 'hover:bg-gray-50'}`}
-              >
-                <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-400'}`}>
-                  <DomainIcon domain={a.domain} className="w-3.5 h-3.5" />
-                </span>
-                <span className="min-w-0 flex-1 truncate text-sm text-gray-700">{a.name}</span>
-                <span className="font-mono text-xs text-gray-400 flex-shrink-0">{a.id}</span>
-              </button>
-            )
-          })}
+          {filtered.map((item, i) => (
+            <button
+              key={item.key}
+              onMouseEnter={() => setActive(i)}
+              onClick={() => go(item)}
+              className={`w-full text-left flex items-center gap-2 px-3 py-2 transition-colors ${i === active ? 'bg-brand-50' : 'hover:bg-gray-50'}`}
+            >
+              <ItemIcon item={item} />
+              <span className="min-w-0 flex-1 truncate text-sm text-gray-700">{item.label}</span>
+              <span className="font-mono text-xs text-gray-400 flex-shrink-0">{item.id}</span>
+            </button>
+          ))}
         </div>
       )}
     </div>

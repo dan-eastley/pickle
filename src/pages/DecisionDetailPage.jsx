@@ -1,8 +1,12 @@
 import { useEffect, useState, useRef, useId } from 'react'
 import { useParams, Navigate, useLocation } from 'react-router-dom'
 import { getDecision, githubAction } from '../lib/api'
+import { decisionChangeFields } from '../lib/narrative'
+import { buildScope } from '../lib/scope'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
+import ScopeSelector from '../components/decisions/ScopeSelector'
+import RequirementsList from '../components/decisions/RequirementsList'
 import Markdown from '../components/ui/Markdown'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
@@ -80,56 +84,59 @@ function StatusProgress({ status }) {
   const activeStep = STATUS_STEPS.indexOf(status)
 
   return (
-    <div className="mb-8 flex items-center gap-0">
-      {STATUS_STEPS.map((step, i) => {
-        const isPast = !isTerminal && i < activeStep
-        const isCurrent = !isTerminal && i === activeStep
-        const reached = isPast || isCurrent
+    // Scrolls rather than squishing the 5 steps on narrow screens.
+    <div className="mb-8 overflow-x-auto">
+      <div className="flex items-center gap-0 min-w-[460px]">
+        {STATUS_STEPS.map((step, i) => {
+          const isPast = !isTerminal && i < activeStep
+          const isCurrent = !isTerminal && i === activeStep
+          const reached = isPast || isCurrent
 
-        return (
-          <div key={step} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
-              <div
-                className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
-                  reached ? '' : 'bg-gray-100 !text-gray-400'
-                } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
-                style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
-              >
-                {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
+          return (
+            <div key={step} className="flex items-center flex-1 last:flex-none">
+              <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
+                <div
+                  className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
+                    reached ? '' : 'bg-gray-100 !text-gray-400'
+                  } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
+                  style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
+                >
+                  {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
+                </div>
+                <span
+                  className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
+                  style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
+                >
+                  {step}
+                </span>
               </div>
-              <span
-                className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
-                style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
-              >
-                {step}
-              </span>
+              {i < STATUS_STEPS.length - 1 && (
+                <div
+                  className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
+                  style={
+                    i < activeStep && !isTerminal
+                      ? {
+                          backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})`,
+                        }
+                      : undefined
+                  }
+                />
+              )}
             </div>
-            {i < STATUS_STEPS.length - 1 && (
-              <div
-                className={`flex-1 h-px mx-2 mb-4 ${i < activeStep && !isTerminal ? '' : 'bg-gray-200'}`}
-                style={
-                  i < activeStep && !isTerminal
-                    ? {
-                        backgroundImage: `linear-gradient(to right, ${STEP_COLORS[i]}, ${STEP_COLORS[i + 1]})`,
-                      }
-                    : undefined
-                }
-              />
-            )}
-          </div>
-        )
-      })}
-      {isTerminal && (
-        <>
-          <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
-          <div className="flex flex-col items-center" title={STATUS_TOOLTIPS.rejected}>
-            <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">
-              !
+          )
+        })}
+        {isTerminal && (
+          <>
+            <div className="h-px w-6 bg-gray-200 mx-2 mb-4" />
+            <div className="flex flex-col items-center" title={STATUS_TOOLTIPS.rejected}>
+              <div className="w-7 h-7 flex items-center justify-center text-xs font-semibold bg-error-50 text-error-700 ring-2 ring-error-200 cursor-default">
+                !
+              </div>
+              <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
             </div>
-            <span className="mt-1 text-xs capitalize font-semibold text-error-700">{status}</span>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -978,11 +985,16 @@ export default function DecisionDetailPage() {
   }
 
   function startEdit() {
+    // Backfill legacy narrative-only decisions into the split fields (DEC-3).
     setEdit({
       title: decision.title ?? '',
-      context: decision.context ?? '',
-      problem: decision.problem ?? '',
-      proposal: decision.proposal ?? '',
+      ...decisionChangeFields(decision),
+      requirements: decision.requirements ?? [],
+      scope: {
+        domain: decision.scope?.domain ?? '',
+        abstraction: decision.scope?.abstraction ?? '',
+        artefact: decision.scope?.artefact ?? '',
+      },
     })
   }
 
@@ -990,11 +1002,23 @@ export default function DecisionDetailPage() {
   // re-dispatches decisions-to-draft, which refreshes the recommendations —
   // so we show the workflow banner. Only available while status === 'draft'.
   async function saveEdit() {
+    const { requirements = [], scope: scopeSel, ...fields } = edit // fields: title/context/problem/proposal
+    const scope = buildScope(scopeSel?.domain, scopeSel?.abstraction, scopeSel?.artefact)
     setSavingEdit(true)
     setTransitionError(null)
-    setDecision((prev) => (prev ? { ...prev, ...edit } : prev)) // optimistic
+    setDecision((prev) =>
+      prev ? { ...prev, ...fields, requirements, ...(scope ? { scope } : {}) } : prev
+    ) // optimistic
     try {
-      await githubAction({ action: 'edit-decision', clientId, versionId, decisionId, ...edit })
+      await githubAction({
+        action: 'edit-decision',
+        clientId,
+        versionId,
+        decisionId,
+        ...fields,
+        requirements: requirements.filter((r) => r.description?.trim()),
+        scope,
+      })
       setEdit(null)
       setPendingWorkflow({
         label: 'reviewing your updated narrative and refreshing recommendations',
@@ -1314,7 +1338,16 @@ export default function DecisionDetailPage() {
                 {renderSub(
                   'scope',
                   'Scope',
-                  decision.scope ? (
+                  edit ? (
+                    <ScopeSelector
+                      domain={edit.scope.domain}
+                      abstraction={edit.scope.abstraction}
+                      artefact={edit.scope.artefact}
+                      onChange={({ domain, abstraction, artefact }) =>
+                        setEdit((p) => ({ ...p, scope: { domain, abstraction, artefact } }))
+                      }
+                    />
+                  ) : decision.scope ? (
                     <ScopeChip scope={decision.scope} />
                   ) : (
                     <EmptyNote
@@ -1341,7 +1374,12 @@ export default function DecisionDetailPage() {
 
             {renderSection(
               'requirements',
-              decision.requirements?.length > 0 ? (
+              edit ? (
+                <RequirementsList
+                  requirements={edit.requirements}
+                  onChange={(r) => setEdit((p) => ({ ...p, requirements: r }))}
+                />
+              ) : decision.requirements?.length > 0 ? (
                 <div className="border border-gray-200 divide-y divide-gray-100">
                   {decision.requirements.map((req, i) => {
                     const title = typeof req === 'string' ? null : req.title
@@ -1367,7 +1405,7 @@ export default function DecisionDetailPage() {
               ) : (
                 <EmptyNote
                   title="No requirements"
-                  description="Add requirements on the full editor to record what this decision must achieve."
+                  description="Use Edit to record what this decision must achieve."
                 />
               )
             )}

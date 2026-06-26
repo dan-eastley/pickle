@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 import EmptyState from '../ui/EmptyState'
-import SlidePanel from '../ui/SlidePanel'
+import EntityPanel from './EntityPanel'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 import ProcessFlowDiagram from './diagrams/ProcessFlowDiagram'
 import WiringDiagram from './diagrams/WiringDiagram'
-import { getArtefact } from '../../lib/artefacts'
-import { getArtefactData } from '../../lib/api'
 
 const NESTED_GROUP_TYPES = new Set(['card-based', 'entity-based'])
 const PROCESS_FLOW_TYPES = new Set(['process-flow'])
@@ -30,104 +28,16 @@ function countSummary(groups, labels) {
   return summary
 }
 
-// Recursively collect all objects with string `id` fields into a flat map
-function buildItemMap(data) {
-  const map = {}
-  const collect = (obj) => {
-    if (!obj || typeof obj !== 'object') return
-    if (Array.isArray(obj)) {
-      obj.forEach(collect)
-      return
-    }
-    if (typeof obj.id === 'string') map[obj.id] = obj
-    Object.values(obj).forEach((v) => {
-      if (typeof v === 'object') collect(v)
-    })
-  }
-  collect(data)
-  return map
-}
-
-const FIELD_LABELS = {
-  type: 'Type',
-  level: 'Level',
-  importance: 'Importance',
-  'parent-id': 'Parent',
-  trigger: 'Trigger',
-  outcome: 'Outcome',
-  owner: 'Owner',
-  status: 'Status',
-  maturity: 'Maturity',
-  vendor: 'Vendor',
-  product: 'Product',
-  direction: 'Direction',
-  source: 'Source',
-  target: 'Target',
-}
-
-const SKIP_FIELDS = new Set(['id', 'name', 'description', 'items', '$schema', 'meta'])
-
-function ItemDetail({ item }) {
-  if (!item) return null
-  const fields = Object.entries(item).filter(([k]) => !SKIP_FIELDS.has(k) && FIELD_LABELS[k])
-  return (
-    <div className="px-4 py-3 space-y-3">
-      {item.description && (
-        <p className="text-xs text-gray-600 leading-relaxed">{item.description}</p>
-      )}
-      {fields.length > 0 && (
-        <dl className="space-y-2">
-          {fields.map(([key, value]) => (
-            <div key={key}>
-              <dt className="text-[10px] font-medium text-gray-400 uppercase tracking-wide">
-                {FIELD_LABELS[key]}
-              </dt>
-              <dd className="mt-0.5 text-xs text-gray-700">{String(value)}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
-    </div>
-  )
-}
-
 export default function DiagramView({ data, artefact, schema, clientId, versionId }) {
   const diagramType = artefact?.diagramType ?? schema?.meta?.diagramType
   const groups = data?.groups
 
   const [selectedId, setSelectedId] = useState(null)
-  const [itemMap, setItemMap] = useState({})
-
-  const sourceArtefactId =
-    NESTED_GROUP_TYPES.has(diagramType) || PROCESS_FLOW_TYPES.has(diagramType)
-      ? artefact?.relatedTo?.find((r) => r.relationship === 'derived-from')?.artefactId
-      : null
-  const sourceArtefactDef = sourceArtefactId ? getArtefact(sourceArtefactId) : null
 
   // Reset selection when navigating between diagrams
   useEffect(() => {
     setSelectedId(null)
-    setItemMap({})
   }, [artefact?.id])
-
-  // Fetch source catalogue data to populate the slide panel
-  useEffect(() => {
-    if (!sourceArtefactDef || !clientId || !versionId) return
-    getArtefactData(
-      clientId,
-      versionId,
-      sourceArtefactDef.domain,
-      sourceArtefactDef.abstraction,
-      sourceArtefactDef.id
-    )
-      .then((d) => {
-        if (d) setItemMap(buildItemMap(d))
-      })
-      .catch(() => {})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sourceArtefactId, clientId, versionId])
-
-  const selectedItem = itemMap[selectedId]
 
   if (diagramType === 'wiring') {
     return <WiringDiagram clientId={clientId} versionId={versionId} />
@@ -149,14 +59,13 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
             {countSummary(groups, schema?.meta?.countLabels)}
           </div>
         </div>
-        <SlidePanel
-          open={!!selectedId}
+        <EntityPanel
+          entityId={selectedId}
+          clientId={clientId}
+          versionId={versionId}
+          onOpenEntity={setSelectedId}
           onClose={() => setSelectedId(null)}
-          title={selectedItem?.name ?? selectedId ?? ''}
-          subtitle={selectedItem ? selectedId : undefined}
-        >
-          <ItemDetail item={selectedItem} />
-        </SlidePanel>
+        />
       </>
     )
   }
@@ -178,14 +87,13 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
             {countSummary(groups, schema?.meta?.countLabels)}
           </div>
         </div>
-        <SlidePanel
-          open={!!selectedId}
+        <EntityPanel
+          entityId={selectedId}
+          clientId={clientId}
+          versionId={versionId}
+          onOpenEntity={setSelectedId}
           onClose={() => setSelectedId(null)}
-          title={selectedItem?.name ?? selectedId ?? ''}
-          subtitle={selectedItem ? selectedId : undefined}
-        >
-          <ItemDetail item={selectedItem} />
-        </SlidePanel>
+        />
       </>
     )
   }
