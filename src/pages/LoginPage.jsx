@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { signIn } from '../lib/authClient'
 import { useAuth } from '../context/AuthContext'
 import AuthCard, { Field } from '../components/auth/AuthCard'
@@ -20,10 +20,7 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false)
 
   // Already signed in → bounce to the intended destination.
-  if (user) {
-    navigate(dest, { replace: true })
-    return null
-  }
+  if (user) return <Navigate to={dest} replace />
 
   const onSubmit = async (e) => {
     e.preventDefault()

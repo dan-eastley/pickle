@@ -98,13 +98,20 @@ export default function DecisionsPage() {
   usePageTitle(`${clientName} — Decisions`)
 
   useEffect(() => {
+    let cancelled = false
     fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/decisions.json`)
       .then((r) => (r.ok ? r.json() : { decisions: [] }))
       .then((data) => {
+        if (cancelled) return
         setDecisions(data.decisions ?? [])
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [clientId, versionId])
 
   // Deep-link: ?status=<s> opens just that status group (e.g. from the domains

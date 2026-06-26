@@ -87,13 +87,20 @@ export default function DiscoveryPage() {
   usePageTitle(`${clientName} — Discovery`)
 
   useEffect(() => {
+    let cancelled = false
     fetch(`/api/arch/clients/${clientId}/${versionId}/discovery/discovery.json`)
       .then((r) => (r.ok ? r.json() : { discoveries: [] }))
       .then((data) => {
+        if (cancelled) return
         setDiscoveries(data.discoveries ?? [])
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [clientId, versionId])
 
   // Deep-link: ?status=<s> opens just that pot (e.g. from the domains overview).

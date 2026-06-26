@@ -41,10 +41,14 @@ export default function DiscoveryDetailPage() {
   usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
 
   useEffect(() => {
+    let cancelled = false
     fetch(`/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`)
       .then((r) => (r.ok ? r.json() : null))
-      .then(setDiscovery)
-      .catch(() => setDiscovery(null))
+      .then((d) => !cancelled && setDiscovery(d))
+      .catch(() => !cancelled && setDiscovery(null))
+    return () => {
+      cancelled = true
+    }
   }, [clientId, versionId, discoveryId])
 
   async function setStatus(status) {
