@@ -26,9 +26,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
         run: |
+          # Tags with a pre-release suffix (e.g. v0.5.0-alpha) are published as
+          # GitHub pre-releases.
+          PRERELEASE=""
+          if [[ "$TAG" == *-* ]]; then PRERELEASE="--prerelease"; fi
           gh release create "$TAG" \
             --title "$TAG" \
-            --generate-notes
+            --generate-notes \
+            $PRERELEASE
 
       - name: Sync main back into develop
         env:
