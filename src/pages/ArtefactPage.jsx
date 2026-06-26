@@ -280,6 +280,10 @@ export default function ArtefactPage() {
 
   useEffect(() => {
     if (!artefact) return
+    // Guard against races: navigating between artefacts fires a new load, and a
+    // slower earlier response must not overwrite the current one (or set state
+    // after unmount).
+    let cancelled = false
     setLoading(true)
     setData(undefined)
     setError(null)
@@ -293,11 +297,19 @@ export default function ArtefactPage() {
       getSchema(domain, abstraction, artefactId),
     ])
       .then(([artefactData, schemaData]) => {
+        if (cancelled) return
         setData(artefactData)
         setSchema(schemaData)
       })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+      .catch((err) => {
+        if (!cancelled) setError(err.message)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, domain, abstraction, artefactId])
 
