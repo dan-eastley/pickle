@@ -232,7 +232,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-5 · 🟡 Accessibility pass · Medium
 **Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (`role=dialog`/`aria-modal`).
 **Done:** `SlidePanel` (entity panel) now has full focus management — `role=dialog`/`aria-modal`/`aria-label`, focus moves in on open and returns to the trigger on close (`useFocusTrap`), and the off-screen closed panel is `inert` so its controls leave the tab order. Real `htmlFor`/`id` label association added to the New Decision and New Discovery create forms (replacing the `<span>` pseudo-labels).
-**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). **Remaining:** a deliberate contrast + keyboard-order audit.
+**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). Keyboard: a consistent always-visible :focus-visible ring (box-shadow, survives focus:outline-none) now applies to every interactive element. **Remaining:** a colour-contrast remediation pass (some text-gray-400 secondary text is below AA).
 
 ### QV-6 · ✅ Formatting + coverage · Low
 **Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.
@@ -253,7 +253,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
 | 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
 
-**Remaining:** finding #1 (auth + CORS) is the headline production blocker — sequence with [RAS-2]/[RAS-3] and [DEC-6]. #4 proxy guard. A deeper review (ideally with the **Fable** model and the `/security-review` skill) should follow once auth is in.
+**Status:** all non-auth hardening is complete (CORS allow-list, id validation, proxy prefix/traversal guards, secret handling, no stored XSS). The npm-audit vulns are dev-tooling only (vite/esbuild build step, not in the runtime bundle) � deferred to the next Vite major. The **only** remaining item is finding #1, authentication, which is its own High backlog item [RAS-2] (deliberately out of scope here).
 
 ### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
 **Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.
