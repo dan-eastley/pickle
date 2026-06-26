@@ -24,5 +24,11 @@
             "status": "accepted"
         }
     ],
-    "folders": []
+    "folders": [
+        {
+            "id": "fmqv2scrx0",
+            "name": "New folder",
+            "parentId": null
+        }
+    ]
 }
