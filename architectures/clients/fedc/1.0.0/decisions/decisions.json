@@ -23,5 +23,12 @@
             "title": "Contractor Driven Work",
             "status": "accepted"
         }
+    ],
+    "folders": [
+        {
+            "id": "fmqunlhvo0",
+            "name": "New folder",
+            "parentId": null
+        }
     ]
 }
