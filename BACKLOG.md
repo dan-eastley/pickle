@@ -19,10 +19,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### DEC-2 · ✅ "New Decision" modal persistence · Medium
 **Context:** The artefact-page modal collects Title + Context/Problem/Proposal + Scope and now POSTs `create-decision` (same path as the full editor), then links to the created draft.
 
-### DEC-3 · 🟡 Decision narrative migration · Low
-**Context:** New decisions use Context/Problem/Proposal; the detail view renders these (falling back to legacy `narrative`).
-**Gap:** Older decisions on branches still carry only `narrative`.
-**Proposed fix:** Backfill on next edit, or a one-off migration.
+### DEC-3 · ✅ Decision narrative migration · Low
+**Done:** `lib/narrative.parseNarrative` is the inverse of the compose step (splits `## Context … ## Problem … ## Proposal` back into the three fields; an un-headed narrative becomes Context). `decisionChangeFields(d)` prefers the split fields and falls back to parsing the narrative. Wired into the full editor load and the inline-edit start, so any legacy narrative-only decision is **backfilled into the split fields on next edit** (and persisted on save). Unit-tested.
 
 ### DEC-4 · ⬜ Branch preview for STAGED decisions · Medium
 **Context:** Staged changes live on the decision branch / PR.

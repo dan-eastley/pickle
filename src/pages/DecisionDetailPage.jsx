@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useId } from 'react'
 import { useParams, Navigate, useLocation } from 'react-router-dom'
 import { getDecision, githubAction } from '../lib/api'
+import { decisionChangeFields } from '../lib/narrative'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
 import Markdown from '../components/ui/Markdown'
@@ -978,12 +979,8 @@ export default function DecisionDetailPage() {
   }
 
   function startEdit() {
-    setEdit({
-      title: decision.title ?? '',
-      context: decision.context ?? '',
-      problem: decision.problem ?? '',
-      proposal: decision.proposal ?? '',
-    })
+    // Backfill legacy narrative-only decisions into the split fields (DEC-3).
+    setEdit({ title: decision.title ?? '', ...decisionChangeFields(decision) })
   }
 
   // Save inline edits to a draft. edit-decision persists the fields and

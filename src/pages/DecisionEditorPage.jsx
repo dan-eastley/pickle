@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision, githubAction, getNextDecisionId } from '../lib/api'
 import { buildScope } from '../lib/scope'
+import { decisionChangeFields } from '../lib/narrative'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import Button from '../components/ui/Button'
@@ -101,10 +102,12 @@ export default function DecisionEditorPage() {
       .then((d) => {
         if (!d) return
         setTitle(d.title ?? '')
-        // Prefer the split fields; fall back to legacy narrative → Context
-        setContext(d.context ?? d.narrative ?? '')
-        setProblem(d.problem ?? '')
-        setProposal(d.proposal ?? '')
+        // Prefer the split fields; for legacy narrative-only records, parse the
+        // narrative back into Context / Problem / Proposal (DEC-3 backfill).
+        const fields = decisionChangeFields(d)
+        setContext(fields.context)
+        setProblem(fields.problem)
+        setProposal(fields.proposal)
         setRequirements(d.requirements ?? [])
         setScopeDomain(d.scope?.domain ?? '')
         setScopeAbstraction(d.scope?.abstraction ?? '')
