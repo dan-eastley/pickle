@@ -48,7 +48,7 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
           <tbody className="divide-y divide-gray-100">
             {rows.map((entry, i) => (
               <tr key={i} className="align-top">
-                <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">
+                <td className="px-4 py-3 text-gray-700 text-sm whitespace-nowrap">
                   {formatDateTime(entry.timestamp)}
                 </td>
                 <td className="px-4 py-3">
@@ -59,7 +59,7 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-gray-700 text-sm break-words">{entry.who || '—'}</td>
-                <td className="px-4 py-3 text-gray-600 text-xs break-words">
+                <td className="px-4 py-3 text-gray-700 text-sm break-words">
                   {entry.notes || '—'}
                 </td>
               </tr>
