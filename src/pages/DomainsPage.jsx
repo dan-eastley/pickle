@@ -1,55 +1,89 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { DOMAINS, DOMAIN_COLORS, getArtefactsForDomain } from '../lib/artefacts'
-import { loadClientMetrics } from '../lib/metrics'
+import { DOMAINS, DOMAIN_COLORS } from '../lib/artefacts'
+import { loadVersionMetrics } from '../lib/metrics'
+import { DECISION_STATUS_ORDER, decisionStatusBadge, decisionStatusLabel } from '../lib/theme'
 import DomainIcon from '../components/ui/DomainIcon'
-import FormatIcon from '../components/ui/FormatIcon'
+import ContentMetrics from '../components/common/ContentMetrics'
 import Button from '../components/ui/Button'
+import Spinner from '../components/ui/Spinner'
 import { ChevronRight, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
-function DomainCard({ domain, base, dm }) {
+const DISCOVERY_STATUS_ORDER = ['active', 'archived']
+const discoveryStatusBadge = (s) =>
+  s === 'archived' ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-700'
+const discoveryStatusLabel = (s) => (s === 'archived' ? 'Archived' : 'Active')
+
+// Clickable per-status breakdown for the decisions / discovery cards. Each chip
+// links to the relevant index page with that status group expanded
+// (?status=<s>). Zero-count statuses are hidden; a zero total shows a hint.
+function StatusBreakdown({ counts, order, badgeOf, labelOf, to }) {
+  const shown = order.filter((s) => (counts?.[s] ?? 0) > 0)
+  const total = order.reduce((sum, s) => sum + (counts?.[s] ?? 0), 0)
+  if (total === 0) {
+    return <p className="text-xs text-gray-400">None yet.</p>
+  }
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {shown.map((s) => (
+        <Link
+          key={s}
+          to={`${to}?status=${s}`}
+          className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium transition-opacity hover:opacity-80 ${badgeOf(s)}`}
+        >
+          <span className="tabular-nums font-semibold">{counts[s]}</span>
+          {labelOf(s)}
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+// The whole-domain link wraps the card; the per-entity stat links inside it must
+// not trigger navigation, so this Link is the card chrome only and the metrics
+// sit beside it.
+function DomainCard({ domain, base, dm, loading }) {
   const colors = DOMAIN_COLORS[domain.id]
   const accent = colors.accent
-  const artefacts = getArtefactsForDomain(domain.id)
-  // Registry counts (artefact *types*) are the placeholder until live metrics
-  // arrive; then we show populated counts, and — crucially — document
-  // *instances* (a document artefact can hold several documents).
-  const reg = (fmt) => artefacts.filter((a) => a.format === fmt).length
-
-  const counts = [
-    { format: 'catalogue', n: dm?.catalogue ?? reg('catalogue'), label: 'Catalogue' },
-    { format: 'diagram', n: dm?.diagram ?? reg('diagram'), label: 'Diagram' },
-    { format: 'matrix', n: dm?.matrix ?? reg('matrix'), label: 'Matrix', plural: 'Matrices' },
-    { format: 'document', n: dm?.documents ?? reg('document'), label: 'Document' },
-  ]
+  // Content counts for this domain, plus document instances as a trailing stat.
+  const items = dm?.items ?? []
+  const extra = dm?.documents ? [{ label: 'Documents', count: dm.documents }] : []
 
   return (
-    <Link
-      to={`${base}/domains/${domain.id}`}
-      className={`group flex items-start gap-4 p-5 bg-white hover:bg-gray-50 transition-colors border-l-4 ${accent}`}
-    >
-      <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors.bg}`}>
-        <span className={colors.text}>
-          <DomainIcon domain={domain.id} className="w-5 h-5" />
-        </span>
-      </div>
-      <div className="min-w-0 flex-1">
-        <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
-          {domain.name} Architecture
-        </h3>
-        <p className="mt-1 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
-        <div className="mt-3 flex items-center gap-4 flex-wrap">
-          {counts.map(({ format, n, label, plural }) => (
-            <span key={format} className="flex items-center gap-1 text-xs text-gray-400">
-              <FormatIcon format={format} className="w-3.5 h-3.5" />
-              {n} {n === 1 ? label : (plural ?? label + 's')}
-            </span>
-          ))}
+    <div className={`bg-white border-l-4 ${accent}`}>
+      <Link
+        to={`${base}/domains/${domain.id}`}
+        className="group flex items-start gap-4 p-5 hover:bg-gray-50 transition-colors"
+      >
+        <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors.bg}`}>
+          <span className={colors.text}>
+            <DomainIcon domain={domain.id} className="w-5 h-5" />
+          </span>
         </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+            {domain.name} Architecture
+          </h3>
+          <p className="mt-1 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
+        </div>
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" />
+      </Link>
+      <div className="px-5 pb-4 -mt-1">
+        {loading ? (
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <Spinner size="sm" /> Loading content…
+          </div>
+        ) : (
+          <ContentMetrics
+            items={items}
+            extra={extra}
+            dense
+            empty={<p className="text-xs text-gray-400">No content yet in this domain.</p>}
+          />
+        )}
       </div>
-      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" />
-    </Link>
+    </div>
   )
 }
 
@@ -61,7 +95,8 @@ export default function DomainsPage() {
   const [metrics, setMetrics] = useState(null)
   useEffect(() => {
     let live = true
-    loadClientMetrics(clientId, versionId).then((m) => live && setMetrics(m))
+    setMetrics(null)
+    loadVersionMetrics(clientId, versionId).then((m) => live && setMetrics(m))
     return () => {
       live = false
     }
@@ -86,6 +121,7 @@ export default function DomainsPage() {
             domain={domain}
             base={base}
             dm={metrics?.perDomain[domain.id]}
+            loading={metrics === null}
           />
         ))}
       </div>
@@ -96,6 +132,17 @@ export default function DomainsPage() {
           icon={<DecisionIcon className="w-5 h-5 text-brand-700" />}
           title="Architecture Decisions"
           description="The governed, auditable way to change the architecture. Capture the context, problem, and proposed direction — the agents analyse impact and alignment, and once accepted the change is applied through a reviewed pull request."
+          stats={
+            metrics && (
+              <StatusBreakdown
+                counts={metrics.decisionsByStatus}
+                order={DECISION_STATUS_ORDER}
+                badgeOf={decisionStatusBadge}
+                labelOf={decisionStatusLabel}
+                to={`${base}/decisions`}
+              />
+            )
+          }
           action={
             <Button to={`${base}/decisions/new`} variant="primary" size="sm">
               <DecisionIcon className="w-4 h-4" />
@@ -107,6 +154,17 @@ export default function DomainsPage() {
           icon={<RobotIcon className="w-5 h-5 text-blue-600" />}
           title="Architecture Discovery"
           description="Ask the Virtual Architect Agent a question about your architecture. It interrogates the model as it stands today and returns a point-in-time view you can keep — read-only, nothing is changed."
+          stats={
+            metrics && (
+              <StatusBreakdown
+                counts={metrics.discoveriesByStatus}
+                order={DISCOVERY_STATUS_ORDER}
+                badgeOf={discoveryStatusBadge}
+                labelOf={discoveryStatusLabel}
+                to={`${base}/discovery`}
+              />
+            )
+          }
           action={
             <Button to={`${base}/discovery/new`} variant="primary" size="sm">
               <RobotIcon className="w-4 h-4" />
@@ -145,7 +203,7 @@ export default function DomainsPage() {
   )
 }
 
-function CapabilityCard({ icon, title, description, action }) {
+function CapabilityCard({ icon, title, description, stats, action }) {
   return (
     <div className="border border-gray-200 bg-white p-5 flex flex-col">
       <div className="w-9 h-9 bg-gray-50 flex items-center justify-center flex-shrink-0">
@@ -153,6 +211,7 @@ function CapabilityCard({ icon, title, description, action }) {
       </div>
       <h3 className="mt-3 text-sm font-bold text-gray-900">{title}</h3>
       <p className="mt-1.5 text-xs text-gray-500 leading-relaxed flex-1">{description}</p>
+      {stats && <div className="mt-3">{stats}</div>}
       <div className="mt-4">{action}</div>
     </div>
   )

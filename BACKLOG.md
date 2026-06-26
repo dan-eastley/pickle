@@ -55,8 +55,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### UI-1 · ✅ Action-bar system · Medium
 **Context:** `ActionBar` (title + strapline, no bar icon, actions ordered Tertiary → Secondary → Primary) and Button variants. Index headers, editor headers, and the artefact bar use it.
-**Gap:** The decision `StatusActions` transition buttons aren't yet folded into the system.
-**Proposed fix:** Express `StatusActions` through the same primary/secondary vocabulary.
+**Done:** The decision `StatusActions` lifecycle transitions are now expressed through the shared `Button` vocabulary — forward actions via a `ForwardButton` (custom variant carrying each stage's signature colour, spinner-on-transition), "Back to …" as `secondary`, "Reject" as `danger`, "Cancel" as `ghost`. The rejection panel is extracted to a shared `RejectPanel`.
 
 ### UI-2 · ✅ Analysis tables · Medium
 **Context:** All seven tables use uniform 25% columns; clicking a finding row accepts/declines it; step headers are collapsible; analysis locks once Accepted.
@@ -73,18 +72,13 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface. **Deep-linkable entity-panel URLs** — the entity panel selection now lives in the URL (`?entity=…`) via a reusable `useSearchParamState` hook, so an open entity is shareable, survives refresh, and is restorable from a link.
 **Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Done: contents-nav rails hide on mobile (hidden lg:block), the 5-step decision status bar scrolls rather than squishing, header + document surfaces use mobile padding. A deep device-by-device QA sweep remains optional.
 
-### UI-6 · ⬜ Diagram export / download · Medium
-**Context:** Diagrams render as SVG in-app.
-**Gap:** No export to PNG/SVG for slides and docs.
-**Proposed fix:** Add an export action to the diagram views.
+### UI-6 · ✅ Artefact export / download · Medium
+**Done:** A shared `DownloadMenu` on the artefact page offers per-format downloads — **Diagrams** → PowerPoint (.pptx) or PNG; **Catalogues** → Excel (.xlsx) or CSV; **Documents** → Word (.docx) or PDF. **Matrices** have no download (by design). Built on a format-agnostic intermediate "block" model (`lib/export/blocks.js`) consumed by each renderer; the heavy writers (`exceljs`, `pptxgenjs`, `docx`, `jspdf`) are **lazy-loaded via dynamic import**, so they stay out of the initial bundle. Diagrams rasterise the live SVG with computed styles inlined (Tailwind classes don't survive a raw serialize) → PNG, embedded into a 16:9 slide for PowerPoint.
 
 ### UI-7 · ⬜ Brand/client-specific diagram theming · Low
 **Proposed fix:** Allow per-client colourways for diagrams.
 
-### UI-8 · ✅ Folder organisation for decisions & discoveries · Medium
-**Done (MVP):** A "Folders" view toggle on the Decisions and Discovery index pages renders a nested folder tree (max 3 levels) with **create / rename (double-click) / delete** folders and **drag-and-drop** to file items into folders, nest folders, or drop back to Unfiled. Built on a reusable `FolderedList` + `useFolders` hook, **client-persisted (localStorage)** per client/version. **Server persistence (done):** the folder tree + per-entry `folderId` now live in the decisions/discovery **index JSON** (schema-backed), written via a `set-folders` API action; `syncIndex`/`syncDiscoveryIndex` preserve `folderId` across status updates. `useServerFolders` seeds from the index and persists every change; `FolderedList` is persistence-agnostic (takes a controller). Folders are now shared across users/devices. Optional later: nest folders within each stage.
-**MVP note:
-**ORIG:
+### UI-8 · ⬜ Folder organisation for decisions & discoveries · Medium
 **Context:** Decisions and discoveries are flat lists within a stage/status. As volume grows (many in-flight ADRs, many discoveries) the lists become unmanageable; there's no way to group related items (e.g. by initiative, domain, or workstream).
 **Gap:** No grouping construct; the index pages are a single flat list per stage.
 **Proposed fix:** A lightweight **folder** tree *within* each stage/status, max **3 levels** deep. Capabilities:
@@ -121,7 +115,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Proposed fix:** Define the remaining diagram/matrix types in the registry and renderers.
 
 ### AMC-5 · 🟡 Matrix coverage review — find the missing mappings · Medium
-**Done:** Coverage review published in [docs/artefacts.md](docs/artefacts.md#matrix-coverage-amc-5) (concept × concept map + prioritised gaps). Defined the first missing matrix end-to-end — **DAT-PRO-DAC** (Process ↔ Data, the classic **CRUD** matrix): schema + schema-index + i18n + registry + schema-doc + registry row, instances for fedc & fwwc, and a small reusable MatrixView enhancement to render an optional `operation` (CRUD) value per cell. Also defined **APP-PRO-DAP** (Process↔Application) end-to-end � schema, index, i18n, registry, doc, registry row, and instances for all five clients. **Remaining:** Capability↔Data, Application↔Data, Capability↔Strategy/Principle.
+**Done:** Coverage review published in [docs/artefacts.md](docs/artefacts.md#matrix-coverage-amc-5) (concept × concept map + prioritised gaps). Defined the first missing matrix end-to-end — **DAT-PRO-DAC** (Process ↔ Data, the classic **CRUD** matrix): schema + schema-index + i18n + registry + schema-doc + registry row, instances for fedc & fwwc, and a small reusable MatrixView enhancement to render an optional `operation` (CRUD) value per cell. Also defined **APP-PRO-DAP** (Process↔Application) end-to-end — schema, index, i18n, registry, doc, registry row, and instances for all five clients. **Remaining:** Capability↔Data, Application↔Data, Capability↔Strategy/Principle.
 **Context:** A handful of matrices exist (e.g. capability↔process `BUS-CAP-PRO`, capability↔application `APP-CAP-DAP`). Matrices are the edges of the architecture graph, so coverage directly limits what [UI-9] can navigate and what governance/impact analysis can reason about.
 **Gap:** No deliberate review of *which* cross-artefact mappings matter. Likely-missing examples: **Data ↔ Process** (which processes create/read/update/delete which data), **Capability ↔ Data** (data owned/used by a capability), **Application ↔ Data** (systems of record), **Process ↔ Application** (which app supports which process step), **Capability ↔ Strategy/Principle** (traceability), **Application ↔ Integration/Interface**, **Capability ↔ Org/Role** (ownership, feeds [DEC-6]).
 **Proposed fix:** Produce a coverage map of artefact-type × artefact-type, mark which mappings are valuable, prioritise, then define the missing matrix types (registry entry + schema + doc + renderer, per `docs/artefacts.md` and [AMC-4]). Start with **Data ↔ Process**.
@@ -256,7 +250,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
 | 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
 
-**Status:** all non-auth hardening is complete (CORS allow-list, id validation, proxy prefix/traversal guards, secret handling, no stored XSS). The npm-audit vulns are dev-tooling only (vite/esbuild build step, not in the runtime bundle) � deferred to the next Vite major. The **only** remaining item is finding #1, authentication, which is its own High backlog item [RAS-2] (deliberately out of scope here).
+**Status:** all non-auth hardening is complete (CORS allow-list, id validation, proxy prefix/traversal guards, secret handling, no stored XSS). The npm-audit vulns are dev-tooling only (vite/esbuild build step, not in the runtime bundle) — deferred to the next Vite major. The **only** remaining item is finding #1, authentication, which is its own High backlog item [RAS-2] (deliberately out of scope here).
 
 ### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
 **Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.

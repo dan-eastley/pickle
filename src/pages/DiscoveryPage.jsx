@@ -9,8 +9,6 @@ import JsonPreview from '../components/ui/JsonPreview'
 import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
-import FolderedList from '../components/common/FolderedList'
-import useServerFolders from '../hooks/useServerFolders'
 import { ChevronRight, ChevronDown, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -18,28 +16,6 @@ const POTS = [
   { status: 'active', label: 'Active', badge: 'bg-emerald-50 text-emerald-700' },
   { status: 'archived', label: 'Archived', badge: 'bg-gray-100 text-gray-500' },
 ]
-
-const POT_BADGE = Object.fromEntries(POTS.map((p) => [p.status, p]))
-
-// Compact discovery row used inside the folder view.
-function DiscoveryRow({ d, clientId, versionId }) {
-  const pot = POT_BADGE[d.status ?? 'active'] ?? POTS[0]
-  return (
-    <Link
-      to={`/clients/${clientId}/${versionId}/discovery/${d['discovery-id']}`}
-      className="group flex items-center gap-3 px-3 py-2 bg-white border border-gray-200 hover:border-gray-400 transition-colors"
-    >
-      <RobotIcon className="w-4 h-4 text-blue-500 flex-shrink-0" />
-      <span className="min-w-0 flex-1 truncate text-sm text-gray-800 group-hover:text-brand-700">
-        {d.title}
-      </span>
-      <span className={`text-[11px] font-semibold px-1.5 py-0.5 flex-shrink-0 ${pot.badge}`}>
-        {pot.label}
-      </span>
-      <span className="text-xs font-mono text-gray-400 flex-shrink-0">{d['discovery-id']}</span>
-    </Link>
-  )
-}
 
 function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onToggle }) {
   const open = !collapsed
@@ -100,20 +76,12 @@ export default function DiscoveryPage() {
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
   const [discoveries, setDiscoveries] = useState([])
-  const [indexFolders, setIndexFolders] = useState([])
   const [collapsedOverride, setCollapsedOverride] = useState(null)
-
-  // UI-8 folders, seeded from the index and persisted server-side.
-  const folders = useServerFolders(clientId, versionId, 'discovery', {
-    folders: indexFolders,
-    assign: Object.fromEntries(
-      discoveries.filter((d) => d.folderId).map((d) => [d['discovery-id'], d.folderId])
-    ),
-  })
 
   const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
   const filterArtefact = searchParams.get('artefact') ?? ''
+  const statusParam = searchParams.get('status') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Discovery`)
@@ -123,11 +91,16 @@ export default function DiscoveryPage() {
       .then((r) => (r.ok ? r.json() : { discoveries: [] }))
       .then((data) => {
         setDiscoveries(data.discoveries ?? [])
-        setIndexFolders(data.folders ?? [])
         setLoading(false)
       })
       .catch(() => setLoading(false))
   }, [clientId, versionId])
+
+  // Deep-link: ?status=<s> opens just that pot (e.g. from the domains overview).
+  useEffect(() => {
+    if (statusParam)
+      setCollapsedOverride(new Set(POTS.map((p) => p.status).filter((s) => s !== statusParam)))
+  }, [statusParam])
 
   const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
   const filtered = discoveries.filter((d) => {
@@ -158,7 +131,6 @@ export default function DiscoveryPage() {
     })
   const expandAll = () => setCollapsedOverride(new Set())
   const collapseAll = () => setCollapsedOverride(new Set(POTS.map((p) => p.status)))
-  const [view, setView] = useState('stage') // 'stage' | 'folders'
 
   return (
     <div>
@@ -217,47 +189,22 @@ export default function DiscoveryPage() {
         </div>
       ) : (
         <>
-          <div className="mb-2 flex items-center justify-between">
-            <div className="inline-flex border border-gray-200 text-xs">
-              {['stage', 'folders'].map((v) => (
-                <button
-                  key={v}
-                  onClick={() => setView(v)}
-                  className={`px-3 py-1 transition-colors ${view === v ? 'bg-brand-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-                >
-                  {v === 'stage' ? 'By stage' : 'Folders'}
-                </button>
-              ))}
-            </div>
-            {view === 'stage' && (
-              <ExpandCollapseAll onExpandAll={expandAll} onCollapseAll={collapseAll} />
-            )}
+          <div className="mb-2 flex justify-end">
+            <ExpandCollapseAll onExpandAll={expandAll} onCollapseAll={collapseAll} />
           </div>
-
-          {view === 'folders' ? (
-            <FolderedList
-              controller={folders}
-              itemLabel="discovery"
-              items={filtered.map((d) => ({
-                id: d['discovery-id'],
-                node: <DiscoveryRow d={d} clientId={clientId} versionId={versionId} />,
-              }))}
-            />
-          ) : (
-            <div className="space-y-3">
-              {grouped.map(({ pot, discoveries: group }) => (
-                <DiscoveryGroup
-                  key={pot.status}
-                  pot={pot}
-                  discoveries={group}
-                  clientId={clientId}
-                  versionId={versionId}
-                  collapsed={isCollapsed(pot.status, group.length)}
-                  onToggle={() => toggleGroup(pot.status)}
-                />
-              ))}
-            </div>
-          )}
+          <div className="space-y-3">
+            {grouped.map(({ pot, discoveries: group }) => (
+              <DiscoveryGroup
+                key={pot.status}
+                pot={pot}
+                discoveries={group}
+                clientId={clientId}
+                versionId={versionId}
+                collapsed={isCollapsed(pot.status, group.length)}
+                onToggle={() => toggleGroup(pot.status)}
+              />
+            ))}
+          </div>
         </>
       )}
 

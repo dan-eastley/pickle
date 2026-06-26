@@ -1,30 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getVersions } from '../lib/api'
-import { loadClientMetrics } from '../lib/metrics'
+import { loadClientRollup } from '../lib/metrics'
+import ContentMetrics from '../components/common/ContentMetrics'
 import Spinner from '../components/ui/Spinner'
 import Illustration from '../components/ui/Illustration'
 import ClientLogo from '../components/ui/ClientLogo'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-// A labelled value with a comparison bar (normalised to the max across clients,
-// so the bars are directly comparable card-to-card).
-function StatBar({ label, value, max }) {
-  const pct = max > 0 ? Math.round((value / max) * 100) : 0
-  return (
-    <div>
-      <div className="flex items-baseline justify-between text-xs">
-        <span className="text-gray-500">{label}</span>
-        <span className="font-semibold text-gray-700 tabular-nums">{value}</span>
-      </div>
-      <div className="mt-0.5 h-1.5 bg-gray-100">
-        <div className="h-full bg-brand-400" style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  )
-}
 
 function MaturityBar({ m }) {
   const pct = Math.round(m.maturity * 100)
@@ -46,10 +29,19 @@ function MaturityBar({ m }) {
   )
 }
 
-function ClientCard({ client, clientsMetadata, m, maxes }) {
+function ClientCard({ client, clientsMetadata, m }) {
   const clientId = client['client-id']
   const meta = clientsMetadata[clientId]
   const name = meta?.name ?? clientId
+
+  // Governance totals (rolled up across every version) shown after content.
+  const governance = m
+    ? [
+        { label: 'Documents', count: m.documents },
+        { label: 'Decisions', count: m.decisions },
+        { label: 'Discoveries', count: m.discoveries },
+      ]
+    : []
 
   return (
     <Link
@@ -68,20 +60,22 @@ function ClientCard({ client, clientsMetadata, m, maxes }) {
       </div>
 
       <div className="px-5 py-4 space-y-3">
-        {m ? (
-          <>
-            <MaturityBar m={m} />
-            <div className="grid grid-cols-2 gap-x-5 gap-y-2.5 pt-1">
-              <StatBar label="Artefacts" value={m.artefacts.populated} max={maxes.artefacts} />
-              <StatBar label="Documents" value={m.documents} max={maxes.documents} />
-              <StatBar label="Decisions" value={m.decisions} max={maxes.decisions} />
-              <StatBar label="Discoveries" value={m.discoveries} max={maxes.discoveries} />
-            </div>
-          </>
-        ) : (
+        {m === undefined ? (
           <div className="flex items-center gap-2 py-2 text-xs text-gray-400">
             <Spinner size="sm" /> Loading metrics…
           </div>
+        ) : m === null ? (
+          <p className="py-2 text-xs text-gray-400">No architecture content yet.</p>
+        ) : (
+          <>
+            <MaturityBar m={m} />
+            <ContentMetrics
+              items={m.content}
+              extra={governance}
+              dense
+              empty={<p className="pt-1 text-xs text-gray-400">No architecture content yet.</p>}
+            />
+          </>
         )}
       </div>
     </Link>
@@ -92,35 +86,22 @@ export default function ClientsPage() {
   const { clients, clientsMetadata, loading } = useArchitecture()
   usePageTitle('Clients')
 
-  // Per-client metrics (keyed by client-id), loaded against each client's latest
-  // version. Cards render immediately; metrics fill in as they resolve.
+  // Per-client metrics (keyed by client-id), rolled up across every version.
+  // Cards render immediately; metrics fill in as they resolve. A resolved value
+  // of null means the client has no architecture content yet.
   const [metrics, setMetrics] = useState({})
   useEffect(() => {
     let live = true
     for (const c of clients) {
       const id = c['client-id']
-      getVersions(id)
-        .then((vs) => {
-          const v = vs[vs.length - 1]?.['version-id']
-          if (!v) return null
-          return loadClientMetrics(id, v)
-        })
-        .then((m) => live && m && setMetrics((prev) => ({ ...prev, [id]: m })))
-        .catch(() => {})
+      loadClientRollup(id)
+        .then((m) => live && setMetrics((prev) => ({ ...prev, [id]: m })))
+        .catch(() => live && setMetrics((prev) => ({ ...prev, [id]: null })))
     }
     return () => {
       live = false
     }
   }, [clients])
-
-  // Normalise the comparison bars to the max across all loaded clients.
-  const resolved = Object.values(metrics)
-  const maxes = {
-    artefacts: Math.max(1, ...resolved.map((m) => m.artefacts.populated)),
-    documents: Math.max(1, ...resolved.map((m) => m.documents)),
-    decisions: Math.max(1, ...resolved.map((m) => m.decisions)),
-    discoveries: Math.max(1, ...resolved.map((m) => m.discoveries)),
-  }
 
   if (loading) {
     return (
@@ -161,7 +142,6 @@ export default function ClientsPage() {
               client={client}
               clientsMetadata={clientsMetadata}
               m={metrics[client['client-id']]}
-              maxes={maxes}
             />
           ))}
         </div>

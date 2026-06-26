@@ -2,7 +2,12 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getArtefactsForDomain, ARTEFACTS, getDomain, DOMAIN_COLORS } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
+import FormatIcon from '../ui/FormatIcon'
 import { DecisionIcon, RobotIcon } from '../ui/icons'
+
+// Document-format artefacts hold individual document instances we can deep-link
+// to (e.g. a specific interface specification).
+const DOCUMENT_ARTEFACTS = ARTEFACTS.filter((a) => a.format === 'document')
 
 // Header quick-jump / command palette. A wide always-visible search box, scoped
 // to the current client + version (and current domain for artefacts). It indexes
@@ -28,11 +33,26 @@ export default function QuickPicker() {
       fetch(`/api/arch/clients/${clientId}/${versionId}/${p}`)
         .then((r) => (r.ok ? r.json() : null))
         .catch(() => null)
-    Promise.all([get('decisions/decisions.json'), get('discovery/discovery.json')]).then(
-      ([dec, dsc]) => {
-        if (live) setExtra({ decisions: dec?.decisions ?? [], discoveries: dsc?.discoveries ?? [] })
-      }
-    )
+    Promise.all([
+      get('decisions/decisions.json'),
+      get('discovery/discovery.json'),
+      ...DOCUMENT_ARTEFACTS.map((a) =>
+        get(`domains/${a.domain}/${a.abstraction}/${a.id}.json`).then((d) => ({
+          artefact: a,
+          docs: Array.isArray(d?.documents) ? d.documents : [],
+        }))
+      ),
+    ]).then(([dec, dsc, ...docResults]) => {
+      if (!live) return
+      const documents = docResults.flatMap(({ artefact, docs }) =>
+        docs.map((doc) => ({ artefact, doc }))
+      )
+      setExtra({
+        decisions: dec?.decisions ?? [],
+        discoveries: dsc?.discoveries ?? [],
+        documents,
+      })
+    })
     return () => {
       live = false
     }
@@ -52,6 +72,14 @@ export default function QuickPicker() {
       domain: a.domain,
       to: `${base}/domains/${a.domain}/${a.abstraction}/${a.id}`,
     }))
+    const documents = (extra?.documents ?? []).map(({ artefact: a, doc: d }) => ({
+      key: `doc:${a.id}:${d.id}`,
+      kind: 'document',
+      label: d.title ?? d.id,
+      id: d.id,
+      domain: a.domain,
+      to: `${base}/domains/${a.domain}/${a.abstraction}/${a.id}?doc=${encodeURIComponent(d.id)}`,
+    }))
     const decisions = (extra?.decisions ?? []).map((d) => ({
       key: `dec:${d['decision-id']}`,
       kind: 'decision',
@@ -66,7 +94,7 @@ export default function QuickPicker() {
       id: d['discovery-id'],
       to: `${base}/discovery/${d['discovery-id']}`,
     }))
-    return [...artefacts, ...decisions, ...discoveries]
+    return [...artefacts, ...documents, ...decisions, ...discoveries]
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domain, extra, clientId, versionId])
 
@@ -138,6 +166,8 @@ export default function QuickPicker() {
       return <DecisionIcon className="w-3.5 h-3.5 text-brand-600 flex-shrink-0" />
     if (item.kind === 'discovery')
       return <RobotIcon className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+    if (item.kind === 'document')
+      return <FormatIcon format="document" className="w-3.5 h-3.5 text-violet-600 flex-shrink-0" />
     const c = DOMAIN_COLORS[item.domain]
     return (
       <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-400'}`}>
@@ -147,7 +177,12 @@ export default function QuickPicker() {
   }
 
   return (
-    <div ref={ref} className="relative w-48 sm:w-80 lg:w-96">
+    <div
+      ref={ref}
+      className={`relative transition-all duration-200 ${
+        focused ? 'w-64 sm:w-[28rem] lg:w-[34rem]' : 'w-48 sm:w-80 lg:w-96'
+      }`}
+    >
       <div className="relative">
         <svg
           className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400"
@@ -163,7 +198,7 @@ export default function QuickPicker() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onKeyDown={onKeyDown}
-          placeholder={`Jump to ${scopeLabel}, decisions…`}
+          placeholder="Jump to… artefact, decision, discovery"
           title={`Jump to ${scopeLabel}, decisions or discoveries — press / to focus`}
           className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-400 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
         />
