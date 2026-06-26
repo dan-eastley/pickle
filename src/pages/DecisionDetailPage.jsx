@@ -2,8 +2,11 @@ import { useEffect, useState, useRef, useId } from 'react'
 import { useParams, Navigate, useLocation } from 'react-router-dom'
 import { getDecision, githubAction } from '../lib/api'
 import { decisionChangeFields } from '../lib/narrative'
+import { buildScope } from '../lib/scope'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
+import ScopeSelector from '../components/decisions/ScopeSelector'
+import RequirementsList from '../components/decisions/RequirementsList'
 import Markdown from '../components/ui/Markdown'
 import EmptyState from '../components/ui/EmptyState'
 import Spinner from '../components/ui/Spinner'
@@ -980,18 +983,39 @@ export default function DecisionDetailPage() {
 
   function startEdit() {
     // Backfill legacy narrative-only decisions into the split fields (DEC-3).
-    setEdit({ title: decision.title ?? '', ...decisionChangeFields(decision) })
+    setEdit({
+      title: decision.title ?? '',
+      ...decisionChangeFields(decision),
+      requirements: decision.requirements ?? [],
+      scope: {
+        domain: decision.scope?.domain ?? '',
+        abstraction: decision.scope?.abstraction ?? '',
+        artefact: decision.scope?.artefact ?? '',
+      },
+    })
   }
 
   // Save inline edits to a draft. edit-decision persists the fields and
   // re-dispatches decisions-to-draft, which refreshes the recommendations —
   // so we show the workflow banner. Only available while status === 'draft'.
   async function saveEdit() {
+    const { requirements = [], scope: scopeSel, ...fields } = edit // fields: title/context/problem/proposal
+    const scope = buildScope(scopeSel?.domain, scopeSel?.abstraction, scopeSel?.artefact)
     setSavingEdit(true)
     setTransitionError(null)
-    setDecision((prev) => (prev ? { ...prev, ...edit } : prev)) // optimistic
+    setDecision((prev) =>
+      prev ? { ...prev, ...fields, requirements, ...(scope ? { scope } : {}) } : prev
+    ) // optimistic
     try {
-      await githubAction({ action: 'edit-decision', clientId, versionId, decisionId, ...edit })
+      await githubAction({
+        action: 'edit-decision',
+        clientId,
+        versionId,
+        decisionId,
+        ...fields,
+        requirements: requirements.filter((r) => r.description?.trim()),
+        scope,
+      })
       setEdit(null)
       setPendingWorkflow({
         label: 'reviewing your updated narrative and refreshing recommendations',
@@ -1311,7 +1335,16 @@ export default function DecisionDetailPage() {
                 {renderSub(
                   'scope',
                   'Scope',
-                  decision.scope ? (
+                  edit ? (
+                    <ScopeSelector
+                      domain={edit.scope.domain}
+                      abstraction={edit.scope.abstraction}
+                      artefact={edit.scope.artefact}
+                      onChange={({ domain, abstraction, artefact }) =>
+                        setEdit((p) => ({ ...p, scope: { domain, abstraction, artefact } }))
+                      }
+                    />
+                  ) : decision.scope ? (
                     <ScopeChip scope={decision.scope} />
                   ) : (
                     <EmptyNote
@@ -1338,7 +1371,12 @@ export default function DecisionDetailPage() {
 
             {renderSection(
               'requirements',
-              decision.requirements?.length > 0 ? (
+              edit ? (
+                <RequirementsList
+                  requirements={edit.requirements}
+                  onChange={(r) => setEdit((p) => ({ ...p, requirements: r }))}
+                />
+              ) : decision.requirements?.length > 0 ? (
                 <div className="border border-gray-200 divide-y divide-gray-100">
                   {decision.requirements.map((req, i) => {
                     const title = typeof req === 'string' ? null : req.title
@@ -1364,7 +1402,7 @@ export default function DecisionDetailPage() {
               ) : (
                 <EmptyNote
                   title="No requirements"
-                  description="Add requirements on the full editor to record what this decision must achieve."
+                  description="Use Edit to record what this decision must achieve."
                 />
               )
             )}
