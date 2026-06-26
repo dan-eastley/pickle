@@ -55,8 +55,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### UI-1 · ✅ Action-bar system · Medium
 **Context:** `ActionBar` (title + strapline, no bar icon, actions ordered Tertiary → Secondary → Primary) and Button variants. Index headers, editor headers, and the artefact bar use it.
-**Gap:** The decision `StatusActions` transition buttons aren't yet folded into the system.
-**Proposed fix:** Express `StatusActions` through the same primary/secondary vocabulary.
+**Done:** The decision `StatusActions` lifecycle transitions are now expressed through the shared `Button` vocabulary — forward actions via a `ForwardButton` (custom variant carrying each stage's signature colour, spinner-on-transition), "Back to …" as `secondary`, "Reject" as `danger`, "Cancel" as `ghost`. The rejection panel is extracted to a shared `RejectPanel`.
 
 ### UI-2 · ✅ Analysis tables · Medium
 **Context:** All seven tables use uniform 25% columns; clicking a finding row accepts/declines it; step headers are collapsible; analysis locks once Accepted.
