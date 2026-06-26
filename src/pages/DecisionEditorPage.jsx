@@ -40,9 +40,10 @@ export default function DecisionEditorPage() {
   // In edit mode, fetch existing decision and pre-populate fields
   useEffect(() => {
     if (!isEdit) return
+    let cancelled = false
     getDecision(clientId, versionId, decisionId)
       .then((d) => {
-        if (!d) return
+        if (cancelled || !d) return
         setTitle(d.title ?? '')
         // Prefer the split fields; for legacy narrative-only records, parse the
         // narrative back into Context / Problem / Proposal (DEC-3 backfill).
@@ -55,7 +56,12 @@ export default function DecisionEditorPage() {
         setScopeAbstraction(d.scope?.abstraction ?? '')
         setScopeArtefact(d.scope?.artefact ?? '')
       })
-      .finally(() => setLoadingExisting(false))
+      .finally(() => {
+        if (!cancelled) setLoadingExisting(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [isEdit, clientId, versionId, decisionId])
 
   const scope = buildScope(scopeDomain, scopeAbstraction, scopeArtefact)
