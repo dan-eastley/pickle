@@ -10,6 +10,7 @@ import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
 import FolderedList from '../components/common/FolderedList'
+import useServerFolders from '../hooks/useServerFolders'
 import { ChevronRight, ChevronDown, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -99,7 +100,16 @@ export default function DiscoveryPage() {
   const { clientsMetadata } = useArchitecture()
   const [loading, setLoading] = useState(true)
   const [discoveries, setDiscoveries] = useState([])
+  const [indexFolders, setIndexFolders] = useState([])
   const [collapsedOverride, setCollapsedOverride] = useState(null)
+
+  // UI-8 folders, seeded from the index and persisted server-side.
+  const folders = useServerFolders(clientId, versionId, 'discovery', {
+    folders: indexFolders,
+    assign: Object.fromEntries(
+      discoveries.filter((d) => d.folderId).map((d) => [d['discovery-id'], d.folderId])
+    ),
+  })
 
   const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
@@ -113,6 +123,7 @@ export default function DiscoveryPage() {
       .then((r) => (r.ok ? r.json() : { discoveries: [] }))
       .then((data) => {
         setDiscoveries(data.discoveries ?? [])
+        setIndexFolders(data.folders ?? [])
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -225,7 +236,7 @@ export default function DiscoveryPage() {
 
           {view === 'folders' ? (
             <FolderedList
-              storageKey={`folders:discovery:${clientId}:${versionId}`}
+              controller={folders}
               itemLabel="discovery"
               items={filtered.map((d) => ({
                 id: d['discovery-id'],
