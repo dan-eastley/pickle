@@ -13,7 +13,7 @@ function architectureApiPlugin() {
     name: 'architecture-api',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        handleApiRequest(req, res, next).catch((err) => {
+        handleApiRequest(req, res, next, server).catch((err) => {
           res.statusCode = 500
           res.end(JSON.stringify({ error: err.message }))
         })
@@ -22,7 +22,7 @@ function architectureApiPlugin() {
   }
 }
 
-async function handleApiRequest(req, res, next) {
+async function handleApiRequest(req, res, next, server) {
   if (!req.url.startsWith('/api/')) {
     return next()
   }
@@ -94,7 +94,7 @@ async function handleApiRequest(req, res, next) {
       const raw = Buffer.concat(chunks).toString('utf8')
       body = raw ? JSON.parse(raw) : {}
     }
-    const { default: handler } = await import('./api/github.js')
+    const { default: handler } = await server.ssrLoadModule('/api/github.ts')
     const shimReq = { method: req.method, query: Object.fromEntries(url.searchParams), body }
     const shimRes = {
       statusCode: 200,
