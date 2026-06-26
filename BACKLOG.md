@@ -64,9 +64,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-3 · ✅ Auto-grow fields, terminology, help panels · Low
 **Context:** Context/Problem/Proposal/Request auto-grow; count casing; "New Architecture Decision/Discovery" titles + primary buttons; confirm-on-discard; friendly help panels.
 
-### UI-4 · 🟡 Global search / command palette · High
-**Done:** Header **QuickPicker** — a wide always-visible jump-to box (`components/layout/QuickPicker.jsx`) scoped to the current client + version (and current domain when active). Type to filter artefacts by name/id; ↑/↓/Enter to navigate; results dropdown only on typing; **`/` shortcut focuses it from anywhere** (command-palette convention) with a visible `/` hint.
-**Remaining:** broaden the index beyond artefact *types* to **entities** (individual capabilities/processes/platforms by id) and to **decisions/discoveries** and navigation actions, for a true global command palette. Pairs with [UI-9] (relationship navigation) and [UI-5] (deep links).
+### UI-4 · ✅ Global search / command palette · High
+**Done:** Header **QuickPicker** — a wide always-visible jump-to box (`components/layout/QuickPicker.jsx`) scoped to the current client + version (and current domain when active). Type to filter artefacts by name/id; ↑/↓/Enter to navigate; results dropdown only on typing; **`/` shortcut focuses it from anywhere** (command-palette convention) with a visible `/` hint. Now also indexes the client's **decisions and discoveries** (loaded lazily on first focus) with per-kind icons, so you can jump to any artefact, decision, or discovery by name/id. **Optional later:** index individual entities (each capability/process by id).
 
 ### UI-5 · 🟡 Responsiveness, loading skeletons, entity deep-linking · Low
 **Context:** Desktop-first; some routes flash a bare spinner; the entity panel has no shareable URL.
