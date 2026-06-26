@@ -81,7 +81,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-7 · ⬜ Brand/client-specific diagram theming · Low
 **Proposed fix:** Allow per-client colourways for diagrams.
 
-### UI-8 · ⬜ Folder organisation for decisions & discoveries · Medium
+### UI-8 · 🟡 Folder organisation for decisions & discoveries · Medium
+**Done (MVP):** A "Folders" view toggle on the Decisions and Discovery index pages renders a nested folder tree (max 3 levels) with **create / rename (double-click) / delete** folders and **drag-and-drop** to file items into folders, nest folders, or drop back to Unfiled. Built on a reusable `FolderedList` + `useFolders` hook, **client-persisted (localStorage)** per client/version. **Follow-up:** promote persistence to the architecture index (a `folders` array + `folderPath` on each entry, written via the API) so folders are shared, and optionally nest folders within each stage.
+**ORIG:
 **Context:** Decisions and discoveries are flat lists within a stage/status. As volume grows (many in-flight ADRs, many discoveries) the lists become unmanageable; there's no way to group related items (e.g. by initiative, domain, or workstream).
 **Gap:** No grouping construct; the index pages are a single flat list per stage.
 **Proposed fix:** A lightweight **folder** tree *within* each stage/status, max **3 levels** deep. Capabilities:
