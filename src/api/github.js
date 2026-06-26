@@ -119,12 +119,13 @@ async function syncIndex(
   const existingIdx = index.decisions.findIndex((d) => d['decision-id'] === decisionId)
   const existingEntry = existingIdx >= 0 ? index.decisions[existingIdx] : {}
 
-  // Preserve existing title/scope when the caller only passes a status update
+  // Preserve existing title/scope/folder when the caller only passes a status update
   const entry = {
     'decision-id': decisionId,
     title: title ?? existingEntry.title ?? '',
     status,
     ...((scope ?? existingEntry.scope) ? { scope: scope ?? existingEntry.scope } : {}),
+    ...(existingEntry.folderId ? { folderId: existingEntry.folderId } : {}),
   }
 
   if (existingIdx >= 0) {
@@ -505,6 +506,7 @@ async function syncDiscoveryIndex(
     title: title ?? existing.title ?? '',
     status: status ?? existing.status ?? 'active',
     ...((scope ?? existing.scope) ? { scope: scope ?? existing.scope } : {}),
+    ...(existing.folderId ? { folderId: existing.folderId } : {}),
   }
   if (i >= 0) list[i] = entry
   else list.push(entry)
@@ -657,6 +659,29 @@ async function refreshDiscovery({ clientId, versionId, discoveryId }, token, own
   return { ok: true, discoveryId }
 }
 
+// ── Action: set-folders ───────────────────────────────────────────────────────
+// Persist the UI-8 folder organisation (the folder tree + per-entry folderId)
+// into the decisions/discovery index. The client sends the full folder state.
+async function setFolders({ clientId, versionId, kind, folders, assignments }, token, owner, repo) {
+  const isDiscovery = kind === 'discovery'
+  const iPath = isDiscovery
+    ? discoveriesIndexPath(clientId, versionId)
+    : indexPath(clientId, versionId)
+  const listKey = isDiscovery ? 'discoveries' : 'decisions'
+  const idKey = isDiscovery ? 'discovery-id' : 'decision-id'
+
+  const { content: index, sha } = await readFile(iPath, BASE, token, owner, repo)
+  index.folders = Array.isArray(folders) ? folders : []
+  const assign = assignments ?? {}
+  for (const entry of index[listKey] ?? []) {
+    const fid = assign[entry[idKey]]
+    if (fid) entry.folderId = fid
+    else delete entry.folderId
+  }
+  await writeFile(iPath, index, `Update ${listKey} folders`, sha, BASE, token, owner, repo)
+  return { ok: true }
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 // Path-segment identifiers from the request flow into repository paths
@@ -740,6 +765,7 @@ export default async function handler(req, res) {
         return res.json(await updateDiscovery(params, token, owner, repo))
       if (action === 'refresh-discovery')
         return res.json(await refreshDiscovery(params, token, owner, repo))
+      if (action === 'set-folders') return res.json(await setFolders(params, token, owner, repo))
       return res.status(400).json({ error: `Unknown POST action: ${action}` })
     }
 

@@ -34,7 +34,25 @@
                             "artefact":    { "type": "string" }
                         },
                         "additionalProperties": false
+                    },
+                    "folderId": {
+                        "type": ["string", "null"],
+                        "description": "Organisational folder this entry is filed under (UI-8); references folders[].id."
                     }
+                },
+                "additionalProperties": false
+            }
+        },
+        "folders": {
+            "type": "array",
+            "description": "Organisational folders for the list view (UI-8). A flat tree via parentId, capped at 3 levels in the UI.",
+            "items": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                    "id":       { "type": "string" },
+                    "name":     { "type": "string" },
+                    "parentId": { "type": ["string", "null"] }
                 },
                 "additionalProperties": false
             }
