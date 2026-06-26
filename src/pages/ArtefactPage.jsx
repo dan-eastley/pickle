@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { useParams, Navigate, Link } from 'react-router-dom'
+import { useParams, Navigate, Link, useSearchParams } from 'react-router-dom'
 import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
@@ -268,6 +268,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
 export default function ArtefactPage() {
   const { clientId, versionId, domain, abstraction, artefactId } = useParams()
   const { selectedClientId, selectedVersionId } = useArchitecture()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [data, setData] = useState(undefined)
   const [schema, setSchema] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -302,15 +303,37 @@ export default function ArtefactPage() {
 
   const diagramRef = useRef(null)
 
+  const isDocument = artefact?.format === 'document'
+  const documents = isDocument ? (data?.documents ?? []) : []
+  const docParam = searchParams.get('doc')
+
+  // Apply a ?doc=<document-id> deep-link (e.g. from the quick-jump menu) once the
+  // documents have loaded.
+  useEffect(() => {
+    if (!isDocument || documents.length === 0 || !docParam) return
+    const idx = documents.findIndex((d) => d.id === docParam)
+    if (idx >= 0) setDocIdx(idx)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [docParam, data, isDocument])
+
   if (!artefact) {
     return (
       <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
     )
   }
 
-  const isDocument = artefact.format === 'document'
-  const documents = isDocument ? (data?.documents ?? []) : []
   const selectedDocument = documents[docIdx] ?? null
+
+  // Change the selected document and reflect it in the URL so the view is
+  // shareable / deep-linkable.
+  const selectDoc = (idx) => {
+    setDocIdx(idx)
+    const next = new URLSearchParams(searchParams)
+    const id = documents[idx]?.id
+    if (id) next.set('doc', id)
+    else next.delete('doc')
+    setSearchParams(next, { replace: true })
+  }
 
   return (
     <div>
@@ -325,7 +348,7 @@ export default function ArtefactPage() {
           artefact={artefact}
           documents={documents}
           selectedIdx={docIdx}
-          onSelect={setDocIdx}
+          onSelect={selectDoc}
         />
       )}
       <AdrActionBar
