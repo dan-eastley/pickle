@@ -81,6 +81,7 @@ export default function DiscoveryPage() {
   const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
   const filterArtefact = searchParams.get('artefact') ?? ''
+  const statusParam = searchParams.get('status') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Discovery`)
@@ -94,6 +95,12 @@ export default function DiscoveryPage() {
       })
       .catch(() => setLoading(false))
   }, [clientId, versionId])
+
+  // Deep-link: ?status=<s> opens just that pot (e.g. from the domains overview).
+  useEffect(() => {
+    if (statusParam)
+      setCollapsedOverride(new Set(POTS.map((p) => p.status).filter((s) => s !== statusParam)))
+  }, [statusParam])
 
   const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
   const filtered = discoveries.filter((d) => {

@@ -92,6 +92,7 @@ export default function DecisionsPage() {
   const filterDomain = searchParams.get('domain') ?? ''
   const filterAbstraction = searchParams.get('abstraction') ?? ''
   const filterArtefact = searchParams.get('artefact') ?? ''
+  const statusParam = searchParams.get('status') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} — Decisions`)
@@ -105,6 +106,13 @@ export default function DecisionsPage() {
       })
       .catch(() => setLoading(false))
   }, [clientId, versionId])
+
+  // Deep-link: ?status=<s> opens just that status group (e.g. from the domains
+  // overview), collapsing the rest so the user lands focused on it.
+  useEffect(() => {
+    if (statusParam)
+      setCollapsedOverride(new Set(DECISION_STATUS_ORDER.filter((s) => s !== statusParam)))
+  }, [statusParam])
 
   const isFiltered = !!(filterDomain || filterAbstraction || filterArtefact)
   const filtered = decisions.filter((d) => {
