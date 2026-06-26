@@ -20,13 +20,19 @@ function findEntity(data, entityId) {
   return null
 }
 
-const HIDDEN_FIELDS = new Set(['id', 'name', 'description'])
 const humanize = (key) => key.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
 
-function FieldValue({ value }) {
-  if (value == null || value === '') return <span className="text-gray-300">—</span>
+// A short scalar goes in the attributes table; long strings, arrays and objects
+// get their own headed section (so the table stays tidily aligned).
+const isLongText = (v) => typeof v === 'string' && (v.length > 80 || v.includes('\n'))
+const isTableValue = (key, v) =>
+  key !== 'description' &&
+  (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') &&
+  !isLongText(v)
+
+// Body for a headed (non-table) section.
+function SectionBody({ value }) {
   if (Array.isArray(value)) {
-    if (value.length === 0) return <span className="text-gray-300">—</span>
     return (
       <ul className="space-y-0.5">
         {value.map((v, i) => (
@@ -37,14 +43,16 @@ function FieldValue({ value }) {
       </ul>
     )
   }
-  if (typeof value === 'object') {
+  if (value && typeof value === 'object') {
     return (
       <pre className="text-xs text-gray-600 whitespace-pre-wrap">
         {JSON.stringify(value, null, 2)}
       </pre>
     )
   }
-  return <span className="text-sm text-gray-700">{String(value)}</span>
+  return (
+    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{String(value)}</p>
+  )
 }
 
 export default function EntityPanel({ entityId, clientId, versionId, onOpenEntity, onClose }) {
@@ -91,9 +99,14 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
   }, [entityId, clientId, versionId, artefact])
 
   const entity = state.status === 'ready' ? state.entity : null
-  const fields = entity
-    ? Object.entries(entity).filter(([k, v]) => !HIDDEN_FIELDS.has(k) && v != null && v !== '')
+  const entries = entity
+    ? Object.entries(entity).filter(([k, v]) => k !== 'id' && k !== 'name' && v != null && v !== '')
     : []
+  const tableFields = entries.filter(([k, v]) => isTableValue(k, v))
+  // Long-text / array / object fields get their own heading — description first.
+  const sectionFields = entries
+    .filter(([k, v]) => !isTableValue(k, v))
+    .sort(([a], [b]) => (a === 'description' ? -1 : b === 'description' ? 1 : 0))
 
   // Fields that point at another entity we can open in this same panel.
   const RELATION_FIELDS = new Set(['parent-id', 'domain-id'])
@@ -127,32 +140,44 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
         )}
 
         {entity && (
-          <div className="space-y-4">
-            {entity.description && (
-              <p className="text-sm text-gray-700 leading-relaxed">{entity.description}</p>
+          <div className="space-y-5">
+            {/* Attributes table — short scalars, label → value forced into a
+                two-column table so everything lines up. */}
+            {tableFields.length > 0 && (
+              <table className="w-full text-sm">
+                <tbody>
+                  {tableFields.map(([key, value]) => (
+                    <tr key={key} className="border-b border-gray-100 last:border-0 align-top">
+                      <th className="py-2 pr-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap align-top">
+                        {humanize(key)}
+                      </th>
+                      <td className="py-2 text-sm text-gray-700">
+                        {RELATION_FIELDS.has(key) ? (
+                          <button
+                            onClick={() => onOpenEntity?.(value)}
+                            className="font-mono text-brand-600 hover:text-brand-700 hover:underline"
+                          >
+                            {value}
+                          </button>
+                        ) : (
+                          String(value)
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
 
-            <dl className="divide-y divide-gray-100 border-t border-gray-100">
-              {fields.map(([key, value]) => (
-                <div key={key} className="py-2.5 grid grid-cols-3 gap-3">
-                  <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                    {humanize(key)}
-                  </dt>
-                  <dd className="col-span-2">
-                    {RELATION_FIELDS.has(key) && typeof value === 'string' ? (
-                      <button
-                        onClick={() => onOpenEntity?.(value)}
-                        className="text-sm font-mono text-rose-600 hover:text-rose-700 hover:underline"
-                      >
-                        {value}
-                      </button>
-                    ) : (
-                      <FieldValue value={value} />
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {/* Long-text / array / object fields — each under its own heading. */}
+            {sectionFields.map(([key, value]) => (
+              <div key={key}>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+                  {humanize(key)}
+                </p>
+                <SectionBody value={value} />
+              </div>
+            ))}
 
             {/* UI-9 — related entities, resolved from the matrices. Click to
                 navigate to that entity in this same panel. */}
