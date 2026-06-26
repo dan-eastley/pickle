@@ -31,7 +31,7 @@ export default function SlidePanel({ open, onClose, title, subtitle, children })
         aria-label={typeof title === 'string' ? title : 'Details'}
         aria-hidden={!open}
         tabIndex={-1}
-        className={`fixed top-0 right-0 h-full z-[151] w-96 bg-white border-l border-gray-200 shadow-2xl flex flex-col transition-transform duration-200 ease-in-out focus:outline-none ${
+        className={`fixed top-0 right-0 h-full z-[151] w-full max-w-[36rem] bg-white border-l border-gray-200 shadow-2xl flex flex-col transition-transform duration-200 ease-in-out focus:outline-none ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
