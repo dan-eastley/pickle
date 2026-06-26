@@ -304,3 +304,12 @@ Failures from running the use-case corpus against the product, captured here so 
 ### UCO-1 · ✅ No outstanding failures · High
 **Context:** Latest run (2026-06-25) over XS/S/M × Must Have/Should Have — **62 cases: 37 passed, 0 failed, 25 to-do** (the to-do titles have no automated check yet, tracked under TT-1). No product defects surfaced.
 **Gap:** None. Any future failure gets its own `UCO-n` entry here with Context / Gap / Proposed fix.
+
+---
+
+## Ops Notes
+
+### OPS-1 · ⬜ Vercel `ignoreCommand` skips multi-commit pushes ending in a data-only commit · Medium
+**Context:** `src/vercel.json` sets `ignoreCommand: git diff --quiet HEAD^ HEAD -- . ':(exclude)architectures'` so the frontend isn't rebuilt when only architecture *data* changes. Vercel evaluates this against the **tip commit only** (`HEAD^..HEAD`).
+**Gap:** When a push contains several commits and the **last** one touches only `architectures/` (e.g. the app's own `Update decisions` writes, or a data tidy-up), Vercel skips the build for the *entire* push — stranding any code changes earlier in the same push. Hit on 2026-06-26: a batch of `src/` features didn't deploy because the tip commit only stripped a key from `decisions.json`.
+**Proposed fix:** Either diff against the last *deployed* SHA rather than `HEAD^`, or keep data-only commits on their own pushes (and never end a code push with a data-only commit). Workaround today: push any commit touching a non-`architectures/` path to trigger a build of the current `HEAD`.
