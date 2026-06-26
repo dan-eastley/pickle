@@ -9,6 +9,7 @@ import ScopeSelector from '../components/decisions/ScopeSelector'
 import RequirementsList from '../components/decisions/RequirementsList'
 import Markdown from '../components/ui/Markdown'
 import EmptyState from '../components/ui/EmptyState'
+import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
@@ -151,9 +152,84 @@ const REJECTION_REASONS = [
   { value: 'superseded', label: 'Superseded — replaced by a newer or broader decision' },
 ]
 
+// Forward arrow used by "Propose"; check-arrow used by Accept / Stage / Commit.
+function ProposeArrow() {
+  return (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+      <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+    </svg>
+  )
+}
+function CheckArrow() {
+  return (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+      <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+    </svg>
+  )
+}
+
+// Primary "advance to the next stage" action. Folds the lifecycle transitions
+// into the shared Button vocabulary; each stage keeps its signature colour via
+// the custom variant, and the spinner replaces the label while transitioning.
+function ForwardButton({ transitioning, spinnerClass = 'text-white', children, ...props }) {
+  return (
+    <Button variant="custom" disabled={transitioning} {...props}>
+      {transitioning ? <Spinner size="sm" className={spinnerClass} /> : children}
+    </Button>
+  )
+}
+
+// Inline rejection panel — shared by the draft and proposed stages.
+function RejectPanel({ rejectReason, setRejectReason, transitioning, onConfirm, onCancel }) {
+  return (
+    <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
+      <div className="flex-1">
+        <span className="block text-xs font-semibold text-error-700 mb-1">
+          Reason for rejection
+        </span>
+        <select
+          value={rejectReason}
+          onChange={(e) => setRejectReason(e.target.value)}
+          className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none"
+        >
+          {REJECTION_REASONS.map((r) => (
+            <option key={r.value} value={r.value}>
+              {r.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <Button
+        variant="custom"
+        disabled={transitioning}
+        onClick={onConfirm}
+        className="bg-error-600 hover:bg-error-700 text-white"
+      >
+        Confirm Rejection
+      </Button>
+      <Button variant="ghost" size="sm" onClick={onCancel}>
+        Cancel
+      </Button>
+    </div>
+  )
+}
+
 function StatusActions({ status, onTransition, transitioning, decision, versionId }) {
   const [rejectOpen, setRejectOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState('duplicate')
+
+  const rejectPanel = (
+    <RejectPanel
+      rejectReason={rejectReason}
+      setRejectReason={setRejectReason}
+      transitioning={transitioning}
+      onConfirm={() => {
+        setRejectOpen(false)
+        onTransition('rejected', { 'rejection-reason': rejectReason })
+      }}
+      onCancel={() => setRejectOpen(false)}
+    />
+  )
 
   if (status === 'draft') {
     return (
@@ -166,72 +242,25 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
             </p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button
+            <Button
+              variant="danger"
+              size="sm"
               disabled={transitioning}
               onClick={() => setRejectOpen((r) => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40"
             >
               Reject
-            </button>
-            <button
-              disabled={transitioning}
+            </Button>
+            <ForwardButton
+              transitioning={transitioning}
               onClick={() => onTransition('proposed')}
-              className="flex items-center gap-2 px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
+              className="bg-brand-600 hover:bg-brand-700 text-white"
             >
-              {transitioning ? (
-                <Spinner size="sm" className="text-white" />
-              ) : (
-                <>
-                  Propose
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M3 7h8M8 4l3 3-3 3"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="square"
-                    />
-                  </svg>
-                </>
-              )}
-            </button>
+              Propose
+              <ProposeArrow />
+            </ForwardButton>
           </div>
         </div>
-        {rejectOpen && (
-          <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
-            <div className="flex-1">
-              <span className="block text-xs font-semibold text-error-700 mb-1">
-                Reason for rejection
-              </span>
-              <select
-                value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none"
-              >
-                {REJECTION_REASONS.map((r) => (
-                  <option key={r.value} value={r.value}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              disabled={transitioning}
-              onClick={() => {
-                setRejectOpen(false)
-                onTransition('rejected', { 'rejection-reason': rejectReason })
-              }}
-              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
-            >
-              Confirm Rejection
-            </button>
-            <button
-              onClick={() => setRejectOpen(false)}
-              className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700"
-            >
-              Cancel
-            </button>
-          </div>
-        )}
+        {rejectOpen && rejectPanel}
       </div>
     )
   }
@@ -249,80 +278,34 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
             </p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
               disabled={transitioning}
               onClick={() => onTransition('draft')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               Back to Draft
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
               disabled={transitioning}
               onClick={() => setRejectOpen((r) => !r)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-error-50 border border-error-300 hover:bg-error-100 text-error-700 text-sm font-medium transition-colors disabled:opacity-40"
             >
               Reject
-            </button>
-            <button
-              disabled={transitioning}
+            </Button>
+            <ForwardButton
+              transitioning={transitioning}
               onClick={() => onTransition('accepted')}
-              className="flex items-center gap-2 px-4 py-1.5 bg-success-500 hover:bg-success-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
+              className="bg-success-500 hover:bg-success-700 text-white"
             >
-              {transitioning ? (
-                <Spinner size="sm" className="text-white" />
-              ) : (
-                <>
-                  Accept
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M2 7l3.5 3.5L12 3"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="square"
-                    />
-                  </svg>
-                </>
-              )}
-            </button>
+              Accept
+              <CheckArrow />
+            </ForwardButton>
           </div>
         </div>
-        {rejectOpen && (
-          <div className="bg-error-50 border-t border-error-200 px-5 py-4 flex items-end gap-3">
-            <div className="flex-1">
-              <span className="block text-xs font-semibold text-error-700 mb-1">
-                Reason for rejection
-              </span>
-              <select
-                value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-error-300 bg-white focus:outline-none"
-              >
-                {REJECTION_REASONS.map((r) => (
-                  <option key={r.value} value={r.value}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              disabled={transitioning}
-              onClick={() => {
-                setRejectOpen(false)
-                onTransition('rejected', { 'rejection-reason': rejectReason })
-              }}
-              className="px-4 py-1.5 bg-error-600 hover:bg-error-700 text-white text-sm font-medium transition-colors disabled:opacity-40"
-            >
-              Confirm Rejection
-            </button>
-            <button
-              onClick={() => setRejectOpen(false)}
-              className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700"
-            >
-              Cancel
-            </button>
-          </div>
-        )}
+        {rejectOpen && rejectPanel}
       </div>
     )
   }
@@ -340,35 +323,23 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
           </p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             disabled={transitioning}
             onClick={() => onTransition('proposed')}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors disabled:opacity-40"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Proposed
-          </button>
-          <button
-            disabled={transitioning}
+          </Button>
+          <ForwardButton
+            transitioning={transitioning}
             onClick={() => onTransition('staged')}
-            className="flex items-center gap-2 px-4 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium transition-colors disabled:opacity-40"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white"
           >
-            {transitioning ? (
-              <Spinner size="sm" className="text-white" />
-            ) : (
-              <>
-                Stage
-                <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M2 7l3.5 3.5L12 3"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </>
-            )}
-          </button>
+            Stage
+            <CheckArrow />
+          </ForwardButton>
         </div>
       </div>
     )
@@ -383,27 +354,15 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
             Committing merges the pull request into main and closes the decision branch.
           </p>
         </div>
-        <button
-          disabled={transitioning}
+        <ForwardButton
+          transitioning={transitioning}
+          spinnerClass="text-gray-700"
           onClick={() => onTransition('committed', { prNumber: decision?.['pr-number'] })}
-          className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold hover:bg-gray-100 transition-colors disabled:opacity-40"
+          className="flex-shrink-0 bg-white text-gray-900 font-semibold hover:bg-gray-100"
         >
-          {transitioning ? (
-            <Spinner size="sm" className="text-gray-700" />
-          ) : (
-            <>
-              {`Commit to v${versionId}`}
-              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M2 7l3.5 3.5L12 3"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="square"
-                />
-              </svg>
-            </>
-          )}
-        </button>
+          {`Commit to v${versionId}`}
+          <CheckArrow />
+        </ForwardButton>
       </div>
     )
   }

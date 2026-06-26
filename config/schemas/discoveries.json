@@ -15,25 +15,7 @@
                     "discovery-id": { "type": "string" },
                     "title": { "type": "string" },
                     "status": { "type": "string", "enum": ["active", "archived"] },
-                    "scope": { "$ref": "urn:pickle:schemas:scope" },
-                    "folderId": {
-                        "type": ["string", "null"],
-                        "description": "Organisational folder this entry is filed under (UI-8); references folders[].id."
-                    }
-                },
-                "additionalProperties": false
-            }
-        },
-        "folders": {
-            "type": "array",
-            "description": "Organisational folders for the list view (UI-8). A flat tree via parentId, capped at 3 levels in the UI.",
-            "items": {
-                "type": "object",
-                "required": ["id", "name"],
-                "properties": {
-                    "id":       { "type": "string" },
-                    "name":     { "type": "string" },
-                    "parentId": { "type": ["string", "null"] }
+                    "scope": { "$ref": "urn:pickle:schemas:scope" }
                 },
                 "additionalProperties": false
             }
