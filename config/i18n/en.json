@@ -203,6 +203,10 @@
       "name": "Business Capabilities ↔ Application Domains & Platforms",
       "description": "Maps each APP-DAP platform to the Level 2 business capabilities it supports."
     },
+    "APP-PRO-DAP": {
+      "name": "Business Processes ↔ Application Domains & Platforms",
+      "description": "Maps which application platforms support which Level 1 business processes."
+    },
     "APP-PRN": {
       "name": "Application Architecture Principles",
       "description": "The guiding principles that shape how Application architecture decisions are made."
