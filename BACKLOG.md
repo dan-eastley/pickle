@@ -72,10 +72,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface. **Deep-linkable entity-panel URLs** — the entity panel selection now lives in the URL (`?entity=…`) via a reusable `useSearchParamState` hook, so an open entity is shareable, survives refresh, and is restorable from a link.
 **Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Done: contents-nav rails hide on mobile (hidden lg:block), the 5-step decision status bar scrolls rather than squishing, header + document surfaces use mobile padding. A deep device-by-device QA sweep remains optional.
 
-### UI-6 · ⬜ Diagram export / download · Medium
-**Context:** Diagrams render as SVG in-app.
-**Gap:** No export to PNG/SVG for slides and docs.
-**Proposed fix:** Add an export action to the diagram views.
+### UI-6 · ✅ Artefact export / download · Medium
+**Done:** A shared `DownloadMenu` on the artefact page offers per-format downloads — **Diagrams** → PowerPoint (.pptx) or PNG; **Catalogues** → Excel (.xlsx) or CSV; **Documents** → Word (.docx) or PDF. **Matrices** have no download (by design). Built on a format-agnostic intermediate "block" model (`lib/export/blocks.js`) consumed by each renderer; the heavy writers (`exceljs`, `pptxgenjs`, `docx`, `jspdf`) are **lazy-loaded via dynamic import**, so they stay out of the initial bundle. Diagrams rasterise the live SVG with computed styles inlined (Tailwind classes don't survive a raw serialize) → PNG, embedded into a 16:9 slide for PowerPoint.
 
 ### UI-7 · ⬜ Brand/client-specific diagram theming · Low
 **Proposed fix:** Allow per-client colourways for diagrams.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
@@ -15,9 +15,78 @@ import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import ActivityHistory from '../components/common/ActivityHistory'
 import ActionBar from '../components/ui/ActionBar'
+import DownloadMenu from '../components/ui/DownloadMenu'
 import { KeyStar, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useCollapsed from '../hooks/useCollapsed'
+import { downloadCatalogueCsv, downloadCatalogueExcel } from '../lib/export/catalogue'
+import { downloadDocumentWord, downloadDocumentPdf } from '../lib/export/document'
+import { downloadDiagramPng, downloadDiagramPptx } from '../lib/export/diagram'
+
+// Per-format download options. Matrices intentionally have none.
+function ArtefactDownload({ artefact, schema, data, selectedDocument, diagramRef }) {
+  if (artefact.format === 'catalogue') {
+    return (
+      <DownloadMenu
+        options={[
+          {
+            label: 'Excel (.xlsx)',
+            sublabel: 'One sheet per catalogue',
+            onSelect: () => downloadCatalogueExcel(data, artefact),
+          },
+          {
+            label: 'CSV (.csv)',
+            sublabel: 'Plain comma-separated values',
+            onSelect: () => downloadCatalogueCsv(data, artefact),
+          },
+        ]}
+      />
+    )
+  }
+  if (artefact.format === 'document' && selectedDocument) {
+    const sections = schema?.meta?.sections
+    return (
+      <DownloadMenu
+        options={[
+          {
+            label: 'Word (.docx)',
+            sublabel: 'Editable document',
+            onSelect: () => downloadDocumentWord(selectedDocument, sections, artefact),
+          },
+          {
+            label: 'PDF (.pdf)',
+            sublabel: 'Print-ready document',
+            onSelect: () => downloadDocumentPdf(selectedDocument, sections, artefact),
+          },
+        ]}
+      />
+    )
+  }
+  if (artefact.format === 'diagram') {
+    const getSvg = () => {
+      const svg = diagramRef.current?.querySelector('svg')
+      if (!svg) throw new Error('No diagram is rendered to export.')
+      return svg
+    }
+    return (
+      <DownloadMenu
+        options={[
+          {
+            label: 'PowerPoint (.pptx)',
+            sublabel: 'Diagram on a slide',
+            onSelect: () => downloadDiagramPptx(getSvg(), artefact),
+          },
+          {
+            label: 'Image (.png)',
+            sublabel: 'High-resolution raster',
+            onSelect: () => downloadDiagramPng(getSvg(), artefact),
+          },
+        ]}
+      />
+    )
+  }
+  return null
+}
 
 function AdrActionBar({ artefact, documents, selectedDocument, clientId, versionId }) {
   const [decisionOpen, setDecisionOpen] = useState(false)
@@ -231,6 +300,8 @@ export default function ArtefactPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, domain, abstraction, artefactId])
 
+  const diagramRef = useRef(null)
+
   if (!artefact) {
     return (
       <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
@@ -306,34 +377,47 @@ export default function ArtefactPage() {
 
       {!loading && !error && data !== null && data !== undefined && (
         <>
-          {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
-          {artefact.format === 'matrix' && (
-            <MatrixView
-              data={data}
-              schema={schema}
-              clientId={clientId ?? selectedClientId}
-              versionId={versionId ?? selectedVersionId}
-            />
+          {artefact.format !== 'matrix' && (
+            <div className="mb-3 flex justify-end">
+              <ArtefactDownload
+                artefact={artefact}
+                schema={schema}
+                data={data}
+                selectedDocument={selectedDocument}
+                diagramRef={diagramRef}
+              />
+            </div>
           )}
-          {artefact.format === 'diagram' && (
-            <DiagramView
-              data={data}
-              artefact={artefact}
-              schema={schema}
-              clientId={clientId ?? selectedClientId}
-              versionId={versionId ?? selectedVersionId}
-            />
-          )}
-          {artefact.format === 'document' && (
-            <DocumentView
-              data={data}
-              artefact={artefact}
-              schema={schema}
-              selectedIdx={docIdx}
-              clientId={clientId ?? selectedClientId}
-              versionId={versionId ?? selectedVersionId}
-            />
-          )}
+          <div ref={diagramRef}>
+            {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
+            {artefact.format === 'matrix' && (
+              <MatrixView
+                data={data}
+                schema={schema}
+                clientId={clientId ?? selectedClientId}
+                versionId={versionId ?? selectedVersionId}
+              />
+            )}
+            {artefact.format === 'diagram' && (
+              <DiagramView
+                data={data}
+                artefact={artefact}
+                schema={schema}
+                clientId={clientId ?? selectedClientId}
+                versionId={versionId ?? selectedVersionId}
+              />
+            )}
+            {artefact.format === 'document' && (
+              <DocumentView
+                data={data}
+                artefact={artefact}
+                schema={schema}
+                selectedIdx={docIdx}
+                clientId={clientId ?? selectedClientId}
+                versionId={versionId ?? selectedVersionId}
+              />
+            )}
+          </div>
           <ActivityHistory activity={data.activity} />
         </>
       )}
