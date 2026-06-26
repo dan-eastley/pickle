@@ -867,10 +867,14 @@ export default function DecisionDetailPage() {
   // Use branch-then-main fallback via getDecision helper.
   // Bust CDN cache if we just navigated back from the editor after a save.
   useEffect(() => {
+    let cancelled = false
     const bust = !!location.state?.cacheBust
     getDecision(clientId, versionId, decisionId, undefined, { bust })
-      .then(setDecision)
-      .catch(() => setDecision(null))
+      .then((d) => !cancelled && setDecision(d))
+      .catch(() => !cancelled && setDecision(null))
+    return () => {
+      cancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, decisionId])
 

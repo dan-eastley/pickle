@@ -145,6 +145,9 @@ export default function DocsPage() {
       navigate('/docs/index', { replace: true })
       return
     }
+    // Guard against races when switching docs quickly — an earlier, slower
+    // response must not replace the current page's content.
+    let cancelled = false
     setLoading(true)
     setNotFound(false)
     setContent(null)
@@ -152,17 +155,24 @@ export default function DocsPage() {
     fetch(`/api/docs/${docPath}.md`)
       .then((r) => {
         if (r.status === 404) {
-          setNotFound(true)
+          if (!cancelled) setNotFound(true)
           return null
         }
         if (!r.ok) throw new Error(`Failed to load doc: ${r.status}`)
         return r.text()
       })
       .then((text) => {
-        if (text !== null) setContent(text)
+        if (!cancelled && text !== null) setContent(text)
       })
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false))
+      .catch(() => {
+        if (!cancelled) setNotFound(true)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docPath])
 

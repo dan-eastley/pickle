@@ -170,9 +170,10 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Context:** `config/roles.json` (27 roles) + `config/schemas/roles.json` enum; `audience`/`author` on all 45 artefact schemas and **backfilled into every instance** by artefact type.
 **Gap:** Fields are optional, not required (kept optional so partial data stays valid).
 
-### RAS-2 · ⬜ Authentication · High
+### RAS-2 · 🟡 Authentication · High
 **Context:** The app is unauthenticated.
-**Proposed fix:** Add an identity provider (OAuth/OIDC) and sessions.
+**Done (foundation):** **Better Auth** (email + password) backed by **Postgres via Drizzle** on the existing Vercel functions. Schema covers Better Auth's user/session/account/verification tables plus custom user fields — `firstName`, `lastName`, `jobRole` (id from `config/roles.json`), and an `access_tier` enum (`admin`/`member`/`viewer`, `input:false` so it can't be self-assigned at sign-up). Initial migration generated (`src/db/migrations/`). Registration + login pages, `useAuth` context, `UserMenu` in both headers, and a `RequireAuth` guard wrapping the app routes — gated behind `VITE_REQUIRE_AUTH` (default off) so the app stays usable until Postgres is provisioned. Migrations via `db:generate`/`db:migrate`; setup in `src/db/README.md`.
+**Remaining:** provision Vercel Postgres + run the migration, set `DATABASE_URL`/`BETTER_AUTH_SECRET`/`BETTER_AUTH_URL`, flip `VITE_REQUIRE_AUTH=true`; then gate `/api/github` behind a valid session and attribute activity to the signed-in user (replacing the `ACTOR` placeholder). Email verification / password reset need an email provider (deferred). Authorization is [RAS-3].
 
 ### RAS-3 · ⬜ Authorization (RBAC + ACL) · High
 **Context:** Roles exist as data but don't gate anything.
@@ -243,8 +244,11 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 
 | # | Severity | Finding | Status |
 |---|---|---|---|
-| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | 🟡 **CORS hardened** — blanket `*` removed; default is same-origin only, with an optional `API_ALLOWED_ORIGINS` env allow-list. Full **auth still open** under [RAS-2] (CORS is a browser-only control). |
-| 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/clients/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$` (400) on every GET/POST. |
+| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | 🟡 **CORS hardened** (same-origin default + `API_ALLOWED_ORIGINS` allow-list). **Auth foundation landed** under [RAS-2] (Better Auth sessions); gating `/api/github` behind a session is the remaining step there. |
+| 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/clients/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed & strengthened** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$`, and additionally any value containing `..` or equal to `.` (the regex alone allowed `..`, since dots are needed for versions like `1.0.0`). |
+| 7 | Low | **Unvalidated `prNumber`** flowed into the PR-merge URL (`/pulls/${prNumber}/merge`). | ✅ **Fixed** — coerced to a positive integer (400 otherwise) during the TS migration. |
+| 8 | Low | **Prototype-pollution surface** — the attacker-influenced `sectionKey` indexed into the parsed decision doc (`content[sectionKey][findingIndex]`). | ✅ **Fixed** — `sectionKey` rejects `__proto__`/`prototype`/`constructor`; `findingIndex` must be a non-negative integer. |
+| 9 | Low | `/api/content` interpolated `ref` into the GitHub URL unencoded. | ✅ **Fixed** — `ref` is URL-encoded (via the shared `GitHubClient`) and reads are wrapped in try/catch. |
 | 3 | Low (dev-only) | `npm audit`: 3 vulns (1 high, 2 moderate) in **esbuild/vite** — build/dev tooling only, **not in the production runtime bundle**. Fix is a breaking vite major bump. | ⬜ Defer; revisit on the next Vite upgrade. |
 | 4 | Low | `/api/arch` GitHub proxy interpolates `relPath` into the contents URL; the local schema/docs shim has a `startsWith(basePath)` traversal guard. | ✅ **Fixed** — `/api/content` now allow-lists `prefix` to the three content roots and rejects `..`/leading-`/` paths. |
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
