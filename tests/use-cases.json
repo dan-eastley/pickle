@@ -43,9 +43,9 @@
         "Selecting a domain shows its artefacts"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "expected ≥5 domain cards, found 0",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -61,9 +61,9 @@
         "Selecting a domain shows its artefacts"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "expected ≥5 domain cards, found 0",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -79,9 +79,9 @@
         "Selecting a domain shows its artefacts"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "5+ domains with descriptions; navigated to \"Business Architecture\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "expected ≥5 domain cards, found 0",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -97,9 +97,9 @@
         "Breadcrumb reflects domain and layer"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (1283 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -115,9 +115,9 @@
         "Breadcrumb reflects domain and layer"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (1283 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -133,9 +133,9 @@
         "Breadcrumb reflects domain and layer"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (1283 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -151,9 +151,9 @@
         "Links navigate to the related artefact"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Related Artefacts\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -169,9 +169,9 @@
         "Links navigate to the related artefact"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Related Artefacts\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -189,7 +189,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -207,7 +207,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -223,9 +223,9 @@
         "Each capability shows id, name, and description"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -241,9 +241,9 @@
         "Each capability shows id, name, and description"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -259,9 +259,9 @@
         "Each capability shows id, name, and description"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -277,9 +277,9 @@
         "Concepts link to the conceptual data model"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2334 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -295,9 +295,9 @@
         "Concepts link to the conceptual data model"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2334 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -313,9 +313,9 @@
         "Concepts link to the conceptual data model"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2334 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -331,9 +331,9 @@
         "Each states its rationale"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (4395 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -349,9 +349,9 @@
         "Each states its rationale"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (4395 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -367,9 +367,9 @@
         "Each states its rationale"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (4395 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -385,9 +385,9 @@
         "Physical applications show lifecycle status"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2589 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -403,9 +403,9 @@
         "Physical applications show lifecycle status"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2589 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -421,9 +421,9 @@
         "Physical applications show lifecycle status"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2589 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -439,9 +439,9 @@
         "Physical applications show lifecycle status"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (2589 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -457,9 +457,9 @@
         "Selecting a card opens its detail"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -475,9 +475,9 @@
         "Selecting a card opens its detail"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Customer Management\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -493,9 +493,9 @@
         "Per-L1 drill-down is available"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (10186 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -511,9 +511,9 @@
         "Per-L1 drill-down is available"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (10186 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -531,7 +531,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -549,7 +549,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -567,7 +567,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -585,7 +585,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -601,9 +601,9 @@
         "Intersections show the relationship"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (9829 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -619,9 +619,9 @@
         "Intersections show the relationship"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (9829 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -637,9 +637,9 @@
         "Unsupported capabilities are visible"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (6259 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -655,9 +655,9 @@
         "Unsupported capabilities are visible"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (6259 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -673,9 +673,9 @@
         "Stakeholders and concerns are shown"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (10893 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -691,9 +691,9 @@
         "Stakeholders and concerns are shown"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (10893 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -709,9 +709,9 @@
         "Stakeholders and concerns are shown"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (10893 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -727,9 +727,9 @@
         "Capabilities and platforms are referenced"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (8176 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -745,9 +745,9 @@
         "Capabilities and platforms are referenced"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (8176 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -763,9 +763,9 @@
         "Capabilities and platforms are referenced"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (8176 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -781,9 +781,9 @@
         "Endpoints and error handling are documented"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (5087 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -799,9 +799,9 @@
         "Endpoints and error handling are documented"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (5087 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -817,9 +817,9 @@
         "Endpoints and error handling are documented"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders (5087 chars)",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -837,7 +837,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -855,7 +855,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -873,7 +873,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -889,9 +889,9 @@
         "It is stored as a versioned record"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"New Architecture Discovery\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -907,9 +907,9 @@
         "It is stored as a versioned record"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"New Architecture Discovery\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -925,9 +925,9 @@
         "It is stored as a versioned record"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"New Architecture Discovery\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -943,9 +943,9 @@
         "A discovery opens to its findings"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Active\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -961,9 +961,9 @@
         "A discovery opens to its findings"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Active\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -979,9 +979,9 @@
         "It is created as a draft on a branch"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"New Architecture Decision\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -997,9 +997,9 @@
         "It is created as a draft on a branch"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"New Architecture Decision\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1015,9 +1015,9 @@
         "It is created as a draft on a branch"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"New Architecture Decision\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1035,7 +1035,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1053,7 +1053,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1071,7 +1071,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1089,7 +1089,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1107,7 +1107,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1125,7 +1125,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1143,7 +1143,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1161,7 +1161,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1179,7 +1179,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1197,7 +1197,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1215,7 +1215,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1233,7 +1233,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1249,9 +1249,9 @@
         "The filter is shareable via the URL"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Architecture Decisions\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1267,9 +1267,9 @@
         "The filter is shareable via the URL"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Architecture Decisions\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1285,9 +1285,9 @@
         "The filter is shareable via the URL"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Architecture Decisions\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1305,7 +1305,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1323,7 +1323,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1341,7 +1341,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1359,7 +1359,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1377,7 +1377,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1393,9 +1393,9 @@
         "Entries are ordered most-recent first"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Joe B\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1411,9 +1411,9 @@
         "Entries are ordered most-recent first"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"Joe B\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1431,7 +1431,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1449,7 +1449,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1467,7 +1467,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1485,7 +1485,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1503,7 +1503,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1521,7 +1521,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1539,7 +1539,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1557,7 +1557,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1573,9 +1573,9 @@
         "It can be copied"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"BUS-CAP.json\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1591,9 +1591,9 @@
         "It can be copied"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"BUS-CAP.json\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1609,9 +1609,9 @@
         "It can be copied"
       ],
       "outcome": {
-        "status": "passed",
-        "note": "renders with \"BUS-CAP.json\"",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "status": "failed",
+        "note": "no h1 rendered",
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1629,7 +1629,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1647,7 +1647,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1665,7 +1665,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1683,7 +1683,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1701,7 +1701,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1719,7 +1719,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1737,7 +1737,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1755,7 +1755,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1773,7 +1773,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1791,7 +1791,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1809,7 +1809,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     },
     {
@@ -1827,7 +1827,7 @@
       "outcome": {
         "status": "todo",
         "note": "No automated check yet",
-        "checkedAt": "2026-06-26T06:42:16.854Z"
+        "checkedAt": "2026-06-27T06:20:18.724Z"
       }
     }
   ]
