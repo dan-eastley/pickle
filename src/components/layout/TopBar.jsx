@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import { ChevronDown } from '../ui/icons'
+import useClickOutside from '../../hooks/useClickOutside'
 import QuickPicker from './QuickPicker'
 import UserMenu from '../auth/UserMenu'
 
@@ -9,13 +10,7 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
-  useEffect(() => {
-    function handleClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
+  useClickOutside(ref, () => setOpen(false))
 
   const currentOpt = value ? options.find((o) => getId(o) === value) : null
 
