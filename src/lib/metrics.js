@@ -226,9 +226,6 @@ export async function loadVersionMetrics(clientId, versionId) {
   }
 }
 
-// Back-compat alias (single-version callers).
-export const loadClientMetrics = loadVersionMetrics
-
 // ── Per-client roll-up (across every version) ────────────────────────────────────
 export async function loadClientRollup(clientId) {
   const idx = await fetchJson(`/api/arch/clients/${clientId}/versions.json`)
