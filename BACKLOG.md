@@ -170,10 +170,11 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Context:** `config/roles.json` (27 roles) + `config/schemas/roles.json` enum; `audience`/`author` on all 45 artefact schemas and **backfilled into every instance** by artefact type.
 **Gap:** Fields are optional, not required (kept optional so partial data stays valid).
 
-### RAS-2 · 🟡 Authentication · High
-**Context:** The app is unauthenticated.
-**Done (foundation):** **Better Auth** (email + password) backed by **Postgres via Drizzle** on the existing Vercel functions. Schema covers Better Auth's user/session/account/verification tables plus custom user fields — `firstName`, `lastName`, `jobRole` (id from `config/roles.json`), and an `access_tier` enum (`admin`/`member`/`viewer`, `input:false` so it can't be self-assigned at sign-up). Initial migration generated (`src/db/migrations/`). Registration + login pages, `useAuth` context, `UserMenu` in both headers, and a `RequireAuth` guard wrapping the app routes — gated behind `VITE_REQUIRE_AUTH` (default off) so the app stays usable until Postgres is provisioned. Migrations via `db:generate`/`db:migrate`; setup in `src/db/README.md`.
-**Remaining:** provision Vercel Postgres + run the migration, set `DATABASE_URL`/`BETTER_AUTH_SECRET`/`BETTER_AUTH_URL`, flip `VITE_REQUIRE_AUTH=true`; then gate `/api/github` behind a valid session and attribute activity to the signed-in user (replacing the `ACTOR` placeholder). Email verification / password reset need an email provider (deferred). Authorization is [RAS-3].
+### RAS-2 · ✅ Authentication · High
+**Context:** The app was unauthenticated.
+**Done:** **Better Auth** (email + password) backed by **Postgres via Drizzle** on the existing Vercel functions, **live in production**. Schema covers Better Auth's user/session/account/verification tables plus custom user fields — `firstName`, `lastName`, `jobRole` (id from `config/roles.json`), and an `access_tier` enum (`admin`/`member`/`viewer`, `input:false` so it can't be self-assigned at sign-up). Registration + login pages, `useAuth` context, `UserMenu` in both headers, and a `RequireAuth` guard (gated by `VITE_REQUIRE_AUTH`, **enabled in prod**). Postgres provisioned (Neon), migration applied, env set, sign-up/sign-in verified end-to-end on the live deployment. **`/api/github` writes are now session-gated** (401 without a valid session; read-only GETs stay open) and activity is **attributed to the signed-in user** (replacing the `Joe B`/`System` placeholder) — this also closed [QV-8] finding #1.
+**Production-only fixes en route (Vercel native ESM):** SPA catch-all rewrite scoped to non-`/api`; explicit `/api/auth/(.*)` rewrite for multi-segment routing; all relative server imports given explicit `.js`/`index.js` (the dev shim had masked these). See [[vercel-esm-functions]].
+**Deferred (own items):** email verification / password reset need an email provider; authorization (who-can-do-what) is [RAS-3].
 
 ### RAS-3 · ⬜ Authorization (RBAC + ACL) · High
 **Context:** Roles exist as data but don't gate anything.
@@ -238,13 +239,13 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-7 · ✅ Footer config banner · Low
 **Context:** The footer shows owner/repo only when `/api/github` config is available (it now is in dev via the shim); the raw "not configured" env-var banner is gone.
 
-### QV-8 · 🟡 Productionisation security review · High
+### QV-8 · ✅ Productionisation security review · High
 **Context:** Pickle is moving from PoC toward production; before exposure it needs a deliberate security pass.
 **Review done (first pass)** — findings by severity:
 
 | # | Severity | Finding | Status |
 |---|---|---|---|
-| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | 🟡 **CORS hardened** (same-origin default + `API_ALLOWED_ORIGINS` allow-list). **Auth foundation landed** under [RAS-2] (Better Auth sessions); gating `/api/github` behind a session is the remaining step there. |
+| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | ✅ **Fixed** — CORS hardened (same-origin default + `API_ALLOWED_ORIGINS` allow-list) **and** every POST write is now gated on a valid Better Auth session (401 otherwise; read-only GETs stay open), verified live on production. [RAS-2] complete. |
 | 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/clients/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed & strengthened** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$`, and additionally any value containing `..` or equal to `.` (the regex alone allowed `..`, since dots are needed for versions like `1.0.0`). |
 | 7 | Low | **Unvalidated `prNumber`** flowed into the PR-merge URL (`/pulls/${prNumber}/merge`). | ✅ **Fixed** — coerced to a positive integer (400 otherwise) during the TS migration. |
 | 8 | Low | **Prototype-pollution surface** — the attacker-influenced `sectionKey` indexed into the parsed decision doc (`content[sectionKey][findingIndex]`). | ✅ **Fixed** — `sectionKey` rejects `__proto__`/`prototype`/`constructor`; `findingIndex` must be a non-negative integer. |
@@ -254,7 +255,7 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
 | 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
 
-**Status:** all non-auth hardening is complete (CORS allow-list, id validation, proxy prefix/traversal guards, secret handling, no stored XSS). The npm-audit vulns are dev-tooling only (vite/esbuild build step, not in the runtime bundle) — deferred to the next Vite major. The **only** remaining item is finding #1, authentication, which is its own High backlog item [RAS-2] (deliberately out of scope here).
+**Status:** ✅ all findings resolved. Finding #1 (the unauthenticated write endpoint) is now closed — `/api/github` writes require a valid session, verified live (see [RAS-2]). The remaining open item is only the **dev-tooling** npm-audit vulns (#3, vite/esbuild build step, not in the runtime bundle), deferred to the next Vite major. This first security pass is complete; a re-review is warranted whenever new endpoints/state land (e.g. [RAS-3] authorization, [RAS-4] DB state).
 
 ### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
 **Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.
