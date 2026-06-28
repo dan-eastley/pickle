@@ -257,9 +257,14 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 
 **Status:** ✅ all findings resolved. Finding #1 (the unauthenticated write endpoint) is now closed — `/api/github` writes require a valid session, verified live (see [RAS-2]). The remaining open item is only the **dev-tooling** npm-audit vulns (#3, vite/esbuild build step, not in the runtime bundle), deferred to the next Vite major. This first security pass is complete; a re-review is warranted whenever new endpoints/state land (e.g. [RAS-3] authorization, [RAS-4] DB state).
 
-### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
-**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.
-**Proposed fix:** Sweep the tree, land low-risk improvements directly (guarded by lint/format/tests/build), and log larger refactors as their own items. **Use the Fable model for the review/refactor where possible** (mirrors the [PDL-3] Fable-review intent for code changes).
+### QV-9 · 🟡 Codebase refactor & enhancement pass · Medium
+**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins.
+**Done (sweep pass 1):**
+- **Dedup** — extracted `hooks/useClickOutside.js` and adopted it in the 5 components that hand-rolled the outside-mousedown listener (DownloadMenu, DomainNav, TopBar, QuickPicker, UserMenu).
+- **Dead code** — removed the unused `loadClientMetrics` alias. (Audited exports: remaining flagged ones — `RELATIONSHIP_TYPES`, `DIAGRAM_DOMAIN_COLORS`, `DECISION_STATUS`/`VERSION_STATUS` — are intentional vocabulary or used internally; left as-is.)
+- **Security scan** — no `eval`/`innerHTML`/open-redirects; the one `dangerouslySetInnerHTML` (Illustration) is a bundled static SVG (`import.meta.glob ?raw`), not user content; every `target="_blank"` carries `rel="noopener noreferrer"`. No spelling errors in copy/comments; lint at zero (no unused vars/imports). Earlier passes already landed the navigation-race guards and the API TS/security hardening.
+**Remaining (iterative):** colour-contrast remediation ([QV-5]); deeper per-file review of the heavy view components (`DocumentView`, `CatalogueView`, diagram renderers); consider a shared `fetchJson` (note: `lib/api.js` throws, `lib/metrics.js` swallows — different semantics, so not a trivial merge).
+**Proposed fix:** Continue sweeping in low-risk batches (guarded by lint/format/tests/build); log larger refactors as their own items.
 
 ---
 
