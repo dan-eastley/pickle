@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
 import { AuthProvider } from './context/AuthContext'
@@ -55,62 +55,70 @@ function AppRoutes() {
   return (
     <>
       <NavigationProgress />
-      <Routes>
-        {/* Authentication (full-screen, no app chrome) */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <Spinner size="lg" />
+          </div>
+        }
+      >
+        <Routes>
+          {/* Authentication (full-screen, no app chrome) */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-        {/* Public / marketing pages */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
+          {/* Public / marketing pages */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/clients"
+              element={
+                <RequireAuth>
+                  <ClientsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/clients/:clientId/versions"
+              element={
+                <RequireAuth>
+                  <VersionsPage />
+                </RequireAuth>
+              }
+            />
+          </Route>
+
+          {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
           <Route
-            path="/clients"
+            path="/clients/:clientId/:versionId"
             element={
               <RequireAuth>
-                <ClientsPage />
+                <Layout />
               </RequireAuth>
             }
-          />
-          <Route
-            path="/clients/:clientId/versions"
-            element={
-              <RequireAuth>
-                <VersionsPage />
-              </RequireAuth>
-            }
-          />
-        </Route>
+          >
+            <Route index element={<Navigate to="domains" replace />} />
+            <Route path="domains" element={<DomainsPage />} />
+            <Route path="domains/:domain" element={<DomainPage />} />
+            <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
+            <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
+            <Route path="decisions" element={<DecisionsPage />} />
+            <Route path="decisions/new" element={<DecisionEditorPage />} />
+            <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
+            <Route path="discovery" element={<DiscoveryPage />} />
+            <Route path="discovery/new" element={<DiscoveryEditorPage />} />
+            <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
+          </Route>
 
-        {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
-        <Route
-          path="/clients/:clientId/:versionId"
-          element={
-            <RequireAuth>
-              <Layout />
-            </RequireAuth>
-          }
-        >
-          <Route index element={<Navigate to="domains" replace />} />
-          <Route path="domains" element={<DomainsPage />} />
-          <Route path="domains/:domain" element={<DomainPage />} />
-          <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
-          <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
-          <Route path="decisions" element={<DecisionsPage />} />
-          <Route path="decisions/new" element={<DecisionEditorPage />} />
-          <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
-          <Route path="discovery" element={<DiscoveryPage />} />
-          <Route path="discovery/new" element={<DiscoveryEditorPage />} />
-          <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
-        </Route>
+          {/* Docs */}
+          <Route path="/docs" element={<DocsLayout />}>
+            <Route index element={<Navigate to="/docs/index" replace />} />
+            <Route path="*" element={<DocsPage />} />
+          </Route>
 
-        {/* Docs */}
-        <Route path="/docs" element={<DocsLayout />}>
-          <Route index element={<Navigate to="/docs/index" replace />} />
-          <Route path="*" element={<DocsPage />} />
-        </Route>
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </>
   )
 }
