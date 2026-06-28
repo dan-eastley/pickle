@@ -10,18 +10,21 @@
  *
  * Required env: GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO.
  *
- * SECURITY: this endpoint performs repository writes with the server token.
- * It is NOT yet authenticated (tracked as RAS-2 / the auth epic) — once Better
- * Auth sessions land, gate every write here behind a valid session and attribute
- * activity to the signed-in user (replacing the ACTOR placeholder).
+ * SECURITY: this endpoint performs repository writes with the server token, so
+ * every POST (write) is gated on a valid Better Auth session when auth is
+ * configured, and activity is attributed to the signed-in user. Read-only GET
+ * actions (next-id, config) are open. When auth is not configured (e.g. local
+ * dev without a database), writes are allowed and attributed to 'System'.
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github.js'
+import { getSessionUser, missingAuthEnv } from '../lib/auth.js'
 
 const BASE = 'main'
 
-// Placeholder activity attribution until sessions are wired in (RAS-2).
-const ACTOR = 'Joe B'
+// Fallback activity attribution when auth isn't configured (e.g. local dev
+// without a database). When a session exists, the signed-in user is used.
+const SYSTEM_ACTOR = 'System'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Doc = Record<string, any>
@@ -51,8 +54,8 @@ function discoveriesIndexPath(clientId: string, versionId: string): string {
   return `architectures/clients/${clientId}/${versionId}/discovery/discovery.json`
 }
 
-function nowEntry(action: string, notes?: string): Doc {
-  return { timestamp: new Date().toISOString(), action, who: ACTOR, ...(notes ? { notes } : {}) }
+function nowEntry(action: string, actor: string, notes?: string): Doc {
+  return { timestamp: new Date().toISOString(), action, who: actor, ...(notes ? { notes } : {}) }
 }
 
 // Read a decision doc from its branch, falling back to main if the branch is
@@ -254,7 +257,8 @@ async function updateFinding(
 // narrative review so findings are refreshed.
 async function editDecision(
   gh: GitHubClient,
-  { clientId, versionId, decisionId, title, context, problem, proposal, requirements, scope }: Doc
+  { clientId, versionId, decisionId, title, context, problem, proposal, requirements, scope }: Doc,
+  actor: string
 ): Promise<Doc> {
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath = decisionPath(clientId, versionId, decisionId)
@@ -269,7 +273,7 @@ async function editDecision(
     requirements: requirements ?? current.requirements,
   }
   updated.narrative = composeNarrative(updated)
-  updated.activity = [...(current.activity ?? []), nowEntry('Updated')]
+  updated.activity = [...(current.activity ?? []), nowEntry('Updated', actor)]
   if (scope !== undefined) {
     if (scope) updated.scope = scope
     else delete updated.scope
@@ -372,7 +376,8 @@ async function nextDiscoveryId(
 
 async function createDiscovery(
   gh: GitHubClient,
-  { clientId, versionId, discovery }: Doc
+  { clientId, versionId, discovery }: Doc,
+  actor: string
 ): Promise<Doc> {
   const discoveryId = await nextDiscoveryId(gh, clientId, versionId)
   const record: Doc = {
@@ -383,7 +388,7 @@ async function createDiscovery(
     context: discovery.context,
     request: discovery.request,
     ...(discovery.scope ? { scope: discovery.scope } : {}),
-    activity: [nowEntry('Created')],
+    activity: [nowEntry('Created', actor)],
   }
   await gh.writeJson(
     discoveryPath(clientId, versionId, discoveryId),
@@ -402,14 +407,15 @@ async function createDiscovery(
 
 async function updateDiscovery(
   gh: GitHubClient,
-  { clientId, versionId, discoveryId, updates }: Doc
+  { clientId, versionId, discoveryId, updates }: Doc,
+  actor: string
 ): Promise<Doc> {
   const dPath = discoveryPath(clientId, versionId, discoveryId)
   const { content: current, sha } = await gh.readJson<Doc>(dPath, BASE)
   const updated = { ...current, ...updates }
   updated.activity = [
     ...(current.activity ?? []),
-    nowEntry(updates.status === 'archived' ? 'Archived' : 'Updated'),
+    nowEntry(updates.status === 'archived' ? 'Archived' : 'Updated', actor),
   ]
   await gh.writeJson(
     dPath,
@@ -439,14 +445,15 @@ async function updateDiscovery(
 // regenerate the point-in-time findings, and re-activates the record.
 async function refreshDiscovery(
   gh: GitHubClient,
-  { clientId, versionId, discoveryId }: Doc
+  { clientId, versionId, discoveryId }: Doc,
+  actor: string
 ): Promise<Doc> {
   const dPath = discoveryPath(clientId, versionId, discoveryId)
   const { content: current, sha } = await gh.readJson<Doc>(dPath, BASE)
   const updated: Doc = {
     ...current,
     status: 'active',
-    activity: [...(current.activity ?? []), nowEntry('Updated', 'Refresh requested')],
+    activity: [...(current.activity ?? []), nowEntry('Updated', actor, 'Refresh requested')],
   }
   await gh.writeJson(dPath, updated, `Refresh ${discoveryId}: regenerate findings`, {
     sha,
@@ -484,7 +491,7 @@ function assertSafeIds(params: Record<string, unknown>): void {
 
 // ── Handler ─────────────────────────────────────────────────────────────────────
 
-type Action = (gh: GitHubClient, params: Doc) => Promise<Doc>
+type Action = (gh: GitHubClient, params: Doc, actor: string) => Promise<Doc>
 
 const GET_ACTIONS: Record<string, Action> = {
   'next-id': getNextId,
@@ -500,12 +507,26 @@ const POST_ACTIONS: Record<string, Action> = {
   'refresh-discovery': refreshDiscovery,
 }
 
+// Resolve the actor for a write and enforce authentication. When auth is
+// configured (the production case), a valid session is required — otherwise a
+// 401 is sent and null is returned. When auth is not configured (e.g. local dev
+// without a database), writes are allowed and attributed to the System actor.
+async function resolveActor(req: VercelRequest, res: VercelResponse): Promise<string | null> {
+  if (missingAuthEnv().length > 0) return SYSTEM_ACTOR
+  const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
+  if (!user) {
+    res.status(401).json({ error: 'Authentication required' })
+    return null
+  }
+  return [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.name || user.email
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS: this endpoint performs repository writes with the server token, so it
   // must not be callable cross-origin by arbitrary sites. Same-origin requests
   // (the SPA itself) need no ACAO header; only allow-listed origins
-  // (API_ALLOWED_ORIGINS, comma-separated) are reflected. NB: CORS is a browser
-  // control only — real auth is tracked under RAS-2.
+  // (API_ALLOWED_ORIGINS, comma-separated) are reflected. CORS is a browser-only
+  // control; the POST writes are additionally gated on a valid session below.
   const origin = req.headers?.origin
   const allowOrigins = (process.env.API_ALLOWED_ORIGINS ?? '')
     .split(',')
@@ -540,9 +561,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           branchUrl: process.env.VERCEL_BRANCH_URL ?? null,
         })
       }
+      // GET actions (next-id, config) are read-only — no session required.
       const fn = GET_ACTIONS[action as string]
       if (!fn) return res.status(400).json({ error: `Unknown GET action: ${action}` })
-      return res.json(await fn(gh, params))
+      return res.json(await fn(gh, params, SYSTEM_ACTOR))
     }
 
     if (req.method === 'POST') {
@@ -550,7 +572,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       assertSafeIds(params)
       const fn = POST_ACTIONS[action as string]
       if (!fn) return res.status(400).json({ error: `Unknown POST action: ${action}` })
-      return res.json(await fn(gh, params))
+      // Writes require a valid session (when auth is configured).
+      const actor = await resolveActor(req, res)
+      if (actor === null) return
+      return res.json(await fn(gh, params, actor))
     }
 
     return res.status(405).json({ error: 'Method not allowed' })

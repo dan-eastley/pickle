@@ -106,3 +106,31 @@ export function getAuthNodeHandler() {
   if (!nodeHandler) nodeHandler = buildNodeHandler()
   return nodeHandler
 }
+
+export interface SessionUser {
+  id: string
+  name: string
+  email: string
+  firstName?: string
+  lastName?: string
+  jobRole?: string | null
+  accessTier?: string
+}
+
+/** Build a Headers object from a Node request's raw headers. */
+function toHeaders(raw: Record<string, string | string[] | undefined>): Headers {
+  const h = new Headers()
+  for (const [k, v] of Object.entries(raw ?? {})) {
+    if (typeof v === 'string') h.set(k, v)
+    else if (Array.isArray(v)) h.set(k, v.join(', '))
+  }
+  return h
+}
+
+/** Resolve the signed-in user from the request's session cookie, or null. */
+export async function getSessionUser(
+  rawHeaders: Record<string, string | string[] | undefined>
+): Promise<SessionUser | null> {
+  const session = await getAuth().api.getSession({ headers: toHeaders(rawHeaders) })
+  return (session?.user as SessionUser | undefined) ?? null
+}
