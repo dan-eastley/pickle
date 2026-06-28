@@ -26,51 +26,83 @@ function sanitiseJobRole(value: unknown): string | null {
   return v && v.length <= 64 ? v : null
 }
 
-const trustedOrigins = [process.env.BETTER_AUTH_URL, 'http://localhost:3000'].filter(
-  Boolean
-) as string[]
+/** Required auth env vars that are unset (for a clear 503 instead of a crash). */
+export function missingAuthEnv(): string[] {
+  return [
+    !process.env.DATABASE_URL && 'DATABASE_URL',
+    !process.env.BETTER_AUTH_SECRET && 'BETTER_AUTH_SECRET',
+  ].filter(Boolean) as string[]
+}
 
-export const auth = betterAuth({
-  appName: 'Pickle',
-  secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL,
-  trustedOrigins,
-  database: drizzleAdapter(db, { provider: 'pg', schema }),
-  emailAndPassword: {
-    enabled: true,
-    // No email provider wired up yet — don't block sign-in on verification.
-    requireEmailVerification: false,
-    autoSignIn: true,
-    minPasswordLength: 8,
-  },
-  user: {
-    additionalFields: {
-      firstName: { type: 'string', required: true, input: true },
-      lastName: { type: 'string', required: true, input: true },
-      // Job role (id from config/roles.json). Optional, set by the user.
-      jobRole: { type: 'string', required: false, input: true },
-      // Access tier — NOT client-settable; defaults to 'member', changed only
-      // server-side once the access-control work lands.
-      accessTier: { type: 'string', required: false, input: false, defaultValue: 'member' },
+// Better Auth is built lazily and cached. Building it eagerly at module load
+// throws in production when BETTER_AUTH_SECRET is missing — which crashes the
+// whole serverless function (FUNCTION_INVOCATION_FAILED) before any handler can
+// respond. Lazy init lets the route handler check the env first and surface a
+// clean error. (Types are inferred from the builders so the configured shape —
+// including the additional user fields — is preserved.)
+function buildAuth() {
+  const trustedOrigins = [process.env.BETTER_AUTH_URL, 'http://localhost:3000'].filter(
+    Boolean
+  ) as string[]
+
+  return betterAuth({
+    appName: 'Pickle',
+    secret: process.env.BETTER_AUTH_SECRET,
+    baseURL: process.env.BETTER_AUTH_URL,
+    trustedOrigins,
+    database: drizzleAdapter(db, { provider: 'pg', schema }),
+    emailAndPassword: {
+      enabled: true,
+      // No email provider wired up yet — don't block sign-in on verification.
+      requireEmailVerification: false,
+      autoSignIn: true,
+      minPasswordLength: 8,
     },
-  },
-  session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // refresh once a day
-  },
-  databaseHooks: {
     user: {
-      create: {
-        // Backstop: normalise jobRole to a clean string (or null) before insert.
-        before: async (userData) => {
-          const data = userData as typeof userData & { jobRole?: string | null }
-          data.jobRole = sanitiseJobRole(data.jobRole)
-          return { data }
+      additionalFields: {
+        firstName: { type: 'string', required: true, input: true },
+        lastName: { type: 'string', required: true, input: true },
+        // Job role (id from config/roles.json). Optional, set by the user.
+        jobRole: { type: 'string', required: false, input: true },
+        // Access tier — NOT client-settable; defaults to 'member', changed only
+        // server-side once the access-control work lands.
+        accessTier: { type: 'string', required: false, input: false, defaultValue: 'member' },
+      },
+    },
+    session: {
+      expiresIn: 60 * 60 * 24 * 7, // 7 days
+      updateAge: 60 * 60 * 24, // refresh once a day
+    },
+    databaseHooks: {
+      user: {
+        create: {
+          // Normalise jobRole to a clean string (or null) before insert.
+          before: async (userData) => {
+            const data = userData as typeof userData & { jobRole?: string | null }
+            data.jobRole = sanitiseJobRole(data.jobRole)
+            return { data }
+          },
         },
       },
     },
-  },
-})
+  })
+}
+
+let authInstance: ReturnType<typeof buildAuth> | undefined
+
+export function getAuth() {
+  if (!authInstance) authInstance = buildAuth()
+  return authInstance
+}
 
 // Node (req, res) handler used by the Vercel function and the dev-server shim.
-export const authNodeHandler = toNodeHandler(auth)
+function buildNodeHandler() {
+  return toNodeHandler(getAuth())
+}
+
+let nodeHandler: ReturnType<typeof buildNodeHandler> | undefined
+
+export function getAuthNodeHandler() {
+  if (!nodeHandler) nodeHandler = buildNodeHandler()
+  return nodeHandler
+}
