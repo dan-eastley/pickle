@@ -5,10 +5,10 @@
  * (sign-up, sign-in, sign-out, get-session, …). Body parsing is disabled so
  * Better Auth can read the raw request stream itself.
  *
- * The auth module is imported dynamically *inside* the handler so that any
- * load-time failure (a heavy dependency failing to initialise, a bad env, …)
- * is caught and returned as JSON, rather than crashing the function at module
- * load (FUNCTION_INVOCATION_FAILED) where it can't be diagnosed.
+ * The auth module is imported dynamically (with an explicit .js extension, as
+ * the deployed function runs as native ESM) inside a try/catch, so a missing
+ * env or any load/runtime failure returns clean JSON instead of crashing the
+ * function at module load (FUNCTION_INVOCATION_FAILED).
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
@@ -29,12 +29,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const e = err as Error
     console.error('[/api/auth]', e?.stack || e?.message)
     if (!res.headersSent) {
-      res.status(500).json({
-        error: 'Authentication error',
-        detail: e?.message ?? String(err),
-        // Temporary: first frames of the stack to diagnose the load failure.
-        stack: (e?.stack ?? '').split('\n').slice(0, 5),
-      })
+      // Logs carry the full error; don't leak internals to clients in prod.
+      const detail = process.env.VERCEL_ENV === 'production' ? undefined : e?.message
+      res.status(500).json({ error: 'Authentication error', ...(detail ? { detail } : {}) })
     }
   }
 }
