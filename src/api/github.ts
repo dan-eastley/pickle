@@ -16,7 +16,7 @@
  * activity to the signed-in user (replacing the ACTOR placeholder).
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github'
+import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github.js'
 
 const BASE = 'main'
 

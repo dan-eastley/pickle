@@ -18,7 +18,7 @@ import {
   b64decode,
   getGitHubConfig,
   type GhContentFile,
-} from '../lib/github'
+} from '../lib/github.js'
 
 // `prefix` is set by the vercel.json rewrites, but the function is also directly
 // reachable, so it (and `path`) must be validated: only the three known content
