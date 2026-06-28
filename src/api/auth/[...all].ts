@@ -5,29 +5,36 @@
  * (sign-up, sign-in, sign-out, get-session, …). Body parsing is disabled so
  * Better Auth can read the raw request stream itself.
  *
- * Env is checked first so a missing DATABASE_URL / BETTER_AUTH_SECRET returns a
- * clear 503 instead of crashing the function, and Better Auth init / runtime
- * errors are caught and returned as JSON rather than FUNCTION_INVOCATION_FAILED.
+ * The auth module is imported dynamically *inside* the handler so that any
+ * load-time failure (a heavy dependency failing to initialise, a bad env, …)
+ * is caught and returned as JSON, rather than crashing the function at module
+ * load (FUNCTION_INVOCATION_FAILED) where it can't be diagnosed.
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getAuthNodeHandler, missingAuthEnv } from '../../lib/auth'
 
 export const config = {
   api: { bodyParser: false },
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const missing = missingAuthEnv()
-  if (missing.length > 0) {
-    res.status(503).json({ error: 'Authentication is not configured', missing })
-    return
-  }
   try {
+    const { getAuthNodeHandler, missingAuthEnv } = await import('../../lib/auth')
+    const missing = missingAuthEnv()
+    if (missing.length > 0) {
+      res.status(503).json({ error: 'Authentication is not configured', missing })
+      return
+    }
     return await getAuthNodeHandler()(req, res)
   } catch (err) {
-    const detail = err instanceof Error ? err.message : String(err)
-    console.error('[/api/auth]', detail)
-    // If Better Auth already started the response, don't try to write again.
-    if (!res.headersSent) res.status(500).json({ error: 'Authentication error', detail })
+    const e = err as Error
+    console.error('[/api/auth]', e?.stack || e?.message)
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'Authentication error',
+        detail: e?.message ?? String(err),
+        // Temporary: first frames of the stack to diagnose the load failure.
+        stack: (e?.stack ?? '').split('\n').slice(0, 5),
+      })
+    }
   }
 }
