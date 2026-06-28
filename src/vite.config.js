@@ -101,7 +101,13 @@ async function handleApiRequest(req, res, next, server) {
       body = raw ? JSON.parse(raw) : {}
     }
     const { default: handler } = await server.ssrLoadModule('/api/github.ts')
-    const shimReq = { method: req.method, query: Object.fromEntries(url.searchParams), body }
+    const shimReq = {
+      method: req.method,
+      query: Object.fromEntries(url.searchParams),
+      body,
+      // Pass headers through so the session gate can read the auth cookie.
+      headers: req.headers,
+    }
     const shimRes = {
       statusCode: 200,
       setHeader: (k, v) => res.setHeader(k, v),
