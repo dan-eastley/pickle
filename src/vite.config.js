@@ -171,7 +171,16 @@ export default defineConfig(({ mode }) => {
   // Load .env (no prefix filter) so the /api/arch GitHub proxy can read
   // GITHUB_* from a local .env. Real shell env vars take precedence.
   const env = loadEnv(mode, __dirname, '')
-  for (const key of ['GITHUB_TOKEN', 'GITHUB_OWNER', 'GITHUB_REPO']) {
+  for (const key of [
+    'GITHUB_TOKEN',
+    'GITHUB_OWNER',
+    'GITHUB_REPO',
+    'API_ALLOWED_ORIGINS',
+    // Auth (Better Auth + Postgres) — needed by the /api/auth dev shim.
+    'DATABASE_URL',
+    'BETTER_AUTH_SECRET',
+    'BETTER_AUTH_URL',
+  ]) {
     if (!process.env[key] && env[key]) process.env[key] = env[key]
   }
 
