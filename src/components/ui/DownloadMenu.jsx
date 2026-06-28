@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { ChevronDown } from './icons'
 import Spinner from './Spinner'
 import useEscapeKey from '../../hooks/useEscapeKey'
+import useClickOutside from '../../hooks/useClickOutside'
 
 function DownloadGlyph({ className = 'w-3.5 h-3.5' }) {
   return (
@@ -25,15 +26,7 @@ export default function DownloadMenu({ options, label = 'Download', align = 'rig
   const [busy, setBusy] = useState(false)
   const ref = useRef(null)
   useEscapeKey(() => setOpen(false), open)
-
-  useEffect(() => {
-    if (!open) return
-    const onClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
-    }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
-  }, [open])
+  useClickOutside(ref, () => setOpen(false), open)
 
   const run = async (option) => {
     setOpen(false)

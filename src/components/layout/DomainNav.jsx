@@ -12,6 +12,7 @@ import {
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
 import { ChevronDown, ChevronRight, KeyStar, DecisionIcon, RobotIcon } from '../ui/icons'
+import useClickOutside from '../../hooks/useClickOutside'
 
 function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose }) {
   const fmt = getFormat(format)
@@ -129,13 +130,7 @@ export default function DomainNav() {
   const discoveryMatch = useMatch('/clients/:clientId/:versionId/discovery/*')
   const onDiscoveryPage = !!discoveryMatch
 
-  useEffect(() => {
-    function handleClick(e) {
-      if (navRef.current && !navRef.current.contains(e.target)) setActiveDropdown(null)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
+  useClickOutside(navRef, () => setActiveDropdown(null))
 
   useEffect(() => {
     setActiveDropdown(null)

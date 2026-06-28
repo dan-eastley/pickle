@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getArtefactsForDomain, ARTEFACTS, getDomain, DOMAIN_COLORS } from '../../lib/artefacts'
+import useClickOutside from '../../hooks/useClickOutside'
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
 import { DecisionIcon, RobotIcon } from '../ui/icons'
@@ -108,13 +109,7 @@ export default function QuickPicker() {
 
   const open = focused && q.length > 0
 
-  useEffect(() => {
-    function onClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) setFocused(false)
-    }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
-  }, [])
+  useClickOutside(ref, () => setFocused(false))
 
   // "/" focuses the box from anywhere, unless already typing in a field.
   useEffect(() => {

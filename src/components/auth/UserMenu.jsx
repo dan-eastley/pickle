@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import useClickOutside from '../../hooks/useClickOutside'
 import rolesConfig from '../../../config/roles.json'
 
 const ROLE_NAME = Object.fromEntries((rolesConfig.roles ?? []).map((r) => [r.id, r.name]))
@@ -13,13 +14,7 @@ export default function UserMenu() {
   const ref = useRef(null)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    function onClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
-    }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
-  }, [])
+  useClickOutside(ref, () => setOpen(false))
 
   if (isLoading) return <div className="w-8 h-8" aria-hidden />
 
