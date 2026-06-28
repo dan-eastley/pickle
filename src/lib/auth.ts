@@ -14,8 +14,8 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { toNodeHandler } from 'better-auth/node'
-import { db } from '../db'
-import { schema } from '../db/schema'
+import { db } from '../db/index.js'
+import { schema } from '../db/schema.js'
 
 // The full role taxonomy lives in config/roles.json (outside this serverless
 // root). The registration form constrains jobRole to that list; here we only
