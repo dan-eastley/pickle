@@ -18,7 +18,7 @@ export const config = {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    const { getAuthNodeHandler, missingAuthEnv } = await import('../../lib/auth')
+    const { getAuthNodeHandler, missingAuthEnv } = await import('../../lib/auth.js')
     const missing = missingAuthEnv()
     if (missing.length > 0) {
       res.status(503).json({ error: 'Authentication is not configured', missing })
