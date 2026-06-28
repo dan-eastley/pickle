@@ -3,7 +3,7 @@
         {
             "discovery-id": "DSC-001",
             "title": "Which capabilities depend on Oracle CC&B?",
-            "status": "active",
+            "status": "archived",
             "scope": {
                 "domain": "business",
                 "abstraction": "conceptual",
