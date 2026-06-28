@@ -507,18 +507,26 @@ const POST_ACTIONS: Record<string, Action> = {
   'refresh-discovery': refreshDiscovery,
 }
 
-// Resolve the actor for a write and enforce authentication. When auth is
-// configured (the production case), a valid session is required — otherwise a
-// 401 is sent and null is returned. When auth is not configured (e.g. local dev
-// without a database), writes are allowed and attributed to the System actor.
+// Resolve the actor for a write and enforce authentication. A valid session is
+// required on **deployed** (Vercel) environments when auth is configured —
+// otherwise a 401 is sent and null is returned. Local dev is intentionally
+// unauthenticated for convenience: a session is still used for attribution if
+// present, but its absence is not blocked (writes attribute to the System
+// actor). When auth isn't configured at all, the same System fallback applies.
 async function resolveActor(req: VercelRequest, res: VercelResponse): Promise<string | null> {
   if (missingAuthEnv().length > 0) return SYSTEM_ACTOR
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
-  if (!user) {
+  if (user) {
+    return (
+      [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.name || user.email
+    )
+  }
+  // No session: enforce only on Vercel deployments; allow locally.
+  if (process.env.VERCEL) {
     res.status(401).json({ error: 'Authentication required' })
     return null
   }
-  return [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.name || user.email
+  return SYSTEM_ACTOR
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
