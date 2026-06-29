@@ -30,8 +30,8 @@ function resolveDocLink(href, currentPath) {
 function MermaidBlock({ children }) {
   return (
     <div className="my-4 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center text-sm text-gray-500">
-      <div className="mb-2 font-medium text-gray-400">Mermaid diagram</div>
-      <pre className="text-left text-xs text-gray-400 overflow-auto">{children}</pre>
+      <div className="mb-2 font-medium text-gray-500">Mermaid diagram</div>
+      <pre className="text-left text-xs text-gray-500 overflow-auto">{children}</pre>
     </div>
   )
 }
@@ -188,7 +188,7 @@ export default function DocsPage() {
     return (
       <div className="py-20 text-center">
         <p className="text-sm font-medium text-gray-500">Page not found</p>
-        <p className="mt-1 text-xs text-gray-400">{docPath}</p>
+        <p className="mt-1 text-xs text-gray-500">{docPath}</p>
       </div>
     )
   }

@@ -21,7 +21,7 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
         className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 transition-colors border-0"
       >
         <span className="max-w-[200px] truncate">{currentOpt ? getLabel(currentOpt) : label}</span>
-        <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+        <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
       </button>
 
       {open && (
@@ -43,7 +43,7 @@ function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
             </button>
           ))}
           {options.length === 0 && (
-            <div className="px-3 py-2 text-sm text-gray-400">No options</div>
+            <div className="px-3 py-2 text-sm text-gray-500">No options</div>
           )}
         </div>
       )}
@@ -90,7 +90,7 @@ export default function TopBar() {
         <span className="text-lg font-bold tracking-widest uppercase leading-none bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
           Pickle
         </span>
-        <span className="text-lg text-gray-400 hidden sm:block">
+        <span className="text-lg text-gray-500 hidden sm:block">
           Agentic Architecture as a Service
         </span>
       </Link>

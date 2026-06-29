@@ -180,7 +180,7 @@ export default function ProcessFlowDiagram({ groups, domain, onItemClick, select
     <div>
       <div className="flex items-baseline gap-2 mb-3">
         <h4 className="text-sm font-semibold text-gray-800">Overview</h4>
-        <span className="text-xs text-gray-400">Level 1 and 2</span>
+        <span className="text-xs text-gray-500">Level 1 and 2</span>
       </div>
       <ProcessFlowSVG
         rows={overviewRows}
@@ -193,9 +193,9 @@ export default function ProcessFlowDiagram({ groups, domain, onItemClick, select
         groups.map((group) => (
           <div key={group.id} className="mt-6 pt-5 border-t border-gray-200">
             <div className="flex items-baseline gap-2 mb-3">
-              <span className="font-mono text-xs text-gray-400">{group.id}</span>
+              <span className="font-mono text-xs text-gray-500">{group.id}</span>
               <h4 className="text-sm font-semibold text-gray-800">{group.name}</h4>
-              <span className="text-xs text-gray-400">Level 2 and 3</span>
+              <span className="text-xs text-gray-500">Level 2 and 3</span>
             </div>
             {/* Drill-down: rows = L2 steps, items = L3 steps */}
             <ProcessFlowSVG

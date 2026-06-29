@@ -133,7 +133,7 @@ export default function NewDecisionModal({
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
+              className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -154,7 +154,7 @@ export default function NewDecisionModal({
                 <div className="text-success-700 font-medium text-sm mb-1">
                   {result.decisionId} created as a draft.
                 </div>
-                <p className="text-xs text-gray-400 mb-3">
+                <p className="text-xs text-gray-500 mb-3">
                   Narrative Review is running to suggest improvements.
                 </p>
                 <TextLink
@@ -195,7 +195,7 @@ export default function NewDecisionModal({
                   >
                     Context <span className="text-error-500">*</span>
                   </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
+                  <p className="text-xs text-gray-500 mb-1.5">
                     The current situation — what is happening that prompts this decision. Written
                     for a business audience.
                   </p>
@@ -216,7 +216,7 @@ export default function NewDecisionModal({
                   >
                     Problem <span className="text-error-500">*</span>
                   </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
+                  <p className="text-xs text-gray-500 mb-1.5">
                     What needs to be fixed or addressed — the gap or pain in the current situation.
                   </p>
                   <AutoGrowTextarea
@@ -236,7 +236,7 @@ export default function NewDecisionModal({
                   >
                     Proposal <span className="text-error-500">*</span>
                   </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
+                  <p className="text-xs text-gray-500 mb-1.5">
                     How we propose to solve it — the direction, at a business level.
                   </p>
                   <AutoGrowTextarea

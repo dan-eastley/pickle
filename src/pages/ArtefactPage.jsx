@@ -185,7 +185,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
             <div className="mt-4">
               <button
                 onClick={togglePurpose}
-                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
               >
                 <svg
                   viewBox="0 0 16 16"
@@ -218,7 +218,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
             <div className="mt-4">
               <button
                 onClick={toggleRelated}
-                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
               >
                 <svg
                   viewBox="0 0 16 16"
@@ -246,9 +246,9 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                         to={`/clients/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
                         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
                       >
-                        <span className="text-gray-400">{relationship}</span>
+                        <span className="text-gray-500">{relationship}</span>
                         <span className="font-medium">{related.name}</span>
-                        <span className="font-mono text-gray-400">[{related.id}]</span>
+                        <span className="font-mono text-gray-500">[{related.id}]</span>
                       </Link>
                     )
                   })}

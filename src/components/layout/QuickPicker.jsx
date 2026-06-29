@@ -165,7 +165,7 @@ export default function QuickPicker() {
       return <FormatIcon format="document" className="w-3.5 h-3.5 text-violet-600 flex-shrink-0" />
     const c = DOMAIN_COLORS[item.domain]
     return (
-      <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-400'}`}>
+      <span className={`flex-shrink-0 ${c?.text ?? 'text-gray-500'}`}>
         <DomainIcon domain={item.domain} className="w-3.5 h-3.5" />
       </span>
     )
@@ -180,7 +180,7 @@ export default function QuickPicker() {
     >
       <div className="relative">
         <svg
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500"
           viewBox="0 0 16 16"
           fill="none"
         >
@@ -195,10 +195,10 @@ export default function QuickPicker() {
           onKeyDown={onKeyDown}
           placeholder="Jump to… artefact, decision, discovery"
           title={`Jump to ${scopeLabel}, decisions or discoveries — press / to focus`}
-          className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-400 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
+          className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-500 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
         />
         {!query && (
-          <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:block text-[11px] font-mono text-gray-400 border border-gray-300 px-1 leading-tight">
+          <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:block text-[11px] font-mono text-gray-500 border border-gray-300 px-1 leading-tight">
             /
           </kbd>
         )}
@@ -207,7 +207,7 @@ export default function QuickPicker() {
       {open && (
         <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 shadow-lg z-50 flex flex-col max-h-96 overflow-y-auto">
           {filtered.length === 0 && (
-            <div className="px-3 py-3 text-xs text-gray-400">No matches</div>
+            <div className="px-3 py-3 text-xs text-gray-500">No matches</div>
           )}
           {filtered.map((item, i) => (
             <button
@@ -218,7 +218,7 @@ export default function QuickPicker() {
             >
               <ItemIcon item={item} />
               <span className="min-w-0 flex-1 truncate text-sm text-gray-700">{item.label}</span>
-              <span className="font-mono text-xs text-gray-400 flex-shrink-0">{item.id}</span>
+              <span className="font-mono text-xs text-gray-500 flex-shrink-0">{item.id}</span>
             </button>
           ))}
         </div>

@@ -12,7 +12,7 @@ export default function AuthCard({ title, subtitle, children, footer }) {
           >
             Pickle
           </Link>
-          <p className="mt-1 text-xs text-gray-400 uppercase tracking-wider">
+          <p className="mt-1 text-xs text-gray-500 uppercase tracking-wider">
             Agentic Architecture as a Service
           </p>
         </div>

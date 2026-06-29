@@ -68,7 +68,7 @@ export default function UserMenu() {
             <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
             <p className="text-xs text-gray-500 truncate">{user.email}</p>
             {user.jobRole && (
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-gray-500">
                 {ROLE_NAME[user.jobRole] ?? user.jobRole}
               </p>
             )}

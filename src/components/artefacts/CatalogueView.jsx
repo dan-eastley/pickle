@@ -154,7 +154,7 @@ function CellValue({ value, colDef }) {
             {String(v)}
           </li>
         ))}
-        {value.length > 3 && <li className="text-xs text-gray-400">+{value.length - 3} more</li>}
+        {value.length > 3 && <li className="text-xs text-gray-500">+{value.length - 3} more</li>}
       </ul>
     )
   }
@@ -197,7 +197,7 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
                 {hasChildren ? (
                   <button
                     onClick={() => onToggle(node.id)}
-                    className="mt-0.5 w-4 h-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="mt-0.5 w-4 h-4 flex-shrink-0 text-gray-500 hover:text-gray-600 transition-colors"
                   >
                     <svg
                       viewBox="0 0 16 16"
@@ -340,7 +340,7 @@ export default function CatalogueView({ data, schema }) {
         <div className="fixed inset-0 z-[200] bg-white flex flex-col">
           {toolbar}
           <div className="overflow-auto flex-1">{groupedTable}</div>
-          <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+          <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex-shrink-0">
             {summary}
           </div>
         </div>,
@@ -352,7 +352,7 @@ export default function CatalogueView({ data, schema }) {
       <div className="bg-white overflow-hidden flex flex-col shadow-xl">
         {toolbar}
         <div className="overflow-x-auto">{groupedTable}</div>
-        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex-shrink-0">
           {summary}
         </div>
       </div>
@@ -437,7 +437,7 @@ export default function CatalogueView({ data, schema }) {
       <div className="fixed inset-0 z-[200] bg-white flex flex-col">
         {toolbar}
         {table}
-        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex-shrink-0">
           {summary}
         </div>
       </div>,
@@ -469,7 +469,7 @@ export default function CatalogueView({ data, schema }) {
           </tbody>
         </table>
       </div>
-      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex-shrink-0">
         {summary}
       </div>
     </div>

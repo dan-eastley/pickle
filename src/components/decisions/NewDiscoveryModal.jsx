@@ -96,7 +96,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
+              className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -116,7 +116,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                 <div className="text-success-700 font-medium text-sm mb-1">
                   {result.discoveryId} created.
                 </div>
-                <p className="text-xs text-gray-400 mb-3">
+                <p className="text-xs text-gray-500 mb-3">
                   The Virtual Architect Agent is running to produce its findings.
                 </p>
                 <TextLink

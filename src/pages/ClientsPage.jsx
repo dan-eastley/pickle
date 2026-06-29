@@ -54,18 +54,18 @@ function ClientCard({ client, clientsMetadata, m }) {
           <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
             {name}
           </h3>
-          <p className="text-xs font-mono text-gray-400 mt-0.5">{clientId}</p>
+          <p className="text-xs font-mono text-gray-500 mt-0.5">{clientId}</p>
         </div>
         <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
       </div>
 
       <div className="px-5 py-4 space-y-3">
         {m === undefined ? (
-          <div className="flex items-center gap-2 py-2 text-xs text-gray-400">
+          <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
             <Spinner size="sm" /> Loading metrics…
           </div>
         ) : m === null ? (
-          <p className="py-2 text-xs text-gray-400">No architecture content yet.</p>
+          <p className="py-2 text-xs text-gray-500">No architecture content yet.</p>
         ) : (
           <>
             <MaturityBar m={m} />
@@ -73,7 +73,7 @@ function ClientCard({ client, clientsMetadata, m }) {
               items={m.content}
               extra={governance}
               dense
-              empty={<p className="pt-1 text-xs text-gray-400">No architecture content yet.</p>}
+              empty={<p className="pt-1 text-xs text-gray-500">No architecture content yet.</p>}
             />
           </>
         )}
