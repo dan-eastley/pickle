@@ -84,7 +84,7 @@ export default function DiscoveryPage() {
   const statusParam = searchParams.get('status') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
-  usePageTitle(`${clientName} — Discovery`)
+  usePageTitle(`${clientName} · Discovery`)
 
   useEffect(() => {
     let cancelled = false
@@ -159,7 +159,7 @@ export default function DiscoveryPage() {
 
       <div className="mb-5 px-4 py-3 bg-blue-50 border border-blue-200 text-sm text-blue-800">
         Discovery is a preview. The Virtual Architect Agent that produces point-in-time views from
-        your questions is not yet wired up — this is the framework for it.
+        your questions is not yet wired up, this is the framework for it.
       </div>
 
       <div className="mb-5 p-4 bg-gray-50 border border-gray-200">
@@ -171,7 +171,7 @@ export default function DiscoveryPage() {
           <span>
             Showing {filtered.length} of {discoveries.length} discover
             {discoveries.length === 1 ? 'y' : 'ies'}
-            {hiddenByFilter > 0 && ` — ${hiddenByFilter} hidden by the scope filter`}.
+            {hiddenByFilter > 0 && `, ${hiddenByFilter} hidden by the scope filter`}.
           </span>
           <button
             onClick={() => setSearchParams(new URLSearchParams())}

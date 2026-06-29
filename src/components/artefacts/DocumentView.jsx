@@ -1036,7 +1036,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
   return (
     <>
       <div className="flex gap-8">
-        {/* Contents nav — H1 + H2 only, stays on the page background */}
+        {/* Contents nav: H1 + H2 only, stays on the page background */}
         <aside className="hidden lg:block w-64 flex-shrink-0">
           <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
             <div className="flex items-center justify-between mb-3">
@@ -1096,7 +1096,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
           </nav>
         </aside>
 
-        {/* Document body — white box with drop shadow, the 'document' surface */}
+        {/* Document body: white box with drop shadow, the 'document' surface */}
         <article className="flex-1 min-w-0 bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
           {/* Document title (H0) */}
           <header className="mb-8 pb-5 border-b border-gray-200">

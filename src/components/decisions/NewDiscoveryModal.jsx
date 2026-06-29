@@ -77,7 +77,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
           aria-label="New Architecture Discovery"
           className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
         >
-          {/* Header — plain coloured bar, icon, title + purpose */}
+          {/* Header: plain coloured bar, icon, title + purpose */}
           <div className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0">
             <div className="flex items-start gap-3 min-w-0">
               <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
@@ -88,7 +88,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                   New Architecture Discovery
                 </h2>
                 <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                  Ask the Virtual Architect Agent a question about your architecture — describe the
+                  Ask the Virtual Architect Agent a question about your architecture: describe the
                   situation and what you want to know, and it produces a point-in-time view from the
                   model as it stands today. It's read-only; nothing is changed.
                 </p>

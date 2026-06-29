@@ -95,7 +95,7 @@ export default function DecisionsPage() {
   const statusParam = searchParams.get('status') ?? ''
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
-  usePageTitle(`${clientName} — Decisions`)
+  usePageTitle(`${clientName} · Decisions`)
 
   useEffect(() => {
     let cancelled = false
@@ -177,7 +177,7 @@ export default function DecisionsPage() {
           <span>
             Showing {filtered.length} of {decisions.length} decision
             {decisions.length === 1 ? '' : 's'}
-            {hiddenByFilter > 0 && ` — ${hiddenByFilter} hidden by the scope filter`}.
+            {hiddenByFilter > 0 && `, ${hiddenByFilter} hidden by the scope filter`}.
           </span>
           <button
             onClick={() => setSearchParams(new URLSearchParams())}
@@ -213,7 +213,7 @@ export default function DecisionsPage() {
         </>
       )}
 
-      {/* JSON preview of decisions.json index — for debugging */}
+      {/* JSON preview of decisions.json index: for debugging */}
       <JsonPreview
         data={{
           decisions: decisions.map((d) => ({

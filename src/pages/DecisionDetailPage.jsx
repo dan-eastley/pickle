@@ -147,9 +147,9 @@ function StatusProgress({ status }) {
 const REJECTION_REASONS = [
   {
     value: 'duplicate',
-    label: 'Duplicate — a similar decision already exists or has been accepted',
+    label: 'Duplicate, a similar decision already exists or has been accepted',
   },
-  { value: 'superseded', label: 'Superseded — replaced by a newer or broader decision' },
+  { value: 'superseded', label: 'Superseded: replaced by a newer or broader decision' },
 ]
 
 // Forward arrow used by "Propose"; check-arrow used by Accept / Stage / Commit.
@@ -837,7 +837,7 @@ export default function DecisionDetailPage() {
       .catch(() => {})
   }, [])
 
-  usePageTitle(decision?.title ? `${decision.title} — Decisions` : 'Decision')
+  usePageTitle(decision?.title ? `${decision.title} · Decisions` : 'Decision')
 
   const sectionRefs = useRef({})
   const [activeSection] = useActiveSection(sectionRefs, [decision])
@@ -1094,7 +1094,7 @@ export default function DecisionDetailPage() {
       ) : (
         <EmptyNote
           title="No findings yet"
-          description="Populated when the analysis workflow runs — it can take a few minutes."
+          description="Populated when the analysis workflow runs, it can take a few minutes."
         />
       ),
       {
@@ -1107,7 +1107,7 @@ export default function DecisionDetailPage() {
   return (
     <div>
       <div className="flex gap-8">
-        {/* Contents nav — document-style left rail */}
+        {/* Contents nav: document-style left rail */}
         <ContentsNav
           sections={navSections}
           activeKey={activeSection}
@@ -1181,7 +1181,7 @@ export default function DecisionDetailPage() {
 
           <StatusProgress status={decision.status} />
 
-          {/* Status actions + any error — above the sections */}
+          {/* Status actions + any error: above the sections */}
           <div className="mb-2">
             <StatusActions
               status={decision.status}
@@ -1197,7 +1197,7 @@ export default function DecisionDetailPage() {
             )}
           </div>
 
-          {/* Workflow-running banner — shown after a transition while the
+          {/* Workflow-running banner: shown after a transition while the
               background workflow populates the next section. */}
           {pendingWorkflow && (
             <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-rose-50 border border-blue-200 text-sm text-gray-700">
@@ -1394,7 +1394,7 @@ export default function DecisionDetailPage() {
               renderSection('history', <HistorySection history={decision.history} />)}
           </div>
 
-          {/* Status actions — repeated below the sections for convenience */}
+          {/* Status actions: repeated below the sections for convenience */}
           <div className="mt-8">
             <StatusActions
               status={decision.status}

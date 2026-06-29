@@ -40,7 +40,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
 
   return (
     <div className="border border-gray-200 bg-white">
-      {/* Abstraction header — inverted (dark background for distinction) */}
+      {/* Abstraction header: inverted (dark background for distinction) */}
       <Link
         to={`${base}/domains/${domain}/${abstraction.id}`}
         className={`group flex items-center justify-between px-5 py-3 border-b border-gray-200 transition-colors ${colors.header} hover:opacity-90`}

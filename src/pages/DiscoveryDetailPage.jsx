@@ -38,7 +38,7 @@ export default function DiscoveryDetailPage() {
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   const canEdit = discovery?.status === 'active'
 
-  usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
+  usePageTitle(discovery?.title ? `${discovery.title} · Discovery` : 'Discovery')
 
   useEffect(() => {
     let cancelled = false
@@ -198,7 +198,7 @@ export default function DiscoveryDetailPage() {
           <Spinner size="sm" />
           <span className="flex-1 min-w-0">
             🤖 The Virtual Architect Agent is regenerating this point-in-time view. This usually
-            takes a couple of minutes — refresh the page to see the updated findings.
+            takes a couple of minutes: refresh the page to see the updated findings.
           </span>
         </div>
       )}
@@ -306,7 +306,7 @@ export default function DiscoveryDetailPage() {
           ) : (
             <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-500">
               No findings yet. The Virtual Architect Agent is interrogating the architecture to
-              produce a point-in-time view — this takes a couple of minutes. Refresh to check.
+              produce a point-in-time view, this takes a couple of minutes. Refresh to check.
             </div>
           )}
         </Section>

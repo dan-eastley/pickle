@@ -107,10 +107,10 @@ export default function DomainsPage() {
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-gray-900">Architecture Domains</h1>
         <p className="mt-1 text-sm text-gray-500">
-          The architecture is organised into five domains — Business, Data, Application,
-          Integration, and Solution. Within each domain, content is grouped into three levels of
-          detail: Conceptual (what and why), Logical (how), and Physical (where and with what).
-          Select a domain to get started.
+          The architecture is organised into five domains: Business, Data, Application, Integration,
+          and Solution. Within each domain, content is grouped into three levels of detail:
+          Conceptual (what and why), Logical (how), and Physical (where and with what). Select a
+          domain to get started.
         </p>
       </div>
 
@@ -131,7 +131,7 @@ export default function DomainsPage() {
         <CapabilityCard
           icon={<DecisionIcon className="w-5 h-5 text-brand-700" />}
           title="Architecture Decisions"
-          description="The governed, auditable way to change the architecture. Capture the context, problem, and proposed direction — the agents analyse impact and alignment, and once accepted the change is applied through a reviewed pull request."
+          description="The governed, auditable way to change the architecture. Capture the context, problem, and proposed direction, the agents analyse impact and alignment, and once accepted the change is applied through a reviewed pull request."
           stats={
             metrics && (
               <StatusBreakdown
@@ -153,7 +153,7 @@ export default function DomainsPage() {
         <CapabilityCard
           icon={<RobotIcon className="w-5 h-5 text-blue-600" />}
           title="Architecture Discovery"
-          description="Ask the Virtual Architect Agent a question about your architecture. It interrogates the model as it stands today and returns a point-in-time view you can keep — read-only, nothing is changed."
+          description="Ask the Virtual Architect Agent a question about your architecture. It interrogates the model as it stands today and returns a point-in-time view you can keep: read-only, nothing is changed."
           stats={
             metrics && (
               <StatusBreakdown
@@ -191,7 +191,7 @@ export default function DomainsPage() {
             </svg>
           }
           title="Architecture Scout"
-          description="Coming soon. Point Scout at your existing, unstructured architecture content — Word documents, PowerPoint decks, SharePoint sites — and it scans them to seed and build out the structured repository. The fast path from scattered artefacts to a governed model."
+          description="Coming soon. Point Scout at your existing, unstructured architecture content: Word documents, PowerPoint decks, SharePoint sites, and it scans them to seed and build out the structured repository. The fast path from scattered artefacts to a governed model."
           action={
             <span className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-500 bg-gray-100 cursor-not-allowed">
               Coming soon

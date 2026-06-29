@@ -114,7 +114,7 @@ export default function NewDecisionModal({
           aria-label="New Architecture Decision"
           className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
         >
-          {/* Header — plain coloured bar, icon, title + purpose */}
+          {/* Header: plain coloured bar, icon, title + purpose */}
           <div
             className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}
           >
@@ -125,7 +125,7 @@ export default function NewDecisionModal({
               <div className="min-w-0">
                 <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
                 <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                  How a change to the architecture gets proposed and governed — capture the context,
+                  How a change to the architecture gets proposed and governed: capture the context,
                   problem, and proposed direction; the agents analyse it and, once accepted, the
                   change is applied through a reviewed pull request.
                 </p>
@@ -196,8 +196,8 @@ export default function NewDecisionModal({
                     Context <span className="text-error-500">*</span>
                   </label>
                   <p className="text-xs text-gray-500 mb-1.5">
-                    The current situation — what is happening that prompts this decision. Written
-                    for a business audience.
+                    The current situation: what is happening that prompts this decision. Written for
+                    a business audience.
                   </p>
                   <AutoGrowTextarea
                     id={`${fid}-context`}
@@ -217,7 +217,7 @@ export default function NewDecisionModal({
                     Problem <span className="text-error-500">*</span>
                   </label>
                   <p className="text-xs text-gray-500 mb-1.5">
-                    What needs to be fixed or addressed — the gap or pain in the current situation.
+                    What needs to be fixed or addressed, the gap or pain in the current situation.
                   </p>
                   <AutoGrowTextarea
                     id={`${fid}-problem`}
@@ -237,7 +237,7 @@ export default function NewDecisionModal({
                     Proposal <span className="text-error-500">*</span>
                   </label>
                   <p className="text-xs text-gray-500 mb-1.5">
-                    How we propose to solve it — the direction, at a business level.
+                    How we propose to solve it, the direction, at a business level.
                   </p>
                   <AutoGrowTextarea
                     id={`${fid}-proposal`}

@@ -1,6 +1,6 @@
 {
     "$schema": "urn:pickle:schemas:roles",
-    "description": "Canonical list of roles used across the architecture model — as artefact audience and author, and (later) for login, access control, and tailored UI. Grouped by category. Names are validated against config/schemas/roles.json. Drawn from TOGAF/ArchiMate stakeholder vocabulary and the Scaled Agile Framework (SAFe).",
+    "description": "Canonical list of roles used across the architecture model, as artefact audience and author, and (later) for login, access control, and tailored UI. Grouped by category. Names are validated against config/schemas/roles.json. Drawn from TOGAF/ArchiMate stakeholder vocabulary and the Scaled Agile Framework (SAFe).",
     "roles": [
         { "id": "enterprise-architect", "name": "Enterprise Architect", "category": "architecture", "description": "Owns the enterprise-wide architecture vision, principles, and roadmap across all domains." },
         { "id": "business-architect", "name": "Business Architect", "category": "architecture", "description": "Owns business capabilities, processes, and the operating model." },

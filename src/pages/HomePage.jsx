@@ -19,11 +19,11 @@ const FEATURE_CARDS = [
   {
     icon: LayersThree01,
     title: 'Architecture as Code',
-    what: 'Enterprise architecture stored as structured, version-controlled data — not documents or spreadsheets.',
+    what: 'Enterprise architecture stored as structured, version-controlled data: not documents or spreadsheets.',
     points: [
-      'Architecture lives in a Git repository — versioned, auditable, and reviewable',
+      'Architecture lives in a Git repository: versioned, auditable, and reviewable',
       'Every artefact is machine-readable JSON, validated against a schema',
-      'Changes require a formal Decision Record — no undocumented drift',
+      'Changes require a formal Decision Record: no undocumented drift',
       'Query, diff, and compare architecture state like source code',
     ],
     usp: 'Pickle gives you a structured, schema-validated architecture repository from day one.',
@@ -31,26 +31,26 @@ const FEATURE_CARDS = [
   {
     icon: CpuChip01,
     title: 'Agentic AI Architecture',
-    what: 'AI agents that actively participate in the process — analysing and validating changes alongside your architects.',
+    what: 'AI agents that actively participate in the process, analysing and validating changes alongside your architects.',
     points: [
       'Every decision is analysed across seven dimensions before it reaches a human',
       'Agents surface conflicts and gaps before a change reaches the review board',
-      'Analysis is structured and traceable — not free-form commentary',
-      'The human stays in the loop — AI informs, architects decide',
+      'Analysis is structured and traceable: not free-form commentary',
+      'The human stays in the loop: AI informs, architects decide',
     ],
-    usp: 'Pickle integrates Claude AI agents into the governance workflow — every decision gets automated analysis before it reaches your architects.',
+    usp: 'Pickle integrates Claude AI agents into the governance workflow: every decision gets automated analysis before it reaches your architects.',
   },
   {
     icon: GitBranch01,
     title: 'Architectural Governance',
-    what: 'A governed, traceable process for changing your architecture — driven by Decision Records and enforced through code review.',
+    what: 'A governed, traceable process for changing your architecture: driven by Decision Records and enforced through code review.',
     points: [
       'Every change must be justified in an Architecture Decision Record',
-      'ADRs capture intent, rationale, and analysis — not just the change',
+      'ADRs capture intent, rationale, and analysis: not just the change',
       'Git history provides an immutable audit trail of every decision',
       'Strategy, principles and guardrails are codified, not just documented',
     ],
-    usp: 'Pickle combines the rigour of decision records with the practicality of pull requests — governance that developers and architects can both live with.',
+    usp: 'Pickle combines the rigour of decision records with the practicality of pull requests: governance that developers and architects can both live with.',
   },
 ]
 
@@ -62,7 +62,7 @@ const ANALYSIS_DIMENSIONS = [
     n: '01',
     name: 'Impact Assessment',
     question: 'What does this change actually touch?',
-    text: 'Identifies the artefacts, domains and abstraction layers affected — the full blast radius of the decision.',
+    text: 'Identifies the artefacts, domains and abstraction layers affected, the full blast radius of the decision.',
   },
   {
     n: '02',
@@ -75,7 +75,7 @@ const ANALYSIS_DIMENSIONS = [
     name: 'Strategy Alignment',
     layer: 'Conceptual',
     question: 'Does it serve the strategy?',
-    text: 'Tests the decision against each affected domain’s documented strategic goals — the what and why.',
+    text: 'Tests the decision against each affected domain’s documented strategic goals, the what and why.',
   },
   {
     n: '04',
@@ -95,13 +95,13 @@ const ANALYSIS_DIMENSIONS = [
     n: '06',
     name: 'Proponent Analysis',
     question: 'What is the strongest case for?',
-    text: 'An agent argues for the change at its best — benefits, opportunities, and the cost of not acting.',
+    text: 'An agent argues for the change at its best: benefits, opportunities, and the cost of not acting.',
   },
   {
     n: '07',
     name: 'Challenger Analysis',
     question: 'What is the strongest case against?',
-    text: 'A second agent stress-tests the change — risks, gaps and unstated assumptions — before a human ever has to.',
+    text: 'A second agent stress-tests the change for risks, gaps and unstated assumptions before a human ever has to.',
   },
 ]
 
@@ -111,7 +111,7 @@ const LAYER_BADGES = {
   Physical: 'bg-rose-100 text-rose-700',
 }
 
-// The solution document chain — each step adds detail and moves from
+// The solution document chain: each step adds detail and moves from
 // conceptual to physical, with the audience shifting from exec to engineer.
 const DOCUMENT_CHAIN = [
   {
@@ -126,14 +126,14 @@ const DOCUMENT_CHAIN = [
     name: 'Architecture Intent',
     layer: 'Conceptual',
     audience: 'Architecture Review Board',
-    adds: 'The decided direction — options weighed and rationale recorded.',
+    adds: 'The decided direction: options weighed and rationale recorded.',
   },
   {
     id: 'SOL-SVI',
     name: 'Solution Intent',
     layer: 'Logical',
     audience: 'Solution Architect',
-    adds: 'Per-initiative problem, approach, capabilities and platforms — fixed and variable intent.',
+    adds: 'Per-initiative problem, approach, capabilities and platforms: fixed and variable intent.',
   },
   {
     id: 'SOL-SDE',
@@ -169,13 +169,13 @@ function DocumentChain() {
             From vision to build, one step at a time
           </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Solution documents form a chain — each one elaborates the last. As you move along it,
+            Solution documents form a chain: each one elaborates the last. As you move along it,
             detail increases and the architecture moves from conceptual to physical, while the
             audience shifts from executives to engineers.
           </p>
         </div>
 
-        {/* Pronounced layer track — the conceptual → logical → physical spine */}
+        {/* Pronounced layer track, the conceptual → logical → physical spine */}
         <div className="mb-6 grid grid-cols-3 gap-2 items-stretch">
           {[
             ['Conceptual', 'What & why · strategic', 'bg-blue-500'],
@@ -238,16 +238,16 @@ function Hero() {
           </h1>
           <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
           <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-            Your enterprise architecture as structured, version-controlled data — with AI agents
-            that analyse every proposed change and a decision-record workflow that keeps your
-            architects in charge.
+            Your enterprise architecture as structured, version-controlled data, with AI agents that
+            analyse every proposed change and a decision-record workflow that keeps your architects
+            in charge.
           </p>
           {/* The strongest selling points, lifted to the top */}
           <ul className="mt-6 space-y-2 max-w-xl mx-auto lg:mx-0 text-left">
             {[
               [
                 'Architecture as code',
-                'Every artefact is schema-validated JSON in Git — versioned, auditable, queryable.',
+                'Every artefact is schema-validated JSON in Git: versioned, auditable, queryable.',
               ],
               [
                 'AI-analysed change',
@@ -255,14 +255,14 @@ function Hero() {
               ],
               [
                 'Governed by Decision Records',
-                'No undocumented drift — intent, rationale and analysis are captured for every change.',
+                'No undocumented drift: intent, rationale and analysis are captured for every change.',
               ],
               ['Framework-aligned', 'Maps onto TOGAF, SAFe, Zachman and UAF out of the box.'],
             ].map(([h, t]) => (
               <li key={h} className="flex items-start gap-2.5 text-sm">
                 <CheckIcon className="w-4 h-4 mt-0.5 text-brand-600 flex-shrink-0" />
                 <span className="text-gray-600">
-                  <span className="font-semibold text-gray-900">{h}</span> — {t}
+                  <span className="font-semibold text-gray-900">{h}</span>: {t}
                 </span>
               </li>
             ))}
@@ -281,14 +281,14 @@ function Hero() {
         <div className="hidden lg:block border border-gray-200 shadow-2xl bg-white overflow-hidden">
           <img
             src={capabilityShot}
-            alt="Pickle — the business capability model rendered as a diagram"
+            alt="Pickle, the business capability model rendered as a diagram"
             className="w-full h-auto"
             loading="eager"
           />
         </div>
       </div>
 
-      {/* Meta-model strip — five domains, three layers */}
+      {/* Meta-model strip: five domains, three layers */}
       <div className="relative z-10 mt-16 max-w-2xl mx-auto text-center">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
           Five architecture domains · Three abstraction layers
@@ -354,7 +354,7 @@ const ABSTRACTION_META = {
   conceptual: {
     label: 'Conceptual',
     sub: 'The what & why',
-    desc: 'Sets direction and intent — what the architecture needs to achieve and why, without any technology choices.',
+    desc: 'Sets direction and intent: what the architecture needs to achieve and why, without any technology choices.',
     bg: 'bg-blue-50',
     text: 'text-blue-700',
     border: 'border-blue-200',
@@ -382,16 +382,16 @@ const ABSTRACTION_META = {
 
 const FORMAT_META = {
   catalogue: {
-    desc: 'A structured list of architecture entities of a single type — capabilities, processes, applications. Hierarchical, machine-readable, schema-validated.',
+    desc: 'A structured list of architecture entities of a single type: capabilities, processes, applications. Hierarchical, machine-readable, schema-validated.',
   },
   diagram: {
-    desc: 'A visual representation of entities and their relationships — capability models, process flows, wiring diagrams. Derived from catalogue content and rendered by the UI.',
+    desc: 'A visual representation of entities and their relationships: capability models, process flows, wiring diagrams. Derived from catalogue content and rendered by the UI.',
   },
   document: {
-    desc: 'Structured narrative content with multiple named instances — vision documents, solution designs, interface specifications. Sections follow the JSON schema structure.',
+    desc: 'Structured narrative content with multiple named instances: vision documents, solution designs, interface specifications. Sections follow the JSON schema structure.',
   },
   matrix: {
-    desc: 'A grid mapping relationships between two sets of entities — capabilities to platforms, interfaces to data concepts. Spans abstraction layers and domains.',
+    desc: 'A grid mapping relationships between two sets of entities: capabilities to platforms, interfaces to data concepts. Spans abstraction layers and domains.',
   },
 }
 
@@ -455,7 +455,7 @@ function ArchitectureModel() {
             })}
           </div>
 
-          {/* Architecture Discovery CTA — the Virtual Architect Agent */}
+          {/* Architecture Discovery CTA, the Virtual Architect Agent */}
           <div className="mt-4 border border-gray-200 border-l-4 border-l-blue-600 bg-gradient-to-r from-blue-50/60 to-rose-50/40 p-5 flex items-center gap-4">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
               <RobotIcon className="w-5 h-5 text-white" />
@@ -496,7 +496,7 @@ function ArchitectureModel() {
             })}
           </div>
           <p className="mt-3 text-xs text-gray-500 leading-relaxed">
-            Layers are progressive — Logical artefacts build on Conceptual ones; Physical artefacts
+            Layers are progressive: Logical artefacts build on Conceptual ones; Physical artefacts
             make Logical ones concrete. Relationships that cross layers are captured in{' '}
             <strong>Matrix</strong> artefact types.
           </p>
@@ -546,8 +546,8 @@ function SevenDimensions() {
             </h2>
             <p className="mt-3 text-sm text-gray-500 leading-relaxed">
               When a decision is proposed, seven AI analysis steps run in sequence against the
-              current architecture state. Each one writes structured findings — finding, impact,
-              recommendation and rationale — into the Decision Record, for architects to accept or
+              current architecture state. Each one writes structured findings, finding, impact,
+              recommendation and rationale: into the Decision Record, for architects to accept or
               decline. Nothing merges until a human says so.
             </p>
           </div>
@@ -557,7 +557,7 @@ function SevenDimensions() {
           />
         </div>
 
-        {/* Pipeline cards — numbered, in execution order */}
+        {/* Pipeline cards: numbered, in execution order */}
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {ANALYSIS_DIMENSIONS.map((dim) => (
             <div
@@ -578,7 +578,7 @@ function SevenDimensions() {
             </div>
           ))}
 
-          {/* Eighth tile — the human gate that closes the pipeline */}
+          {/* Eighth tile, the human gate that closes the pipeline */}
           <div className="border border-dashed border-gray-300 bg-gray-50 p-5 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-2">
               <span className="w-6 h-6 bg-gray-800 text-white flex items-center justify-center">
@@ -588,7 +588,7 @@ function SevenDimensions() {
             </div>
             <p className="text-xs text-gray-500 leading-relaxed">
               Architects review every finding, then accept, reject or return the decision. AI
-              informs — people decide.
+              informs: people decide.
             </p>
           </div>
         </div>
@@ -598,7 +598,7 @@ function SevenDimensions() {
 }
 
 // The defining piece: architects author Strategy / Principles / Guardrails for
-// every domain × layer. Everything else — and every AI analysis — is measured
+// every domain × layer. Everything else, and every AI analysis, is measured
 // against them. Full-width, high-emphasis.
 const FOUNDATION = [
   {
@@ -615,7 +615,7 @@ const FOUNDATION = [
     suffix: 'PRN',
     layer: 'Logical',
     q: 'How we decide',
-    text: 'The vendor-neutral rules that shape design choices — the architect’s guidance, codified.',
+    text: 'The vendor-neutral rules that shape design choices, the architect’s guidance, codified.',
     bar: 'bg-amber-500',
     badge: 'bg-amber-100 text-amber-700',
   },
@@ -636,15 +636,15 @@ function FoundationArtefacts() {
       <div className="max-w-[1400px] mx-auto px-6 py-16">
         <div className="max-w-3xl mb-10">
           <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-white/70">
-            The foundation — defined by your architects
+            The foundation: defined by your architects
           </p>
           <h2 className="text-2xl font-bold">Strategy, Principles &amp; Guardrails</h2>
           <p className="mt-3 text-sm leading-relaxed text-white/80">
             These three artefacts are the spine of the whole model. Your{' '}
             <span className="font-semibold text-white">architects author them</span> for every
-            domain — one per abstraction layer — and every other artefact, and every AI analysis
-            step, is measured against them. This is where human judgement sets the rules; the agents
-            only check that changes respect them.
+            domain, one per abstraction layer, and every other artefact, and every AI analysis step,
+            is measured against them. This is where human judgement sets the rules; the agents only
+            check that changes respect them.
           </p>
         </div>
 
@@ -689,7 +689,7 @@ const CAROUSEL = [
   {
     src: matrixShot,
     title: 'Relationships as matrices',
-    desc: 'Capability-to-process, process-to-data (CRUD) and more — the edges of the architecture graph.',
+    desc: 'Capability-to-process, process-to-data (CRUD) and more, the edges of the architecture graph.',
   },
   {
     src: processFlowShot,
@@ -709,7 +709,7 @@ const CAROUSEL = [
   {
     src: solutionDesignShot,
     title: 'Low-level design',
-    desc: 'Solution designs and interface specs — concrete enough for engineers to build against.',
+    desc: 'Solution designs and interface specs: concrete enough for engineers to build against.',
   },
   {
     src: decisionShot,
@@ -804,13 +804,13 @@ function ProductCarousel() {
   )
 }
 
-// Positive alignment bullets only — sales call-outs, a tick is enough.
+// Positive alignment bullets only: sales call-outs, a tick is enough.
 const FRAMEWORKS = [
   {
     name: 'TOGAF',
     sub: 'ADM',
     className: 'bg-sky-700 text-white',
-    blurb: 'A TOGAF Architecture Repository — as code.',
+    blurb: 'A TOGAF Architecture Repository, as code.',
     points: [
       'Architecture Repository as versioned data',
       'Business · Data · Application domains',
@@ -824,7 +824,7 @@ const FRAMEWORKS = [
     className: 'bg-indigo-700 text-white',
     blurb: 'A SAFe Solution Intent store.',
     points: [
-      'Solution Intent — the document chain',
+      'Solution Intent, the document chain',
       'Architectural enablers as Decision Records',
       'Capabilities & features',
       'PI / release baselines as versions',
@@ -880,7 +880,7 @@ function FrameworkSupport() {
             Aligned to TOGAF, SAFe, Zachman &amp; UAF
           </h2>
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-            Pickle isn’t a rival method — it’s the repository the methods you already use are crying
+            Pickle isn’t a rival method: it’s the repository the methods you already use are crying
             out for. Its domains, layers, and formats map straight onto the frameworks your
             architects work in.
           </p>
@@ -930,9 +930,9 @@ function ClosingCta() {
 }
 
 const AGENT_BULLETS = [
-  'Ask questions in plain language — the agent reads the architecture as structured data, not screenshots.',
+  'Ask questions in plain language, the agent reads the architecture as structured data, not screenshots.',
   'Produces point-in-time views: dependency traces, impact maps, and gap analyses scoped to a domain or artefact.',
-  'Every discovery is captured as a record — title, context, and request — so the question and its answer are versioned.',
+  'Every discovery is captured as a record: title, context, and request, so the question and its answer are versioned.',
   'Active and archived pots keep live investigations separate from historical ones.',
 ]
 
@@ -946,11 +946,11 @@ function VirtualArchitectAgent() {
               Virtual Architect Agent
             </p>
             <h2 className="text-2xl font-bold text-gray-900">
-              Architecture Discovery — interrogate your architecture
+              Architecture Discovery: interrogate your architecture
             </h2>
             <p className="mt-3 text-sm text-gray-500 leading-relaxed">
               Discovery turns the repository into something you can question. Raise a discovery, and
-              the Virtual Architect Agent reads the model to answer it — producing a view you can
+              the Virtual Architect Agent reads the model to answer it, producing a view you can
               keep.
             </p>
             <ul className="mt-6 space-y-3">
