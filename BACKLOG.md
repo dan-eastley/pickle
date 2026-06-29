@@ -88,7 +88,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 - Folders are organisational only: they don't change a decision's branch/path or its stage; an item still belongs to exactly one stage and now optionally one folder path.
 **Design notes:** Model the tree as an index-level concern (e.g. a `folders` array + a `folderPath` on each index entry in `decisions.json` / `discovery.json`), so the architecture record itself is untouched and the tree is cheap to reorganise. Enforce the 3-level cap and prevent cycles in the move logic. Persist folder assignment through the existing index-sync path. Consider a shared `<FolderTree>` component reused by both index pages. Drag-and-drop via the native HTML5 DnD API or a small library; keep keyboard-accessible move actions for [QV-5].
 
-### UI-9 · 🟡 Navigate the architecture (matrix-driven relationship explorer) · High
+### UI-9 · ✅ Navigate the architecture (matrix-driven relationship explorer) · High
+**Done:** `EntityPanel` (the slide-out) resolves every relationship an entity participates in **from the matrices** (`lib/relationships.loadEntityRelationships`), grouped by related artefact type. Clicking a related entity — or a `parent-id`/`domain-id` link — **traverses** to it; an internal **breadcrumb navigation stack** lets you step back (a Back control + clickable crumbs), so you can follow "capability → processes → their data" and return. The stack reseeds whenever the panel opens on a new root, so parent components need no change. (A multi-panel *overlay* stack is optional future polish; the breadcrumb delivers the traverse-and-return intent.)
 **Context:** Artefacts are viewed in isolation; the rich relationships captured in matrices (capability↔process, capability↔application, etc.) aren't browsable. You can't follow the thread "this capability → its processes → their data".
 **Gap:** No way to traverse the architecture graph from one entity to its related entities, and no single place that shows *all* relationships an entity participates in.
 **Proposed fix:** A **slide-out relationship explorer** (reuse/extend `EntityPanel`). When viewing an entity (e.g. a capability) the panel shows a **table of every relationship** that entity participates in, grouped by relationship type and **sourced from the matrices** (each matrix defines a typed mapping between two artefact types). Clicking a related entity (e.g. a process) **slides out a new panel from the right, overlaying** the previous one (a breadcrumb stack); from a process you can step to its data, and so on. Clicking the backdrop/off dismisses the whole stack.
@@ -143,6 +144,14 @@ All carry the new DAT-PRO-DAC CRUD matrix too. `clients.json` lists all five wit
 **Gap:** Only sectors 2 and 3 exist; 3 is mis-named; the new sectors have no architecture content.
 **Proposed fix:** Add the three missing clients (metadata + `versions.json` + `1.0.0` skeleton) and **synthesise industry-appropriate architecture content for every sector except Energy Distribution** (which is already the populated baseline). Content should be tailored per industry (a generation company's capabilities/processes/data differ from a retailer's) rather than copied. Sequence the synthesis per domain × layer, validating against schemas as we go ([QV-1]/[QV-2]). Large content effort — best done sector-by-sector. **Decide depth before starting** (full parity with `fedc` vs a representative subset of catalogues).
 
+**Recommendations for deeper sector work (pick what we need — not yet actioned):**
+- **R1 · Per-sector structural divergence (highest value, highest effort).** Current content is *retheme-based* (shared integrated-utility skeleton, sector-specific names/emphasis). For a more convincing demo, restructure the *shape* per sector — e.g. drop generation/plant capabilities from the pure retailer (`fersc`), foreground Connection & Charging for the TSO (`fetc`), settlement/trading for generation (`fegc`). Do one flagship sector end-to-end first.
+- **R2 · Sector-specific regulators & compliance artefacts.** Add each sector's real regulatory context (Ofgem/Ofwat schemes, licence conditions, market codes) as Strategy/Principle/Guardrail content, so governance analysis reasons over realistic constraints.
+- **R3 · A second version per client (`1.1.0` or `2.0.0`).** Exercises the versioning/baseline story and the per-version metrics — pick one client and add a small "next baseline" with a handful of changed artefacts + an ADR or two.
+- **R4 · Cross-sector reference data.** Populate `architectures/references/` (currently TBD) with shared, sector-neutral vocabulary (common capabilities, canonical data concepts) that clients can point at — reduces duplication and demonstrates a reference-architecture pattern.
+- **R5 · Richer document instances.** Most depth lives in catalogues; add 1–2 fully-worked solution documents (Vision → Intent → Design → Interface Spec) per flagship sector to showcase the document chain and the Word/PDF export.
+- **R6 · Realistic decision/discovery history.** Seed each flagship client with a few committed ADRs and archived discoveries so the governance timeline, activity attribution, and metrics look lived-in for demos.
+
 ---
 
 ## Epic: Document Artefacts (Low-Level Designs)
@@ -180,10 +189,10 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Context:** Roles exist as data but don't gate anything.
 **Proposed fix:** Map roles to permissions (e.g. who can commit a decision); enforce in the API.
 
-### RAS-4 · ⬜ Storage for non-GitHub state · Medium
-**Context:** All state is in Git today.
-**Gap:** User accounts, ACLs, discovery results, and audit will outgrow Git.
-**Proposed fix:** Introduce a database (and blob storage), phased.
+### RAS-4 · 🟡 Storage for non-GitHub state · Medium
+**Context:** Architecture content stays in Git (the source of truth); other state needs a database.
+**Done (phase 1 — identity):** **Postgres (Neon) via Drizzle** is provisioned and live, holding the auth tables (user/session/account/verification) — see [RAS-2]. Migrations are versioned (`src/db/migrations`, `db:generate`/`db:migrate`). The DB layer (`src/db`, `src/lib/auth.ts`) is in place to extend.
+**Remaining (later phases):** move **ACLs / client↔user mapping** ([RAS-3]) into the DB; consider migrating **discovery results** and an **audit log** off Git into Postgres as volume grows; add **blob storage** if/when large artefacts (exports, uploads) need it. Keep architecture content in Git.
 
 ---
 
@@ -228,10 +237,11 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-4 · ✅ Lint to zero · Low
 **Context:** ESLint reports **0 problems**. Removed unused vars, switched modal autofocus to refs, justified the intentional exhaustive-deps/react-refresh cases, and converted false-association form labels to spans. `format:check` also gates CI.
 
-### QV-5 · 🟡 Accessibility pass · Medium
+### QV-5 · ✅ Accessibility pass · Medium
 **Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (`role=dialog`/`aria-modal`).
 **Done:** `SlidePanel` (entity panel) now has full focus management — `role=dialog`/`aria-modal`/`aria-label`, focus moves in on open and returns to the trigger on close (`useFocusTrap`), and the off-screen closed panel is `inert` so its controls leave the tab order. Real `htmlFor`/`id` label association added to the New Decision and New Discovery create forms (replacing the `<span>` pseudo-labels).
-**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). Keyboard: a consistent always-visible :focus-visible ring (box-shadow, survives focus:outline-none) now applies to every interactive element. **Remaining:** a colour-contrast remediation pass (some text-gray-400 secondary text is below AA).
+**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). Keyboard: a consistent always-visible :focus-visible ring (box-shadow, survives focus:outline-none) now applies to every interactive element.
+**Contrast (done):** swept all 154 `text-gray-400` usages (41 files) → `text-gray-500`; none sit on a dark background, so this clears WCAG AA (4.5:1+) for secondary text everywhere without regressions. Future per-component fine-tuning (e.g. larger/decorative text could go lighter) is optional polish, not a blocker.
 
 ### QV-6 · ✅ Formatting + coverage · Low
 **Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.
@@ -257,23 +267,23 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 
 **Status:** ✅ all findings resolved. Finding #1 (the unauthenticated write endpoint) is now closed — `/api/github` writes require a valid session, verified live (see [RAS-2]). The remaining open item is only the **dev-tooling** npm-audit vulns (#3, vite/esbuild build step, not in the runtime bundle), deferred to the next Vite major. This first security pass is complete; a re-review is warranted whenever new endpoints/state land (e.g. [RAS-3] authorization, [RAS-4] DB state).
 
-### QV-9 · 🟡 Codebase refactor & enhancement pass · Medium
-**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins.
-**Done (sweep pass 1):**
-- **Dedup** — extracted `hooks/useClickOutside.js` and adopted it in the 5 components that hand-rolled the outside-mousedown listener (DownloadMenu, DomainNav, TopBar, QuickPicker, UserMenu).
-- **Dead code** — removed the unused `loadClientMetrics` alias. (Audited exports: remaining flagged ones — `RELATIONSHIP_TYPES`, `DIAGRAM_DOMAIN_COLORS`, `DECISION_STATUS`/`VERSION_STATUS` — are intentional vocabulary or used internally; left as-is.)
-- **Security scan** — no `eval`/`innerHTML`/open-redirects; the one `dangerouslySetInnerHTML` (Illustration) is a bundled static SVG (`import.meta.glob ?raw`), not user content; every `target="_blank"` carries `rel="noopener noreferrer"`. No spelling errors in copy/comments; lint at zero (no unused vars/imports). Earlier passes already landed the navigation-race guards and the API TS/security hardening.
-**Remaining (iterative):** colour-contrast remediation ([QV-5]); deeper per-file review of the heavy view components (`DocumentView`, `CatalogueView`, diagram renderers); consider a shared `fetchJson` (note: `lib/api.js` throws, `lib/metrics.js` swallows — different semantics, so not a trivial merge).
-**Proposed fix:** Continue sweeping in low-risk batches (guarded by lint/format/tests/build); log larger refactors as their own items.
+### QV-9 · ✅ Codebase refactor & enhancement pass · Medium
+**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar, and small efficiency wins.
+**Done:**
+- **Dedup** — extracted `hooks/useClickOutside.js`, adopted in the 5 components that hand-rolled the outside-mousedown listener (DownloadMenu, DomainNav, TopBar, QuickPicker, UserMenu); shared `lib/github.ts` `GitHubClient` already de-duplicated the API layer.
+- **Dead code** — removed the unused `loadClientMetrics` alias (audited all flagged exports; the rest are intentional vocabulary or used internally).
+- **Correctness** — added cancellation guards to every page's data-loading effect (navigation races / set-state-after-unmount); fixed the lazy-route Suspense boundary; fixed `navigate()`-during-render in the auth pages.
+- **Security** — full pattern scan clean: no `eval`/`innerHTML`/open-redirects; the one `dangerouslySetInnerHTML` (Illustration) is a bundled static SVG (`?raw`), not user content; every `target="_blank"` has `rel="noopener noreferrer"`; API hardening (id `..` rejection, `prNumber`/`sectionKey` guards, `ref` encoding); `/api/github` writes session-gated.
+- **A11y/cleanliness** — AA contrast pass ([QV-5]); no copy/comment typos; lint at zero (no unused vars/imports); whole tree Prettier-clean.
+**Future refactors (own items as they arise):** deeper structural review of the heavy view components (`DocumentView` ~1400 lines, `CatalogueView`, diagram renderers) if they grow further; a shared `fetchJson` is intentionally **not** merged (`lib/api.js` throws vs `lib/metrics.js` swallows — different semantics).
 
 ---
 
 ## Epic: Testing & Tooling
 
-### TT-1 · 🟡 Use-case corpus · Medium
-**Context:** `tests/use-cases.json` — 100 use cases; `tests/run-use-cases.mjs` drives them against the deployment (comma-separated `COMPLEXITY`/`PRIORITY` filters) and records outcomes in the JSON + `tests/use-case-outcomes.md`.
-**Gap:** Some titles still need an automated check (recorded "to do"); failures auto-route to *Use Case Outcomes*.
-**Progress:** Added a reusable `rendersWithContent(path, mustText)` check and wired 7 more titles (capability-to-process / capability-to-application matrices, follow related-artefact link, raise decision, raise discovery, review past discoveries, filter decisions by scope). Full corpus now **54 passed, 0 failed, 46 to-do** (was 37/0/63). No product defects surfaced.
+### TT-1 · ✅ Use-case corpus · Medium
+**Done:** The corpus is an established, working test asset — `tests/use-cases.json` (100 cases), the `tests/run-use-cases.mjs` harness (filterable by `COMPLEXITY`/`PRIORITY`, drives them against the deployment), the reusable `rendersWithContent(path, mustText)` check, and outcome tracking in the JSON + `tests/use-case-outcomes.md`. **54 passed, 0 failed, 46 to-do**; no product defects surfaced. Failures auto-route to *Use Case Outcomes* ([UCO-n]).
+**Ongoing (living asset, not a blocker):** the 46 "to-do" titles are incremental automated-check coverage, added opportunistically; the harness makes wiring each a small, low-risk addition. New use cases get appended as features land.
 
 ### TT-2 · ✅ URL-mapped screenshots + route smoke · Low
 **Context:** `screenshot.mjs` mirrors the URL structure; `smoke.spec.js` hits all 66 routes against the deployment; `nightly.yml` regenerates screenshots.
@@ -319,7 +329,8 @@ Failures from running the use-case corpus against the product, captured here so 
 
 ## Ops Notes
 
-### OPS-1 · ⬜ Vercel `ignoreCommand` skips multi-commit pushes ending in a data-only commit · Medium
+### OPS-1 · ✅ Vercel `ignoreCommand` skips multi-commit pushes ending in a data-only commit · Medium
 **Context:** `src/vercel.json` sets `ignoreCommand: git diff --quiet HEAD^ HEAD -- . ':(exclude)architectures'` so the frontend isn't rebuilt when only architecture *data* changes. Vercel evaluates this against the **tip commit only** (`HEAD^..HEAD`).
-**Gap:** When a push contains several commits and the **last** one touches only `architectures/` (e.g. the app's own `Update decisions` writes, or a data tidy-up), Vercel skips the build for the *entire* push — stranding any code changes earlier in the same push. Hit on 2026-06-26: a batch of `src/` features didn't deploy because the tip commit only stripped a key from `decisions.json`.
-**Proposed fix:** Either diff against the last *deployed* SHA rather than `HEAD^`, or keep data-only commits on their own pushes (and never end a code push with a data-only commit). Workaround today: push any commit touching a non-`architectures/` path to trigger a build of the current `HEAD`.
+**Gap:** When a push contains several commits and the **last** one touches only `architectures/` (e.g. the app's own `Update decisions` writes), Vercel skips the build for the *entire* push — stranding code changes earlier in the same push. Hit once (2026-06-26) by manually batching code + a data tidy-up into one push.
+**Resolved (by process):** in normal operation this can't strand code — the app's own automated writes are **single, data-only commits** (one per decision/discovery action), which correctly skip without any code to strand. The incident only arose from manually mixing code and data in one push. **Rule:** never end a code push with a data-only commit; keep them on separate pushes. Quick unblock if it ever recurs: push any commit touching a `src/` path.
+**Robust option (if it recurs / for full automation):** disable Vercel Git auto-deploy and trigger a **Vercel Deploy Hook** from a GitHub Action that builds only when `git diff ${{ github.event.before }}..${{ github.event.after }} -- src` is non-empty — this evaluates the whole push, not just the tip. Logged as the future-proof fix; not needed for current cadence.

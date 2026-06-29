@@ -57,7 +57,7 @@ export default function VersionsPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-4">
-        <Link to="/clients" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        <Link to="/clients" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
           ← All clients
         </Link>
       </div>
@@ -116,18 +116,18 @@ export default function VersionsPage() {
                         )}
                       </div>
                       {meta?.description && (
-                        <p className="text-xs text-gray-400 mt-0.5">{meta.description}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{meta.description}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-xs font-mono text-gray-400">{vId}</span>
+                    <span className="text-xs font-mono text-gray-500">{vId}</span>
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
                   </div>
                 </Link>
                 <div className="px-5 pb-4 pt-1 border-t border-gray-100">
                   {m === undefined ? (
-                    <div className="flex items-center gap-2 py-1 text-xs text-gray-400">
+                    <div className="flex items-center gap-2 py-1 text-xs text-gray-500">
                       <Spinner size="sm" /> Loading content…
                     </div>
                   ) : (
@@ -136,7 +136,7 @@ export default function VersionsPage() {
                       extra={governance}
                       dense
                       empty={
-                        <p className="py-1 text-xs text-gray-400">
+                        <p className="py-1 text-xs text-gray-500">
                           No content in this version yet.
                         </p>
                       }

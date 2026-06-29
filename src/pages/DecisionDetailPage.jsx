@@ -98,14 +98,14 @@ function StatusProgress({ status }) {
               <div className="flex flex-col items-center" title={STATUS_TOOLTIPS[step]}>
                 <div
                   className={`w-7 h-7 flex items-center justify-center text-xs font-semibold cursor-default text-white ${
-                    reached ? '' : 'bg-gray-100 !text-gray-400'
+                    reached ? '' : 'bg-gray-100 !text-gray-500'
                   } ${isCurrent ? 'ring-2 ring-offset-1 ring-gray-200' : ''}`}
                   style={reached ? { backgroundColor: STEP_COLORS[i] } : undefined}
                 >
                   {isPast ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
                 </div>
                 <span
-                  className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-400'}`}
+                  className={`mt-1 text-xs whitespace-nowrap capitalize ${isCurrent ? 'font-semibold' : 'text-gray-500'}`}
                   style={isCurrent ? { color: STEP_COLORS[i] } : undefined}
                 >
                   {step}
@@ -376,7 +376,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
 // analysis tables. Accept/decline is toggled by clicking the row (a coloured
 // left accent + tint shows the state); the analysis locks once Accepted.
 function AnalysisTable({ rows, sectionKey, accepted, onAccept, saving, locked }) {
-  if (!rows?.length) return <p className="text-sm text-gray-400">No findings recorded.</p>
+  if (!rows?.length) return <p className="text-sm text-gray-500">No findings recorded.</p>
   const toggle = (i, isAccepted) => {
     if (!locked) onAccept(sectionKey, i, isAccepted ? 'declined' : 'accepted')
   }
@@ -662,7 +662,7 @@ function EmptyNote({ title, description }) {
       </svg>
       <p className="text-sm font-medium text-gray-500">{title}</p>
       {description && (
-        <p className="text-xs text-gray-400 mt-0.5 max-w-md mx-auto leading-relaxed">
+        <p className="text-xs text-gray-500 mt-0.5 max-w-md mx-auto leading-relaxed">
           {description}
         </p>
       )}
@@ -751,18 +751,18 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
     <aside className="hidden lg:block w-64 flex-shrink-0">
       <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Contents</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Contents</p>
           <div className="flex items-center gap-2">
             <button
               onClick={onExpandAll}
-              className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+              className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
             >
               Expand all
             </button>
             <span className="text-gray-300">·</span>
             <button
               onClick={onCollapseAll}
-              className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+              className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
             >
               Collapse all
             </button>
@@ -779,7 +779,7 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
                 }`}
               >
-                <span className="font-mono text-xs text-gray-400">{i + 1}</span>
+                <span className="font-mono text-xs text-gray-500">{i + 1}</span>
                 <span className="min-w-0 flex-1 truncate">{s.label}</span>
                 {typeof s.count === 'number' && (
                   <NavCount n={s.count} active={activeKey === s.key} />
@@ -1028,7 +1028,7 @@ export default function DecisionDetailPage() {
           </span>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2.5 flex-wrap">
             <span>
-              <span className="text-gray-400 font-mono text-base mr-2">{sectionNumber[key]}</span>
+              <span className="text-gray-500 font-mono text-base mr-2">{sectionNumber[key]}</span>
               {label}
             </span>
             {typeof count === 'number' && (
@@ -1069,7 +1069,7 @@ export default function DecisionDetailPage() {
                 {count}
               </span>
             )}
-            {hint && <span className="text-xs font-normal text-gray-400">· {hint}</span>}
+            {hint && <span className="text-xs font-normal text-gray-500">· {hint}</span>}
           </h3>
         </button>
         {!subCollapsed && <div className="mt-3">{body}</div>}
@@ -1146,7 +1146,7 @@ export default function DecisionDetailPage() {
                   {decision['decision-id']}
                 </span>
                 {decision['rejection-reason'] && (
-                  <span className="text-xs text-gray-400">{decision['rejection-reason']}</span>
+                  <span className="text-xs text-gray-500">{decision['rejection-reason']}</span>
                 )}
                 {decision.status === 'draft' &&
                   (edit ? (
@@ -1218,7 +1218,7 @@ export default function DecisionDetailPage() {
               </button>
               <button
                 onClick={() => setPendingWorkflow(null)}
-                className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
+                className="flex-shrink-0 text-gray-500 hover:text-gray-700 transition-colors"
                 title="Dismiss"
               >
                 <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">

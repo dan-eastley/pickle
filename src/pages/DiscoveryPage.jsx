@@ -28,17 +28,17 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onTo
       >
         <div className="flex items-center gap-3">
           <span className={`text-xs font-semibold px-2 py-0.5 ${pot.badge}`}>{pot.label}</span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-500">
             {discoveries.length} {discoveries.length === 1 ? 'Discovery' : 'Discoveries'}
           </span>
         </div>
         <ChevronDown
-          className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-gray-500 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
         />
       </button>
 
       {open && discoveries.length === 0 && (
-        <div className="px-5 py-3 text-xs text-gray-400">No discoveries in this pot.</div>
+        <div className="px-5 py-3 text-xs text-gray-500">No discoveries in this pot.</div>
       )}
 
       {open && discoveries.length > 0 && (
@@ -59,7 +59,7 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onTo
               </div>
               {d.scope && <ScopeChip scope={d.scope} />}
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-xs font-mono text-gray-400">{d['discovery-id']}</span>
+                <span className="text-xs font-mono text-gray-500">{d['discovery-id']}</span>
                 <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
               </div>
             </Link>

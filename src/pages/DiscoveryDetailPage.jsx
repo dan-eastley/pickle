@@ -304,7 +304,7 @@ export default function DiscoveryDetailPage() {
               {discovery.findings}
             </Markdown>
           ) : (
-            <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-400">
+            <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-500">
               No findings yet. The Virtual Architect Agent is interrogating the architecture to
               produce a point-in-time view — this takes a couple of minutes. Refresh to check.
             </div>

@@ -11,7 +11,7 @@ export default function PublicLayout() {
           <span className="text-lg font-bold tracking-widest uppercase leading-none bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
             Pickle
           </span>
-          <span className="text-lg text-gray-400 hidden sm:block">
+          <span className="text-lg text-gray-500 hidden sm:block">
             Agentic Architecture as a Service
           </span>
         </NavLink>

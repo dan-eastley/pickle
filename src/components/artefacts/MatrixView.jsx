@@ -132,7 +132,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
         <thead>
           <tr>
             <th className="sticky left-0 top-0 z-30 bg-gray-50 border-b border-r border-gray-200 px-4 py-3 text-left align-bottom min-w-[260px]">
-              <div className="text-xs text-gray-400 font-normal">
+              <div className="text-xs text-gray-500 font-normal">
                 <span className="font-mono">{rows.artefact}</span>
                 <span className="px-1">↓</span>
                 <span className="text-gray-300">/</span>
@@ -149,7 +149,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
                 <div className="font-mono text-xs font-semibold text-gray-600">
                   {col[columns.idField]}
                 </div>
-                <div className="text-xs text-gray-400 font-normal mt-0.5 line-clamp-2 leading-tight">
+                <div className="text-xs text-gray-500 font-normal mt-0.5 line-clamp-2 leading-tight">
                   {col[columns.labelField ?? columns.tooltipField]}
                 </div>
               </th>
@@ -163,7 +163,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
                 className="sticky left-0 z-10 bg-white group-hover:bg-gray-50 border-r border-gray-200 px-4 py-2.5 align-top transition-colors"
                 title={row[rows.tooltipField]}
               >
-                <div className="font-mono text-xs text-gray-400">{row[rows.idField]}</div>
+                <div className="font-mono text-xs text-gray-500">{row[rows.idField]}</div>
                 <div className="text-sm text-gray-700">{row[rows.labelField]}</div>
               </td>
               {columnItems.map((col) => {
@@ -203,7 +203,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
       <div className="fixed inset-0 z-[200] bg-white flex flex-col">
         {toolbar}
         {table}
-        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+        <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex-shrink-0">
           {summary}
         </div>
       </div>,
@@ -215,7 +215,7 @@ export default function MatrixView({ data, schema, clientId, versionId }) {
     <div className="bg-white overflow-hidden flex flex-col shadow-xl">
       {toolbar}
       {table}
-      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-400 flex-shrink-0">
+      <div className="px-4 py-2.5 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex-shrink-0">
         {summary}
       </div>
     </div>

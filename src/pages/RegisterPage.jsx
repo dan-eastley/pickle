@@ -110,7 +110,7 @@ export default function RegisterPage() {
           value={form.password}
           onChange={set('password')}
         />
-        <p className="-mt-2 text-xs text-gray-400">At least 8 characters.</p>
+        <p className="-mt-2 text-xs text-gray-500">At least 8 characters.</p>
 
         <label className="block">
           <span className="block text-xs font-medium text-gray-500 mb-1">Role</span>

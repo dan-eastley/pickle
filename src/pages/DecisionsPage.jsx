@@ -27,17 +27,17 @@ function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onTo
           <span className={`text-xs font-semibold px-2 py-0.5 ${decisionStatusBadge(status)}`}>
             {decisionStatusLabel(status)}
           </span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-500">
             {decisions.length} {decisions.length === 1 ? 'Decision' : 'Decisions'}
           </span>
         </div>
         <ChevronDown
-          className={`w-4 h-4 text-gray-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-gray-500 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
         />
       </button>
 
       {open && decisions.length === 0 && (
-        <div className="px-5 py-3 text-xs text-gray-400">No decisions at this stage.</div>
+        <div className="px-5 py-3 text-xs text-gray-500">No decisions at this stage.</div>
       )}
 
       {open && decisions.length > 0 && (
@@ -68,7 +68,7 @@ function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onTo
 
               {/* ID + chevron */}
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-xs font-mono text-gray-400">{d['decision-id']}</span>
+                <span className="text-xs font-mono text-gray-500">{d['decision-id']}</span>
                 <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
               </div>
             </Link>

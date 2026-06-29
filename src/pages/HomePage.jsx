@@ -188,7 +188,7 @@ function DocumentChain() {
                 <span className="text-sm font-bold text-gray-900">{label}</span>
                 {j < 2 && <ArrowRight className="w-4 h-4 text-gray-300" />}
               </div>
-              <p className="text-xs text-gray-400 uppercase tracking-wide">{sub}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide">{sub}</p>
             </div>
           ))}
         </div>
@@ -208,9 +208,9 @@ function DocumentChain() {
                 </span>
               </div>
               <h3 className="text-sm font-bold text-gray-900">{doc.name}</h3>
-              <p className="text-xs font-mono text-gray-400 mt-0.5">{doc.id}</p>
+              <p className="text-xs font-mono text-gray-500 mt-0.5">{doc.id}</p>
               <p className="mt-2 text-xs text-gray-500 leading-relaxed flex-1">{doc.adds}</p>
-              <p className="mt-3 pt-2 border-t border-gray-100 text-xs text-gray-400">
+              <p className="mt-3 pt-2 border-t border-gray-100 text-xs text-gray-500">
                 <span className="font-medium text-gray-500">Audience:</span> {doc.audience}
               </p>
             </div>
@@ -290,13 +290,13 @@ function Hero() {
 
       {/* Meta-model strip — five domains, three layers */}
       <div className="relative z-10 mt-16 max-w-2xl mx-auto text-center">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
           Five architecture domains · Three abstraction layers
         </p>
         <div className="mt-4 flex items-center justify-center gap-x-8 gap-y-3 flex-wrap">
           {DOMAINS.map((d) => (
             <span key={d.id} className="flex items-center gap-2 text-sm text-gray-500">
-              <DomainIcon domain={d.id} className="w-4 h-4 text-gray-400" />
+              <DomainIcon domain={d.id} className="w-4 h-4 text-gray-500" />
               {d.name}
             </span>
           ))}
@@ -422,7 +422,7 @@ function ArchitectureModel() {
 
         {/* Domains */}
         <div className="mb-12">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
             Architecture Domains
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -443,7 +443,7 @@ function ArchitectureModel() {
                   </div>
                   <div>
                     <div className="text-sm font-bold text-gray-900">{domain.name}</div>
-                    <div className={`text-xs font-mono mt-0.5 ${colors?.text ?? 'text-gray-400'}`}>
+                    <div className={`text-xs font-mono mt-0.5 ${colors?.text ?? 'text-gray-500'}`}>
                       {domain.acronym}-*
                     </div>
                   </div>
@@ -477,7 +477,7 @@ function ArchitectureModel() {
 
         {/* Abstraction Layers */}
         <div className="mb-12">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
             Abstraction Layers
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -495,7 +495,7 @@ function ArchitectureModel() {
               )
             })}
           </div>
-          <p className="mt-3 text-xs text-gray-400 leading-relaxed">
+          <p className="mt-3 text-xs text-gray-500 leading-relaxed">
             Layers are progressive — Logical artefacts build on Conceptual ones; Physical artefacts
             make Logical ones concrete. Relationships that cross layers are captured in{' '}
             <strong>Matrix</strong> artefact types.
@@ -504,7 +504,7 @@ function ArchitectureModel() {
 
         {/* Output Formats */}
         <div>
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
             Output Formats
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -657,7 +657,7 @@ function FoundationArtefacts() {
                   <span className="text-lg font-bold">{f.name}</span>
                   <span className={`text-xs font-medium px-2 py-0.5 ${f.badge}`}>{f.layer}</span>
                 </div>
-                <p className="text-xs font-mono text-gray-400 mb-2">&lt;DOMAIN&gt;-{f.suffix}</p>
+                <p className="text-xs font-mono text-gray-500 mb-2">&lt;DOMAIN&gt;-{f.suffix}</p>
                 <p className="text-sm font-semibold text-brand-700 mb-1">{f.q}</p>
                 <p className="text-sm text-gray-600 leading-relaxed">{f.text}</p>
               </div>

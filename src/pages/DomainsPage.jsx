@@ -22,7 +22,7 @@ function StatusBreakdown({ counts, order, badgeOf, labelOf, to }) {
   const shown = order.filter((s) => (counts?.[s] ?? 0) > 0)
   const total = order.reduce((sum, s) => sum + (counts?.[s] ?? 0), 0)
   if (total === 0) {
-    return <p className="text-xs text-gray-400">None yet.</p>
+    return <p className="text-xs text-gray-500">None yet.</p>
   }
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -71,7 +71,7 @@ function DomainCard({ domain, base, dm, loading }) {
       </Link>
       <div className="px-5 pb-4 -mt-1">
         {loading ? (
-          <div className="flex items-center gap-2 text-xs text-gray-400">
+          <div className="flex items-center gap-2 text-xs text-gray-500">
             <Spinner size="sm" /> Loading content…
           </div>
         ) : (
@@ -79,7 +79,7 @@ function DomainCard({ domain, base, dm, loading }) {
             items={items}
             extra={extra}
             dense
-            empty={<p className="text-xs text-gray-400">No content yet in this domain.</p>}
+            empty={<p className="text-xs text-gray-500">No content yet in this domain.</p>}
           />
         )}
       </div>
@@ -193,7 +193,7 @@ export default function DomainsPage() {
           title="Architecture Scout"
           description="Coming soon. Point Scout at your existing, unstructured architecture content — Word documents, PowerPoint decks, SharePoint sites — and it scans them to seed and build out the structured repository. The fast path from scattered artefacts to a governed model."
           action={
-            <span className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-400 bg-gray-100 cursor-not-allowed">
+            <span className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-500 bg-gray-100 cursor-not-allowed">
               Coming soon
             </span>
           }
