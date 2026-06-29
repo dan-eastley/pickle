@@ -90,10 +90,10 @@ export default function JsonPreview({ data, label = 'JSON', docUrl, prUrl }) {
         createPortal(
           <div className="fixed inset-0 z-[200] bg-gray-900 flex flex-col">
             <div className="flex items-center justify-between px-5 py-3 bg-gray-800 border-b border-gray-700 flex-shrink-0">
-              <span className="text-xs font-mono text-gray-400">{label} — raw JSON</span>
+              <span className="text-xs font-mono text-gray-500">{label} — raw JSON</span>
               <button
                 onClick={() => setOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-500 hover:text-white transition-colors"
                 title="Close (Esc)"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">

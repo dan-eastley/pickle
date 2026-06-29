@@ -23,8 +23,8 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex items-center gap-1.5 px-2 py-1 mb-1 bg-gray-50">
-        <FormatIcon format={format} className="w-3 h-3 text-gray-400" />
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <FormatIcon format={format} className="w-3 h-3 text-gray-500" />
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
           {fmt.label}
         </span>
       </div>
@@ -70,7 +70,7 @@ function DomainDropdown({ domain, base, onClose }) {
             <p className="text-sm font-bold text-gray-800 group-hover:text-brand-700 transition-colors">
               {domain.name} Architecture
             </p>
-            <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{domain.description}</p>
+            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{domain.description}</p>
           </div>
           <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 ml-auto flex-shrink-0 transition-colors" />
         </Link>

@@ -72,7 +72,7 @@ export default function DownloadMenu({ options, label = 'Download', align = 'rig
             >
               <span className="text-sm text-gray-800">{option.label}</span>
               {option.sublabel && (
-                <span className="text-xs text-gray-400 mt-0.5">{option.sublabel}</span>
+                <span className="text-xs text-gray-500 mt-0.5">{option.sublabel}</span>
               )}
             </button>
           ))}

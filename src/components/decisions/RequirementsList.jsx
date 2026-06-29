@@ -35,7 +35,7 @@ export default function RequirementsList({ requirements, onChange }) {
             </select>
             <button
               onClick={() => remove(i)}
-              className="p-1.5 text-gray-400 hover:text-error-600 transition-colors flex-shrink-0"
+              className="p-1.5 text-gray-500 hover:text-error-600 transition-colors flex-shrink-0"
               title="Remove"
             >
               <CloseIcon className="w-4 h-4" />

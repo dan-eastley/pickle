@@ -24,7 +24,7 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
 
   return (
     <section className="mt-8">
-      <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{title}</h2>
+      <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{title}</h2>
       <div className="border border-gray-200 overflow-x-auto bg-white">
         {/* Percentage column widths so a longer name fits in "By" while Notes
             takes the remaining space and wraps. */}

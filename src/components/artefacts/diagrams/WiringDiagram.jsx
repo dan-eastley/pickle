@@ -110,7 +110,7 @@ function PlatformDetail({ plat, domName }) {
     <div className="p-4 space-y-3">
       {fields.map((f) => (
         <div key={f.label}>
-          <dt className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{f.label}</dt>
+          <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{f.label}</dt>
           <dd className="mt-0.5 text-sm text-gray-800">{f.value}</dd>
         </div>
       ))}
@@ -127,7 +127,7 @@ function PairDetail({ pair, platformsById }) {
           <span>↔</span>
           <span className="font-mono">{pair.tgt}</span>
         </div>
-        <p className="mt-1 text-xs text-gray-400">
+        <p className="mt-1 text-xs text-gray-500">
           {pair.interfaces.length} interface{pair.interfaces.length !== 1 ? 's' : ''}
         </p>
       </div>
@@ -140,13 +140,13 @@ function PairDetail({ pair, platformsById }) {
             <div key={iface.id} className="px-4 py-3">
               <div className="flex items-baseline gap-2">
                 <span className="text-base font-bold text-gray-500 leading-none">{icon}</span>
-                <span className="font-mono text-xs text-gray-400">{iface.id}</span>
+                <span className="font-mono text-xs text-gray-500">{iface.id}</span>
                 <span className="text-sm font-medium text-gray-900">{iface.name}</span>
               </div>
               {iface.description && (
                 <p className="mt-1 text-xs text-gray-500 ml-6">{iface.description}</p>
               )}
-              <p className="mt-1 text-xs text-gray-400 ml-6">
+              <p className="mt-1 text-xs text-gray-500 ml-6">
                 {ifcSrc} <span className="font-bold">{icon}</span> {ifcTgt}
               </p>
             </div>
@@ -256,7 +256,7 @@ export default function WiringDiagram({ clientId, versionId }) {
         {selection && (
           <button
             onClick={() => setSelection(null)}
-            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
+            className="ml-auto text-gray-500 hover:text-gray-600 transition-colors"
           >
             ✕ Clear selection
           </button>
@@ -457,7 +457,7 @@ export default function WiringDiagram({ clientId, versionId }) {
         </svg>
       </div>
 
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-gray-400 text-center">
+      <div className="px-4 py-2 border-t border-gray-100 text-xs text-gray-500 text-center">
         Click a platform or connection line to view details
       </div>
 

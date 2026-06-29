@@ -15,7 +15,7 @@ function Stat({ label, count, sub, to }) {
         <span className="text-xs text-gray-500">{label}</span>
       </div>
       {sub?.length > 0 && (
-        <div className="mt-1 text-[11px] text-gray-400 tabular-nums">
+        <div className="mt-1 text-[11px] text-gray-500 tabular-nums">
           {sub.map((s, i) => (
             <span key={s.label}>
               {i > 0 && <span className="text-gray-300"> · </span>}

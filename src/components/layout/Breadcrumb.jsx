@@ -9,7 +9,7 @@ function Crumbs({ crumbs }) {
       <nav className="flex items-center gap-1.5 py-3 text-sm" aria-label="Breadcrumb">
         {crumbs.map((crumb, i) => (
           <span key={i} className="flex items-center gap-1.5">
-            {i > 0 && <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />}
+            {i > 0 && <ChevronRight className="w-4 h-4 text-gray-500 flex-shrink-0" />}
             {crumb.to ? (
               <Link to={crumb.to} className="text-gray-500 hover:text-gray-700 transition-colors">
                 {crumb.label}

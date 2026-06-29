@@ -148,7 +148,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
                 <tbody>
                   {tableFields.map(([key, value]) => (
                     <tr key={key} className="border-b border-gray-100 last:border-0 align-top">
-                      <th className="py-2 pr-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap align-top">
+                      <th className="py-2 pr-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap align-top">
                         {humanize(key)}
                       </th>
                       <td className="py-2 text-sm text-gray-700">
@@ -172,7 +172,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
             {/* Long-text / array / object fields — each under its own heading. */}
             {sectionFields.map(([key, value]) => (
               <div key={key}>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                   {humanize(key)}
                 </p>
                 <SectionBody value={value} />
@@ -182,10 +182,10 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
             {/* UI-9 — related entities, resolved from the matrices. Click to
                 navigate to that entity in this same panel. */}
             {rels === null ? (
-              <p className="text-xs text-gray-400">Finding relationships…</p>
+              <p className="text-xs text-gray-500">Finding relationships…</p>
             ) : rels.length > 0 ? (
               <div className="space-y-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                   Related
                 </p>
                 {rels.map((group) => (

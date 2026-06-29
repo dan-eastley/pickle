@@ -42,7 +42,7 @@ export default function SlidePanel({ open, onClose, title, subtitle, children })
           </div>
           <button
             onClick={onClose}
-            className="flex-shrink-0 p-0.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            className="flex-shrink-0 p-0.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
             aria-label="Close"
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
