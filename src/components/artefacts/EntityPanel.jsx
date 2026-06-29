@@ -55,29 +55,40 @@ function SectionBody({ value }) {
   )
 }
 
-export default function EntityPanel({ entityId, clientId, versionId, onOpenEntity, onClose }) {
+export default function EntityPanel({ entityId, clientId, versionId, onClose }) {
   const [state, setState] = useState({ status: 'idle' })
   const [rels, setRels] = useState(null) // UI-9 matrix relationships (null = loading)
+  // Internal breadcrumb navigation stack, seeded from the entityId prop. Clicking
+  // a related entity pushes onto it so you can traverse the graph and step back
+  // (UI-9) without the parent having to track history.
+  const [stack, setStack] = useState(() => (entityId ? [entityId] : []))
+  useEffect(() => {
+    setStack(entityId ? [entityId] : [])
+  }, [entityId])
 
-  const targetArtefactId = resolveRefArtefactId(entityId)
+  const currentId = stack[stack.length - 1] ?? null
+  const pushEntity = (id) => id && setStack((s) => [...s, id])
+  const goToLevel = (i) => setStack((s) => s.slice(0, i + 1))
+
+  const targetArtefactId = resolveRefArtefactId(currentId)
   const artefact = targetArtefactId ? getArtefact(targetArtefactId) : null
 
   // UI-9 — load the entity's relationships across all matrices so you can step
   // from here to related capabilities / processes / data / platforms.
   useEffect(() => {
-    if (!entityId) return
+    if (!currentId) return
     let cancelled = false
     setRels(null)
-    loadEntityRelationships(entityId, clientId, versionId)
+    loadEntityRelationships(currentId, clientId, versionId)
       .then((r) => !cancelled && setRels(r))
       .catch(() => !cancelled && setRels([]))
     return () => {
       cancelled = true
     }
-  }, [entityId, clientId, versionId])
+  }, [currentId, clientId, versionId])
 
   useEffect(() => {
-    if (!entityId) return
+    if (!currentId) return
     if (!artefact) {
       setState({ status: 'unresolved' })
       return
@@ -87,7 +98,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
     getArtefactData(clientId, versionId, artefact.domain, artefact.abstraction, artefact.id)
       .then((data) => {
         if (cancelled) return
-        const entity = findEntity(data, entityId)
+        const entity = findEntity(data, currentId)
         setState(entity ? { status: 'ready', entity } : { status: 'not-found' })
       })
       .catch((err) => {
@@ -96,7 +107,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
     return () => {
       cancelled = true
     }
-  }, [entityId, clientId, versionId, artefact])
+  }, [currentId, clientId, versionId, artefact])
 
   const entity = state.status === 'ready' ? state.entity : null
   const entries = entity
@@ -115,10 +126,42 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
     <SlidePanel
       open={!!entityId}
       onClose={onClose}
-      title={entity ? nameWithId(entity.name, entity.id) : entityId}
+      title={entity ? nameWithId(entity.name, entity.id) : currentId}
       subtitle={artefact ? nameWithId(artefact.name, artefact.id) : undefined}
     >
       <div className="px-4 py-4">
+        {/* Breadcrumb trail — the navigation stack (UI-9). Back steps up one
+            level; clicking an earlier crumb jumps to it. */}
+        {stack.length > 1 && (
+          <nav
+            className="mb-3 flex items-center gap-1 text-xs text-gray-500 flex-wrap"
+            aria-label="Trail"
+          >
+            <button
+              onClick={() => goToLevel(stack.length - 2)}
+              className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 font-medium"
+            >
+              ← Back
+            </button>
+            <span className="mx-1 text-gray-300">·</span>
+            {stack.map((id, i) => (
+              <span key={`${id}-${i}`} className="inline-flex items-center">
+                {i > 0 && <span className="mx-1 text-gray-300">›</span>}
+                {i === stack.length - 1 ? (
+                  <span className="font-mono text-gray-700">{id}</span>
+                ) : (
+                  <button
+                    onClick={() => goToLevel(i)}
+                    className="font-mono text-brand-600 hover:text-brand-700 hover:underline"
+                  >
+                    {id}
+                  </button>
+                )}
+              </span>
+            ))}
+          </nav>
+        )}
+
         {state.status === 'loading' && (
           <div className="flex justify-center py-8">
             <Spinner />
@@ -126,12 +169,12 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
         )}
         {state.status === 'unresolved' && (
           <p className="text-sm text-gray-500">
-            No catalogue is registered for <span className="font-mono">{entityId}</span>.
+            No catalogue is registered for <span className="font-mono">{currentId}</span>.
           </p>
         )}
         {state.status === 'not-found' && (
           <p className="text-sm text-gray-500">
-            <span className="font-mono">{entityId}</span> was not found in{' '}
+            <span className="font-mono">{currentId}</span> was not found in{' '}
             {nameWithId(artefact?.name, artefact?.id)} for this version.
           </p>
         )}
@@ -154,7 +197,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
                       <td className="py-2 text-sm text-gray-700">
                         {RELATION_FIELDS.has(key) ? (
                           <button
-                            onClick={() => onOpenEntity?.(value)}
+                            onClick={() => pushEntity(value)}
                             className="font-mono text-brand-600 hover:text-brand-700 hover:underline"
                           >
                             {value}
@@ -197,7 +240,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onOpenEntit
                       {group.entities.map((e) => (
                         <button
                           key={e.id}
-                          onClick={() => onOpenEntity?.(e.id)}
+                          onClick={() => pushEntity(e.id)}
                           title={`via ${e.via.join(', ')}`}
                           className="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 transition-colors"
                         >
