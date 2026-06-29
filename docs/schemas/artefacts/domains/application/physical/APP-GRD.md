@@ -1,4 +1,4 @@
-# APP-GRD — Application Architecture Guardrails Catalogue
+# APP-GRD: Application Architecture Guardrails Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/application/physical/APP-GRD.json`](../../../../../../config/schemas/artefacts/domains/application/physical/APP-GRD.json)
 **Architecture Domain / Layer:** Application / Physical
@@ -10,8 +10,8 @@ Non-negotiable constraints, mandatory standards, and concrete patterns for the A
 
 ## Industry alignment
 
-- **AWS Service Control Policies** / **Azure Policy** — Rule + scope + effect framing
-- **Policy-as-Code** — Each guardrail expected to be enforceable, ideally automatically
+- **AWS Service Control Policies** / **Azure Policy**: Rule + scope + effect framing
+- **Policy-as-Code**: Each guardrail expected to be enforceable, ideally automatically
 
 ## Example
 
@@ -37,6 +37,6 @@ Non-negotiable constraints, mandatory standards, and concrete patterns for the A
 | `id` | string | yes | Unique identifier (e.g. `APP-GRD-001`) |
 | `rule` | string | yes | The mandatory constraint or required pattern |
 | `scope` | string | yes | What the rule applies to (systems, environments, data classifications, etc.) |
-| `rationale` | string | yes | Why this is mandatory — often references a principle or compliance requirement |
+| `rationale` | string | yes | Why this is mandatory: often references a principle or compliance requirement |
 | `enforcement` | string | no | How compliance is checked (automated scan, review gate, manual audit, etc.) |
 | `exception-process` | string | no | How an exception can be raised (or `"No exceptions"`) |

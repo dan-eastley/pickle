@@ -1,4 +1,4 @@
-# APP-STR-PRN — Application Architecture Strategy ↔ Principles Matrix
+# APP-STR-PRN: Application Architecture Strategy ↔ Principles Matrix
 
 **File:** [`/config/schemas/artefacts/domains/application/logical/APP-STR-PRN.json`](../../../../../../config/schemas/artefacts/domains/application/logical/APP-STR-PRN.json)
 **Architecture Domain / Layer:** Application / Logical
@@ -10,7 +10,7 @@ Maps each [APP-STR](../conceptual/APP-STR.md) strategy statement to the [APP-PRN
 
 ## Shape
 
-Relationships are stored as a **sparse list** — only required (checked) cells are listed. An entry's presence means the principle is required to operationalise the strategy; absence means no required relationship.
+Relationships are stored as a **sparse list**: only required (checked) cells are listed. An entry's presence means the principle is required to operationalise the strategy; absence means no required relationship.
 
 ## Example
 

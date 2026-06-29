@@ -1,4 +1,4 @@
-# APP-PRO-DAP — Business Processes ↔ Application Domains & Platforms
+# APP-PRO-DAP: Business Processes ↔ Application Domains & Platforms
 
 **File:** [`/config/schemas/artefacts/domains/application/logical/APP-PRO-DAP.json`](../../../../../../config/schemas/artefacts/domains/application/logical/APP-PRO-DAP.json)
 **Architecture Domain / Layer:** Application / Logical
@@ -12,7 +12,7 @@ Together with [DAT-PRO-DAC](../../data/conceptual/DAT-PRO-DAC.md) (process ↔ d
 
 ## Matrix placement
 
-Per [Matrix placement](../../../../output-formats.md#matrix-placement): the sources are BUS-PRO (business/conceptual) and APP-DAP (application/logical). APP-DAP is more downstream on both axes (Application > Business; Logical > Conceptual), so the **home** is APP-DAP — the matrix lives at **application/logical**, APP-DAP's `platforms` are the `rows`, and BUS-PRO's `processes` are the `columns`. ID = `APP-PRO-DAP`.
+Per [Matrix placement](../../../../output-formats.md#matrix-placement): the sources are BUS-PRO (business/conceptual) and APP-DAP (application/logical). APP-DAP is more downstream on both axes (Application > Business; Logical > Conceptual), so the **home** is APP-DAP, the matrix lives at **application/logical**, APP-DAP's `platforms` are the `rows`, and BUS-PRO's `processes` are the `columns`. ID = `APP-PRO-DAP`.
 
 ## Matrix axes
 

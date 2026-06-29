@@ -1,4 +1,4 @@
-# SOL-PRN-GRD — Solution Architecture Principles ↔ Guardrails Matrix
+# SOL-PRN-GRD: Solution Architecture Principles ↔ Guardrails Matrix
 
 **File:** [`/config/schemas/artefacts/domains/solution/physical/SOL-PRN-GRD.json`](../../../../../../config/schemas/artefacts/domains/solution/physical/SOL-PRN-GRD.json)
 **Architecture Domain / Layer:** Solution / Physical
@@ -10,7 +10,7 @@ Maps each [SOL-PRN](../logical/SOL-PRN.md) principle to the [SOL-GRD](SOL-GRD.md
 
 ## Shape
 
-Relationships are stored as a **sparse list** — only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
+Relationships are stored as a **sparse list**: only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
 
 SOL-GRD is currently empty for this client/version, so this matrix ships with no relationships. It will populate once guardrails are defined.
 

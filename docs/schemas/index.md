@@ -4,7 +4,7 @@ Each schema in [`/config/schemas/`](../../config/schemas/) is documented here. C
 
 ## Schema / instance mirroring
 
-The `config/schemas/` tree mirrors the `architectures/` tree — every instance file has a schema at the matching relative path.
+The `config/schemas/` tree mirrors the `architectures/` tree: every instance file has a schema at the matching relative path.
 
 ```mermaid
 flowchart LR
@@ -124,11 +124,11 @@ Diagram artefacts are derived from a source catalogue rather than authored direc
 
 ### Diagram rendering
 
-`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group is rendered as a card containing its items. Groups and items carry an open `meta` object for additional display attributes — e.g. BUS-BCM uses `meta.importance` to badge each capability card. The `wiring` type (`INT-WRD`) derives its data from INT-IFC and APP-DAP at render time — no authored data in the instance file.
+`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group is rendered as a card containing its items. Groups and items carry an open `meta` object for additional display attributes: e.g. BUS-BCM uses `meta.importance` to badge each capability card. The `wiring` type (`INT-WRD`) derives its data from INT-IFC and APP-DAP at render time: no authored data in the instance file.
 
 ## Document schemas
 
-Document artefacts contain a `documents` array — each element is a named instance (e.g. one Architecture Vision per programme). See [output-formats.md](../output-formats.md#document-sections) for the section structure of each type.
+Document artefacts contain a `documents` array: each element is a named instance (e.g. one Architecture Vision per programme). See [output-formats.md](../output-formats.md#document-sections) for the section structure of each type.
 
 | Schema | Artefact Type | Architecture Domain / Layer |
 |---|---|---|

@@ -130,7 +130,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
       subtitle={artefact ? nameWithId(artefact.name, artefact.id) : undefined}
     >
       <div className="px-4 py-4">
-        {/* Breadcrumb trail — the navigation stack (UI-9). Back steps up one
+        {/* Breadcrumb trail, the navigation stack (UI-9). Back steps up one
             level; clicking an earlier crumb jumps to it. */}
         {stack.length > 1 && (
           <nav
@@ -184,7 +184,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
 
         {entity && (
           <div className="space-y-5">
-            {/* Attributes table — short scalars, label → value forced into a
+            {/* Attributes table: short scalars, label → value forced into a
                 two-column table so everything lines up. */}
             {tableFields.length > 0 && (
               <table className="w-full text-sm">
@@ -212,7 +212,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
               </table>
             )}
 
-            {/* Long-text / array / object fields — each under its own heading. */}
+            {/* Long-text / array / object fields: each under its own heading. */}
             {sectionFields.map(([key, value]) => (
               <div key={key}>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
@@ -222,7 +222,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
               </div>
             ))}
 
-            {/* UI-9 — related entities, resolved from the matrices. Click to
+            {/* UI-9: related entities, resolved from the matrices. Click to
                 navigate to that entity in this same panel. */}
             {rels === null ? (
               <p className="text-xs text-gray-500">Finding relationships…</p>

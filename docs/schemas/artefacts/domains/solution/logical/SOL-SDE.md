@@ -1,4 +1,4 @@
-# SOL-SDE — Solution Design
+# SOL-SDE: Solution Design
 
 **Domain:** Solution · **Layer:** Logical · **Format:** Document
 
@@ -48,16 +48,16 @@ The section structure (titles, descriptions, and ordering) is defined in the sch
 | `description` | string | yes | One-paragraph summary |
 | `status` | enum | yes | `draft` · `in-review` · `approved` · `superseded` |
 | `scope` | string | no | Solution or initiative this document covers |
-| `executive-summary` | string | yes | §1.1 — plain-language summary for senior/exec readers |
-| `context` | array | no | §1.2 — links to related documents. Each: `relationship` (`informed-by`/`informs`/`related`), `artefact-id`, `document-id`, `title` |
-| `capabilities` | array | no | §2.1 — business capability references. Each: `artefact-id` (BUS-CAP), `note` |
-| `functional-requirements` | array | no | §2.2 — each: `id`, `requirement`, `rationale`, `priority` (`must`/`should`/`could`/`wont`) |
-| `features` | array | no | §2.3 — each: `id`, `name`, `description` |
-| `nfr-*` | array | no | §3.1–3.10 — one property per NFR subsection, each an array of `requirement` items (`id`, `requirement`, `rationale`, `priority`) |
-| `arch-business` / `arch-data` / `arch-integration` / `arch-application` | object | no | §4.1–4.4 — each: `description` (prose), `references` (array of `artefact-id` + `note`), `diagrams` (diagram refs) |
-| `principles-adherence` | array | no | §5 — each: `principle-id`, `adherence` (`adheres`/`partial`/`deviation`), `statement` |
-| `flows-user` / `flows-information` / `flows-system` | array | no | §6.1–6.3 — each `flow`: `title`, `description`, and a diagram (`format` + `content`) and/or ordered `steps` |
+| `executive-summary` | string | yes | §1.1: plain-language summary for senior/exec readers |
+| `context` | array | no | §1.2: links to related documents. Each: `relationship` (`informed-by`/`informs`/`related`), `artefact-id`, `document-id`, `title` |
+| `capabilities` | array | no | §2.1: business capability references. Each: `artefact-id` (BUS-CAP), `note` |
+| `functional-requirements` | array | no | §2.2: each: `id`, `requirement`, `rationale`, `priority` (`must`/`should`/`could`/`wont`) |
+| `features` | array | no | §2.3: each: `id`, `name`, `description` |
+| `nfr-*` | array | no | §3.1–3.10, one property per NFR subsection, each an array of `requirement` items (`id`, `requirement`, `rationale`, `priority`) |
+| `arch-business` / `arch-data` / `arch-integration` / `arch-application` | object | no | §4.1–4.4: each: `description` (prose), `references` (array of `artefact-id` + `note`), `diagrams` (diagram refs) |
+| `principles-adherence` | array | no | §5: each: `principle-id`, `adherence` (`adheres`/`partial`/`deviation`), `statement` |
+| `flows-user` / `flows-information` / `flows-system` | array | no | §6.1–6.3: each `flow`: `title`, `description`, and a diagram (`format` + `content`) and/or ordered `steps` |
 
 ## Usage
 
-Derived from Solution Visions (`SOL-SVI`) and informs Interface Specifications (`SOL-ISP`) — these relationships are captured per instance in the §1.2 Context links. Section 4 calls out the relevant architecture from each delivery domain (`BUS`, `DAT`, `INT`, `APP`); section 5 records how the design adheres to the relevant principles (`SOL-PRN` and domain principles). Flow diagrams are stored as source text (Mermaid or PlantUML) and rendered in the UI; step-based flows are rendered as ordered lists.
+Derived from Solution Visions (`SOL-SVI`) and informs Interface Specifications (`SOL-ISP`): these relationships are captured per instance in the §1.2 Context links. Section 4 calls out the relevant architecture from each delivery domain (`BUS`, `DAT`, `INT`, `APP`); section 5 records how the design adheres to the relevant principles (`SOL-PRN` and domain principles). Flow diagrams are stored as source text (Mermaid or PlantUML) and rendered in the UI; step-based flows are rendered as ordered lists.

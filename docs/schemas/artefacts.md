@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Index of every defined artefact-type schema in the repository, keyed by artefact-type ID. Each entry `$ref`s the underlying JSON Schema — including diagram and matrix artefacts, even where the storage format is still provisional (their schema is just a `meta` block plus an open `additionalProperties: true` body until the format is finalised).
+Index of every defined artefact-type schema in the repository, keyed by artefact-type ID. Each entry `$ref`s the underlying JSON Schema, including diagram and matrix artefacts, even where the storage format is still provisional (their schema is just a `meta` block plus an open `additionalProperties: true` body until the format is finalised).
 
 The full artefact-type registry (with architecture domain / abstraction / format classifications) lives in [`/docs/artefacts.md`](../artefacts.md).
 

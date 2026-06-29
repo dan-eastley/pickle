@@ -2,30 +2,30 @@
   "domains": {
     "business": {
       "name": "Business",
-      "description": "The organisation's capabilities, processes, and operating model — what the business does and why. This domain sets the context that all others serve."
+      "description": "The organisation's capabilities, processes, and operating model: what the business does and why. This domain sets the context that all others serve."
     },
     "data": {
       "name": "Data",
-      "description": "The data assets, structures, and governance that support business operations — ensuring data is well-defined, trusted, and available where it is needed."
+      "description": "The data assets, structures, and governance that support business operations, ensuring data is well-defined, trusted, and available where it is needed."
     },
     "integration": {
       "name": "Integration",
-      "description": "How systems and services connect and communicate — covering APIs, events, messaging, and the rules that govern how information flows between them."
+      "description": "How systems and services connect and communicate, covering APIs, events, messaging, and the rules that govern how information flows between them."
     },
     "application": {
       "name": "Application",
-      "description": "The software applications and platforms that deliver business capabilities — what exists, how it is organised, and how it relates to business needs."
+      "description": "The software applications and platforms that deliver business capabilities: what exists, how it is organised, and how it relates to business needs."
     },
     "solution": {
       "name": "Solution",
-      "description": "Joined-up designs that span multiple domains to address a specific business need or initiative — bringing together business, data, integration, and application concerns."
+      "description": "Joined-up designs that span multiple domains to address a specific business need or initiative, bringing together business, data, integration, and application concerns."
     }
   },
   "abstractions": {
     "conceptual": {
       "name": "Conceptual",
       "label": "What & Why",
-      "description": "Sets the direction — what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs)."
+      "description": "Sets the direction: what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs)."
     },
     "logical": {
       "name": "Logical",
@@ -85,7 +85,7 @@
   "artefacts": {
     "BUS-STR": {
       "name": "Business Architecture Strategy",
-      "description": "A catalogue of strategic goals and direction for the Business domain — the outcomes the organisation is trying to achieve and why."
+      "description": "A catalogue of strategic goals and direction for the Business domain, the outcomes the organisation is trying to achieve and why."
     },
     "BUS-CAP": {
       "name": "Business Capabilities",
@@ -165,7 +165,7 @@
     },
     "INT-WRD": {
       "name": "Interface Wiring Diagram",
-      "description": "Visual map of the integration landscape — platform-to-platform connections with flow counts and per-pair interface drill-down."
+      "description": "Visual map of the integration landscape: platform-to-platform connections with flow counts and per-pair interface drill-down."
     },
     "INT-DAC-IFC": {
       "name": "Data Domains & Concepts ↔ Interface Catalogue",
@@ -253,23 +253,23 @@
     },
     "SOL-AVI": {
       "name": "Architecture Vision(s)",
-      "description": "TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain — together with the stakeholders involved and the concerns they hold. Multiple instances — one per initiative."
+      "description": "TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain, together with the stakeholders involved and the concerns they hold. Multiple instances, one per initiative."
     },
     "SOL-AIN": {
       "name": "Architecture Intent(s)",
-      "description": "TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs — capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances — one per domain or capability area."
+      "description": "TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs, capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances, one per domain or capability area."
     },
     "SOL-SVI": {
       "name": "Solution Intent(s)",
-      "description": "TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative."
+      "description": "TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent, the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature: problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances, one per epic or initiative."
     },
     "SOL-SDE": {
       "name": "Solution Design(s)",
-      "description": "TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area."
+      "description": "TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature: solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances, one per feature or design area."
     },
     "SOL-ISP": {
       "name": "Interface Specification(s)",
-      "description": "TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface."
+      "description": "TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces: protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances, one per interface."
     }
   }
 }

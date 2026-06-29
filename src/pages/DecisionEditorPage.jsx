@@ -23,7 +23,7 @@ export default function DecisionEditorPage() {
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   const isEdit = !!decisionId
 
-  usePageTitle(isEdit ? `Edit ${decisionId} — ${clientName}` : `New Decision — ${clientName}`)
+  usePageTitle(isEdit ? `Edit ${decisionId} · ${clientName}` : `New Decision · ${clientName}`)
 
   const [loadingExisting, setLoadingExisting] = useState(isEdit)
   const [title, setTitle] = useState('')
@@ -209,7 +209,7 @@ export default function DecisionEditorPage() {
 
       <p className="max-w-2xl mb-6 text-sm text-gray-500 leading-relaxed border-l-2 border-brand-200 pl-3">
         An Architecture Decision is how a change to the architecture gets proposed and governed.
-        Capture the context, the problem, and your proposed direction — the agents then analyse its
+        Capture the context, the problem, and your proposed direction, the agents then analyse its
         impact and alignment, and once accepted the change is applied through a reviewed pull
         request. Every change stays auditable.
       </p>
@@ -310,7 +310,7 @@ export default function DecisionEditorPage() {
         <FormHelp
           title="Writing a good decision"
           tips={[
-            ['Title', 'A short, plain-language summary — the headline, not the detail.'],
+            ['Title', 'A short, plain-language summary, the headline, not the detail.'],
             [
               'Context',
               'Set the scene: what’s happening today that makes this worth deciding? Write it for a business reader.',
@@ -318,18 +318,18 @@ export default function DecisionEditorPage() {
             ['Problem', 'Name the gap or the pain. What hurts if nothing changes?'],
             [
               'Proposal',
-              'The direction you’re leaning, at a business level — the “how”, not the implementation.',
+              'The direction you’re leaning, at a business level, the “how”, not the implementation.',
             ],
             [
               'Requirements',
-              'Optional. The testable things this must achieve — the “what”, never the “how”.',
+              'Optional. The testable things this must achieve, the “what”, never the “how”.',
             ],
             [
               'Scope',
               'Optional. Pin it to a domain, layer, or artefact so the agents analyse just that slice.',
             ],
           ]}
-          footer="Don’t overthink it — the agents will review your draft and suggest improvements."
+          footer="Don’t overthink it, the agents will review your draft and suggest improvements."
         />
       </div>
     </div>

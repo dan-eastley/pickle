@@ -1,4 +1,4 @@
-# BUS-PRO — Business Processes Catalogue
+# BUS-PRO: Business Processes Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/business/conceptual/BUS-PRO.json`](../../../../../../config/schemas/artefacts/domains/business/conceptual/BUS-PRO.json)
 **Architecture Domain / Layer:** Business / Conceptual
@@ -6,11 +6,11 @@
 
 ## Industry alignment
 
-- **APQC Process Classification Framework (PCF)** — `level` (1 = Process Group, 2 = Process Category, 3 = Process)
-- **Porter's Value Chain** — `type` (`core`, `supporting`, `management`)
-- **BPMN** — Concepts of `trigger`, `inputs`, `outputs` (catalogue captures the metadata; the visual hierarchy lives in BUS-BPM)
+- **APQC Process Classification Framework (PCF)**: `level` (1 = Process Group, 2 = Process Category, 3 = Process)
+- **Porter's Value Chain**: `type` (`core`, `supporting`, `management`)
+- **BPMN**: Concepts of `trigger`, `inputs`, `outputs` (catalogue captures the metadata; the visual hierarchy lives in BUS-BPM)
 
-The catalogue stops at **Level 3** — the finest decomposition modelled here. Sub-process steps (PCF Level 4) are out of scope for the architecture catalogue.
+The catalogue stops at **Level 3**, the finest decomposition modelled here. Sub-process steps (PCF Level 4) are out of scope for the architecture catalogue.
 
 ## Example
 
@@ -49,7 +49,7 @@ The catalogue stops at **Level 3** — the finest decomposition modelled here. S
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `id` | string | yes | Unique identifier — `PROC-NNN` (L1), `PROC-NNN-NN` (L2), `PROC-NNN-NN-NN` (L3) |
+| `id` | string | yes | Unique identifier: `PROC-NNN` (L1), `PROC-NNN-NN` (L2), `PROC-NNN-NN-NN` (L3) |
 | `name` | string | yes | Process name |
 | `description` | string | no | Free-text description |
 | `type` | enum | yes | `core` \| `supporting` \| `management` |

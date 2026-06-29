@@ -1,8 +1,8 @@
-# SOL-AIN — Architecture Intent
+# SOL-AIN: Architecture Intent
 
 **Domain:** Solution · **Layer:** Conceptual · **Format:** Document
 
-A conceptual-level architecture intent, one instance per programme or decision area. Organised into **numbered sections** that record the chosen architecture direction — the options weighed and the reasoning — before solution-level design.
+A conceptual-level architecture intent, one instance per programme or decision area. Organised into **numbered sections** that record the chosen architecture direction, the options weighed and the reasoning: before solution-level design.
 
 ## Section structure
 
@@ -34,17 +34,17 @@ Defined in the schema under `meta.sections` and rendered with derived numbering.
 | `description` | string | yes | One-paragraph summary |
 | `status` | enum | yes | `draft` · `in-review` · `approved` · `superseded` |
 | `scope` | string | no | Programme, initiative, or domain this intent covers |
-| `executive-summary` | object | yes | §1.1 — `summary` (opening paragraph) + `points` (bullets) |
-| `context` | array | no | §1.2 — links to related documents (`informed-by` the Vision, `informs` the Solution Vision) |
-| `intent-statement` | string | yes | §2.1 — the chosen direction in one paragraph |
-| `background` | string | no | §2.2 — the current situation and the need |
-| `drivers` | array | no | §2.3 — `id`, `description`, `type` (business/technology/regulatory/market) |
-| `options-considered` | array | no | §3.1 — `id`, `name`, `description`, `pros`, `cons` |
-| `recommended-direction` | string | no | §3.2 — the recommended option and rationale |
-| `architecture-principles` | array | no | §4.1 — principle IDs that underpin this intent |
-| `guardrails` | array | no | §4.2 — guardrail IDs that apply |
-| `open-questions` | array | no | §5 — `id`, `question`, `raised-by` |
+| `executive-summary` | object | yes | §1.1: `summary` (opening paragraph) + `points` (bullets) |
+| `context` | array | no | §1.2: links to related documents (`informed-by` the Vision, `informs` the Solution Vision) |
+| `intent-statement` | string | yes | §2.1, the chosen direction in one paragraph |
+| `background` | string | no | §2.2, the current situation and the need |
+| `drivers` | array | no | §2.3: `id`, `description`, `type` (business/technology/regulatory/market) |
+| `options-considered` | array | no | §3.1: `id`, `name`, `description`, `pros`, `cons` |
+| `recommended-direction` | string | no | §3.2, the recommended option and rationale |
+| `architecture-principles` | array | no | §4.1: principle IDs that underpin this intent |
+| `guardrails` | array | no | §4.2: guardrail IDs that apply |
+| `open-questions` | array | no | §5: `id`, `question`, `raised-by` |
 
 ## Usage
 
-Derived from Architecture Visions (`SOL-AVI`) and informs Solution Visions (`SOL-SVI`) — captured per instance in the §1.2 Context links.
+Derived from Architecture Visions (`SOL-AVI`) and informs Solution Visions (`SOL-SVI`): captured per instance in the §1.2 Context links.

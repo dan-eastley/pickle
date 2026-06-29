@@ -18,7 +18,7 @@ export default function DiscoveryEditorPage() {
   const { clientsMetadata } = useArchitecture()
   const clientName = clientsMetadata[clientId]?.name ?? clientId
 
-  usePageTitle(`New Discovery — ${clientName}`)
+  usePageTitle(`New Discovery · ${clientName}`)
 
   const [title, setTitle] = useState('')
   const [context, setContext] = useState('')
@@ -90,7 +90,7 @@ export default function DiscoveryEditorPage() {
       <p className="max-w-2xl mb-6 text-sm text-gray-500 leading-relaxed border-l-2 border-blue-200 pl-3">
         A Discovery asks the Virtual Architect Agent a question about your architecture. Describe
         the situation and what you want to know, and it interrogates the model as it stands today to
-        produce a point-in-time view you can keep — it's read-only, nothing is changed.
+        produce a point-in-time view you can keep: it's read-only, nothing is changed.
       </p>
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -166,7 +166,7 @@ export default function DiscoveryEditorPage() {
         <FormHelp
           title="Asking a good question"
           tips={[
-            ['Title', 'The question in a nutshell — short and scannable.'],
+            ['Title', 'The question in a nutshell: short and scannable.'],
             ['Context', 'Why are you asking now, and what does the architecture look like today?'],
             [
               'Request',

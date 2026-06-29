@@ -1,4 +1,4 @@
-# DAT-DAC — Data Domains & Concepts Catalogue
+# DAT-DAC: Data Domains & Concepts Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/data/conceptual/DAT-DAC.json`](../../../../../../config/schemas/artefacts/domains/data/conceptual/DAT-DAC.json)
 **Architecture Domain / Layer:** Data / Conceptual
@@ -6,9 +6,9 @@
 
 ## Industry alignment
 
-- **DAMA-DMBOK** — Data domains (subject areas) and stewardship
-- **Conceptual Data Modelling** — Concepts represent entities, events, or reference data without committing to a logical/physical structure
-- **ISO 27001** — Information classification (`public`, `internal`, `confidential`, `restricted`)
+- **DAMA-DMBOK**: Data domains (subject areas) and stewardship
+- **Conceptual Data Modelling**: Concepts represent entities, events, or reference data without committing to a logical/physical structure
+- **ISO 27001**: Information classification (`public`, `internal`, `confidential`, `restricted`)
 
 ## Example
 

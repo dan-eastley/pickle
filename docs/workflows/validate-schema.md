@@ -5,7 +5,7 @@
 
 ## Purpose
 
-For every `.json` file changed by the push, JSON-parse it (syntax check) and — where a schema applies — validate it against the matching JSON Schema using `jsonschema` (Draft 2020-12).
+For every `.json` file changed by the push, JSON-parse it (syntax check) and: where a schema applies: validate it against the matching JSON Schema using `jsonschema` (Draft 2020-12).
 
 ## Base-ref selection (what counts as a "change")
 
@@ -30,6 +30,6 @@ Files outside these mappings (e.g. schema files themselves) get a JSON-parse che
 
 ## Behaviour
 
-- All changed JSON files are checked, even after the first failure — the script reports every issue, then exits non-zero if any failed.
+- All changed JSON files are checked, even after the first failure, the script reports every issue, then exits non-zero if any failed.
 - Deleted files are skipped.
 - Expected schema path missing → reported as an error (likely a typo in the artefact-id folder name, or a missing schema).
