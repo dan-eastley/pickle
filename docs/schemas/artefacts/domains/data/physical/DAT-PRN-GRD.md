@@ -1,4 +1,4 @@
-# DAT-PRN-GRD — Data Architecture Principles ↔ Guardrails Matrix
+# DAT-PRN-GRD: Data Architecture Principles ↔ Guardrails Matrix
 
 **File:** [`/config/schemas/artefacts/domains/data/physical/DAT-PRN-GRD.json`](../../../../../../config/schemas/artefacts/domains/data/physical/DAT-PRN-GRD.json)
 **Architecture Domain / Layer:** Data / Physical
@@ -10,7 +10,7 @@ Maps each [DAT-PRN](../logical/DAT-PRN.md) principle to the [DAT-GRD](DAT-GRD.md
 
 ## Shape
 
-Relationships are stored as a **sparse list** — only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
+Relationships are stored as a **sparse list**: only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
 
 DAT-GRD is currently empty for this client/version, so this matrix ships with no relationships. It will populate once guardrails are defined.
 

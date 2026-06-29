@@ -10,7 +10,7 @@ On tag push, create a GitHub release for the tag and merge `main` back into `dev
 ## Behaviour
 
 1. Checks out the tagged commit.
-2. Runs `gh release create <tag> --title <tag> --generate-notes` — GitHub auto-generates release notes from commit history since the previous release.
+2. Runs `gh release create <tag> --title <tag> --generate-notes`: GitHub auto-generates release notes from commit history since the previous release.
 3. Syncs main back into develop:
    - Fetches both refs.
    - Checks out `develop`.

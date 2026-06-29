@@ -12,7 +12,7 @@ Gate the change surface a branch is allowed to touch, based on its branch type.
 | `decisions/<client>/<version>/<decision-id>` | `architectures/clients/<client>/...` only | anything outside `architectures/clients/<client>/` |
 | `features/<feature-id>` | everything outside `architectures/clients/<client>/...` | any file inside `architectures/<some-client>/...` |
 
-A decision branch is for client-specific architecture change. A feature branch is for everything else (schemas, workflows, docs, tooling). The two surfaces are deliberately disjoint — no branch type can touch both worlds at once.
+A decision branch is for client-specific architecture change. A feature branch is for everything else (schemas, workflows, docs, tooling). The two surfaces are deliberately disjoint: no branch type can touch both worlds at once.
 
 ## Behaviour
 
@@ -40,8 +40,8 @@ A decision branch is for client-specific architecture change. A feature branch i
 
 1. Diffs the branch against `origin/develop`.
 2. Any changed file matching `architectures/<some-client>/...` (i.e. depth ≥ 3 under `architectures/`) is a violation, with one exception:
-   - **`decisions.json` index files are allowed.** They are organisational metadata (decision IDs only), not architecture content, and may be updated from a feature branch — for example, when registering a new decision ID ahead of the decision branch that fills it in.
-3. Files at `architectures/clients/clients.json` and similar top-level index files are **not** violations either — they sit outside any client folder.
+   - **`decisions.json` index files are allowed.** They are organisational metadata (decision IDs only), not architecture content, and may be updated from a feature branch: for example, when registering a new decision ID ahead of the decision branch that fills it in.
+3. Files at `architectures/clients/clients.json` and similar top-level index files are **not** violations either: they sit outside any client folder.
 4. No decision JSON to update; the result is reported via build status and workflow logs.
 5. Exits non-zero on violation.
 
@@ -49,4 +49,4 @@ A decision branch is for client-specific architecture change. A feature branch i
 
 - Logic is deterministic; no AI involvement.
 - The two diff bases differ deliberately: decision branches integrate to `main`, feature branches integrate to `develop`.
-- The shape of `context-validation` is permissive in [`config/schemas/decision.json`](../../config/schemas/decision.json) — it deviates from the 4-string `$defs/section` shape used by the analysis workflows because the output is structured data, not narrative.
+- The shape of `context-validation` is permissive in [`config/schemas/decision.json`](../../config/schemas/decision.json), it deviates from the 4-string `$defs/section` shape used by the analysis workflows because the output is structured data, not narrative.

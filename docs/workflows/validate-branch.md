@@ -1,7 +1,7 @@
 # Validate Branch
 
 **File:** [`/.github/workflows/validate-branch.yml`](../../.github/workflows/validate-branch.yml)
-**Trigger:** GitHub `create` event (a new branch ref lands on the remote — covers fresh branches and renames).
+**Trigger:** GitHub `create` event (a new branch ref lands on the remote: covers fresh branches and renames).
 
 ## Purpose
 

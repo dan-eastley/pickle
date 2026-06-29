@@ -1,4 +1,4 @@
-# APP-DAP — Application Domains & Platforms Catalogue
+# APP-DAP: Application Domains & Platforms Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/application/logical/APP-DAP.json`](../../../../../../config/schemas/artefacts/domains/application/logical/APP-DAP.json)
 **Architecture Domain / Layer:** Application / Logical
@@ -6,9 +6,9 @@
 
 ## Industry alignment
 
-- **TOGAF Application Architecture** — Application domains as logical groupings
-- **Gartner Pace Layers** / **Geoffrey Moore's CORE/CONTEXT** — `type` classification (`system-of-record`, `system-of-engagement`, `system-of-insight`, `system-of-innovation`)
-- **TechRadar (ThoughtWorks)** — `lifecycle` stance (`adopt`, `trial`, `hold`, `retire`)
+- **TOGAF Application Architecture**: Application domains as logical groupings
+- **Gartner Pace Layers** / **Geoffrey Moore's CORE/CONTEXT**: `type` classification (`system-of-record`, `system-of-engagement`, `system-of-insight`, `system-of-innovation`)
+- **TechRadar (ThoughtWorks)**: `lifecycle` stance (`adopt`, `trial`, `hold`, `retire`)
 
 ## Example
 
