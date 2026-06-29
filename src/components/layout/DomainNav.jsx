@@ -55,7 +55,7 @@ function DomainDropdown({ domain, base, onClose }) {
   return (
     <div className="absolute left-0 right-0 top-full bg-white border-b-2 border-gray-200 shadow-lg z-40">
       <div className="max-w-[1400px] mx-auto px-6 py-5">
-        {/* Domain header — links to the domain overview page */}
+        {/* Domain header: links to the domain overview page */}
         <Link
           to={`${base}/domains/${domain.id}`}
           onClick={onClose}
@@ -84,7 +84,7 @@ function DomainDropdown({ domain, base, onClose }) {
 
             return (
               <div key={abstraction.id}>
-                {/* Abstraction column header — links to abstraction page */}
+                {/* Abstraction column header: links to abstraction page */}
                 <Link
                   to={`${base}/domains/${domain.id}/${abstraction.id}`}
                   onClick={onClose}
@@ -186,7 +186,7 @@ export default function DomainNav() {
             )
           })}
 
-          {/* Decisions + Discovery — right-aligned */}
+          {/* Decisions + Discovery: right-aligned */}
           <div className="flex-1" />
           <Link
             to={`${base}/decisions`}

@@ -194,7 +194,7 @@ export default function QuickPicker() {
           onFocus={() => setFocused(true)}
           onKeyDown={onKeyDown}
           placeholder="Jump to… artefact, decision, discovery"
-          title={`Jump to ${scopeLabel}, decisions or discoveries — press / to focus`}
+          title={`Jump to ${scopeLabel}, decisions or discoveries. Press / to focus`}
           className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-500 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
         />
         {!query && (

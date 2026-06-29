@@ -26,9 +26,9 @@ A single orchestrator workflow runs seven Claude-driven analyses as sequential j
 | Workflow | File | Trigger | Purpose |
 |---|---|---|---|
 | [Decisions Analysis](decisions-analysis.md) | `decisions-analysis.yml` | `workflow_dispatch` from the Pickle API on DRAFT → PROPOSED | Orchestrates the seven analyses as sequential jobs |
-| (reusable analysis step) | `decisions-analysis-step.yml` | `workflow_call` from the orchestrator or Narrative Review | One Claude analysis pass — parameterised by section key, prompt file, client/version/decision IDs, and model |
+| (reusable analysis step) | `decisions-analysis-step.yml` | `workflow_call` from the orchestrator or Narrative Review | One Claude analysis pass: parameterised by section key, prompt file, client/version/decision IDs, and model |
 
-Within the orchestrator, jobs run in this order — each writes its result to the matching decision-JSON section:
+Within the orchestrator, jobs run in this order: each writes its result to the matching decision-JSON section:
 
 | # | Job | Decision-JSON section |
 |---|---|---|
@@ -40,6 +40,6 @@ Within the orchestrator, jobs run in this order — each writes its result to th
 | 6 | `proponent-analysis` | `proponent-analysis` |
 | 7 | `challenger-analysis` | `challenger-analysis` |
 
-All seven jobs run a real Claude analysis pass via `anthropics/claude-code-base-action`, defaulting to Haiku 4.5 to keep dev-time cost down (overridable via the `model` input) — see [decisions-analysis.md](decisions-analysis.md) for the orchestration mechanism and prompt files.
+All seven jobs run a real Claude analysis pass via `anthropics/claude-code-base-action`, defaulting to Haiku 4.5 to keep dev-time cost down (overridable via the `model` input): see [decisions-analysis.md](decisions-analysis.md) for the orchestration mechanism and prompt files.
 
-Separately, [Decisions — Narrative Review](../../.github/workflows/decisions-narrative-review.yml) runs once on DRAFT creation, writing to the `recommendations` section via the same reusable analysis step.
+Separately, [Decisions: Narrative Review](../../.github/workflows/decisions-narrative-review.yml) runs once on DRAFT creation, writing to the `recommendations` section via the same reusable analysis step.

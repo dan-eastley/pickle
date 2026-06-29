@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Authoritative list of client IDs that have an architecture in this repository. Per-client metadata (name, etc.) lives in `architectures/clients/<client>/client.json` — this index intentionally only carries the IDs.
+Authoritative list of client IDs that have an architecture in this repository. Per-client metadata (name, etc.) lives in `architectures/clients/<client>/client.json`, this index intentionally only carries the IDs.
 
 ## Example
 
@@ -22,7 +22,7 @@ Authoritative list of client IDs that have an architecture in this repository. P
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `clients` | array | yes | List of client entries |
-| `clients[].client-id` | string | yes | Unique identifier — must match the client folder name |
+| `clients[].client-id` | string | yes | Unique identifier: must match the client folder name |
 
 ## Conventions
 

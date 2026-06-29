@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Walk the `architectures/` tree and assert that the folder/file layout stays in sync with the indexes — catches drift before it propagates.
+Walk the `architectures/` tree and assert that the folder/file layout stays in sync with the indexes: catches drift before it propagates.
 
 ## Invariants checked
 
@@ -32,8 +32,8 @@ The script reports every violation it finds (it does not stop at the first error
 
 ## Why a workflow, not a schema?
 
-JSON Schema validates the shape of individual files (`validate-schema` already does that). Structure validation answers a different question: *do the files exist where they should, and do the indexes agree with reality?* Those are filesystem/cross-file invariants — outside what JSON Schema can express on its own.
+JSON Schema validates the shape of individual files (`validate-schema` already does that). Structure validation answers a different question: *do the files exist where they should, and do the indexes agree with reality?* Those are filesystem/cross-file invariants: outside what JSON Schema can express on its own.
 
 ## How it stays maintainable
 
-The script treats the indexes (`clients.json`, `versions.json`, `decisions.json`) as the source of truth. When you add a new client, version, or decision, you update its index — the structure check then enforces the matching folder/file exists. No separate manifest to keep in sync.
+The script treats the indexes (`clients.json`, `versions.json`, `decisions.json`) as the source of truth. When you add a new client, version, or decision, you update its index, the structure check then enforces the matching folder/file exists. No separate manifest to keep in sync.

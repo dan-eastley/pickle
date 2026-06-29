@@ -82,7 +82,7 @@ export default function TopBar() {
 
   return (
     <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-3 sm:px-6 gap-3 sm:gap-6 sticky top-0 z-40">
-      {/* Pickle brand — links to root */}
+      {/* Pickle brand: links to root */}
       <Link
         to="/"
         className="flex items-baseline gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
@@ -103,12 +103,12 @@ export default function TopBar() {
         {clientMeta?.name ?? ''}
       </div>
 
-      {/* Quick jump — scoped to the current client + domain */}
+      {/* Quick jump: scoped to the current client + domain */}
       <div className="flex-shrink-0">
         <QuickPicker />
       </div>
 
-      {/* Docs link — opens in a new window */}
+      {/* Docs link: opens in a new window */}
       <a
         href="/docs"
         target="_blank"

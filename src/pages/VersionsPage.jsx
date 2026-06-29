@@ -20,7 +20,7 @@ export default function VersionsPage() {
   const [loading, setLoading] = useState(true)
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
-  usePageTitle(`${clientName} — Versions`)
+  usePageTitle(`${clientName} · Versions`)
 
   useEffect(() => {
     let live = true

@@ -29,17 +29,17 @@ const DIRECTION_ICONS = {
 
 // Domain colours — emerald/green theme (integration domain)
 const DOM_COLORS = [
-  '#0891b2', // cyan  — Customer
-  '#ea580c', // orange — Billing
-  '#6366f1', // indigo — Data
-  '#7c3aed', // purple — Network
-  '#0891b2', // cyan  — Metering
-  '#64748b', // slate  — Enterprise
-  '#16a34a', // green  — Field
-  '#059669', // emerald — Sustain
-  '#dc2626', // red   — Trading
-  '#d97706', // amber  — Regulatory
-  '#0d9488', // teal  — Integration
+  '#0891b2', // cyan : Customer
+  '#ea580c', // orange, Billing
+  '#6366f1', // indigo: Data
+  '#7c3aed', // purple: Network
+  '#0891b2', // cyan , Metering
+  '#64748b', // slate : Enterprise
+  '#16a34a', // green : Field
+  '#059669', // emerald: Sustain
+  '#dc2626', // red  , Trading
+  '#d97706', // amber : Regulatory
+  '#0d9488', // teal : Integration
 ]
 
 function domHeight(nPlats) {
@@ -269,7 +269,7 @@ export default function WiringDiagram({ clientId, versionId }) {
           className="w-full min-w-[640px]"
           style={{ maxHeight: '680px' }}
         >
-          {/* Edges — drawn first so they appear beneath boxes */}
+          {/* Edges: drawn first so they appear beneath boxes */}
           {edges.map((edge) => {
             const { key, sp, tp } = edge
             const isSel = selection?.type === 'pair' && selection.id === key

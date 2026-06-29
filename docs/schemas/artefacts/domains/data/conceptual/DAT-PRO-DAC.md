@@ -1,4 +1,4 @@
-# DAT-PRO-DAC — Business Processes ↔ Data Domains & Concepts
+# DAT-PRO-DAC: Business Processes ↔ Data Domains & Concepts
 
 **File:** [`/config/schemas/artefacts/domains/data/conceptual/DAT-PRO-DAC.json`](../../../../../../config/schemas/artefacts/domains/data/conceptual/DAT-PRO-DAC.json)
 **Architecture Domain / Layer:** Data / Conceptual
@@ -16,7 +16,7 @@ This is the bridge between **how the business operates** (process) and **the dat
 
 ## Matrix placement
 
-Per [Matrix placement](../../../../output-formats.md#matrix-placement): the sources are BUS-PRO (business/conceptual) and DAT-DAC (data/conceptual). Data is more downstream on the domain axis (Business < Data) and the layers are equal, so the **home** is DAT-DAC — the matrix lives at **data/conceptual**, DAT-DAC's `concepts` are the `rows`, and BUS-PRO's `processes` are the `columns`. ID = `DAT-PRO-DAC`.
+Per [Matrix placement](../../../../output-formats.md#matrix-placement): the sources are BUS-PRO (business/conceptual) and DAT-DAC (data/conceptual). Data is more downstream on the domain axis (Business < Data) and the layers are equal, so the **home** is DAT-DAC, the matrix lives at **data/conceptual**, DAT-DAC's `concepts` are the `rows`, and BUS-PRO's `processes` are the `columns`. ID = `DAT-PRO-DAC`.
 
 ## Matrix axes
 
@@ -31,7 +31,7 @@ Per [Matrix placement](../../../../output-formats.md#matrix-placement): the sour
 |---|---|---|---|
 | `column-id` | string | yes | BUS-PRO process ID |
 | `row-id` | string | yes | DAT-DAC data concept ID |
-| `operation` | string | no | CRUD operations performed — any combination of `C` `R` `U` `D` (pattern `^[CRUD]+$`), e.g. `"CRUD"`, `"R"`, `"RU"`. Rendered in the matrix cell. |
+| `operation` | string | no | CRUD operations performed: any combination of `C` `R` `U` `D` (pattern `^[CRUD]+$`), e.g. `"CRUD"`, `"R"`, `"RU"`. Rendered in the matrix cell. |
 | `rationale` | string | no | Why this process acts on this entity |
 
 ## Example

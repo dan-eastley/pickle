@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Per-client metadata file living inside each client's folder. Carries human-readable information about the client. The plural index at [`architectures/clients/clients.json`](../../architectures/clients/clients.json) only lists IDs — names and other metadata live here.
+Per-client metadata file living inside each client's folder. Carries human-readable information about the client. The plural index at [`architectures/clients/clients.json`](../../architectures/clients/clients.json) only lists IDs: names and other metadata live here.
 
 ## Example
 
@@ -20,7 +20,7 @@ Per-client metadata file living inside each client's folder. Carries human-reada
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `client-id` | string | yes | Unique identifier — must match the client folder name |
+| `client-id` | string | yes | Unique identifier: must match the client folder name |
 | `name` | string | yes | Human-readable client name |
 
 ## Conventions

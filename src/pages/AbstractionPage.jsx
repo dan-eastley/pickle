@@ -19,7 +19,7 @@ export default function AbstractionPage() {
   const abstractionData = getAbstraction(abstraction)
   const colors = ABSTRACTION_COLORS[abstraction]
   usePageTitle(
-    abstractionData && domainData ? `${abstractionData.name} — ${domainData.name}` : null
+    abstractionData && domainData ? `${abstractionData.name} · ${domainData.name}` : null
   )
 
   if (!domainData || !abstractionData) {
