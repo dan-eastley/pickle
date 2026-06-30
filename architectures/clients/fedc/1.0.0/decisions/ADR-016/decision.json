@@ -27,6 +27,38 @@
             "recommendation": "**Clarify CRM and system integration scope.** The narrative mentions interfacing with CRM and work planning but doesn't specify *how* — are these new integrations, replacements for existing ones, or enhancements? Are there performance or data governance constraints? These details will guide architecture design."
         }
     ],
+    "impact-assessment": [
+        {
+            "finding": "The decision proposes adopting a **Contact Centre as a Service (CCaaS)** platform to replace a legacy on-premises VOIP application. This is a strategic acquisition of a new application capability covering omnichannel communication.",
+            "impact": "The Application Catalogue (`APP-CAT`) will require a new entry for the CCaaS vendor product. The Application Domains & Platforms (`APP-DAP`) may need a new platform grouping to organize CCaaS and related capabilities. Without updating these artefacts, the new application will be invisible to architecture views and impact analysis.",
+            "recommendation": "**Add** a new entry to the **Application Catalogue** (`APP-CAT`) with the CCaaS product name, vendor, and lifecycle status. Determine whether **Application Domains & Platforms** (`APP-DAP`) requires a new platform grouping to represent the CCaaS solution, and **add** or **update** it accordingly.",
+            "rationale": "The physical application layer (`APP-CAT`) is the single source of truth for deployed systems. The logical platform layer (`APP-DAP`) determines how capabilities are organized across the application landscape. Capturing the CCaaS platform ensures visibility in downstream architecture models and enables impact analysis on dependent systems."
+        },
+        {
+            "finding": "The narrative states the CCaaS platform will 'drive customer engagement, interface with CRM and feed the work planning.' This indicates new integrations with at least two external systems (CRM and work planning), plus inbound customer engagement flows.",
+            "impact": "The Interface Catalogue (`INT-IFC`) will need new interface definitions for: CCaaS ↔ CRM synchronization, CCaaS ↔ work planning system, and possibly inbound customer engagement channels. Without these definitions, the integration landscape will be incomplete and integration governance will lack enforcement points.",
+            "recommendation": "**Add** entries to the **Interface Catalogue** (`INT-IFC`) for each integration point: CCaaS to CRM, CCaaS to work planning, and any bidirectional customer engagement flows. Document the direction of data flow and the conceptual entities crossing each interface (via **Data Domains & Concepts ↔ Interface Catalogue** (`INT-DAC-IFC`)).",
+            "rationale": "The Interface Catalogue is the authoritative definition of system-to-system connections. Interfaces must be recorded before implementation to ensure data governance, performance contracts, and integration standards are applied consistently across the landscape."
+        },
+        {
+            "finding": "The decision mentions that the CCaaS platform will interface with CRM and work planning, but does not specify what data entities are involved, their CRUD operations, or ownership. The narrative lacks clarity on data governance and data flow direction.",
+            "impact": "The Data Domains & Concepts (`DAT-DAC`) may require new data entities if the CCaaS platform owns or creates new data (e.g. contact centre interaction records, queue state). The Process-to-Data CRUD matrix (`DAT-PRO-DAC`) will need updates to reflect which business processes create/read/update/delete data flowing through the CCaaS platform. Downstream applications consuming work queue updates from the CCaaS cannot be validated without this clarity.",
+            "recommendation": "**Review and clarify** the data governance boundaries: which entities does CCaaS create, read, update, or own? **Update** or **add** entries to **Data Domains & Concepts** (`DAT-DAC`) if new data subject areas are introduced. **Update** the **Process ↔ Data CRUD matrix** (`DAT-PRO-DAC`) to reflect the CCaaS platform's role in data flows, particularly for customer interaction records and work queue updates.",
+            "rationale": "Data governance is a precondition for sound architecture. Mapping data entities to the processes that use them, and to the systems that own them, prevents data quality issues and ensures the CCaaS platform integrates cleanly with the organisation's data management practices."
+        },
+        {
+            "finding": "The decision's narrative provides insufficient clarity on scope. It does not enumerate specific communication channels (phone, email, chat, SMS, social media), identify which channels replace legacy VOIP, which are new, or define the target customer segments. Requirements are absent.",
+            "impact": "Without clear requirements and scope boundaries, architecture analysis cannot determine whether capabilities in the Business Capabilities (`BUS-CAP`) catalogue require updates, whether business processes must be remodelled, or whether the CCaaS platform introduces process innovations that should be captured in the Business Processes (`BUS-PRO`) catalogue. This creates risk of scope creep and misalignment between business intent and technical delivery.",
+            "recommendation": "**Before proceeding**, clarify the business scope: enumerate the digital channels and customer segments in scope; state which capabilities (from `BUS-CAP`) the CCaaS platform enables or enhances; and confirm whether business processes must be updated to reflect omnichannel customer engagement workflows. Once scope is clear, **review and update** `BUS-CAP` and `BUS-PRO` as needed.",
+            "rationale": "The Business Capabilities and Processes catalogues are the business's formal architecture view. Aligning the CCaaS initiative to these artefacts ensures the decision is grounded in business strategy and that downstream architecture work (application platforms, integration, data) flows logically from business intent."
+        },
+        {
+            "finding": "The decision does not reference any applicable strategies, principles, or guardrails from the cross-domain baseline artefacts (e.g. **Application Architecture Strategy** (`APP-STR`), **Application Architecture Principles** (`APP-PRN`), **Integration Architecture Guardrails** (`INT-GRD`)).",
+            "impact": "The absence of explicit traceability to governance standards creates risk that the CCaaS platform may be implemented without applying relevant constraints on integration patterns, data protection, vendor lock-in, or operational resilience. Downstream decision-makers will lack clear guidance on how to operationalize this decision within the governance framework.",
+            "recommendation": "**Review** the existing **Application Architecture Strategy** (`APP-STR`), **Principles** (`APP-PRN`), **Guardrails** (`APP-GRD`), **Integration Principles** (`INT-PRN`), and **Integration Guardrails** (`INT-GRD`). Explicitly state which of these apply to the CCaaS platform in the ADR narrative. If no applicable strategy or principle exists, this signals a governance gap that may need to be addressed in a separate decision.",
+            "rationale": "Architecture governance is enforced through explicit strategy and principles. Tracing the CCaaS initiative to these foundational artefacts ensures the platform operates within the organisation's risk tolerance, vendor standards, and technical constraints."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T11:27:56.554Z",
