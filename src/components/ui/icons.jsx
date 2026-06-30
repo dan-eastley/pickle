@@ -59,6 +59,20 @@ export function ChevronDown({ className = 'w-3.5 h-3.5' }) {
   )
 }
 
+export function LockIcon({ className = 'w-4 h-4' }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M5 7V5a3 3 0 016 0v2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
 export function ArrowRight({ className = 'w-4 h-4' }) {
   return (
     <svg className={className} viewBox="0 0 16 16" fill="none">

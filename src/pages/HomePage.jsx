@@ -4,7 +4,9 @@ import { DOMAINS, ABSTRACTIONS, FORMATS, DOMAIN_COLORS } from '../lib/artefacts'
 import DomainIcon from '../components/ui/DomainIcon'
 import FormatIcon from '../components/ui/FormatIcon'
 import Button from '../components/ui/Button'
+import Logo from '../components/ui/Logo'
 import Illustration from '../components/ui/Illustration'
+import { useAuth } from '../context/AuthContext'
 import { ArrowRight, CheckIcon, RobotIcon } from '../components/ui/icons'
 import capabilityShot from '../assets/screenshots/capability-model.png'
 import documentShot from '../assets/screenshots/vision-document.png'
@@ -222,6 +224,7 @@ function DocumentChain() {
 }
 
 function Hero() {
+  const { user } = useAuth()
   return (
     <section className="relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-brand-50 via-white to-gray-50 px-6 py-24">
       {/* Soft ambient glow for depth */}
@@ -233,11 +236,8 @@ function Hero() {
             <span className="w-1.5 h-1.5 bg-brand-500" />
             Architecture as Code · Agentic
           </span>
-          <h1 className="text-5xl font-bold tracking-widest uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
-            Pickle
-          </h1>
-          <p className="mt-3 text-xl text-gray-500">Agentic Architecture as a Service</p>
-          <p className="mt-4 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          <Logo align="left" size="xl" />
+          <p className="mt-6 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Your enterprise architecture as structured, version-controlled data, with AI agents that
             analyse every proposed change and a decision-record workflow that keeps your architects
             in charge.
@@ -268,12 +268,9 @@ function Hero() {
             ))}
           </ul>
           <div className="mt-8 flex items-center justify-center lg:justify-start gap-3">
-            <Button to="/clients" size="lg">
-              Get started
+            <Button to={user ? '/clients' : '/register'} size="lg">
+              {user ? 'View Clients' : 'Get Started'}
               <ArrowRight className="w-4 h-4" />
-            </Button>
-            <Button to="/docs" variant="secondary" size="lg">
-              Read the Docs
             </Button>
           </div>
         </div>
@@ -910,19 +907,17 @@ function FrameworkSupport() {
 }
 
 function ClosingCta() {
+  const { user } = useAuth()
   return (
     <section className="px-6 py-16 text-center">
       <h2 className="text-xl font-bold text-gray-900">See it in action</h2>
       <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
-        Browse a worked client architecture, or read the docs to understand the model behind it.
+        Browse a worked client architecture and the governed decision workflow behind it.
       </p>
       <div className="mt-6 flex items-center justify-center gap-3">
-        <Button to="/clients" size="lg">
-          View Clients
+        <Button to={user ? '/clients' : '/register'} size="lg">
+          {user ? 'View Clients' : 'Get Started'}
           <ArrowRight className="w-4 h-4" />
-        </Button>
-        <Button to="/docs" variant="secondary" size="lg">
-          Read the Docs
         </Button>
       </div>
     </section>

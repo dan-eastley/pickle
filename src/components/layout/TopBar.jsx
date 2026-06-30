@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useArchitecture } from '../../context/ArchitectureContext'
 import { ChevronDown } from '../ui/icons'
 import useClickOutside from '../../hooks/useClickOutside'
 import QuickPicker from './QuickPicker'
 import UserMenu from '../auth/UserMenu'
+import Logo from '../ui/Logo'
 
 function Dropdown({ label, value, options, onSelect, getLabel, getId }) {
   const [open, setOpen] = useState(false)
@@ -81,19 +82,9 @@ export default function TopBar() {
   }
 
   return (
-    <header className="h-14 bg-white border-b-2 border-brand-600 flex items-center px-3 sm:px-6 gap-3 sm:gap-6 sticky top-0 z-40">
+    <header className="h-16 bg-white border-b-2 border-brand-600 flex items-center px-3 sm:px-6 gap-3 sm:gap-6 sticky top-0 z-40">
       {/* Pickle brand: links to root */}
-      <Link
-        to="/"
-        className="flex items-baseline gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
-      >
-        <span className="text-lg font-bold tracking-widest uppercase leading-none bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
-          Pickle
-        </span>
-        <span className="text-lg text-gray-500 hidden sm:block">
-          Agentic Architecture as a Service
-        </span>
-      </Link>
+      <Logo align="left" size="sm" to="/" className="flex-shrink-0" />
 
       {/* Divider */}
       <div className="h-5 w-px bg-gray-200 flex-shrink-0" />
@@ -107,25 +98,6 @@ export default function TopBar() {
       <div className="flex-shrink-0">
         <QuickPicker />
       </div>
-
-      {/* Docs link: opens in a new window */}
-      <a
-        href="/docs"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-sm font-medium px-3 py-1.5 transition-colors flex-shrink-0 text-gray-500 hover:text-gray-900 hover:bg-gray-100 inline-flex items-center gap-1"
-      >
-        Docs
-        <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
-          <path
-            d="M6 3h7v7M13 3L6.5 9.5M11 9.5V13H3V5h3.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </a>
 
       {/* Selectors */}
       <div className="flex items-center gap-2 flex-shrink-0">
