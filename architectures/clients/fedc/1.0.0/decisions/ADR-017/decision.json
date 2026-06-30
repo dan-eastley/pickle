@@ -110,6 +110,32 @@
             "rationale": "Guardrails are non-negotiable rules that reflect regulatory requirements, risk tolerance, and governance boundaries. Empty guardrails catalogues indicate that the organisation has not yet codified its mandatory constraints. A populated guardrails framework enables consistent, traceable decision-making and reduces governance friction by making expectations explicit. Until guardrails are defined, decisions can only be assessed against strategy and principles — which this ADR satisfies."
         }
     ],
+    "proponent-analysis": [
+        {
+            "finding": "**Zero structural risk.** Referential integrity validation confirms that the ID-based relationships in all dependent artefacts (`BUS-CAP-PRO`, `BUS-BCM`) are sound and will remain valid after the name change. No cascading corrections are needed, and foreign key relationships will not break.",
+            "impact": "The change can proceed immediately without risk of data corruption or consistency violations. The architecture model remains logically sound, reducing implementation risk to near-zero and eliminating the need for downstream rework or validation cycles.",
+            "recommendation": "Proceed with confidence on the data and structure front. No additional data remediation or integrity checks are required before implementation.",
+            "rationale": "Structural validation is the first gate for any change. Once passed, it removes the largest category of implementation risk and allows focus to shift entirely to semantic and business questions."
+        },
+        {
+            "finding": "**Strong alignment to customer-centric strategy.** The rename advances **BUS-STR-001** ('Operate as a customer-centric organisation, organised around end-to-end customer outcomes') by explicitly naming the monitoring function within customer management. This removes ambiguity about whether the capability spans the full customer lifecycle—from proactive health assessment through retention—or only reactive retention.",
+            "impact": "Clearer capability definitions improve how the operating model is communicated to cross-functional teams and executives, reducing interpretation friction. Frontline staff and leadership will more readily understand that customer management is a continuous, outcome-oriented discipline, not a reactive function.",
+            "recommendation": "Proceed. Strengthen the business narrative by explicitly stating: 'This rename clarifies that customer management is end-to-end, from proactive monitoring through to retention, directly advancing our customer-centric operating model and the target outcome of 90% of frontline staff working in cross-functional customer-facing teams.'",
+            "rationale": "Customer-centricity is the foundational strategy. A capability name that conflates monitoring with retention outcome signals to teams that proactive customer health monitoring is a core responsibility, not a pre-step. This directly enables measurement and accountability against business outcomes."
+        },
+        {
+            "finding": "**Aligns to multiple business principles.** The rename advances **BUS-PRN-002** ('Outcome over output') by elevating the capability from a single activity (output: retention) to a full lifecycle (outcome: customer health and value growth). It also adheres to **BUS-PRN-001** (capabilities reflect what the business does, not how it is organised) by naming the outcome independent of org structure, and **BUS-PRN-005** (customer journey as the unit of design) by making the monitoring dimension of the journey explicit.",
+            "impact": "Principle alignment strengthens governance grounding and stakeholder accountability. Teams will be measured on outcome (customer health and value) rather than activity volume, and the capability definition will remain stable across future reorganisations.",
+            "recommendation": "Proceed. Document principle alignment explicitly in the narrative to establish governance credibility.",
+            "rationale": "Principles establish the durable operating model. A capability name that explicitly embeds monitoring-and-retention-as-outcome (not org or activity) is more defensible through strategy execution and less vulnerable to rework as business conditions change."
+        },
+        {
+            "finding": "**Minimal implementation footprint.** Impact assessment confirms that only the **BUS-CAP** catalogue requires direct editing (update the `name` field of CAP-001-04). The **Business Capability Model** (`BUS-BCM`) either auto-syncs from BUS-CAP or requires a single label update. The **Capability ↔ Process Matrix** (`BUS-CAP-PRO`) requires no changes because it uses ID-based relationships. Total implementation effort is low.",
+            "impact": "Reduces implementation cost and deployment cycle time. A focused, low-footprint change limits risk of user error or oversight and allows rapid deployment.",
+            "recommendation": "Proceed. Sequence the change as a low-priority, low-effort update that can be bundled with other capability model refinements.",
+            "rationale": "Low risk and low implementation cost reduce the barrier to proceeding and make the decision commercially efficient."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T13:13:31.959Z",
