@@ -4,7 +4,7 @@ import { DOMAINS, DOMAIN_COLORS } from '../lib/artefacts'
 import { loadVersionMetrics } from '../lib/metrics'
 import { DECISION_STATUS_ORDER, decisionStatusBadge, decisionStatusLabel } from '../lib/theme'
 import DomainIcon from '../components/ui/DomainIcon'
-import ContentMetrics from '../components/common/ContentMetrics'
+import MetricBars from '../components/common/MetricBars'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import { ChevronRight, DecisionIcon, RobotIcon } from '../components/ui/icons'
@@ -46,9 +46,6 @@ function StatusBreakdown({ counts, order, badgeOf, labelOf, to }) {
 function DomainCard({ domain, base, dm, loading }) {
   const colors = DOMAIN_COLORS[domain.id]
   const accent = colors.accent
-  // Content counts for this domain, plus document instances as a trailing stat.
-  const items = dm?.items ?? []
-  const extra = dm?.documents ? [{ label: 'Documents', count: dm.documents }] : []
 
   return (
     <div className={`bg-white border-l-4 ${accent}`}>
@@ -75,10 +72,9 @@ function DomainCard({ domain, base, dm, loading }) {
             <Spinner size="sm" /> Loading content…
           </div>
         ) : (
-          <ContentMetrics
-            items={items}
-            extra={extra}
-            dense
+          <MetricBars
+            perDomain={{ [domain.id]: dm }}
+            single
             empty={<p className="text-xs text-gray-500">No content yet in this domain.</p>}
           />
         )}

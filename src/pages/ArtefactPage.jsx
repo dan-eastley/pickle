@@ -13,6 +13,8 @@ import EmptyState from '../components/ui/EmptyState'
 import Skeleton from '../components/ui/Skeleton'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
+import MetricBars from '../components/common/MetricBars'
+import { extractContentItems } from '../lib/metrics'
 import ActivityHistory from '../components/common/ActivityHistory'
 import ActionBar from '../components/ui/ActionBar'
 import DownloadMenu from '../components/ui/DownloadMenu'
@@ -412,8 +414,18 @@ export default function ArtefactPage() {
 
       {!loading && !error && data !== null && data !== undefined && (
         <>
-          {artefact.format !== 'matrix' && (
-            <div className="mb-3 flex justify-end">
+          {/* Count strip (left) + downloads (right) — consistent metric formatting. */}
+          <div className="mb-3 flex items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <MetricBars
+                perDomain={{
+                  [artefact.domain]: { items: extractContentItems(data, artefact.domain) },
+                }}
+                single
+                empty={null}
+              />
+            </div>
+            {artefact.format !== 'matrix' && (
               <ArtefactDownload
                 artefact={artefact}
                 schema={schema}
@@ -421,8 +433,8 @@ export default function ArtefactPage() {
                 selectedDocument={selectedDocument}
                 diagramRef={diagramRef}
               />
-            </div>
-          )}
+            )}
+          </div>
           <div ref={diagramRef}>
             {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
             {artefact.format === 'matrix' && (
