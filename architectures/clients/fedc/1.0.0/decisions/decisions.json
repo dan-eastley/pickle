@@ -27,6 +27,16 @@
             "decision-id": "ADR-016",
             "title": "Implement a Contact Centre as a Service",
             "status": "proposed"
+        },
+        {
+            "decision-id": "ADR-017",
+            "title": "Rename CAP-001-04",
+            "status": "draft",
+            "scope": {
+                "domain": "business",
+                "abstraction": "conceptual",
+                "artefact": "BUS-BCM"
+            }
         }
     ]
 }
