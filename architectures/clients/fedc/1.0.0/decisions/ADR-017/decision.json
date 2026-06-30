@@ -56,6 +56,20 @@
             "rationale": "Matrix artefacts use ID-based relationships, not name copies, precisely to decouple them from cosmetic or minor name changes. This design reduces maintenance burden and prevents cascading edits across the model. The mapping is already correct; the rename is transparent to the matrix layer."
         }
     ],
+    "strategy-alignment": [
+        {
+            "finding": "The proposed rename advances **Business Strategy** (`BUS-STR`) statement BUS-STR-001: *'Operate as a customer-centric organisation, organised around end-to-end customer outcomes'*. Explicitly naming the monitoring function within 'Monitor & Retain Customer' clarifies the full scope of the customer management outcome and removes ambiguity about whether the capability covers only reactive retention or the full upstream-to-downstream customer lifecycle.",
+            "impact": "This strengthens the business case for the decision. The clearer capability name improves how the operating model is communicated to cross-functional teams and executives, reducing interpretation friction and reinforcing the customer-centric operating principle. Stakeholders will more readily understand that customer management includes proactive monitoring, not just reactive saves.",
+            "recommendation": "Strengthen the decision narrative by explicitly connecting the rename to the customer-centric strategy. Add language such as: 'This rename clarifies that the organisation operates end-to-end customer management, from proactive monitoring through to retention, advancing our commitment to customer-centric operations.' This justifies the change as strategic, not merely cosmetic.",
+            "rationale": "BUS-STR-001 is the foundational strategy for business organisation. A capability model that clearly articulates the full scope of customer outcomes (including monitoring) directly supports the ability to measure progress toward the target outcome ('90% of frontline staff working in cross-functional customer-facing teams by end of 2027'). Precision in capability naming reduces the ambiguity that can emerge when cross-functional teams interpret the model differently."
+        },
+        {
+            "finding": "The decision narrative lacks evidence that the rename is supported by data or learning, creating tension with **Business Strategy** (`BUS-STR`) statement BUS-STR-003: *'Decide with data — every material business decision must cite the evidence that supports it'*. The narrative states 'the operating model tells us we monitor and retain customers' but does not provide evidence (e.g., stakeholder feedback, process discovery findings, or outcome data) that the current name obscures this understanding in practice.",
+            "impact": "The strategic foundation for the decision is incomplete. Without evidence of a real problem (e.g., 'stakeholders consistently misinterpret the capability as retention-only' or 'process analysis shows monitoring is a material part of the capability but not named'), it is difficult to assess whether this change will meaningfully advance business outcomes. The decision risks being seen as a naming preference rather than a strategic move.",
+            "recommendation": "Add a 'Evidence' section to the decision narrative documenting why the monitoring function was not explicit in the current name, and what evidence (stakeholder interviews, process review, capability heat maps, or team feedback) indicates that the current name creates confusion or gaps in understanding. Cite this evidence to establish that the rename is driven by learning, not assumption.",
+            "rationale": "BUS-STR-003 explicitly requires evidence for material business decisions. The business case for renaming a core capability should rest on data showing that the current name is a problem. If the rename is confirmed by stakeholder discovery or operating model alignment work, that evidence should be captured and cited, making the decision more defensible and traceable to strategy execution."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T13:13:31.959Z",
