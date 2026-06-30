@@ -28,6 +28,26 @@
             "recommendation": "Define success criteria. How will you know this change has been successfully applied? Will the capability appear under the new name in published architecture views? Will stakeholder sign-off be required?"
         }
     ],
+    "impact-assessment": [
+        {
+            "finding": "The proposed name change affects **Business Capabilities** (`BUS-CAP`), which defines CAP-001-04 as 'Retain Customer' at Level 2 under the Customer Management capability (CAP-001). Renaming to 'Monitor & Retain Customer' explicitly acknowledges the monitoring function already implied in the operating model.",
+            "impact": "The **Business Capabilities** catalogue (`BUS-CAP`) must be updated with the new capability name and description to clarify the monitoring responsibility. This change is observable in any published capability architecture views. The name is also referenced in the **Capability ↔ Process Matrix** (`BUS-CAP-PRO`), which documents the mapping relationship but not the capability name itself, so the matrix will not require editing — only the source capability in BUS-CAP.",
+            "recommendation": "Update the `capabilities` array in the **Business Capabilities** (`BUS-CAP`) catalogue: change the `name` field of CAP-001-04 from 'Retain Customer' to 'Monitor & Retain Customer'. Consider expanding the `description` field to explain the monitoring dimension (e.g., 'Monitor customer health, loyalty, and at-risk signals; renew, save, and grow value with existing customers'). Verify the change is consistent with the operating model and process descriptions.",
+            "rationale": "The Business domain is accountable for customer lifecycle management, including both retention and the upstream monitoring activities that inform retention decisions. Renaming the capability aligns the architecture model to the operating model and improves stakeholder clarity. Since BUS-CAP is the authoritative source of capability definitions and the Business Capability Model (BUS-BCM) and matrices derive from it, updating only BUS-CAP ensures consistency across all downstream views."
+        },
+        {
+            "finding": "The capability name is visually represented in the **Business Capability Model** (`BUS-BCM`), a diagram artefact that derives its content from **Business Capabilities** (`BUS-CAP`). If BUS-BCM is generated from BUS-CAP, the diagram will automatically reflect the new name; if manually maintained, it requires a matching update.",
+            "impact": "Published Business Capability Model views (e.g., in architecture reports or portals) will display the updated capability name. Stakeholders rely on the diagram for high-level orientation to the capability landscape; inconsistency between BUS-CAP and BUS-BCM would create confusion. If BUS-BCM is manually edited, failure to update it creates a discrepancy that undermines stakeholder trust in the model.",
+            "recommendation": "Confirm whether **Business Capability Model** (`BUS-BCM`) is generated from BUS-CAP or manually maintained. If generated, no action is needed. If manually maintained, update the capability label for CAP-001-04 from 'Retain Customer' to 'Monitor & Retain Customer' to match the updated BUS-CAP entry. Check for any multi-line layout constraints (diagram width, label wrapping) that the longer name might introduce.",
+            "rationale": "Architecture diagrams are communication tools and must remain consistent with their source catalogues. Manual discrepancies are a common source of governance gaps and stakeholder confusion. Clarifying the maintenance model prevents rework and establishes a clear single source of truth."
+        },
+        {
+            "finding": "The **Capability ↔ Process Matrix** (`BUS-CAP-PRO`) documents that CAP-001-04 ('Retain Customer') is enacted by PROC-001-04 ('Retain & Grow Customers'). The matrix records the relationship through IDs (CAP-001-04 / PROC-001-04) and a rationale statement, but does not duplicate the capability or process names.",
+            "impact": "The matrix relationship will remain valid and will not require editing — the mapping (CAP-001-04 ↔ PROC-001-04) is name-independent. The rationale ('Retain Customer capability is enacted through the Retain & Grow Customers process') reflects the semantic intent and will remain accurate even after the capability is renamed. No loss of traceability or consistency.",
+            "recommendation": "No changes required to **Capability ↔ Process Matrix** (`BUS-CAP-PRO`). The mapping itself is sound and will be understood by readers to be current because both BUS-CAP and BUS-PRO are treated as authoritative sources. The matrix rationale is semantic (what the relationship means) rather than a literal name copy, so it will continue to make sense.",
+            "rationale": "Matrix artefacts use ID-based relationships, not name copies, precisely to decouple them from cosmetic or minor name changes. This design reduces maintenance burden and prevents cascading edits across the model. The mapping is already correct; the rename is transparent to the matrix layer."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T13:13:31.959Z",
