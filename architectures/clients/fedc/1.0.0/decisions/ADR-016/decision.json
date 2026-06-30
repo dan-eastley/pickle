@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-016",
     "title": "Implement a Contact Centre as a Service",
-    "status": "proposed",
+    "status": "accepted",
     "context": "We use a legacy application, on-prem, unsupported that cover VOIP.",
     "problem": "It doesn't support where the business needs to be",
     "proposal": "We want to implement a full CCaaS platform that covers all digital platforms and channels of communication, to drive customer engagement, interface with CRM and feed the work planning.",
