@@ -251,6 +251,38 @@
             "rationale": "Operational principles are the contracts for technical quality. A CCaaS platform that violates baseline expectations (cloud-native, observable, composable) will require custom integration for observability and will become a long-term operational liability. Locking these principles into vendor evaluation upfront prevents expensive post-implementation remediation."
         }
     ],
+    "architecture-changes": [
+        {
+            "artefact-id": "APP-CAT",
+            "artefact-name": "Application Catalogue",
+            "change-type": "create",
+            "description": "Add new entry for CCaaS vendor product. Populate fields: vendor (determined during vendor selection), product (vendor product name, e.g. 'Genesys Cloud CX' or equivalent), status (live or in-development), lifecycle-stage (invest). Reference the accepted Impact Assessment finding: 'The Application Catalogue (`APP-CAT`) will require a new entry for the CCaaS vendor product.' Ensure the entry captures the cloud-based contact centre platform that replaces the legacy on-premises VOIP system."
+        },
+        {
+            "artefact-id": "INT-IFC",
+            "artefact-name": "Interface Catalogue",
+            "change-type": "create",
+            "description": "Add interface: CCaaS to CRM synchronization. Create entry with source (the new CCaaS application, to be populated after APP-CAT entry is created), target (PLAT-CRM), direction (bi-directional), and description: 'Contact centre interactions and agent responses sync with CRM for unified customer view.' Reference Challenger Analysis: define integration contracts in Interface Catalogue before vendor selection using OpenAPI 3.0 for synchronous APIs."
+        },
+        {
+            "artefact-id": "INT-IFC",
+            "artefact-name": "Interface Catalogue",
+            "change-type": "create",
+            "description": "Add interface: CCaaS to work planning synchronization. Create entry with source (the new CCaaS application, to be populated after APP-CAT entry is created), target (PLAT-HRIS or equivalent work-queue system, to be confirmed), direction (source-to-target), and description: 'Contact centre interactions feed the work planning system to create or update work queue items.' Reference Impact Assessment: new integrations with work planning system must be documented in Interface Catalogue with defined direction and entities crossing each interface."
+        },
+        {
+            "artefact-id": "INT-DAC-IFC",
+            "artefact-name": "Data Domains & Concepts ↔ Interface Catalogue",
+            "change-type": "create",
+            "description": "Document data entities crossing the CCaaS ↔ CRM interface. Link the existing concept CON-CUST-INTERACTION (Customer Interaction in DAT-DOM-CUSTOMER domain) to the CCaaS-to-CRM interface created above. Specify the direction and CRUD operations for customer interaction records flowing from CCaaS to CRM. Reference Impact Assessment: Interface Catalogue entries must document the conceptual entities crossing each interface via INT-DAC-IFC."
+        },
+        {
+            "artefact-id": "INT-DAC-IFC",
+            "artefact-name": "Data Domains & Concepts ↔ Interface Catalogue",
+            "change-type": "create",
+            "description": "Document data entities crossing the CCaaS ↔ work planning interface. If work queue or work assignment concepts exist in DAT-DAC, link them to the CCaaS-to-work-planning interface. If they do not exist, create new data concepts in DAT-DAC first (e.g. 'Work Queue Item', 'Contact Centre Interaction Queue State'), then link them via INT-DAC-IFC. Specify CRUD operations and data ownership. Reference Challenger Analysis: define contact centre data entities in Data Domains & Concepts catalogue with named ownership before implementation."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T11:27:56.554Z",
