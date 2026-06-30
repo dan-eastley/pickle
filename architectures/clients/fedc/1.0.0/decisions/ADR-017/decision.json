@@ -157,6 +157,20 @@
             "rationale": "Clear scope boundaries prevent implementation friction and rework. The impact assessment correctly identifies that **BUS-CAP-PRO** requires no changes (ID-based relationships are resilient), but the narrative does not address whether process descriptions, application capabilities, or solution-level definitions also benefit from or require updates. Defining this boundary in the ADR prevents teams from discovering scope disagreements during implementation."
         }
     ],
+    "architecture-changes": [
+        {
+            "artefact-id": "BUS-CAP",
+            "artefact-name": "Business Capabilities",
+            "change-type": "update",
+            "description": "Update the `name` field of capability CAP-001-04 from 'Retain Customer' to 'Monitor & Retain Customer' in the capabilities array. This change makes explicit the monitoring responsibility already implied in the operating model and aligns the capability definition to the customer-centric strategy (BUS-STR-001) and principles (BUS-PRN-002, BUS-PRN-005). No other fields require change; the `description` field ('Renew, save, and grow value with existing customers') remains unchanged unless the implementor chooses to expand it to clarify the monitoring dimension."
+        },
+        {
+            "artefact-id": "BUS-BCM",
+            "artefact-name": "Business Capability Model",
+            "change-type": "update",
+            "description": "Update the `name` field of capability CAP-001-04 from 'Retain Customer' to 'Monitor & Retain Customer' within the items array of the CAP-001 (Customer Management) group. If BUS-BCM is auto-generated from BUS-CAP, this change will be reflected automatically and no manual edit is needed; if manually maintained, apply this update to ensure consistency with the renamed entry in BUS-CAP. Check for any multi-line layout constraints introduced by the longer name."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T13:13:31.959Z",
