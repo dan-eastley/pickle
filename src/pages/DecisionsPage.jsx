@@ -45,7 +45,7 @@ function DecisionGroup({ status, decisions, clientId, versionId, collapsed, onTo
           {decisions.map((d) => (
             <Link
               key={d['decision-id']}
-              to={`/clients/${clientId}/${versionId}/decisions/${d['decision-id']}`}
+              to={`/architectures/${clientId}/${versionId}/decisions/${d['decision-id']}`}
               className="group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
               {/* Decision icon */}
@@ -99,7 +99,7 @@ export default function DecisionsPage() {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`/api/arch/clients/${clientId}/${versionId}/decisions/decisions.json`)
+    fetch(`/api/arch/${clientId}/${versionId}/decisions/decisions.json`)
       .then((r) => (r.ok ? r.json() : { decisions: [] }))
       .then((data) => {
         if (cancelled) return
@@ -161,7 +161,7 @@ export default function DecisionsPage() {
         title="Architecture Decisions"
         strapline={`${clientName} · v${versionId}`}
         primary={
-          <Button to={`/clients/${clientId}/${versionId}/decisions/new`} size="lg">
+          <Button to={`/architectures/${clientId}/${versionId}/decisions/new`} size="lg">
             <DecisionIcon className="w-4 h-4" />
             New Architecture Decision
           </Button>

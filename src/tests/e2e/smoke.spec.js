@@ -5,14 +5,14 @@ import { readdirSync, existsSync } from 'fs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-// Reference client/version whose routes we smoke-test.
+// Reference architecture/transition whose routes we smoke-test.
 const CLIENT = 'fedc'
-const VERSION = '1.0.0'
-const ROUTE_BASE = `/clients/${CLIENT}/${VERSION}`
+const VERSION = 'baseline'
+const ROUTE_BASE = `/architectures/${CLIENT}/${VERSION}`
 const DOMAINS_ROOT = resolve(
   __dirname,
   '../../../architectures',
-  `clients/${CLIENT}/${VERSION}`,
+  `${CLIENT}/${VERSION}`,
   'domains'
 )
 
@@ -63,7 +63,7 @@ test('homepage renders its key sections', async ({ page }) => {
 test('navigates from the homepage to the clients list', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('link', { name: 'View Clients' }).first().click()
-  await expect(page).toHaveURL(/\/clients$/)
+  await expect(page).toHaveURL(/\/architectures$/)
   await expect(page.getByRole('heading', { name: 'Clients', level: 1 })).toBeVisible()
 })
 

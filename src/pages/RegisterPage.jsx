@@ -17,7 +17,7 @@ export default function RegisterPage() {
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
 
-  if (user) return <Navigate to="/clients" replace />
+  if (user) return <Navigate to="/architectures" replace />
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
@@ -38,7 +38,7 @@ export default function RegisterPage() {
       return
     }
     // autoSignIn is on, so land in the app.
-    navigate('/clients', { replace: true })
+    navigate('/architectures', { replace: true })
   }
 
   return (

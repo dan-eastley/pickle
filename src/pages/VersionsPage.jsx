@@ -20,7 +20,7 @@ export default function VersionsPage() {
   const [loading, setLoading] = useState(true)
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
-  usePageTitle(`${clientName} · Versions`)
+  usePageTitle(`${clientName} · Transitions`)
 
   useEffect(() => {
     let live = true
@@ -28,14 +28,14 @@ export default function VersionsPage() {
       if (!live) return
       setVersions(list)
       const metas = await Promise.all(
-        list.map((v) => getVersion(clientId, v['version-id']).then((m) => [v['version-id'], m]))
+        list.map((v) => getVersion(clientId, v['transition-id']).then((m) => [v['transition-id'], m]))
       )
       if (!live) return
       setVersionMeta(Object.fromEntries(metas.filter(([, m]) => m)))
       setLoading(false)
       // Content metrics fill in per version as they resolve.
       for (const v of list) {
-        const vId = v['version-id']
+        const vId = v['transition-id']
         loadVersionMetrics(clientId, vId)
           .then((m) => live && setVersionMetrics((prev) => ({ ...prev, [vId]: m })))
           .catch(() => live && setVersionMetrics((prev) => ({ ...prev, [vId]: null })))
@@ -57,8 +57,8 @@ export default function VersionsPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-4">
-        <Link to="/clients" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
-          ← All clients
+        <Link to="/architectures" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
+          ← All architectures
         </Link>
       </div>
       <div className="mb-8 flex items-center justify-between gap-8">
@@ -67,7 +67,7 @@ export default function VersionsPage() {
           <div className="min-w-0">
             <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
             <p className="mt-1 text-sm text-gray-500">
-              Select a version to browse its architecture.
+              Select a transition state to browse its architecture.
             </p>
           </div>
         </div>
@@ -77,19 +77,19 @@ export default function VersionsPage() {
       {versions.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Illustration name="no-data" className="w-56 mb-6" />
-          <p className="text-sm font-semibold text-gray-700">No versions yet</p>
+          <p className="text-sm font-semibold text-gray-700">No transition states yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
-            Each release baseline lives in its own version folder under this client.
+            Each transition state lives in its own folder under this architecture.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
           {versions.map((v) => {
-            const vId = v['version-id']
+            const vId = v['transition-id']
             const meta = versionMeta[vId]
             const statusStyle = versionStatusBadge(meta?.status)
             const m = versionMetrics[vId]
-            const base = `/clients/${clientId}/${vId}`
+            const base = `/architectures/${clientId}/${vId}`
             return (
               <div key={vId} className="border border-gray-200 bg-white">
                 <Link

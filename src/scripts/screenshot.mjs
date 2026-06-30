@@ -1,7 +1,7 @@
 // Renders the app's routes with headless Chromium and writes PNGs into
 // src/assets/screenshots/. The screenshot folder mirrors the URL structure,
-// ignoring the client id and version (e.g. the route
-//   /clients/fedc/1.0.0/domains/business/conceptual/BUS-CAP
+// ignoring the architecture id and transition (e.g. the route
+//   /architectures/fedc/baseline/domains/business/conceptual/BUS-CAP
 // is saved to
 //   assets/screenshots/domains/business/conceptual/BUS-CAP.png
 //
@@ -25,12 +25,12 @@ const OUT = resolve(__dirname, '../assets/screenshots')
 const BASE = process.env.BASE_URL ?? 'https://pickle-psi-neon.vercel.app'
 const ONLY = process.env.ONLY ?? 'all' // all | url | product
 
-// Reference client/version whose routes we capture. The screenshot path drops
-// the client and version, so the imagery stays stable as those change.
+// Reference architecture/transition whose routes we capture. The screenshot path
+// drops the architecture and transition, so the imagery stays stable as those change.
 const CLIENT = process.env.SHOT_CLIENT ?? 'fedc'
-const VERSION = process.env.SHOT_VERSION ?? '1.0.0'
-const ROUTE_BASE = `clients/${CLIENT}/${VERSION}`
-const DOMAINS_ROOT = join(REPO, 'architectures', ROUTE_BASE, 'domains')
+const VERSION = process.env.SHOT_VERSION ?? 'baseline'
+const ROUTE_BASE = `architectures/${CLIENT}/${VERSION}`
+const DOMAINS_ROOT = join(REPO, 'architectures', `${CLIENT}/${VERSION}`, 'domains')
 
 const dirs = (p) =>
   existsSync(p)
@@ -95,7 +95,7 @@ const productShots = [
     out: 'wiring-diagram',
     fullPage: false,
   },
-  { route: 'clients/fedc/1.0.0/decisions/ADR-013', out: 'decision', fullPage: false },
+  { route: 'architectures/fedc/baseline/decisions/ADR-013', out: 'decision', fullPage: false },
 ]
 
 const SHOTS =

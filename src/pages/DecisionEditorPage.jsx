@@ -148,7 +148,7 @@ export default function DecisionEditorPage() {
         secondary={
           isEdit && (
             <Button
-              to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
+              to={`/architectures/${clientId}/${versionId}/decisions/${decisionId}`}
               variant="secondary"
               size="lg"
             >
@@ -180,7 +180,7 @@ export default function DecisionEditorPage() {
         <div className="mb-4 px-4 py-3 bg-success-50 border border-success-500 text-success-700 text-sm">
           Changes saved. Narrative Review is running to refresh the analysis.{' '}
           <TextLink
-            to={`/clients/${clientId}/${versionId}/decisions/${decisionId}`}
+            to={`/architectures/${clientId}/${versionId}/decisions/${decisionId}`}
             state={{ cacheBust: true }}
             className="font-medium"
           >
@@ -193,7 +193,7 @@ export default function DecisionEditorPage() {
           <span className="font-semibold">{saveResult.decisionId}</span> created as a draft.
           Narrative Review is running to suggest improvements.{' '}
           <TextLink
-            to={`/clients/${clientId}/${versionId}/decisions/${saveResult.decisionId}`}
+            to={`/architectures/${clientId}/${versionId}/decisions/${saveResult.decisionId}`}
             state={{ cacheBust: true }}
             className="font-medium"
           >

@@ -264,8 +264,8 @@ function Hero() {
             ))}
           </ul>
           <div className="mt-8 flex items-center justify-center lg:justify-start gap-3">
-            <Button to={user ? '/clients' : '/register'} size="lg">
-              {user ? 'View Clients' : 'Get Started'}
+            <Button to={user ? '/architectures' : '/register'} size="lg">
+              {user ? 'View Architectures' : 'Get Started'}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
@@ -461,7 +461,7 @@ function ArchitectureModel() {
                 point-in-time view.
               </p>
             </div>
-            <Button to="/clients" variant="secondary" className="flex-shrink-0">
+            <Button to="/architectures" variant="secondary" className="flex-shrink-0">
               Explore
               <ArrowRight className="w-4 h-4" />
             </Button>
@@ -820,7 +820,7 @@ const FRAMEWORKS = [
       'Solution Intent, the document chain',
       'Architectural enablers as Decision Records',
       'Capabilities & features',
-      'PI / release baselines as versions',
+      'PI / release baselines as transitions',
     ],
   },
   {
@@ -908,11 +908,11 @@ function ClosingCta() {
     <section className="px-6 py-16 text-center">
       <h2 className="text-xl font-bold text-gray-900">See it in action</h2>
       <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
-        Browse a worked client architecture and the governed decision workflow behind it.
+        Browse a worked architecture and the governed decision workflow behind it.
       </p>
       <div className="mt-6 flex items-center justify-center gap-3">
-        <Button to={user ? '/clients' : '/register'} size="lg">
-          {user ? 'View Clients' : 'Get Started'}
+        <Button to={user ? '/architectures' : '/register'} size="lg">
+          {user ? 'View Architectures' : 'Get Started'}
           <ArrowRight className="w-4 h-4" />
         </Button>
       </div>

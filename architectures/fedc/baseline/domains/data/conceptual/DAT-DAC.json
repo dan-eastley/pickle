@@ -1,0 +1,444 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:data:conceptual:DAT-DAC",
+    "audience": [
+        "Enterprise Architect",
+        "Data Architect",
+        "Chief Data Officer"
+    ],
+    "author": [
+        "Data Architect",
+        "Data Analyst"
+    ],
+    "domains": [
+        {
+            "id": "DAT-DOM-CUSTOMER",
+            "name": "Customer",
+            "description": "Customers, accounts, contracts, premises, and customer interactions.",
+            "owner": "Chief Customer Officer"
+        },
+        {
+            "id": "DAT-DOM-ASSET",
+            "name": "Asset",
+            "description": "Physical assets across the generation, transmission, distribution and back-office estate.",
+            "owner": "Head of Asset Management"
+        },
+        {
+            "id": "DAT-DOM-GENERATION",
+            "name": "Generation",
+            "description": "Generation units, production output, fuel, and emissions associated with energy production.",
+            "owner": "Head of Generation"
+        },
+        {
+            "id": "DAT-DOM-NETWORK",
+            "name": "Network",
+            "description": "Network topology, capacity, flows, and connection points.",
+            "owner": "Head of Network Operations"
+        },
+        {
+            "id": "DAT-DOM-MARKET",
+            "name": "Market & Trading",
+            "description": "Market data, trade positions, counterparties, and settlements.",
+            "owner": "Head of Trading"
+        },
+        {
+            "id": "DAT-DOM-METER",
+            "name": "Metering",
+            "description": "Meters, meter reads, consumption data, and metering points.",
+            "owner": "Head of Metering"
+        },
+        {
+            "id": "DAT-DOM-BILLING",
+            "name": "Billing & Payment",
+            "description": "Tariffs, bills, payments, and arrears.",
+            "owner": "Head of Retail Operations"
+        },
+        {
+            "id": "DAT-DOM-REGULATORY",
+            "name": "Regulatory & Compliance",
+            "description": "Licences, regulatory obligations, and compliance reporting.",
+            "owner": "Head of Regulatory Affairs"
+        },
+        {
+            "id": "DAT-DOM-SUSTAINABILITY",
+            "name": "Sustainability",
+            "description": "Emissions, renewable sources, carbon credits, and ESG disclosures.",
+            "owner": "Chief Sustainability Officer"
+        },
+        {
+            "id": "DAT-DOM-WORKFORCE",
+            "name": "Workforce",
+            "description": "Employees, contractors, skills, and field-work assignments.",
+            "owner": "Chief People Officer"
+        },
+        {
+            "id": "DAT-DOM-FINANCE",
+            "name": "Finance",
+            "description": "General ledger, cost centres, suppliers, and financial close.",
+            "owner": "Chief Financial Officer"
+        }
+    ],
+    "concepts": [
+        {
+            "id": "CON-CUSTOMER",
+            "name": "Customer",
+            "description": "A residential, business, or industrial customer purchasing energy.",
+            "domain-id": "DAT-DOM-CUSTOMER",
+            "type": "entity",
+            "classification": "confidential",
+            "aliases": [
+                "Account holder",
+                "Client"
+            ]
+        },
+        {
+            "id": "CON-ACCOUNT",
+            "name": "Account",
+            "description": "A billing relationship between the company and a customer.",
+            "domain-id": "DAT-DOM-CUSTOMER",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-CONTRACT",
+            "name": "Contract",
+            "description": "A signed agreement on tariff, term, and product between customer and supplier.",
+            "domain-id": "DAT-DOM-CUSTOMER",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-PREMISE",
+            "name": "Premise",
+            "description": "A physical location at which energy is supplied (the site identifier).",
+            "domain-id": "DAT-DOM-CUSTOMER",
+            "type": "entity",
+            "classification": "confidential",
+            "aliases": [
+                "Supply Point",
+                "Site"
+            ]
+        },
+        {
+            "id": "CON-CUST-INTERACTION",
+            "name": "Customer Interaction",
+            "description": "A discrete contact with a customer across any channel.",
+            "domain-id": "DAT-DOM-CUSTOMER",
+            "type": "event",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-ASSET",
+            "name": "Asset",
+            "description": "A managed physical asset (e.g. transformer, generator, vehicle).",
+            "domain-id": "DAT-DOM-ASSET",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-ASSET-TYPE",
+            "name": "Asset Type",
+            "description": "A class of asset with shared characteristics (taxonomy reference data).",
+            "domain-id": "DAT-DOM-ASSET",
+            "type": "reference",
+            "classification": "public"
+        },
+        {
+            "id": "CON-ASSET-CONDITION",
+            "name": "Asset Condition",
+            "description": "A point-in-time assessment of an asset's condition.",
+            "domain-id": "DAT-DOM-ASSET",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-MAINT-WORK-ORDER",
+            "name": "Maintenance Work Order",
+            "description": "A request to perform maintenance on an asset.",
+            "domain-id": "DAT-DOM-ASSET",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-GEN-UNIT",
+            "name": "Generation Unit",
+            "description": "An individually-dispatchable generating unit.",
+            "domain-id": "DAT-DOM-GENERATION",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-PRODUCTION-OUTPUT",
+            "name": "Production Output",
+            "description": "Energy produced by a unit over a reporting interval.",
+            "domain-id": "DAT-DOM-GENERATION",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-FUEL-CONSUMPTION",
+            "name": "Fuel Consumption",
+            "description": "Fuel consumed by a generating unit over a reporting interval.",
+            "domain-id": "DAT-DOM-GENERATION",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-GEN-OUTAGE",
+            "name": "Generation Outage",
+            "description": "A planned or unplanned outage of a generation unit.",
+            "domain-id": "DAT-DOM-GENERATION",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-NETWORK-NODE",
+            "name": "Network Node",
+            "description": "A node in the transmission or distribution network topology.",
+            "domain-id": "DAT-DOM-NETWORK",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-CONNECTION-POINT",
+            "name": "Connection Point",
+            "description": "Point at which a customer, generator or interconnector connects to the network.",
+            "domain-id": "DAT-DOM-NETWORK",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-NETWORK-CAPACITY",
+            "name": "Network Capacity",
+            "description": "Available capacity for a network element or path.",
+            "domain-id": "DAT-DOM-NETWORK",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-POWER-FLOW",
+            "name": "Power Flow",
+            "description": "Measured or estimated power flow across a network element.",
+            "domain-id": "DAT-DOM-NETWORK",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-NETWORK-OUTAGE",
+            "name": "Network Outage",
+            "description": "A planned or unplanned outage of a network element.",
+            "domain-id": "DAT-DOM-NETWORK",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-MARKET-PRICE",
+            "name": "Market Price",
+            "description": "A published or transacted price for an energy product on a market.",
+            "domain-id": "DAT-DOM-MARKET",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-TRADE",
+            "name": "Trade",
+            "description": "An individual trade between counterparties.",
+            "domain-id": "DAT-DOM-MARKET",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-POSITION",
+            "name": "Position",
+            "description": "Net exposure across products and tenors, derived from trades.",
+            "domain-id": "DAT-DOM-MARKET",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-COUNTERPARTY",
+            "name": "Counterparty",
+            "description": "A market counterparty to a trade or contract.",
+            "domain-id": "DAT-DOM-MARKET",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-SETTLEMENT",
+            "name": "Settlement",
+            "description": "Financial and physical settlement of a trade or market position.",
+            "domain-id": "DAT-DOM-MARKET",
+            "type": "event",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-METER",
+            "name": "Meter",
+            "description": "A device measuring consumption or production at a metering point.",
+            "domain-id": "DAT-DOM-METER",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-METER-POINT",
+            "name": "Metering Point",
+            "description": "Logical point at which metered consumption or production is measured (MPxN).",
+            "domain-id": "DAT-DOM-METER",
+            "type": "entity",
+            "classification": "internal",
+            "aliases": [
+                "MPAN",
+                "MPRN"
+            ]
+        },
+        {
+            "id": "CON-METER-READING",
+            "name": "Meter Reading",
+            "description": "A reading captured from a meter, validated or estimated.",
+            "domain-id": "DAT-DOM-METER",
+            "type": "event",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-CONSUMPTION",
+            "name": "Consumption",
+            "description": "Energy consumed at a metering point over an interval, derived from readings.",
+            "domain-id": "DAT-DOM-METER",
+            "type": "event",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-TARIFF",
+            "name": "Tariff",
+            "description": "A published or contracted price plan for a retail energy product.",
+            "domain-id": "DAT-DOM-BILLING",
+            "type": "reference",
+            "classification": "public"
+        },
+        {
+            "id": "CON-BILL",
+            "name": "Bill",
+            "description": "An invoice issued to a customer for an account period.",
+            "domain-id": "DAT-DOM-BILLING",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-PAYMENT",
+            "name": "Payment",
+            "description": "A payment received from a customer against a bill or balance.",
+            "domain-id": "DAT-DOM-BILLING",
+            "type": "event",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-ARREARS",
+            "name": "Arrears",
+            "description": "Outstanding overdue balance against an account.",
+            "domain-id": "DAT-DOM-BILLING",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-LICENCE",
+            "name": "Licence",
+            "description": "A regulatory licence held by the business.",
+            "domain-id": "DAT-DOM-REGULATORY",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-REG-OBLIGATION",
+            "name": "Regulatory Obligation",
+            "description": "A specific obligation arising from regulation or licence.",
+            "domain-id": "DAT-DOM-REGULATORY",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-COMPLIANCE-REPORT",
+            "name": "Compliance Report",
+            "description": "A periodic report submitted to a regulator.",
+            "domain-id": "DAT-DOM-REGULATORY",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-EMISSION",
+            "name": "Emission",
+            "description": "A measured or estimated greenhouse-gas emission.",
+            "domain-id": "DAT-DOM-SUSTAINABILITY",
+            "type": "event",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-RENEWABLE-SOURCE",
+            "name": "Renewable Source",
+            "description": "A renewable generation source (e.g. wind farm, solar plant).",
+            "domain-id": "DAT-DOM-SUSTAINABILITY",
+            "type": "entity",
+            "classification": "public"
+        },
+        {
+            "id": "CON-CARBON-CREDIT",
+            "name": "Carbon Credit",
+            "description": "A carbon-emissions credit or allowance.",
+            "domain-id": "DAT-DOM-SUSTAINABILITY",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-EMPLOYEE",
+            "name": "Employee",
+            "description": "A person employed by the business.",
+            "domain-id": "DAT-DOM-WORKFORCE",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-FIELD-CREW",
+            "name": "Field Crew",
+            "description": "A team carrying out field operations such as installation or maintenance.",
+            "domain-id": "DAT-DOM-WORKFORCE",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-SUPPLIER",
+            "name": "Supplier",
+            "description": "A supplier of goods or services to the business.",
+            "domain-id": "DAT-DOM-FINANCE",
+            "type": "entity",
+            "classification": "internal"
+        },
+        {
+            "id": "CON-INVOICE-PAYABLE",
+            "name": "Invoice Payable",
+            "description": "An invoice owed by the business to a supplier.",
+            "domain-id": "DAT-DOM-FINANCE",
+            "type": "entity",
+            "classification": "confidential"
+        },
+        {
+            "id": "CON-COST-CENTRE",
+            "name": "Cost Centre",
+            "description": "A cost centre in the financial reporting structure.",
+            "domain-id": "DAT-DOM-FINANCE",
+            "type": "reference",
+            "classification": "internal"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

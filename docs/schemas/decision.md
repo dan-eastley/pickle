@@ -1,7 +1,7 @@
 # Decision Record Schema
 
 **File:** [`/config/schemas/decision.json`](../../config/schemas/decision.json)
-**Validates:** `/architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`
+**Validates:** `/architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json`
 
 ## Purpose
 
@@ -38,8 +38,8 @@ flowchart TB
 
 ## Lifecycle
 
-1. **Author** creates `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
-2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires `Validate Context` (gate; deterministic: writes `context-validation`).
+1. **Author** creates `architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
+2. **Push** to a `decisions/<architecture-id>/<transition-id>/<decision-id>` branch fires `Validate Context` (gate; deterministic: writes `context-validation`).
 3. When the author moves the decision from **DRAFT to PROPOSED**, the Pickle API dispatches `Decisions Analysis`, one workflow with seven sequential jobs:
    1. Impact Assessment
    2. Referential Integrity

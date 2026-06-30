@@ -14,7 +14,7 @@ import usePageTitle from '../hooks/usePageTitle'
 
 export default function AbstractionPage() {
   const { clientId, versionId, domain, abstraction } = useParams()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
   const domainData = getDomain(domain)
   const abstractionData = getAbstraction(abstraction)
   const colors = ABSTRACTION_COLORS[abstraction]

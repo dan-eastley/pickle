@@ -24,14 +24,14 @@ export default function QuickPicker() {
   const ref = useRef(null)
   const inputRef = useRef(null)
 
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
 
   // Lazily load decisions + discoveries the first time the box is focused.
   useEffect(() => {
     if (!focused || extra || !clientId || !versionId) return
     let live = true
     const get = (p) =>
-      fetch(`/api/arch/clients/${clientId}/${versionId}/${p}`)
+      fetch(`/api/arch/${clientId}/${versionId}/${p}`)
         .then((r) => (r.ok ? r.json() : null))
         .catch(() => null)
     Promise.all([

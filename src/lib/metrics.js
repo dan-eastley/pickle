@@ -24,7 +24,7 @@ async function fetchJson(url) {
 
 async function listArtefactIds(clientId, versionId, domain, abstraction) {
   const data = await fetchJson(
-    `/api/arch/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`
+    `/api/arch/${clientId}/${versionId}/domains/${domain}/${abstraction}`
   )
   return (data?.entries ?? [])
     .filter((e) => !e.isDir && e.name.endsWith('.json'))
@@ -180,7 +180,7 @@ export async function loadVersionMetrics(clientId, versionId) {
       .filter((a) => a.format === 'catalogue' || a.format === 'document')
       .map(async (a) => {
         const data = await fetchJson(
-          `/api/arch/clients/${clientId}/${versionId}/domains/${a.domain}/${a.abstraction}/${a.id}.json`
+          `/api/arch/${clientId}/${versionId}/domains/${a.domain}/${a.abstraction}/${a.id}.json`
         )
         if (!data) return
         if (a.format === 'document') {
@@ -201,8 +201,8 @@ export async function loadVersionMetrics(clientId, versionId) {
 
   // 3) Governance.
   const [decIdx, discIdx] = await Promise.all([
-    fetchJson(`/api/arch/clients/${clientId}/${versionId}/decisions/decisions.json`),
-    fetchJson(`/api/arch/clients/${clientId}/${versionId}/discovery/discovery.json`),
+    fetchJson(`/api/arch/${clientId}/${versionId}/decisions/decisions.json`),
+    fetchJson(`/api/arch/${clientId}/${versionId}/discovery/discovery.json`),
   ])
   const decisionsList = decIdx?.decisions ?? []
   const discoveriesList = discIdx?.discoveries ?? []
@@ -228,8 +228,8 @@ export async function loadVersionMetrics(clientId, versionId) {
 
 // ── Per-client roll-up (across every version) ────────────────────────────────────
 export async function loadClientRollup(clientId) {
-  const idx = await fetchJson(`/api/arch/clients/${clientId}/versions.json`)
-  const versionIds = (idx?.versions ?? []).map((v) => v['version-id']).filter(Boolean)
+  const idx = await fetchJson(`/api/arch/${clientId}/transitions.json`)
+  const versionIds = (idx?.transitions ?? []).map((v) => v['transition-id']).filter(Boolean)
   if (versionIds.length === 0) return null
 
   const perVersion = await Promise.all(versionIds.map((v) => loadVersionMetrics(clientId, v)))

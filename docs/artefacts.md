@@ -7,7 +7,7 @@ An **artefact type** is a single, classified piece of architecture content. Ever
 - Conforms to exactly one [output format](output-formats.md)
 - Has a unique ID prefixed with the architecture domain acronym (e.g. `BUS-CAP`, `APP-DAP`)
 
-Each artefact type has a folder under `architectures/clients/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `config/schemas/`.
+Each artefact type has a folder under `architectures/<architecture>/<transition>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `config/schemas/`.
 
 ## Cross-domain baseline (Strategy / Principles / Guardrails)
 
@@ -122,4 +122,4 @@ Each new matrix follows the [Adding a new artefact type](#adding-a-new-artefact-
    - For a matrix joining two artefacts, see [Matrix placement](output-formats.md#matrix-placement) to determine which domain/layer the new artefact type belongs to and which source becomes `columns` vs `rows`.
 3. Add an entry for the new artefact-type ID to `/config/schemas/artefacts.json` (the schema index).
 4. Document the schema with a markdown page in `/docs/schemas/artefacts/domains/<domain>/<layer>/<ID>.md`.
-5. Create the instance file in each affected client version: `/architectures/clients/<client>/<version>/domains/<domain>/<layer>/<ID>.json`.
+5. Create the instance file in each affected client version: `/architectures/<architecture>/<transition>/domains/<domain>/<layer>/<ID>.json`.

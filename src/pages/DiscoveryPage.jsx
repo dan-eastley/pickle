@@ -46,7 +46,7 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onTo
           {discoveries.map((d) => (
             <Link
               key={d['discovery-id']}
-              to={`/clients/${clientId}/${versionId}/discovery/${d['discovery-id']}`}
+              to={`/architectures/${clientId}/${versionId}/discovery/${d['discovery-id']}`}
               className="group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
@@ -88,7 +88,7 @@ export default function DiscoveryPage() {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`/api/arch/clients/${clientId}/${versionId}/discovery/discovery.json`)
+    fetch(`/api/arch/${clientId}/${versionId}/discovery/discovery.json`)
       .then((r) => (r.ok ? r.json() : { discoveries: [] }))
       .then((data) => {
         if (cancelled) return
@@ -147,7 +147,7 @@ export default function DiscoveryPage() {
         strapline={`${clientName} · v${versionId}`}
         primary={
           <Button
-            to={`/clients/${clientId}/${versionId}/discovery/new`}
+            to={`/architectures/${clientId}/${versionId}/discovery/new`}
             size="lg"
             variant="primary"
           >

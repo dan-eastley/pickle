@@ -62,7 +62,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   ]
     .filter(Boolean)
     .join('&')
-  const fullEditorUrl = `/clients/${clientId}/${versionId}/discovery/new${scopeParams ? `?${scopeParams}` : ''}`
+  const fullEditorUrl = `/architectures/${clientId}/${versionId}/discovery/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
     <>
@@ -120,7 +120,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
                   The Virtual Architect Agent is running to produce its findings.
                 </p>
                 <TextLink
-                  to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`}
+                  to={`/architectures/${clientId}/${versionId}/discovery/${result.discoveryId}`}
                   onClick={onClose}
                   className="text-sm font-medium"
                 >
