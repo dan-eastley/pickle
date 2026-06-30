@@ -232,11 +232,7 @@ function Hero() {
       <div className="pointer-events-none absolute -bottom-40 -left-24 w-[28rem] h-[28rem] bg-rose-200/20 blur-3xl rounded-full" />
       <div className="relative z-10 max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/70 backdrop-blur border border-gray-200 text-xs font-medium text-gray-600 mb-5">
-            <span className="w-1.5 h-1.5 bg-brand-500" />
-            Architecture as Code · Agentic
-          </span>
-          <Logo align="left" size="xl" />
+          <Logo align="left" size="lg" />
           <p className="mt-6 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Your enterprise architecture as structured, version-controlled data, with AI agents that
             analyse every proposed change and a decision-record workflow that keeps your architects
