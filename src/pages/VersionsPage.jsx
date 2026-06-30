@@ -4,7 +4,7 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import { getVersions, getVersion } from '../lib/api'
 import { loadVersionMetrics } from '../lib/metrics'
 import { versionStatusBadge } from '../lib/theme'
-import ContentMetrics from '../components/common/ContentMetrics'
+import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
 import Illustration from '../components/ui/Illustration'
 import ClientLogo from '../components/ui/ClientLogo'
@@ -90,13 +90,6 @@ export default function VersionsPage() {
             const statusStyle = versionStatusBadge(meta?.status)
             const m = versionMetrics[vId]
             const base = `/clients/${clientId}/${vId}`
-            const governance = m
-              ? [
-                  { label: 'Documents', count: m.documents },
-                  { label: 'Decisions', count: m.decisions, to: `${base}/decisions` },
-                  { label: 'Discoveries', count: m.discoveries, to: `${base}/discovery` },
-                ]
-              : []
             return (
               <div key={vId} className="border border-gray-200 bg-white">
                 <Link
@@ -131,13 +124,12 @@ export default function VersionsPage() {
                       <Spinner size="sm" /> Loading content…
                     </div>
                   ) : (
-                    <ContentMetrics
-                      items={m?.content ?? []}
-                      extra={governance}
-                      dense
+                    <MetricBars
+                      perDomain={m?.perDomain}
+                      governance={{ decisions: m?.decisions, discoveries: m?.discoveries }}
                       empty={
                         <p className="py-1 text-xs text-gray-500">
-                          No content in this version yet.
+                          No content in this transition yet.
                         </p>
                       }
                     />

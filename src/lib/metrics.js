@@ -243,9 +243,20 @@ export async function loadClientRollup(clientId) {
   }
   const maturity = Math.max(...perVersion.map((m) => m.maturity))
 
+  // Merge per-domain content across versions so the clients list can group by domain.
+  const domains = new Set(perVersion.flatMap((m) => Object.keys(m.perDomain)))
+  const perDomain = {}
+  for (const d of domains) {
+    perDomain[d] = {
+      items: mergeContent(perVersion.map((m) => m.perDomain[d]?.items ?? [])),
+      documents: perVersion.reduce((acc, m) => acc + (m.perDomain[d]?.documents ?? 0), 0),
+    }
+  }
+
   return {
     versions: versionIds.length,
     content,
+    perDomain,
     documents: sum('documents'),
     decisions: sum('decisions'),
     discoveries: sum('discoveries'),
