@@ -1,0 +1,21 @@
+{
+    "decision-id": "ADR-017",
+    "title": "Rename CAP-001-04",
+    "status": "draft",
+    "context": "Called Retain Customer",
+    "problem": "We need to explicitly call out monitoring",
+    "proposal": "Rename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\"",
+    "narrative": "## Context\n\nCalled Retain Customer\n\n## Problem\n\nWe need to explicitly call out monitoring\n\n## Proposal\n\nRename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\"",
+    "scope": {
+        "domain": "business",
+        "abstraction": "conceptual",
+        "artefact": "BUS-BCM"
+    },
+    "activity": [
+        {
+            "timestamp": "2026-06-30T13:13:31.959Z",
+            "action": "Created",
+            "who": "Joe B"
+        }
+    ]
+}
