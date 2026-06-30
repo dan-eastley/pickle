@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import AuthCard, { Field } from '../components/auth/AuthCard'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
+import { LockIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 export default function LoginPage() {
@@ -73,7 +74,14 @@ export default function LoginPage() {
         )}
 
         <Button type="submit" size="lg" disabled={submitting} className="w-full">
-          {submitting ? <Spinner size="sm" className="text-white" /> : 'Sign in'}
+          {submitting ? (
+            <Spinner size="sm" className="text-white" />
+          ) : (
+            <>
+              <LockIcon className="w-4 h-4" />
+              Sign in
+            </>
+          )}
         </Button>
       </form>
     </AuthCard>
