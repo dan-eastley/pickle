@@ -126,7 +126,18 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
     <SlidePanel
       open={!!entityId}
       onClose={onClose}
-      title={entity ? nameWithId(entity.name, entity.id) : currentId}
+      title={
+        entity ? (
+          <span className="flex flex-col min-w-0">
+            <span className="text-[11px] font-mono font-normal text-gray-400 truncate">
+              {entity.id}
+            </span>
+            <span className="text-sm font-semibold text-gray-900 truncate">{entity.name}</span>
+          </span>
+        ) : (
+          currentId
+        )
+      }
       subtitle={artefact ? nameWithId(artefact.name, artefact.id) : undefined}
     >
       <div className="px-4 py-4">
