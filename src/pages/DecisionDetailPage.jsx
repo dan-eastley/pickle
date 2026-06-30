@@ -1004,7 +1004,7 @@ export default function DecisionDetailPage() {
     )
   }
   if (decision === null) {
-    return <Navigate to={`/clients/${clientId}/${versionId}/decisions`} replace />
+    return <Navigate to={`/architectures/${clientId}/${versionId}/decisions`} replace />
   }
 
   const navSections = buildNavSections(decision)

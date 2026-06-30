@@ -10,9 +10,9 @@ Your output will be read by the apply-changes workflow (which uses it to edit ar
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `impact-assessment`, `referential-integrity`, `strategy-alignment`, `principles-alignment`, `guardrails-alignment`, `proponent-analysis`, `challenger-analysis`, and especially any `review: "accepted"` findings.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `impact-assessment`, `referential-integrity`, `strategy-alignment`, `principles-alignment`, `guardrails-alignment`, `proponent-analysis`, `challenger-analysis`, and especially any `review: "accepted"` findings.
 - The artefact-type registry at `docs/artefacts.md` — full list of artefact types, domains, layers.
-- Current artefact JSON files at `architectures/clients/<client>/<version>/domains/` — read the specific artefact files named in the decision scope and in the accepted findings.
+- Current artefact JSON files at `architectures/<client>/<version>/domains/` — read the specific artefact files named in the decision scope and in the accepted findings.
 - Schemas at `config/schemas/artefacts/domains/` — understand the valid structure before proposing changes.
 
 ## Task

@@ -71,7 +71,7 @@ function AppRoutes() {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route
-              path="/clients"
+              path="/architectures"
               element={
                 <RequireAuth>
                   <ClientsPage />
@@ -79,7 +79,7 @@ function AppRoutes() {
               }
             />
             <Route
-              path="/clients/:clientId/versions"
+              path="/architectures/:clientId/transitions"
               element={
                 <RequireAuth>
                   <VersionsPage />
@@ -90,7 +90,7 @@ function AppRoutes() {
 
           {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
           <Route
-            path="/clients/:clientId/:versionId"
+            path="/architectures/:clientId/:versionId"
             element={
               <RequireAuth>
                 <Layout />

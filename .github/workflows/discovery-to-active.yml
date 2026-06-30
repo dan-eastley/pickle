@@ -41,7 +41,7 @@ jobs:
       VERSION_ID:    ${{ inputs.version-id }}
       DISCOVERY_ID:  ${{ inputs.discovery-id }}
       PROMPT_FILE:   config/prompts/discovery/architecture-discovery.md
-      DISCOVERY_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/discovery/${{ inputs.discovery-id }}/discovery.json
+      DISCOVERY_FILE: architectures/${{ inputs.client-id }}/${{ inputs.version-id }}/discovery/${{ inputs.discovery-id }}/discovery.json
     steps:
       - name: Started
         run: |
@@ -85,7 +85,7 @@ jobs:
               1. Read the prompt instructions at ${{ env.PROMPT_FILE }}.
               2. Read the discovery JSON at ${{ env.DISCOVERY_FILE }} (its context, request, scope).
               3. Interrogate the architecture data under
-                 architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/.
+                 architectures/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/.
               4. Write your Markdown answer into the discovery JSON's `findings` property
                  using the Edit or Write tool. Do not modify any other property.
 

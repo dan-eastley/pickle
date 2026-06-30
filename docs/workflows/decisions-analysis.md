@@ -6,7 +6,7 @@
 
 **Trigger:** `workflow_dispatch`, called by the Pickle API ([`/api/github`](../../src/api/github.js)) when a decision's status moves DRAFT → PROPOSED.
 
-A single workflow runs seven Claude-driven analyses sequentially as `needs:`-chained jobs. Each analysis writes to the matching kebab-cased section of the [decision JSON](../schemas/decision.md) at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, on the decision's own branch (`decisions/<client>/<version>/<decision-id>`): in-flight decisions live on their branch, not `main`.
+A single workflow runs seven Claude-driven analyses sequentially as `needs:`-chained jobs. Each analysis writes to the matching kebab-cased section of the [decision JSON](../schemas/decision.md) at `architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json`, on the decision's own branch (`decisions/<architecture>/<transition>/<decision-id>`): in-flight decisions live on their branch, not `main`.
 
 Narrative Review ([`decisions-narrative-review.yml`](../../.github/workflows/decisions-narrative-review.yml)) is a separate workflow that runs once, on DRAFT creation, writing to the `recommendations` section. It is not part of this chain.
 

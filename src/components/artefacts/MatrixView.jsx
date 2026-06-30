@@ -10,7 +10,7 @@ import FullscreenToggle from '../ui/FullscreenToggle'
 import Spinner from '../ui/Spinner'
 
 function artefactUrl(artefact, clientId, versionId) {
-  return `/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
+  return `/architectures/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
 }
 
 export default function MatrixView({ data, schema, clientId, versionId }) {

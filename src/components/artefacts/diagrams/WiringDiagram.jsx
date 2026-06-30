@@ -165,7 +165,7 @@ export default function WiringDiagram({ clientId, versionId }) {
   const [selection, setSelection] = useState(null) // { type: 'platform'|'pair', id }
 
   useEffect(() => {
-    const base = `/api/arch/clients/${clientId}/${versionId}/domains`
+    const base = `/api/arch/${clientId}/${versionId}/domains`
     Promise.all([
       fetch(`${base}/integration/logical/INT-IFC.json`).then((r) => (r.ok ? r.json() : null)),
       fetch(`${base}/application/logical/APP-DAP.json`).then((r) => (r.ok ? r.json() : null)),

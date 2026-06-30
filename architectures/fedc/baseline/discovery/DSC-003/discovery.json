@@ -1,0 +1,26 @@
+{
+    "$schema": "urn:pickle:schemas:discovery",
+    "discovery-id": "DSC-003",
+    "title": "Which platforms support Billing & Revenue Management?",
+    "status": "active",
+    "context": "We are reviewing the application landscape supporting retail and billing ahead of the CC&B migration.",
+    "request": "List the application platforms (APP-DAP) that support the Retail & Billing capability (CAP-006) and its level-2 sub-capabilities, and flag any capability with no supporting platform.",
+    "scope": {
+        "domain": "application",
+        "abstraction": "logical",
+        "artefact": "APP-DAP"
+    },
+    "findings": "## Retail & Billing Platform Coverage\n\n### Overview\n\nThe Retail & Billing capability (CAP-006) is decomposed into five level-2 sub-capabilities, each with varying platform support. As at version 1.0.0, four of five sub-capabilities have platform support; one has no supporting platform.\n\n### Capability-to-Platform Mapping\n\n| Sub-capability | ID | Description | Supporting Platforms |\n|---|---|---|---|\n| Manage Tariffs & Products | CAP-006-01 | Design and price retail energy products and tariffs | PLAT-TARIFF-ENGINE |\n| Read & Validate Meters | CAP-006-02 | Capture, validate, and estimate meter readings | PLAT-MDM, PLAT-HES |\n| Generate Bills | CAP-006-03 | Produce accurate, timely customer bills | PLAT-CIS |\n| Collect Payment | CAP-006-04 | Receive payment and manage payment methods | PLAT-CIS |\n| Manage Arrears | CAP-006-05 | Handle late payment, customer financial difficulty, and recovery | ⚠️ **No supporting platform** |\n\n### Platform Details\n\n**PLAT-CIS** (Customer Information System) — System-of-record in the Retail & Billing domain. Hosts the customer, account, and contract master plus the billing engine; supports both bill generation (CAP-006-03) and payment collection (CAP-006-04).\n\n**PLAT-TARIFF-ENGINE** (Tariff & Pricing Engine) — System-of-record. Handles tariff modelling, pricing, and rating for CAP-006-01.\n\n**PLAT-MDM** (Meter Data Management) — System-of-record in the Metering domain. Validates, estimates, and edits meter reads; maintains the metering point register; supports CAP-006-02.\n\n**PLAT-HES** (Head-End System) — System-of-record in the Metering domain. Manages smart-meter communications and command-and-control; also supports CAP-006-02.\n\n### Gap Analysis\n\n**CAP-006-05 (Manage Arrears)** is currently unsupported by any mapped platform. This capability covers late payment handling, customer financial difficulty management, and recovery — activities typically embedded in CIS or standalone collections systems. Given the CC&B migration context, this is a critical gap to address during platform selection and implementation.\n\n### Recommendation\n\nConfirm that CAP-006-05 will be supported by the CC&B replacement or identify a dedicated collections/arrears management platform during the migration.",
+    "activity": [
+        {
+            "timestamp": "2026-06-25T06:14:44.764Z",
+            "action": "Created",
+            "who": "Joe B"
+        },
+        {
+            "timestamp": "2026-06-25T06:14:44.764Z",
+            "action": "Updated",
+            "who": "Architecture Discovery Agent"
+        }
+    ]
+}

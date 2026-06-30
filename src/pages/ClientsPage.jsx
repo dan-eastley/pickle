@@ -10,13 +10,13 @@ import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
 function ClientCard({ client, clientsMetadata, m }) {
-  const clientId = client['client-id']
+  const clientId = client['architecture-id']
   const meta = clientsMetadata[clientId]
   const name = meta?.name ?? clientId
 
   return (
     <Link
-      to={`/clients/${clientId}/versions`}
+      to={`/architectures/${clientId}/transitions`}
       className="group flex flex-col sm:flex-row sm:items-stretch bg-white border border-gray-200 hover:border-gray-400 transition-colors"
     >
       {/* Identity column */}
@@ -53,7 +53,7 @@ function ClientCard({ client, clientsMetadata, m }) {
 
 export default function ClientsPage() {
   const { clients, clientsMetadata, loading } = useArchitecture()
-  usePageTitle('Clients')
+  usePageTitle('Architectures')
 
   // Per-client metrics (keyed by client-id), rolled up across every version.
   // Cards render immediately; metrics fill in as they resolve. A resolved value
@@ -62,7 +62,7 @@ export default function ClientsPage() {
   useEffect(() => {
     let live = true
     for (const c of clients) {
-      const id = c['client-id']
+      const id = c['architecture-id']
       loadClientRollup(id)
         .then((m) => live && setMetrics((prev) => ({ ...prev, [id]: m })))
         .catch(() => live && setMetrics((prev) => ({ ...prev, [id]: null })))
@@ -84,10 +84,10 @@ export default function ClientsPage() {
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-8 flex items-center justify-between gap-8">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
+          <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Select a client to view its architecture versions. The bars compare how populated each
-            client&rsquo;s architecture is.
+            Select an architecture to view its transition states. The bars compare how populated
+            each architecture is.
           </p>
         </div>
         <Illustration name="select-option" className="hidden md:block w-52 flex-shrink-0" />
@@ -96,10 +96,10 @@ export default function ClientsPage() {
       {clients.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Illustration name="no-data" className="w-56 mb-6" />
-          <p className="text-sm font-semibold text-gray-700">No clients yet</p>
+          <p className="text-sm font-semibold text-gray-700">No architectures yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
-            Architecture is organised per client. Add a client folder under{' '}
-            <code className="font-mono text-xs bg-gray-100 px-1">architectures/clients/</code> to
+            Each architecture lives in its own folder. Add one under{' '}
+            <code className="font-mono text-xs bg-gray-100 px-1">architectures/</code> to
             get started.
           </p>
         </div>
@@ -107,10 +107,10 @@ export default function ClientsPage() {
         <div className="flex flex-col gap-3">
           {clients.map((client) => (
             <ClientCard
-              key={client['client-id']}
+              key={client['architecture-id']}
               client={client}
               clientsMetadata={clientsMetadata}
-              m={metrics[client['client-id']]}
+              m={metrics[client['architecture-id']]}
             />
           ))}
         </div>

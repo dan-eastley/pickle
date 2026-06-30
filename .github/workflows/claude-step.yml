@@ -58,7 +58,7 @@ jobs:
       CLIENT_ID:     ${{ inputs.client-id }}
       VERSION_ID:    ${{ inputs.version-id }}
       DECISION_ID:   ${{ inputs.decision-id }}
-      DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
+      DECISION_FILE: architectures/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
     steps:
       - name: Started
         run: |
@@ -104,7 +104,7 @@ jobs:
               1. Read the prompt instructions at ${{ env.PROMPT_FILE }}.
               2. Read the decision JSON at ${{ env.DECISION_FILE }}.
               3. Read any other inputs the prompt asks for — architecture data
-                 lives under architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
+                 lives under architectures/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
                  schemas under config/schemas/.
               4. Follow the prompt's task exactly, including the output format it specifies.
               5. Write your result into the decision JSON's `${{ env.SECTION_KEY }}` property
