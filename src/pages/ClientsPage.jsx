@@ -9,26 +9,6 @@ import ClientLogo from '../components/ui/ClientLogo'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
-function MaturityBar({ m }) {
-  const pct = Math.round(m.maturity * 100)
-  return (
-    <div>
-      <div className="flex items-baseline justify-between text-xs mb-1">
-        <span className="font-semibold text-gray-700">Maturity</span>
-        <span className="text-gray-500">
-          {m.maturityTier} · {pct}%
-        </span>
-      </div>
-      <div className="h-2 bg-gray-100">
-        <div
-          className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-    </div>
-  )
-}
-
 function ClientCard({ client, clientsMetadata, m }) {
   const clientId = client['client-id']
   const meta = clientsMetadata[clientId]
@@ -67,15 +47,12 @@ function ClientCard({ client, clientsMetadata, m }) {
         ) : m === null ? (
           <p className="py-2 text-xs text-gray-500">No architecture content yet.</p>
         ) : (
-          <>
-            <MaturityBar m={m} />
-            <ContentMetrics
-              items={m.content}
-              extra={governance}
-              dense
-              empty={<p className="pt-1 text-xs text-gray-500">No architecture content yet.</p>}
-            />
-          </>
+          <ContentMetrics
+            items={m.content}
+            extra={governance}
+            dense
+            empty={<p className="pt-1 text-xs text-gray-500">No architecture content yet.</p>}
+          />
         )}
       </div>
     </Link>

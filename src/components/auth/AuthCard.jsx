@@ -1,20 +1,12 @@
-import { Link } from 'react-router-dom'
+import Logo from '../ui/Logo'
 
 // Centred card shell shared by the login and registration pages.
 export default function AuthCard({ title, subtitle, children, footer }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-50 via-white to-gray-50 px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="text-center mb-6">
-          <Link
-            to="/"
-            className="text-2xl font-bold tracking-widest uppercase bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent"
-          >
-            Pickle
-          </Link>
-          <p className="mt-1 text-xs text-gray-500 uppercase tracking-wider">
-            Agentic Architecture as a Service
-          </p>
+        <div className="flex justify-center mb-6">
+          <Logo align="center" size="lg" to="/" />
         </div>
 
         <div className="bg-white border border-gray-200 shadow-xl p-6 sm:p-8">
