@@ -10,8 +10,8 @@ Your findings will be read by business architects and delivery leads reviewing t
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
-- The full catalogue instance data under `architectures/clients/<client>/<version>/artefacts/` for the affected client and version.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
+- The full catalogue instance data under `architectures/<client>/<version>/artefacts/` for the affected client and version.
 - The schemas under `config/schemas/artefacts/` for the relevant artefact types.
 
 ## Task

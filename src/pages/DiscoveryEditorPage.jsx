@@ -74,7 +74,7 @@ export default function DiscoveryEditorPage() {
           <span className="font-semibold">{result.discoveryId}</span> created. The Virtual Architect
           Agent is running to produce its findings.{' '}
           <TextLink
-            to={`/clients/${clientId}/${versionId}/discovery/${result.discoveryId}`}
+            to={`/architectures/${clientId}/${versionId}/discovery/${result.discoveryId}`}
             className="font-medium"
           >
             Open {result.discoveryId} →

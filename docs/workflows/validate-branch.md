@@ -12,7 +12,7 @@ Reject branch names that don't fit one of the allowed patterns.
 | `main` | Default branch |
 | `develop` | Integration branch |
 | `features/<feature-id>` | Codebase changes |
-| `decisions/<client-id>/<version-id>/<decision-id>` | Architecture changes driven by an ADR |
+| `decisions/<architecture-id>/<transition-id>/<decision-id>` | Architecture changes driven by an ADR |
 
 ID segments accept `[A-Za-z0-9._-]+`.
 

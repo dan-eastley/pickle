@@ -22,10 +22,10 @@ export function ArchitectureProvider({ children }) {
       .then((list) => {
         setClients(list)
         if (!selectedClientId && list.length > 0) {
-          setSelectedClientId(list[0]['client-id'])
+          setSelectedClientId(list[0]['architecture-id'])
         }
         Promise.all(
-          list.map((c) => getClient(c['client-id']).then((meta) => [c['client-id'], meta]))
+          list.map((c) => getClient(c['architecture-id']).then((meta) => [c['architecture-id'], meta]))
         ).then((entries) => {
           setClientsMetadata(Object.fromEntries(entries.filter(([, m]) => m)))
         })
@@ -45,10 +45,10 @@ export function ArchitectureProvider({ children }) {
       .then(([meta, vers]) => {
         setClientMeta(meta)
         setVersions(vers)
-        const currentVersionValid = vers.some((v) => v['version-id'] === selectedVersionId)
+        const currentVersionValid = vers.some((v) => v['transition-id'] === selectedVersionId)
         if (!currentVersionValid && vers.length > 0) {
           // Select the latest (last) version
-          setSelectedVersionId(vers[vers.length - 1]['version-id'])
+          setSelectedVersionId(vers[vers.length - 1]['transition-id'])
         }
       })
       .catch((err) => setError(err.message))

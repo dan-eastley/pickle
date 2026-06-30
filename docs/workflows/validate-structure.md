@@ -12,15 +12,15 @@ Walk the `architectures/` tree and assert that the folder/file layout stays in s
 
 | # | Invariant |
 |---|---|
-| 1 | `architectures/clients/clients.json` exists |
-| 2 | Every `client-id` in `clients.json` has a matching `architectures/clients/<id>/` folder |
-| 3 | Every `architectures/clients/<id>/` folder has an entry in `clients.json` (no orphans) |
-| 4 | Each client folder has `client.json` and `versions.json` |
-| 5 | The `client.json`'s `client-id` field equals the folder name |
-| 6 | Every `version-id` in `versions.json` has a matching `<version>/` folder |
-| 7 | Every `<version>/` folder has an entry in `versions.json` (no orphans) |
-| 8 | Each version folder has `version.json`, `artefacts/`, `decisions/` |
-| 9 | The `version.json`'s `version-id` field equals the folder name |
+| 1 | `architectures/architectures.json` exists |
+| 2 | Every `client-id` in `architectures.json` has a matching `architectures/<id>/` folder |
+| 3 | Every `architectures/<id>/` folder has an entry in `architectures.json` (no orphans) |
+| 4 | Each client folder has `architecture.json` and `transitions.json` |
+| 5 | The `architecture.json`'s `client-id` field equals the folder name |
+| 6 | Every `version-id` in `transitions.json` has a matching `<transition>/` folder |
+| 7 | Every `<transition>/` folder has an entry in `transitions.json` (no orphans) |
+| 8 | Each version folder has `transition.json`, `artefacts/`, `decisions/` |
+| 9 | The `transition.json`'s `version-id` field equals the folder name |
 | 10 | Under `artefacts/domains/`, the 5 architecture-domain × 3 abstraction-layer grid is complete |
 | 11 | Under `decisions/`, `decisions.json` exists |
 | 12 | Every `decision-id` in `decisions.json` has a matching `<id>/decision.json` |
@@ -36,4 +36,4 @@ JSON Schema validates the shape of individual files (`validate-schema` already d
 
 ## How it stays maintainable
 
-The script treats the indexes (`clients.json`, `versions.json`, `decisions.json`) as the source of truth. When you add a new client, version, or decision, you update its index, the structure check then enforces the matching folder/file exists. No separate manifest to keep in sync.
+The script treats the indexes (`architectures.json`, `transitions.json`, `decisions.json`) as the source of truth. When you add a new client, version, or decision, you update its index, the structure check then enforces the matching folder/file exists. No separate manifest to keep in sync.

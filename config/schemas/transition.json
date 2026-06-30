@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:transition",
+    "title": "Transition Metadata",
+    "description": "Per-transition metadata file at architectures/<architecture>/<transition>/transition.json.",
+    "type": "object",
+    "required": [
+        "transition-id",
+        "name",
+        "status"
+    ],
+    "properties": {
+        "transition-id": {
+            "type": "string",
+            "description": "Unique identifier — must match the transition folder name (e.g. \"baseline\")"
+        },
+        "name": {
+            "type": "string",
+            "description": "Human-readable name for this transition state (e.g. \"Baseline\", \"Transition State 2026 Q2\")"
+        },
+        "description": {
+            "type": "string",
+            "description": "Brief description of what this transition represents — key changes, goals, or scope relative to previous transition states"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "draft",
+                "published",
+                "archived"
+            ],
+            "description": "Lifecycle status — draft (in progress), published (baseline), archived (superseded)"
+        },
+        "release-date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date this transition was published (ISO 8601, e.g. 2025-06-01). Leave blank for draft transitions."
+        }
+    },
+    "additionalProperties": false
+}

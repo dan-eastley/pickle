@@ -10,7 +10,7 @@ Your findings will be read by business sponsors, business architects, and delive
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read the `narrative` and `requirements` fields.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read the `narrative` and `requirements` fields.
 - The artefact-type registry at `docs/artefacts.md` — the authoritative list of all defined artefact types, their domains, layers, and formats.
 - The schema index at `config/schemas/artefacts.json` — maps artefact-type IDs to their catalogue schemas.
 - The branch environment variable `BRANCH` — shape is `decisions/<client>/<version>/<decision-id>`.

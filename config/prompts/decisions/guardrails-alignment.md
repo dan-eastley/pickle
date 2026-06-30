@@ -10,13 +10,13 @@ Your findings will be read by business architects, enterprise architects, and go
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `strategy-alignment`, and `principles-alignment`.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `strategy-alignment`, and `principles-alignment`.
 - The **Guardrails** catalogues (artefact format: **Catalogue**, abstraction layer: **Physical**) for each affected domain:
-  - **Business Guardrails** (`BUS-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/business/physical/BUS-GRD/`
-  - **Data Guardrails** (`DAT-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/data/physical/DAT-GRD/`
-  - **Integration Guardrails** (`INT-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/integration/physical/INT-GRD/`
-  - **Application Guardrails** (`APP-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/application/physical/APP-GRD/`
-  - **Solution Guardrails** (`SOL-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/solution/physical/SOL-GRD/`
+  - **Business Guardrails** (`BUS-GRD`) at `architectures/<client>/<version>/artefacts/domains/business/physical/BUS-GRD/`
+  - **Data Guardrails** (`DAT-GRD`) at `architectures/<client>/<version>/artefacts/domains/data/physical/DAT-GRD/`
+  - **Integration Guardrails** (`INT-GRD`) at `architectures/<client>/<version>/artefacts/domains/integration/physical/INT-GRD/`
+  - **Application Guardrails** (`APP-GRD`) at `architectures/<client>/<version>/artefacts/domains/application/physical/APP-GRD/`
+  - **Solution Guardrails** (`SOL-GRD`) at `architectures/<client>/<version>/artefacts/domains/solution/physical/SOL-GRD/`
 
 ## Task
 

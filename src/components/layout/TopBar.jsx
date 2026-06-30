@@ -67,17 +67,17 @@ export default function TopBar() {
 
   const handleClientChange = (newClientId) => {
     setClientId(newClientId)
-    navigate(`/clients/${newClientId}/${selectedVersionId ?? '1.0.0'}/domains`)
+    navigate(`/architectures/${newClientId}/${selectedVersionId ?? 'baseline'}/domains`)
   }
 
   const handleVersionChange = (versionId) => {
     setVersionId(versionId)
-    navigate(`/clients/${selectedClientId}/${versionId}/domains`)
+    navigate(`/architectures/${selectedClientId}/${versionId}/domains`)
   }
 
   const getClientLabel = (opt) => {
     if (!opt) return ''
-    const id = opt['client-id']
+    const id = opt['architecture-id']
     return clientsMetadata[id]?.name ?? id
   }
 
@@ -103,21 +103,21 @@ export default function TopBar() {
       <div className="flex items-center gap-2 flex-shrink-0">
         {clients.length > 1 && (
           <Dropdown
-            label="Select client"
+            label="Select architecture"
             value={selectedClientId}
             options={clients}
             onSelect={handleClientChange}
             getLabel={getClientLabel}
-            getId={(o) => o['client-id']}
+            getId={(o) => o['architecture-id']}
           />
         )}
         <Dropdown
-          label="Select version"
+          label="Select transition"
           value={selectedVersionId}
           options={versions}
           onSelect={handleVersionChange}
-          getLabel={(o) => o['version-id']}
-          getId={(o) => o['version-id']}
+          getLabel={(o) => o['transition-id']}
+          getId={(o) => o['transition-id']}
         />
       </div>
 

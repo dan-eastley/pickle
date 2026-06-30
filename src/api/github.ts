@@ -38,20 +38,20 @@ interface Scope {
 // ── Path + branch helpers ───────────────────────────────────────────────────────
 
 function decisionPath(clientId: string, versionId: string, decisionId: string): string {
-  return `architectures/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`
+  return `architectures/${clientId}/${versionId}/decisions/${decisionId}/decision.json`
 }
 function indexPath(clientId: string, versionId: string): string {
-  return `architectures/clients/${clientId}/${versionId}/decisions/decisions.json`
+  return `architectures/${clientId}/${versionId}/decisions/decisions.json`
 }
 function decisionBranch(clientId: string, versionId: string, decisionId: string): string {
   return `decisions/${clientId}/${versionId}/${decisionId}`
 }
 // Discovery records live on main (no per-record branch), unlike decisions.
 function discoveryPath(clientId: string, versionId: string, discoveryId: string): string {
-  return `architectures/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`
+  return `architectures/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`
 }
 function discoveriesIndexPath(clientId: string, versionId: string): string {
-  return `architectures/clients/${clientId}/${versionId}/discovery/discovery.json`
+  return `architectures/${clientId}/${versionId}/discovery/discovery.json`
 }
 
 function nowEntry(action: string, actor: string, notes?: string): Doc {
@@ -474,9 +474,9 @@ async function refreshDiscovery(
 
 // ── Identifier safety ───────────────────────────────────────────────────────────
 // Path-segment identifiers from the request flow into repository paths
-// (architectures/clients/<clientId>/<versionId>/…). Reject anything that isn't a
+// (architectures/<clientId>/<versionId>/…). Reject anything that isn't a
 // plain id — and specifically any `..` — so a crafted value can't traverse out of
-// the architectures tree. (Dots are allowed for versions like `1.0.0`.)
+// the architectures tree. (Dots are allowed in ids.)
 const SAFE_ID = /^[A-Za-z0-9._-]+$/
 function assertSafeIds(params: Record<string, unknown>): void {
   for (const k of ['clientId', 'versionId', 'decisionId', 'discoveryId']) {
