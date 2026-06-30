@@ -433,7 +433,7 @@ function DiagramRefs({ refs, clientId, versionId }) {
             </div>
             {artefact && (
               <Link
-                to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
+                to={`/architectures/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
                 className="flex-shrink-0 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 View →
@@ -594,7 +594,7 @@ function ContextLinks({ items, clientId, versionId }) {
       {items.map((link, i) => {
         const artefact = getArtefact(link['artefact-id'])
         const href = artefact
-          ? `/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
+          ? `/architectures/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
           : null
         return (
           <div

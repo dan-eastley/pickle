@@ -97,7 +97,7 @@ export default function NewDecisionModal({
   ]
     .filter(Boolean)
     .join('&')
-  const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
+  const fullEditorUrl = `/architectures/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
     <>
@@ -158,7 +158,7 @@ export default function NewDecisionModal({
                   Narrative Review is running to suggest improvements.
                 </p>
                 <TextLink
-                  to={`/clients/${clientId}/${versionId}/decisions/${result.decisionId}`}
+                  to={`/architectures/${clientId}/${versionId}/decisions/${result.decisionId}`}
                   state={{ cacheBust: true }}
                   onClick={onClose}
                   className="text-sm font-medium"

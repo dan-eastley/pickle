@@ -123,11 +123,11 @@ export default function DomainNav() {
   const [activeDropdown, setActiveDropdown] = useState(null)
   const navRef = useRef(null)
   const { clientId, versionId, domain: activeDomain } = useParams()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
 
-  const decisionsMatch = useMatch('/clients/:clientId/:versionId/decisions/*')
+  const decisionsMatch = useMatch('/architectures/:clientId/:versionId/decisions/*')
   const onDecisionsPage = !!decisionsMatch
-  const discoveryMatch = useMatch('/clients/:clientId/:versionId/discovery/*')
+  const discoveryMatch = useMatch('/architectures/:clientId/:versionId/discovery/*')
   const onDiscoveryPage = !!discoveryMatch
 
   useClickOutside(navRef, () => setActiveDropdown(null))

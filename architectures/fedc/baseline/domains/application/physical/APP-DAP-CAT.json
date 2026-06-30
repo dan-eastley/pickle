@@ -1,0 +1,193 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:physical:APP-DAP-CAT",
+    "audience": [
+        "Enterprise Architect",
+        "Application Architect",
+        "Chief Information Officer"
+    ],
+    "author": [
+        "Application Architect",
+        "Systems Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "PLAT-CRM",
+            "row-id": "APP-CAT-001",
+            "rationale": "Salesforce Sales Cloud is the deployed CRM for sales, service, and case management."
+        },
+        {
+            "column-id": "PLAT-DXP",
+            "row-id": "APP-CAT-002",
+            "rationale": "Oracle Utilities Customer Self Service provides the customer-facing digital experience portal."
+        },
+        {
+            "column-id": "PLAT-MOBILE-APP",
+            "row-id": "APP-CAT-003",
+            "rationale": "The customer mobile app is built and maintained on the OutSystems low-code platform."
+        },
+        {
+            "column-id": "PLAT-CONTACT-CENTRE",
+            "row-id": "APP-CAT-004",
+            "rationale": "Genesys Cloud CX provides voice, chat, and email routing with an agent desktop."
+        },
+        {
+            "column-id": "PLAT-MARKETING-AUTOMATION",
+            "row-id": "APP-CAT-005",
+            "rationale": "Salesforce Marketing Cloud runs campaign management and customer journeys."
+        },
+        {
+            "column-id": "PLAT-EAM",
+            "row-id": "APP-CAT-006",
+            "rationale": "IBM Maximo Application Suite is the asset register and work-order management system."
+        },
+        {
+            "column-id": "PLAT-FSM",
+            "row-id": "APP-CAT-007",
+            "rationale": "Oracle Field Service schedules and dispatches field crews."
+        },
+        {
+            "column-id": "PLAT-IOT",
+            "row-id": "APP-CAT-008",
+            "rationale": "PTC ThingWorx is the industrial IoT platform being trialled for edge telemetry."
+        },
+        {
+            "column-id": "PLAT-ETRM",
+            "row-id": "APP-CAT-009",
+            "rationale": "ION Endur is the energy trading and risk management system of record."
+        },
+        {
+            "column-id": "PLAT-MARKET-DATA",
+            "row-id": "APP-CAT-010",
+            "rationale": "LSEG Workspace supplies wholesale price feeds and forward curves."
+        },
+        {
+            "column-id": "PLAT-RISK-ANALYTICS",
+            "row-id": "APP-CAT-011",
+            "rationale": "Murex MX.3 provides VaR, stress testing, and credit risk analytics for the trading book."
+        },
+        {
+            "column-id": "PLAT-ADMS",
+            "row-id": "APP-CAT-012",
+            "rationale": "GE Vernova PowerOn Advantage operates the distribution network in real time."
+        },
+        {
+            "column-id": "PLAT-EMS",
+            "row-id": "APP-CAT-013",
+            "rationale": "Siemens Spectrum Power operates the transmission network in real time."
+        },
+        {
+            "column-id": "PLAT-OMS",
+            "row-id": "APP-CAT-014",
+            "rationale": "Oracle Utilities Network Management System handles outage prediction, dispatch, and customer communication."
+        },
+        {
+            "column-id": "PLAT-GIS",
+            "row-id": "APP-CAT-015",
+            "rationale": "Esri ArcGIS Utility Network is the spatial register of network assets and connectivity."
+        },
+        {
+            "column-id": "PLAT-CIS",
+            "row-id": "APP-CAT-016",
+            "rationale": "Oracle Utilities Customer Care & Billing holds the customer, account, and contract master plus billing engine."
+        },
+        {
+            "column-id": "PLAT-TARIFF-ENGINE",
+            "row-id": "APP-CAT-017",
+            "rationale": "Oracle Utilities Revenue Management and Billing performs tariff modelling, pricing, and rating."
+        },
+        {
+            "column-id": "PLAT-MDM",
+            "row-id": "APP-CAT-018",
+            "rationale": "Oracle Utilities Meter Data Management validates, estimates, and stores meter reads."
+        },
+        {
+            "column-id": "PLAT-HES",
+            "row-id": "APP-CAT-019",
+            "rationale": "Itron Enterprise Edition is the head-end system for smart-meter communications."
+        },
+        {
+            "column-id": "PLAT-REG-REPORTING",
+            "row-id": "APP-CAT-020",
+            "rationale": "Workiva produces compliance, statutory, and regulatory reports."
+        },
+        {
+            "column-id": "PLAT-EMISSIONS",
+            "row-id": "APP-CAT-021",
+            "rationale": "Persefoni is being trialled for Scope 1/2/3 emissions data capture and calculation."
+        },
+        {
+            "column-id": "PLAT-ESG",
+            "row-id": "APP-CAT-022",
+            "rationale": "Diligent ESG is being trialled for ESG disclosure aggregation and reporting."
+        },
+        {
+            "column-id": "PLAT-DATA-LAKEHOUSE",
+            "row-id": "APP-CAT-023",
+            "rationale": "Databricks Lakehouse Platform provides unified storage and compute for data products."
+        },
+        {
+            "column-id": "PLAT-MDM-MASTER",
+            "row-id": "APP-CAT-024",
+            "rationale": "Oracle Enterprise Data Management Cloud manages master data for customers, assets, and reference data."
+        },
+        {
+            "column-id": "PLAT-BI",
+            "row-id": "APP-CAT-025",
+            "rationale": "Oracle Analytics Cloud provides self-service analytics, dashboards, and reporting."
+        },
+        {
+            "column-id": "PLAT-ML",
+            "row-id": "APP-CAT-026",
+            "rationale": "Amazon SageMaker is the model training and deployment platform being trialled for ML workloads."
+        },
+        {
+            "column-id": "PLAT-ERP",
+            "row-id": "APP-CAT-027",
+            "rationale": "Oracle Fusion Cloud ERP covers finance, procurement, and cost management."
+        },
+        {
+            "column-id": "PLAT-HRIS",
+            "row-id": "APP-CAT-028",
+            "rationale": "Oracle Fusion Cloud HCM covers core HR, payroll, talent, and learning."
+        },
+        {
+            "column-id": "PLAT-ITSM",
+            "row-id": "APP-CAT-029",
+            "rationale": "ServiceNow ITSM handles incident, problem, change, and asset management for IT."
+        },
+        {
+            "column-id": "PLAT-COLLAB",
+            "row-id": "APP-CAT-030",
+            "rationale": "Microsoft 365 provides email, messaging, documents, and meetings for the workforce."
+        },
+        {
+            "column-id": "PLAT-API-GATEWAY",
+            "row-id": "APP-CAT-031",
+            "rationale": "Apigee is the managed gateway for inter-system API traffic."
+        },
+        {
+            "column-id": "PLAT-EVENT-BROKER",
+            "row-id": "APP-CAT-032",
+            "rationale": "Confluent Platform is the shared event-driven messaging backbone."
+        },
+        {
+            "column-id": "PLAT-IPAAS",
+            "row-id": "APP-CAT-033",
+            "rationale": "Oracle Integration Cloud runs low-code orchestrations and SaaS integrations."
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

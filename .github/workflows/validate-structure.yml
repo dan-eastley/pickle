@@ -3,7 +3,7 @@ name: Validate Structure
 # Walk the architectures/ tree and assert structural invariants:
 #   - every index entry has a matching folder (no missing)
 #   - every folder has a matching index entry (no orphans)
-#   - required files at each level (client.json, versions.json, version.json,
+#   - required files at each level (architecture.json, transitions.json, transition.json,
 #     decisions.json, decision.json)
 #   - the 5 x 3 architecture-domain x abstraction-layer grid is complete
 #     under each version's artefacts/

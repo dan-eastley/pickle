@@ -1,11 +1,11 @@
 # Decisions Index Schema
 
 **File:** [`/schemas/decisions.json`](../../schemas/decisions.json)
-**Validates:** `/architectures/clients/<client>/<version>/decisions/decisions.json`
+**Validates:** `/architectures/<architecture>/<transition>/decisions/decisions.json`
 
 ## Purpose
 
-Authoritative list of decision IDs for a client version. Per-decision content (narrative, status, the seven analysis sections) lives in the corresponding `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, one folder per decision, this index intentionally only carries the IDs, mirroring the [clients](clients.md) / [versions](versions.md) pattern.
+Authoritative list of decision IDs for an architecture transition. Per-decision content (narrative, status, the seven analysis sections) lives in the corresponding `architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json`, one folder per decision, this index intentionally only carries the IDs, mirroring the [architectures](architectures.md) / [transitions](transitions.md) pattern.
 
 ## Example
 
@@ -27,6 +27,6 @@ Authoritative list of decision IDs for a client version. Per-decision content (n
 
 ## Conventions
 
-- When raising a new decision (via a `decisions/<client>/<version>/<decision-id>` branch + matching JSON file), add a corresponding entry here in the same commit.
+- When raising a new decision (via a `decisions/<architecture>/<transition>/<decision-id>` branch + matching JSON file), add a corresponding entry here in the same commit.
 - The `decision-id` value must equal the decision folder name (e.g. folder `adr-001/` → `decision-id: "adr-001"`). The decision content always lives at `<decision-id>/decision.json`.
 - This is the index that drives discovery, listing this file gives you the decisions for that version without scanning the folder.

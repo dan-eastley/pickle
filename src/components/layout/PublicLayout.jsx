@@ -13,12 +13,12 @@ export default function PublicLayout() {
         <Logo align="left" size="sm" to="/" />
         <div className="flex-1" />
         <NavLink
-          to={user ? '/clients' : '/register'}
+          to={user ? '/architectures' : '/register'}
           className={({ isActive }) =>
             `text-sm font-medium px-3 py-1.5 transition-colors ${isActive ? 'text-brand-700 bg-brand-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'}`
           }
         >
-          {user ? 'View Clients' : 'Get Started'}
+          {user ? 'View Architectures' : 'Get Started'}
         </NavLink>
         <div className="h-5 w-px bg-gray-200 flex-shrink-0" />
         <UserMenu />

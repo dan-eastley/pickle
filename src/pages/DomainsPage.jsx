@@ -85,7 +85,7 @@ function DomainCard({ domain, base, dm, loading }) {
 
 export default function DomainsPage() {
   const { clientId, versionId } = useParams()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
   usePageTitle('Architecture Domains')
 
   const [metrics, setMetrics] = useState(null)

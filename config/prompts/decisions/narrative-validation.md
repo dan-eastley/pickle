@@ -10,7 +10,7 @@ The narrative and requirements will be read by business stakeholders, not techni
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, including the `narrative` and `requirements` fields.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json`, including the `narrative` and `requirements` fields.
 - The artefact-type registry at `docs/artefacts.md` and schemas at `config/schemas/artefacts/`.
 
 ## Task

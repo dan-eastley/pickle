@@ -6,8 +6,8 @@ Your output is read by architects and stakeholders who want a trustworthy view d
 
 ## Inputs
 
-- The discovery JSON at `architectures/clients/<client>/<version>/discovery/<discovery-id>/discovery.json` — read its `context` (the situation) and `request` (what is being asked). Honour any `scope` (domain / abstraction / artefact) to focus your analysis.
-- The architecture instance data under `architectures/clients/<client>/<version>/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json`.
+- The discovery JSON at `architectures/<client>/<version>/discovery/<discovery-id>/discovery.json` — read its `context` (the situation) and `request` (what is being asked). Honour any `scope` (domain / abstraction / artefact) to focus your analysis.
+- The architecture instance data under `architectures/<client>/<version>/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json`.
 - The artefact registry and relationships in `docs/artefacts.md`, and the schemas under `config/schemas/` for structure.
 
 ## Task
