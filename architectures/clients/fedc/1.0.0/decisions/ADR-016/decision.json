@@ -153,6 +153,32 @@
             "rationale": "Digital-by-default execution is the only basis for measurable outcomes and AI-assisted operations. If manual steps remain in the contact centre workflow, the organisation will have incomplete data for analytics and lack the foundation for future intelligent automation."
         }
     ],
+    "guardrails-alignment": [
+        {
+            "finding": "**Business Guardrails** (`BUS-GRD`) catalogue is empty — no guardrails are currently defined.",
+            "impact": "Without guardrail definitions, the decision cannot be assessed for compliance with business-level constraints (e.g. regulatory, operational, compliance, risk-management rules). The absence of guardrails in the baseline creates governance blind spots and prevents enforcement of business standards on architecture decisions.",
+            "recommendation": "**Populate the Business Guardrails (`BUS-GRD`) catalogue before finalising this decision.** Define guardrails that address business-level risks relevant to the CCaaS initiative — e.g. data residency, regulatory compliance (GDPR, CCPA), customer privacy, audit and compliance reporting, vendor lock-in, and operational resilience. Once guardrails are defined, re-run guardrails alignment to validate this decision against them.",
+            "rationale": "Guardrails are the organisation's top-level control framework. A CCaaS platform that will handle customer personal data and integrate with CRM requires explicit business-level guardrails to ensure compliance, privacy, and operational governance are achieved."
+        },
+        {
+            "finding": "**Application Guardrails** (`APP-GRD`) catalogue is empty — no guardrails are currently defined.",
+            "impact": "Without application-level guardrails, the decision cannot be assessed for compliance with constraints on cloud deployment, vendor selection, licensing, support models, or operational standards (e.g. uptime SLAs, incident response, observability, data backup). The CCaaS platform will be implemented without explicit architectural guardrails.",
+            "recommendation": "**Populate the Application Guardrails (`APP-GRD`) catalogue before finalising this decision.** Define guardrails that address application-level risks — e.g. cloud-first and cloud-only deployments, supported vendor ecosystems, licensing and cost controls, observability and telemetry standards, incident response time targets, and backup/disaster recovery requirements. Once defined, re-run guardrails alignment to validate the CCaaS platform against these guardrails.",
+            "rationale": "Application guardrails enforce technical standards across the portfolio. A CCaaS platform is a new, external system that will become part of the operational landscape; explicit guardrails ensure the vendor meets the organisation's standards for uptime, observability, compliance, and operational support."
+        },
+        {
+            "finding": "**Integration Guardrails** (`INT-GRD`) catalogue is empty — no guardrails are currently defined.",
+            "impact": "Without integration-level guardrails, the decision cannot be assessed for compliance with constraints on API design, data exchange security, integration patterns, or contract governance. The CCaaS integrations with CRM and work planning will be built without explicit integration standards.",
+            "recommendation": "**Populate the Integration Guardrails (`INT-GRD`) catalogue before finalising this decision.** Define guardrails that address integration risks — e.g. API versioning and lifecycle management, encryption-in-transit and data exchange security, API rate limiting and quota controls, integration monitoring and alerting, and contract-first design requirements. Once defined, re-run guardrails alignment to validate the proposed CCaaS integrations against these guardrails.",
+            "rationale": "Integration guardrails prevent tight coupling and ensure integration debt does not accumulate. The CCaaS platform will establish new inter-system exchanges with CRM and work planning; explicit guardrails ensure these integrations are loosely coupled, monitored, and standards-compliant."
+        },
+        {
+            "finding": "**Data Guardrails** (`DAT-GRD`) catalogue is empty — no guardrails are currently defined.",
+            "impact": "Without data-level guardrails, the decision cannot be assessed for compliance with constraints on data classification, privacy (GDPR, CCPA), retention, deletion, access control, or data quality standards. The CCaaS platform will produce customer personal data without explicit data governance guardrails.",
+            "recommendation": "**Populate the Data Guardrails (`DAT-GRD`) catalogue before finalising this decision.** Define guardrails that address data governance risks — e.g. data classification and labelling standards, personal data protection and consent management, retention and deletion policies, access control requirements, and data quality SLAs. Once defined, re-run guardrails alignment to validate the CCaaS data governance model against these guardrails.",
+            "rationale": "Data guardrails are essential for privacy compliance and risk management. A CCaaS platform will handle customer contact details, interaction transcripts, and agent notes (all personal data); explicit guardrails ensure privacy controls, consent tracking, and compliance are designed in from day one."
+        }
+    ],
     "referential-integrity": [
         {
             "finding": "All referential integrity checks passed for the architecture catalogues in scope.",
