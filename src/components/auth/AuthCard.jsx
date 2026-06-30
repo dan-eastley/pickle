@@ -6,7 +6,7 @@ export default function AuthCard({ title, subtitle, children, footer }) {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-50 via-white to-gray-50 px-4 py-12">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-6">
-          <Logo align="center" size="lg" to="/" />
+          <Logo align="center" size="sm" to="/" />
         </div>
 
         <div className="bg-white border border-gray-200 shadow-xl p-6 sm:p-8">
