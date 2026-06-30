@@ -13,19 +13,19 @@
     },
     "recommendations": [
         {
-            "recommendation": "Expand the **business rationale**. The narrative states 'we need to explicitly call out monitoring' but doesn't explain *why* — what business condition, customer insight, or operational challenge makes monitoring visibility now essential? This context is critical for downstream validation."
+            "recommendation": "**Add a Requirements section** with specific, testable requirements. Currently there are no measurable obligations. Include: (1) **Functional** — 'The Business Capabilities catalogue must display the capability name as \"Monitor & Retain Customer\" in all published views and exports'; (2) **Non-Functional** — 'All dependent references (process models, capability maps) must be verified for consistency within 5 business days of deployment.' These establish clear success criteria."
         },
         {
-            "recommendation": "Replace technical identifiers with plain language for a business audience. Instead of 'CAP-001-04' and 'BUS-BCM', use 'the Retain Customer capability in the Business Capabilities Model'. Jargon like 'artefacts' and 'trickle down' should be replaced with clearer terms like 'related models' and 'cascade' or 'propagate'."
+            "recommendation": "**Strengthen the business evidence.** The narrative says 'the operating model tells us we monitor and retain customers' but doesn't explain *why* this change is needed *now*. Add: What stakeholder feedback, process discovery, or outcome data indicates that the current name obscures the monitoring function? If teams are struggling to understand capability scope, cite that. If process analysis revealed monitoring as material but unnamed, reference it. This grounds the decision in business learning, not assumption."
         },
         {
-            "recommendation": "**Add a requirements section.** The narrative has no measurable requirements. Provide at least: (1) a functional requirement stating the capability name must be consistently updated across all dependent artefacts, and (2) a non-functional requirement describing how impact to downstream models will be assessed."
+            "recommendation": "**Replace technical language with plain business terms** for non-specialist readers. Change 'CAP-001-04' to 'the Retain Customer capability', 'BUS-BCM' to 'the Business Capabilities Model', and 'trickle down' to 'cascade to dependent models'. Remove or explain 'artefacts' (use 'models' or 'views' instead). This improves clarity for executive and non-architecture stakeholders."
         },
         {
-            "recommendation": "Clarify scope boundaries explicitly. State whether this ADR covers *only* the name change in the Business Capabilities Model, or whether it includes updates to dependent artefacts (e.g., process models, application capabilities). If updates to dependent artefacts are in scope, enumerate what will be changed; if out of scope, confirm that separate ADRs may be needed."
+            "recommendation": "**Clarify scope boundaries explicitly.** The proposal says 'This should trickle down to related models' but doesn't specify which models. State clearly: Is this ADR *only* renaming the capability in the Business Capabilities catalogue, or does it *also* include updates to process models, application capabilities, or other dependent artefacts? If out of scope, confirm that separate decisions may be needed. This prevents implementation disagreement."
         },
         {
-            "recommendation": "Define success criteria. How will you know this change has been successfully applied? Will the capability appear under the new name in published architecture views? Will stakeholder sign-off be required?"
+            "recommendation": "**Document stakeholder engagement.** Add a note confirming which teams (e.g., customer success, operations, analytics leads) were consulted on this rename and what their input was. If input is still pending, note that approval is contingent on team sign-off. This demonstrates collaborative decision-making and builds confidence in the change."
         }
     ],
     "referential-integrity": [
