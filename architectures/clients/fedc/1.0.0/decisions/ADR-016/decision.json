@@ -6,25 +6,40 @@
     "problem": "It doesn't support where the business needs to be",
     "proposal": "We want to implement a full CCaaS platform that covers all digital platforms and channels of communication, to drive customer engagement, interface with CRM and feed the work planning.",
     "narrative": "## Context\n\nWe use a legacy application, on-prem, unsupported that cover VOIP.\n\n## Problem\n\nIt doesn't support where the business needs to be\n\n## Proposal\n\nWe want to implement a full CCaaS platform that covers all digital platforms and channels of communication, to drive customer engagement, interface with CRM and feed the work planning.",
-    "requirements": [],
+    "requirements": [
+        {
+            "type": "Functional",
+            "statement": "Support omnichannel customer communication across voice, email, chat, and SMS channels."
+        },
+        {
+            "type": "Functional",
+            "statement": "Interface with the CRM system to capture customer context and enrich interactions."
+        },
+        {
+            "type": "Functional",
+            "statement": "Feed contact centre interactions to the work planning system to create and update work queue items."
+        },
+        {
+            "type": "Non-Functional",
+            "statement": "Support a minimum of 500 concurrent contact centre agents."
+        },
+        {
+            "type": "Non-Functional",
+            "statement": "Achieve end-to-end integration latency with CRM and work planning systems of less than 5 seconds."
+        }
+    ],
     "recommendations": [
         {
-            "recommendation": "**Clarify the problem statement.** Replace 'It doesn't support where the business needs to be' with concrete pain points — e.g. *What specific channels or capabilities does the legacy system lack? What customer segments are underserved?* This will help downstream architecture analysis understand the true business constraint."
+            "recommendation": "**Clarify the problem statement.** The context 'unsupported' legacy VOIP system is clear, but the problem statement 'It doesn't support where the business needs to be' is vague. Add concrete pain points — e.g. *lacks email and chat capabilities needed for modern customer engagement, cannot route to specialist queues, cannot track customer context across channels*. This will help stakeholders and architects understand the true business constraint."
         },
         {
-            "recommendation": "**Define 'CCaaS' for a business audience.** Spell out the term in the narrative and explain what it means in simple terms — e.g. *a cloud-based contact centre platform managed by a vendor* — so the decision is accessible to readers without technical architecture knowledge."
+            "recommendation": "**Define 'CCaaS' for a business audience.** The narrative uses the acronym without explanation. Add a sentence explaining that CCaaS means *a cloud-based contact centre platform managed by an external vendor, reducing on-premises infrastructure and support burden*. This ensures the decision is accessible to business readers without technical knowledge."
         },
         {
-            "recommendation": "**Enumerate the digital platforms and channels.** 'All digital platforms and channels' is too vague. List the specific channels in scope (e.g. phone, email, chat, SMS, social media) and which platforms will connect to them, so architecture analysis has clear boundaries."
+            "recommendation": "**Enumerate the digital channels explicitly.** The narrative mentions 'all digital platforms and channels' and the requirements now specify voice, email, chat, SMS — good progress. Consider clarifying in the narrative whether social media (Facebook, Twitter, etc.) is in scope, and whether all channels will be available from day one or phased."
         },
         {
-            "recommendation": "**Clarify the work planning integration.** Explain what 'feed the work planning' means in business terms — e.g. *enabling contact centre interactions to automatically create or update work queue items* — so the intent is clear to stakeholders and architects alike."
-        },
-        {
-            "recommendation": "**Add a requirements array.** The decision currently has no `requirements` field. Define measurable requirements that downstream architecture steps can validate — e.g. *Support omnichannel communication (voice, email, chat, SMS)*, *Integrate with the CRM system within 5 seconds*, *Support 500 concurrent users*, etc. Even if brief, these will ensure the decision has clear success criteria."
-        },
-        {
-            "recommendation": "**Clarify CRM and system integration scope.** The narrative mentions interfacing with CRM and work planning but doesn't specify *how* — are these new integrations, replacements for existing ones, or enhancements? Are there performance or data governance constraints? These details will guide architecture design."
+            "recommendation": "**Clarify the strategic motivation.** Link the CCaaS decision explicitly to the business strategy already in the decision JSON — the narrative should state that this platform enables 'customer-centric operations' and supports the goal of '90% of frontline staff in cross-functional customer-facing teams by 2027'. This elevates the initiative from a technology refresh to a strategic capability enabler."
         }
     ],
     "impact-assessment": [
