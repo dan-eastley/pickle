@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:discovery",
     "title": "Discovery Record",
-    "description": "A machine-readable Architecture Discovery — a question put to the Virtual Architect Agent, which interrogates the architecture state and produces a point-in-time view in answer. Stored at architectures/clients/<client>/<version>/discovery/<id>/discovery.json. SCAFFOLD: the discovery workflow is not yet implemented.",
+    "description": "A machine-readable Architecture Discovery — a question put to the Virtual Architect Agent, which interrogates the architecture state and produces a point-in-time view in answer. Stored at architectures/<architecture>/<transition>/discovery/<id>/discovery.json. SCAFFOLD: the discovery workflow is not yet implemented.",
     "type": "object",
     "required": [
         "discovery-id",

@@ -4,7 +4,7 @@
 //   node tests/validate-integrity.mjs
 //
 // Checks:
-//   - clients / versions indexes match the folders on disk
+//   - architectures / transitions indexes match the folders on disk
 //   - discovery index matches the discovery records (ids + status)
 //   - audience / author roles exist in config/roles.json
 //   - artefact instance $schema URN mirrors its file path
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const REPO = resolve(__dirname, '..')
-const A = resolve(REPO, 'architectures/clients')
+const A = resolve(REPO, 'architectures')
 const read = (f) => JSON.parse(readFileSync(f, 'utf8'))
 const subdirs = (d) => existsSync(d) ? readdirSync(d, { withFileTypes: true }).filter(e => e.isDirectory()).map(e => e.name) : []
 const META = new Set(['audience', 'author', 'activity'])
@@ -25,10 +25,10 @@ let errors = 0
 const err = (m) => { console.log(`  ✖ ${m}`); errors++ }
 const same = (a, b) => a.length === b.length && a.every(x => b.includes(x))
 
-// ── Clients index ↔ folders ─────────────────────────────────────────────────
-const clientIds = read(join(A, 'clients.json')).clients.map(c => c['client-id'])
+// ── Architectures index ↔ folders ───────────────────────────────────────────
+const clientIds = read(join(A, 'architectures.json')).architectures.map(c => c['architecture-id'])
 const clientFolders = subdirs(A)
-if (!same(clientIds, clientFolders)) err(`clients.json [${clientIds}] ≠ folders [${clientFolders}]`)
+if (!same(clientIds, clientFolders)) err(`architectures.json [${clientIds}] ≠ folders [${clientFolders}]`)
 
 // ── Roles registry ──────────────────────────────────────────────────────────
 const roleNames = new Set(read(resolve(REPO, 'config/roles.json')).roles.map(r => r.name))
@@ -43,9 +43,9 @@ function walk(dir) {
 
 for (const client of clientFolders) {
   // ── Versions index ↔ folders ──
-  const vPath = join(A, client, 'versions.json')
-  if (!existsSync(vPath)) { err(`${client}: missing versions.json`); continue }
-  const versionIds = read(vPath).versions.map(v => v['version-id'])
+  const vPath = join(A, client, 'transitions.json')
+  if (!existsSync(vPath)) { err(`${client}: missing transitions.json`); continue }
+  const versionIds = read(vPath).transitions.map(v => v['transition-id'])
   const versionFolders = subdirs(join(A, client))
   if (!same(versionIds, versionFolders)) err(`${client}: versions.json [${versionIds}] ≠ folders [${versionFolders}]`)
 

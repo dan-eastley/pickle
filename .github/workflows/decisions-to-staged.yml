@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH:      decisions/${{ inputs.client-id }}/${{ inputs.version-id }}/${{ inputs.decision-id }}
-      INDEX_FILE:  architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/decisions.json
+      INDEX_FILE:  architectures/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/decisions.json
       DECISION_ID: ${{ inputs.decision-id }}
       CLIENT_ID:   ${{ inputs.client-id }}
       VERSION_ID:  ${{ inputs.version-id }}

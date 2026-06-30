@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:transitions",
+    "title": "Transitions Index",
+    "description": "Authoritative list of transition IDs for an architecture. Per-transition metadata lives in architectures/<architecture>/<transition>/transition.json.",
+    "type": "object",
+    "required": [
+        "transitions"
+    ],
+    "properties": {
+        "transitions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "transition-id"
+                ],
+                "properties": {
+                    "transition-id": {
+                        "type": "string",
+                        "description": "Unique identifier — must match the transition folder name (e.g. \"baseline\")"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

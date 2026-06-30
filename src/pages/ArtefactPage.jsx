@@ -96,7 +96,7 @@ function AdrActionBar({ artefact, documents, selectedDocument, clientId, version
   const colors = DOMAIN_COLORS[artefact.domain]
   const bgClass = colors?.bg ?? 'bg-gray-50'
   const btnClass = colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
-  const viewDecisionsUrl = `/clients/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
+  const viewDecisionsUrl = `/architectures/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
 
   return (
     <>
@@ -245,7 +245,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                     return (
                       <Link
                         key={artefactId}
-                        to={`/clients/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
+                        to={`/architectures/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
                         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
                       >
                         <span className="text-gray-500">{relationship}</span>
@@ -332,7 +332,7 @@ export default function ArtefactPage() {
 
   if (!artefact) {
     return (
-      <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
+      <Navigate to={`/architectures/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
     )
   }
 

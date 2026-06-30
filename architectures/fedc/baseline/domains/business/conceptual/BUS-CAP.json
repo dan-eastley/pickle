@@ -1,0 +1,501 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-CAP",
+    "audience": ["Enterprise Architect", "Business Architect", "Chief Operating Officer"],
+    "author": ["Business Architect", "Business Analyst"],
+    "capabilities": [
+        {
+            "id": "CAP-001",
+            "name": "Customer Management",
+            "level": 1,
+            "description": "Acquiring, serving, and retaining residential, commercial and industrial energy customers across all channels.",
+            "importance": "differentiating"
+        },
+        {
+            "id": "CAP-002",
+            "name": "Energy Generation",
+            "level": 1,
+            "description": "Producing electrical and thermal energy from conventional and renewable sources.",
+            "importance": "strategic"
+        },
+        {
+            "id": "CAP-003",
+            "name": "Energy Trading & Risk Management",
+            "level": 1,
+            "description": "Buying, selling, and hedging energy and related products in wholesale and retail markets.",
+            "importance": "strategic"
+        },
+        {
+            "id": "CAP-004",
+            "name": "Network Operations",
+            "level": 1,
+            "description": "Operating transmission and distribution networks to move energy reliably from generation to consumption.",
+            "importance": "foundational"
+        },
+        {
+            "id": "CAP-005",
+            "name": "Asset Management",
+            "level": 1,
+            "description": "Planning, acquiring, operating, maintaining, and decommissioning physical assets across the value chain.",
+            "importance": "foundational"
+        },
+        {
+            "id": "CAP-006",
+            "name": "Retail & Billing",
+            "level": 1,
+            "description": "Pricing energy products, metering consumption, generating bills, and collecting payment.",
+            "importance": "foundational"
+        },
+        {
+            "id": "CAP-007",
+            "name": "Regulatory & Compliance",
+            "level": 1,
+            "description": "Maintaining the right to operate via licensing, reporting, audits, and safety obligations.",
+            "importance": "foundational"
+        },
+        {
+            "id": "CAP-008",
+            "name": "Sustainability & Decarbonisation",
+            "level": 1,
+            "description": "Reducing emissions, increasing renewable share, and meeting evolving ESG obligations.",
+            "importance": "strategic"
+        },
+        {
+            "id": "CAP-009",
+            "name": "Enterprise Support",
+            "level": 1,
+            "description": "Cross-cutting business support: finance, HR, IT, legal, and procurement.",
+            "importance": "foundational"
+        },
+        {
+            "id": "CAP-001-01",
+            "name": "Acquire Customer",
+            "level": 2,
+            "parent-id": "CAP-001",
+            "description": "Generate, qualify, and convert prospects into customers across channels."
+        },
+        {
+            "id": "CAP-001-02",
+            "name": "Service Customer",
+            "level": 2,
+            "parent-id": "CAP-001",
+            "description": "Respond to enquiries, complaints, and service requests across channels."
+        },
+        {
+            "id": "CAP-001-03",
+            "name": "Manage Customer Insight",
+            "level": 2,
+            "parent-id": "CAP-001",
+            "description": "Understand customer needs, behaviours, and value, and act on that insight."
+        },
+        {
+            "id": "CAP-001-04",
+            "name": "Retain Customer",
+            "level": 2,
+            "parent-id": "CAP-001",
+            "description": "Renew, save, and grow value with existing customers."
+        },
+        {
+            "id": "CAP-001-05",
+            "name": "Offboard Customer",
+            "level": 2,
+            "parent-id": "CAP-001",
+            "description": "Manage the departure of customers, ensuring fair, transparent, and compliant exit from the portfolio."
+        },
+        {
+            "id": "CAP-002-01",
+            "name": "Plan Generation Capacity",
+            "level": 2,
+            "parent-id": "CAP-002",
+            "description": "Forecast demand and plan generation mix and capacity additions."
+        },
+        {
+            "id": "CAP-002-02",
+            "name": "Operate Generation Assets",
+            "level": 2,
+            "parent-id": "CAP-002",
+            "description": "Run generation assets safely, reliably, and economically against the dispatch schedule."
+        },
+        {
+            "id": "CAP-002-03",
+            "name": "Manage Fuel & Inputs",
+            "level": 2,
+            "parent-id": "CAP-002",
+            "description": "Source, schedule, and manage fuel and other generation inputs."
+        },
+        {
+            "id": "CAP-002-04",
+            "name": "Optimise Generation Portfolio",
+            "level": 2,
+            "parent-id": "CAP-002",
+            "description": "Optimise dispatch and unit commitment across the portfolio against price and constraint."
+        },
+        {
+            "id": "CAP-003-01",
+            "name": "Forecast Demand & Supply",
+            "level": 2,
+            "parent-id": "CAP-003",
+            "description": "Forecast load, generation, and price across horizons."
+        },
+        {
+            "id": "CAP-003-02",
+            "name": "Trade Energy & Products",
+            "level": 2,
+            "parent-id": "CAP-003",
+            "description": "Execute trades in wholesale and retail energy markets and adjacent products."
+        },
+        {
+            "id": "CAP-003-03",
+            "name": "Manage Trading Risk",
+            "level": 2,
+            "parent-id": "CAP-003",
+            "description": "Measure and manage market, credit, and operational risk across the trading book."
+        },
+        {
+            "id": "CAP-003-04",
+            "name": "Settle Trades",
+            "level": 2,
+            "parent-id": "CAP-003",
+            "description": "Confirm, invoice, and settle trades with counterparties and market operators."
+        },
+        {
+            "id": "CAP-004-01",
+            "name": "Plan Network Investment",
+            "level": 2,
+            "parent-id": "CAP-004",
+            "description": "Plan transmission and distribution network development against load growth and policy."
+        },
+        {
+            "id": "CAP-004-02",
+            "name": "Operate Network",
+            "level": 2,
+            "parent-id": "CAP-004",
+            "description": "Run the network within operating limits, including balancing and constraint management."
+        },
+        {
+            "id": "CAP-004-03",
+            "name": "Maintain Network",
+            "level": 2,
+            "parent-id": "CAP-004",
+            "description": "Maintain and repair network assets to sustain reliability."
+        },
+        {
+            "id": "CAP-004-04",
+            "name": "Manage Outages",
+            "level": 2,
+            "parent-id": "CAP-004",
+            "description": "Plan and respond to outages, restoration, and emergency events."
+        },
+        {
+            "id": "CAP-004-05",
+            "name": "Connect Customers & Generators",
+            "level": 2,
+            "parent-id": "CAP-004",
+            "description": "Connect new loads and generators to the network."
+        },
+        {
+            "id": "CAP-005-01",
+            "name": "Plan Assets",
+            "level": 2,
+            "parent-id": "CAP-005",
+            "description": "Develop the asset investment plan against demand, risk, and policy."
+        },
+        {
+            "id": "CAP-005-02",
+            "name": "Acquire & Construct Assets",
+            "level": 2,
+            "parent-id": "CAP-005",
+            "description": "Procure, build, and commission new assets."
+        },
+        {
+            "id": "CAP-005-03",
+            "name": "Operate Assets",
+            "level": 2,
+            "parent-id": "CAP-005",
+            "description": "Operate assets within their performance envelope."
+        },
+        {
+            "id": "CAP-005-04",
+            "name": "Maintain Assets",
+            "level": 2,
+            "parent-id": "CAP-005",
+            "description": "Inspect, maintain, and repair assets over their lifecycle."
+        },
+        {
+            "id": "CAP-005-05",
+            "name": "Decommission Assets",
+            "level": 2,
+            "parent-id": "CAP-005",
+            "description": "Retire and dispose of end-of-life assets."
+        },
+        {
+            "id": "CAP-006-01",
+            "name": "Manage Tariffs & Products",
+            "level": 2,
+            "parent-id": "CAP-006",
+            "description": "Design and price retail energy products and tariffs."
+        },
+        {
+            "id": "CAP-006-02",
+            "name": "Read & Validate Meters",
+            "level": 2,
+            "parent-id": "CAP-006",
+            "description": "Capture, validate, and estimate meter readings."
+        },
+        {
+            "id": "CAP-006-03",
+            "name": "Generate Bills",
+            "level": 2,
+            "parent-id": "CAP-006",
+            "description": "Produce accurate, timely customer bills."
+        },
+        {
+            "id": "CAP-006-04",
+            "name": "Collect Payment",
+            "level": 2,
+            "parent-id": "CAP-006",
+            "description": "Receive payment and manage payment methods."
+        },
+        {
+            "id": "CAP-006-05",
+            "name": "Manage Arrears",
+            "level": 2,
+            "parent-id": "CAP-006",
+            "description": "Handle late payment, customer financial difficulty, and recovery."
+        },
+        {
+            "id": "CAP-007-01",
+            "name": "Manage Licensing",
+            "level": 2,
+            "parent-id": "CAP-007",
+            "description": "Hold and maintain the licences required to operate."
+        },
+        {
+            "id": "CAP-007-02",
+            "name": "Report to Regulators",
+            "level": 2,
+            "parent-id": "CAP-007",
+            "description": "Produce regulatory and statutory reports."
+        },
+        {
+            "id": "CAP-007-03",
+            "name": "Manage Audits & Investigations",
+            "level": 2,
+            "parent-id": "CAP-007",
+            "description": "Support audits and investigations and remediate findings."
+        },
+        {
+            "id": "CAP-007-04",
+            "name": "Manage Safety & Environment",
+            "level": 2,
+            "parent-id": "CAP-007",
+            "description": "Discharge health, safety and environmental obligations."
+        },
+        {
+            "id": "CAP-008-01",
+            "name": "Measure Emissions",
+            "level": 2,
+            "parent-id": "CAP-008",
+            "description": "Quantify Scope 1, 2 and 3 emissions across the value chain."
+        },
+        {
+            "id": "CAP-008-02",
+            "name": "Integrate Renewable Generation",
+            "level": 2,
+            "parent-id": "CAP-008",
+            "description": "Connect and orchestrate renewable generation sources."
+        },
+        {
+            "id": "CAP-008-03",
+            "name": "Manage Carbon Credits & Offsets",
+            "level": 2,
+            "parent-id": "CAP-008",
+            "description": "Trade, retire and audit carbon credits and offsets."
+        },
+        {
+            "id": "CAP-008-04",
+            "name": "Report ESG Performance",
+            "level": 2,
+            "parent-id": "CAP-008",
+            "description": "Disclose ESG performance to investors, regulators and the public."
+        },
+        {
+            "id": "CAP-009-01",
+            "name": "Manage Finance",
+            "level": 2,
+            "parent-id": "CAP-009",
+            "description": "Accounting, treasury, planning, and tax."
+        },
+        {
+            "id": "CAP-009-02",
+            "name": "Manage People",
+            "level": 2,
+            "parent-id": "CAP-009",
+            "description": "Hire, develop, pay and exit people."
+        },
+        {
+            "id": "CAP-009-03",
+            "name": "Manage Technology",
+            "level": 2,
+            "parent-id": "CAP-009",
+            "description": "Provide IT infrastructure, applications and operating services to the business."
+        },
+        {
+            "id": "CAP-009-04",
+            "name": "Manage Procurement",
+            "level": 2,
+            "parent-id": "CAP-009",
+            "description": "Source goods and services and manage supplier relationships."
+        },
+        {
+            "id": "CAP-001-01-01",
+            "name": "Generate Leads",
+            "level": 3,
+            "parent-id": "CAP-001-01",
+            "description": "Identify and capture prospective customers via marketing channels."
+        },
+        {
+            "id": "CAP-001-01-02",
+            "name": "Qualify Prospects",
+            "level": 3,
+            "parent-id": "CAP-001-01",
+            "description": "Assess fit, creditworthiness and intent of prospects."
+        },
+        {
+            "id": "CAP-001-01-03",
+            "name": "Convert Sales",
+            "level": 3,
+            "parent-id": "CAP-001-01",
+            "description": "Close the sale and capture the contract."
+        },
+        {
+            "id": "CAP-001-01-04",
+            "name": "Onboard Customer",
+            "level": 3,
+            "parent-id": "CAP-001-01",
+            "description": "Provision service, switch supply, and orient the customer."
+        },
+        {
+            "id": "CAP-001-05-01",
+            "name": "Notify Customer",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Notify customer of account suspension and offboarding timeline."
+        },
+        {
+            "id": "CAP-001-05-02",
+            "name": "Handle Data Requests",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Process data deletion and data access requests per GDPR/CCPA regulations."
+        },
+        {
+            "id": "CAP-001-05-03",
+            "name": "Close Account",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Close account and remove system access."
+        },
+        {
+            "id": "CAP-001-05-04",
+            "name": "Process Settlement",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Process final payment settlement and financial reconciliation."
+        },
+        {
+            "id": "CAP-001-05-05",
+            "name": "Notify Compliance & Legal",
+            "level": 3,
+            "parent-id": "CAP-001-05",
+            "description": "Notify compliance, legal, and audit teams of customer offboarding."
+        },
+        {
+            "id": "CAP-002-02-01",
+            "name": "Dispatch Units",
+            "level": 3,
+            "parent-id": "CAP-002-02",
+            "description": "Bring units online and offline according to plan and real-time signals."
+        },
+        {
+            "id": "CAP-002-02-02",
+            "name": "Manage Real-Time Performance",
+            "level": 3,
+            "parent-id": "CAP-002-02",
+            "description": "Monitor and control unit performance against operating targets."
+        },
+        {
+            "id": "CAP-002-02-03",
+            "name": "Quality Control",
+            "level": 3,
+            "parent-id": "CAP-002-02",
+            "description": "Ensure output meets quality, frequency and stability requirements."
+        },
+        {
+            "id": "CAP-003-02-01",
+            "name": "Trade Day-Ahead",
+            "level": 3,
+            "parent-id": "CAP-003-02",
+            "description": "Trade in day-ahead and balancing markets."
+        },
+        {
+            "id": "CAP-003-02-02",
+            "name": "Trade Intraday",
+            "level": 3,
+            "parent-id": "CAP-003-02",
+            "description": "Trade in intraday continuous markets."
+        },
+        {
+            "id": "CAP-003-02-03",
+            "name": "Negotiate Bilateral Contracts",
+            "level": 3,
+            "parent-id": "CAP-003-02",
+            "description": "Negotiate longer-term bilateral and structured contracts."
+        },
+        {
+            "id": "CAP-004-04-01",
+            "name": "Plan Planned Outages",
+            "level": 3,
+            "parent-id": "CAP-004-04",
+            "description": "Schedule and prepare planned outages for maintenance and works."
+        },
+        {
+            "id": "CAP-004-04-02",
+            "name": "Respond to Unplanned Outages",
+            "level": 3,
+            "parent-id": "CAP-004-04",
+            "description": "Detect, triage and restore from unplanned outages."
+        },
+        {
+            "id": "CAP-004-04-03",
+            "name": "Communicate to Affected Customers",
+            "level": 3,
+            "parent-id": "CAP-004-04",
+            "description": "Inform customers of outage scope, cause, and restoration."
+        },
+        {
+            "id": "CAP-006-03-01",
+            "name": "Calculate Charges",
+            "level": 3,
+            "parent-id": "CAP-006-03",
+            "description": "Apply tariffs and usage data to calculate billable amounts."
+        },
+        {
+            "id": "CAP-006-03-02",
+            "name": "Validate Bills",
+            "level": 3,
+            "parent-id": "CAP-006-03",
+            "description": "Validate bills for accuracy before dispatch."
+        },
+        {
+            "id": "CAP-006-03-03",
+            "name": "Dispatch Bills",
+            "level": 3,
+            "parent-id": "CAP-006-03",
+            "description": "Deliver bills to customers via preferred channels."
+        }
+    ],
+    "activity": [
+        { "timestamp": "2026-01-15T09:30:00Z", "action": "Created", "who": "Joe B", "notes": "Initial business capability catalogue established for the 1.0.0 baseline." },
+        { "timestamp": "2026-03-04T14:10:00Z", "action": "Updated", "who": "Joe B", "notes": "Added Level 3 sub-capabilities under Billing & Revenue Management." }
+    ]
+}

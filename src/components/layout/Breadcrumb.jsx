@@ -45,14 +45,14 @@ export default function Breadcrumb() {
   const { clientId, versionId, domain, abstraction, artefactId, decisionId, discoveryId } =
     useParams()
   const { pathname } = useLocation()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
 
   const decisionTitle = useRecordTitle(
-    `/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`,
+    `/api/arch/${clientId}/${versionId}/decisions/${decisionId}/decision.json`,
     decisionId
   )
   const discoveryTitle = useRecordTitle(
-    `/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`,
+    `/api/arch/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`,
     discoveryId
   )
 

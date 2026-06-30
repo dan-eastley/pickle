@@ -42,7 +42,7 @@ export const HISTORY_EVENT_STYLES = {
   ...Object.fromEntries(Object.entries(DECISION_STATUS).map(([k, v]) => [k, v.badge])),
 }
 
-// Version lifecycle (architectures/clients/<client>/<version>/version.json).
+// Transition lifecycle (architectures/<architecture>/<transition>/transition.json).
 export const VERSION_STATUS = {
   draft: { label: 'Draft', badge: 'bg-warning-50 text-warning-700' },
   active: { label: 'Active', badge: 'bg-success-50 text-success-700' },

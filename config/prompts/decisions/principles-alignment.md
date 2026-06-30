@@ -10,13 +10,13 @@ Your findings will be read by business architects, enterprise architects, and go
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
 - The **Principles** catalogues (artefact format: **Catalogue**, abstraction layer: **Logical**) for each affected domain:
-  - **Business Principles** (`BUS-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/business/logical/BUS-PRN/`
-  - **Data Principles** (`DAT-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/data/logical/DAT-PRN/`
-  - **Integration Principles** (`INT-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/integration/logical/INT-PRN/`
-  - **Application Principles** (`APP-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/application/logical/APP-PRN/`
-  - **Solution Principles** (`SOL-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/solution/logical/SOL-PRN/`
+  - **Business Principles** (`BUS-PRN`) at `architectures/<client>/<version>/artefacts/domains/business/logical/BUS-PRN/`
+  - **Data Principles** (`DAT-PRN`) at `architectures/<client>/<version>/artefacts/domains/data/logical/DAT-PRN/`
+  - **Integration Principles** (`INT-PRN`) at `architectures/<client>/<version>/artefacts/domains/integration/logical/INT-PRN/`
+  - **Application Principles** (`APP-PRN`) at `architectures/<client>/<version>/artefacts/domains/application/logical/APP-PRN/`
+  - **Solution Principles** (`SOL-PRN`) at `architectures/<client>/<version>/artefacts/domains/solution/logical/SOL-PRN/`
 
 ## Task
 

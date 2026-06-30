@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:architecture",
+    "title": "Architecture Metadata",
+    "description": "Per-architecture metadata file at architectures/<architecture>/architecture.json.",
+    "type": "object",
+    "required": [
+        "architecture-id",
+        "name"
+    ],
+    "properties": {
+        "architecture-id": {
+            "type": "string",
+            "description": "Unique identifier — must match the architecture folder name"
+        },
+        "name": {
+            "type": "string",
+            "description": "Human-readable architecture name"
+        },
+        "description": {
+            "type": "string",
+            "description": "Brief description of the architecture — who it belongs to and the context of this engagement"
+        },
+        "industry": {
+            "type": "string",
+            "description": "Industry sector the organisation operates in"
+        }
+    },
+    "additionalProperties": false
+}

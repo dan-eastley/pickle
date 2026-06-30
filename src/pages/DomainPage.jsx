@@ -86,7 +86,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
 
 export default function DomainPage() {
   const { clientId, versionId, domain } = useParams()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
   const domainData = getDomain(domain)
   const colors = DOMAIN_COLORS[domain]
   usePageTitle(domainData ? `${domainData.name} Architecture` : null)

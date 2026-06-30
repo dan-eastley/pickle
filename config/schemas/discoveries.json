@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:pickle:schemas:discoveries",
     "title": "Discoveries Index",
-    "description": "Index of Architecture Discovery records for a client version. Lives at architectures/clients/<client>/<version>/discovery/discovery.json. Holds a lightweight summary per discovery; the full record lives in <id>/discovery.json.",
+    "description": "Index of Architecture Discovery records for an architecture transition. Lives at architectures/<architecture>/<transition>/discovery/discovery.json. Holds a lightweight summary per discovery; the full record lives in <id>/discovery.json.",
     "type": "object",
     "required": ["discoveries"],
     "properties": {

@@ -10,13 +10,13 @@ Your findings will be read by business sponsors, strategy leads, and senior arch
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
 - The **Strategy** catalogues (artefact format: **Catalogue**, abstraction layer: **Conceptual**) for each affected domain:
-  - **Business Strategy** (`BUS-STR`) at `architectures/clients/<client>/<version>/artefacts/domains/business/conceptual/BUS-STR/`
-  - **Data Strategy** (`DAT-STR`) at `architectures/clients/<client>/<version>/artefacts/domains/data/conceptual/DAT-STR/`
-  - **Integration Strategy** (`INT-STR`) at `architectures/clients/<client>/<version>/artefacts/domains/integration/conceptual/INT-STR/`
-  - **Application Strategy** (`APP-STR`) at `architectures/clients/<client>/<version>/artefacts/domains/application/conceptual/APP-STR/`
-  - **Solution Strategy** (`SOL-STR`) at `architectures/clients/<client>/<version>/artefacts/domains/solution/conceptual/SOL-STR/`
+  - **Business Strategy** (`BUS-STR`) at `architectures/<client>/<version>/artefacts/domains/business/conceptual/BUS-STR/`
+  - **Data Strategy** (`DAT-STR`) at `architectures/<client>/<version>/artefacts/domains/data/conceptual/DAT-STR/`
+  - **Integration Strategy** (`INT-STR`) at `architectures/<client>/<version>/artefacts/domains/integration/conceptual/INT-STR/`
+  - **Application Strategy** (`APP-STR`) at `architectures/<client>/<version>/artefacts/domains/application/conceptual/APP-STR/`
+  - **Solution Strategy** (`SOL-STR`) at `architectures/<client>/<version>/artefacts/domains/solution/conceptual/SOL-STR/`
 
 ## Task
 

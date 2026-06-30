@@ -109,7 +109,7 @@ export default function DiscoveryDetailPage() {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`)
+    fetch(`/api/arch/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => !cancelled && setDiscovery(d))
       .catch(() => !cancelled && setDiscovery(null))
@@ -217,7 +217,7 @@ export default function DiscoveryDetailPage() {
     )
   }
   if (discovery === null) {
-    return <Navigate to={`/clients/${clientId}/${versionId}/discovery`} replace />
+    return <Navigate to={`/architectures/${clientId}/${versionId}/discovery`} replace />
   }
 
   return (

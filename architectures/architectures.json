@@ -1,0 +1,19 @@
+{
+    "architectures": [
+        {
+            "architecture-id": "fetc"
+        },
+        {
+            "architecture-id": "fedc"
+        },
+        {
+            "architecture-id": "fwwc"
+        },
+        {
+            "architecture-id": "fegc"
+        },
+        {
+            "architecture-id": "fersc"
+        }
+    ]
+}
