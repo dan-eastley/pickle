@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-017",
     "title": "Rename CAP-001-04",
-    "status": "proposed",
+    "status": "draft",
     "context": "Called Retain Customer",
     "problem": "We need to explicitly call out monitoring",
     "proposal": "Rename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\"",
