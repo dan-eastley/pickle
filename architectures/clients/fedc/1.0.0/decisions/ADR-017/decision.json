@@ -14,16 +14,16 @@
     "requirements": [],
     "recommendations": [
         {
-            "recommendation": "Explain the business rationale behind adding 'Monitor' to the capability name. What change in business model or operations makes this monitoring aspect now critical to call out? This context will help downstream steps validate the impact of the change."
+            "recommendation": "Expand the **business rationale**. The narrative states 'we need to explicitly call out monitoring' but doesn't explain *why* — what business condition, customer insight, or operational challenge makes monitoring visibility now essential? This context is critical for downstream validation."
         },
         {
-            "recommendation": "Replace technical identifiers with business language for a business audience. Instead of 'CAP-001-04' and 'BUS-BCM', refer to it as 'the \"Retain Customer\" capability in the Business Capabilities Model'."
+            "recommendation": "Avoid technical identifiers when writing for a business audience. Replace 'CAP-001-04' and 'BUS-BCM' with plain language like 'the Retain Customer capability in the Business Capabilities Model'."
         },
         {
-            "recommendation": "Add requirements to make this change testable. Include a requirement that the capability name is updated consistently wherever it appears, and consider whether other artefacts (like processes or application capabilities that reference this capability) need to be assessed for impact."
+            "recommendation": "Add testable requirements. At minimum: a functional requirement that the capability name is updated consistently across all artefacts that reference it, and a non-functional requirement that dependent capabilities/processes are assessed for impact."
         },
         {
-            "recommendation": "Clarify scope: is this rename *only* a change to the name in the Business Capabilities Model, or does it trigger downstream changes to dependent artefacts (processes, applications, etc.)? If the latter, are those changes in or out of scope for this ADR?"
+            "recommendation": "Clarify scope boundaries. Does this ADR cover *only* the name change in the Business Capabilities Model, or does it include updates to dependent artefacts (e.g., process models, application capabilities)? If the latter, state what is in scope; if out of scope, confirm whether those artefacts need separate ADRs."
         }
     ],
     "activity": [
