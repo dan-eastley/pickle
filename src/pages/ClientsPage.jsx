@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { loadClientRollup } from '../lib/metrics'
-import ContentMetrics from '../components/common/ContentMetrics'
+import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
 import Illustration from '../components/ui/Illustration'
 import ClientLogo from '../components/ui/ClientLogo'
@@ -14,21 +14,13 @@ function ClientCard({ client, clientsMetadata, m }) {
   const meta = clientsMetadata[clientId]
   const name = meta?.name ?? clientId
 
-  // Governance totals (rolled up across every version) shown after content.
-  const governance = m
-    ? [
-        { label: 'Documents', count: m.documents },
-        { label: 'Decisions', count: m.decisions },
-        { label: 'Discoveries', count: m.discoveries },
-      ]
-    : []
-
   return (
     <Link
       to={`/clients/${clientId}/versions`}
-      className="group bg-white border border-gray-200 hover:border-gray-400 transition-colors flex flex-col"
+      className="group flex flex-col sm:flex-row sm:items-stretch bg-white border border-gray-200 hover:border-gray-400 transition-colors"
     >
-      <div className="flex items-center gap-4 px-5 py-5 border-b border-gray-100">
+      {/* Identity column */}
+      <div className="flex items-center gap-4 px-5 py-5 sm:w-72 sm:flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100">
         <ClientLogo clientId={clientId} name={name} className="w-12 h-12" />
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
@@ -36,10 +28,11 @@ function ClientCard({ client, clientsMetadata, m }) {
           </h3>
           <p className="text-xs font-mono text-gray-500 mt-0.5">{clientId}</p>
         </div>
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors sm:hidden" />
       </div>
 
-      <div className="px-5 py-4 space-y-3">
+      {/* Metrics column */}
+      <div className="flex-1 min-w-0 px-5 py-4">
         {m === undefined ? (
           <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
             <Spinner size="sm" /> Loading metrics…
@@ -47,11 +40,10 @@ function ClientCard({ client, clientsMetadata, m }) {
         ) : m === null ? (
           <p className="py-2 text-xs text-gray-500">No architecture content yet.</p>
         ) : (
-          <ContentMetrics
-            items={m.content}
-            extra={governance}
-            dense
-            empty={<p className="pt-1 text-xs text-gray-500">No architecture content yet.</p>}
+          <MetricBars
+            perDomain={m.perDomain}
+            governance={{ decisions: m.decisions, discoveries: m.discoveries }}
+            empty={<p className="text-xs text-gray-500">No architecture content yet.</p>}
           />
         )}
       </div>
@@ -112,7 +104,7 @@ export default function ClientsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex flex-col gap-3">
           {clients.map((client) => (
             <ClientCard
               key={client['client-id']}
