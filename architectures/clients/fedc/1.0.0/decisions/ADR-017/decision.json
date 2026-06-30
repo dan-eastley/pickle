@@ -2,16 +2,15 @@
     "decision-id": "ADR-017",
     "title": "Rename CAP-001-04",
     "status": "draft",
-    "context": "Called Retain Customer",
+    "context": "Capability called Retain Customer isn't comprehensive enough. The operating model tells use we monitor and retain customers so this should be explicit",
     "problem": "We need to explicitly call out monitoring",
-    "proposal": "Rename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\"",
-    "narrative": "## Context\n\nCalled Retain Customer\n\n## Problem\n\nWe need to explicitly call out monitoring\n\n## Proposal\n\nRename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\"",
+    "proposal": "Rename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\". This should trickle down to related models.",
+    "narrative": "## Context\n\nCapability called Retain Customer isn't comprehensive enough. The operating model tells use we monitor and retain customers so this should be explicit\n\n## Problem\n\nWe need to explicitly call out monitoring\n\n## Proposal\n\nRename CAP-001-04 from \"Retain Customer\" to \"Monitor & Retain Customer\". This should trickle down to related models.",
     "scope": {
         "domain": "business",
         "abstraction": "conceptual",
         "artefact": "BUS-BCM"
     },
-    "requirements": [],
     "recommendations": [
         {
             "recommendation": "Expand the **business rationale**. The narrative states 'we need to explicitly call out monitoring' but doesn't explain *why* — what business condition, customer insight, or operational challenge makes monitoring visibility now essential? This context is critical for downstream validation."
@@ -31,6 +30,11 @@
             "timestamp": "2026-06-30T13:13:31.959Z",
             "action": "Created",
             "who": "Joe B"
+        },
+        {
+            "timestamp": "2026-06-30T13:18:47.003Z",
+            "action": "Updated",
+            "who": "Dan Pendleton-Eastley"
         }
     ]
 }
