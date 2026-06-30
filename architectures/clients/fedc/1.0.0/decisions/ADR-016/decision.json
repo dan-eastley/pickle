@@ -6,6 +6,27 @@
     "problem": "It doesn't support where the business needs to be",
     "proposal": "We want to implement a full CCaaS platform that covers all digital platforms and channels of communication, to drive customer engagement, interface with CRM and feed the work planning.",
     "narrative": "## Context\n\nWe use a legacy application, on-prem, unsupported that cover VOIP.\n\n## Problem\n\nIt doesn't support where the business needs to be\n\n## Proposal\n\nWe want to implement a full CCaaS platform that covers all digital platforms and channels of communication, to drive customer engagement, interface with CRM and feed the work planning.",
+    "requirements": [],
+    "recommendations": [
+        {
+            "recommendation": "**Clarify the problem statement.** Replace 'It doesn't support where the business needs to be' with concrete pain points — e.g. *What specific channels or capabilities does the legacy system lack? What customer segments are underserved?* This will help downstream architecture analysis understand the true business constraint."
+        },
+        {
+            "recommendation": "**Define 'CCaaS' for a business audience.** Spell out the term in the narrative and explain what it means in simple terms — e.g. *a cloud-based contact centre platform managed by a vendor* — so the decision is accessible to readers without technical architecture knowledge."
+        },
+        {
+            "recommendation": "**Enumerate the digital platforms and channels.** 'All digital platforms and channels' is too vague. List the specific channels in scope (e.g. phone, email, chat, SMS, social media) and which platforms will connect to them, so architecture analysis has clear boundaries."
+        },
+        {
+            "recommendation": "**Clarify the work planning integration.** Explain what 'feed the work planning' means in business terms — e.g. *enabling contact centre interactions to automatically create or update work queue items* — so the intent is clear to stakeholders and architects alike."
+        },
+        {
+            "recommendation": "**Add a requirements array.** The decision currently has no `requirements` field. Define measurable requirements that downstream architecture steps can validate — e.g. *Support omnichannel communication (voice, email, chat, SMS)*, *Integrate with the CRM system within 5 seconds*, *Support 500 concurrent users*, etc. Even if brief, these will ensure the decision has clear success criteria."
+        },
+        {
+            "recommendation": "**Clarify CRM and system integration scope.** The narrative mentions interfacing with CRM and work planning but doesn't specify *how* — are these new integrations, replacements for existing ones, or enhancements? Are there performance or data governance constraints? These details will guide architecture design."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T11:27:56.554Z",
