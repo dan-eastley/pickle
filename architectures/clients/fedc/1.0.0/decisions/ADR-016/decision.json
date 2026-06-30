@@ -59,6 +59,14 @@
             "rationale": "Architecture governance is enforced through explicit strategy and principles. Tracing the CCaaS initiative to these foundational artefacts ensures the platform operates within the organisation's risk tolerance, vendor standards, and technical constraints."
         }
     ],
+    "referential-integrity": [
+        {
+            "finding": "All referential integrity checks passed for the architecture catalogues in scope.",
+            "impact": "The existing **Application Catalogue** (`APP-CAT`), **Application Domains & Platforms** (`APP-DAP`), **Interface Catalogue** (`INT-IFC`), **Data Domains & Concepts ↔ Interface Catalogue** (`INT-DAC-IFC`), **Data Domains & Concepts** (`DAT-DAC`), **Process-to-Data CRUD matrix** (`DAT-PRO-DAC`), and **Business Processes** (`BUS-PRO`) catalogues all maintain referential integrity. No broken foreign keys, orphaned entities, or ID uniqueness violations were detected.",
+            "recommendation": "No corrective action required. When the CCaaS decision moves to implementation, ensure that any new application, interface, data concept, or process entries added to the catalogues maintain referential integrity by correctly linking to their parent entities and validating all foreign key references before committing changes.",
+            "rationale": "Referential integrity is the foundation of reliable architecture data. The absence of violations demonstrates that the baseline architecture model is well-formed and that the catalogue update processes have preserved consistency across the interconnected catalogues."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T11:27:56.554Z",
