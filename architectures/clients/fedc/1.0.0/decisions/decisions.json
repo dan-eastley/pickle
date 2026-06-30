@@ -26,7 +26,7 @@
         {
             "decision-id": "ADR-016",
             "title": "Implement a Contact Centre as a Service",
-            "status": "proposed"
+            "status": "accepted"
         },
         {
             "decision-id": "ADR-017",
