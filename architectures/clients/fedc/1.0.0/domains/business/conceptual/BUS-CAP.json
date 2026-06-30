@@ -89,7 +89,7 @@
         },
         {
             "id": "CAP-001-04",
-            "name": "Retain Customer",
+            "name": "Monitor & Retain Customer",
             "level": 2,
             "parent-id": "CAP-001",
             "description": "Renew, save, and grow value with existing customers."
