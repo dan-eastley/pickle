@@ -28,6 +28,14 @@
             "recommendation": "Define success criteria. How will you know this change has been successfully applied? Will the capability appear under the new name in published architecture views? Will stakeholder sign-off be required?"
         }
     ],
+    "referential-integrity": [
+        {
+            "finding": "All referential integrity checks passed. The **Business Capabilities** catalogue (`BUS-CAP`) contains a valid entry for CAP-001-04 ('Retain Customer') with ID uniqueness confirmed, parent-id reference to CAP-001 correctly resolved, and no orphan child items. The **Capability ↔ Process Matrix** (`BUS-CAP-PRO`) correctly maps CAP-001-04 to PROC-001-04 ('Retain & Grow Customers') in `BUS-PRO`, and the **Business Capability Model** (`BUS-BCM`) correctly references CAP-001-04 within its parent group CAP-001. No integrity violations detected.",
+            "impact": "The architecture data is structurally sound and internally consistent. The name change to CAP-001-04 can proceed without risk of breaking foreign key relationships or creating orphaned records. All downstream artefacts that reference this capability by ID will continue to function correctly.",
+            "recommendation": "Proceed with the proposed name change. No data corrections are required before implementation. The ID-based references in BUS-CAP-PRO and BUS-BCM will remain valid after the name update.",
+            "rationale": "Referential integrity validation ensures that the architecture data model is logically consistent and that all relationships between catalogues are correctly maintained. ID-based references decouple from name changes, allowing safe updates to descriptive fields without cascading corrections."
+        }
+    ],
     "impact-assessment": [
         {
             "finding": "The proposed name change affects **Business Capabilities** (`BUS-CAP`), which defines CAP-001-04 as 'Retain Customer' at Level 2 under the Customer Management capability (CAP-001). Renaming to 'Monitor & Retain Customer' explicitly acknowledges the monitoring function already implied in the operating model.",
