@@ -102,6 +102,14 @@
             "rationale": "BUS-PRN-003 states that decision authority lives with the team closest to the customer and the data, and that leaders coach decision-making rather than impose decisions. A capability rename that affects how customer-facing and data teams define their outcomes should explicitly document that those teams have been heard and that their input shaped the final decision."
         }
     ],
+    "guardrails-alignment": [
+        {
+            "finding": "The **Business Guardrails** (`BUS-GRD`) catalogue is empty — no guardrails are currently defined for the business domain. Since the decision's scope is limited to the Business domain (Business Capability Model rename), and no other domains are materially affected, there are no guardrail rules to assess for compliance or breach.",
+            "impact": "Absence of defined guardrails creates a governance gap: there is no documented baseline of mandatory rules, constraints, or compliance obligations against which to measure the decision. While the decision itself is not blocked by missing guardrails, the organisation lacks a formal guardrails framework to validate future capability changes or architecture decisions in the business domain.",
+            "recommendation": "Before finalising this decision or any subsequent capability changes, populate the **Business Guardrails** (`BUS-GRD`) catalogue with rules that reflect the organisation's mandatory constraints, regulatory obligations, and architecture governance thresholds (e.g., naming conventions, capability coverage rules, change impact thresholds). This establishes a clear single source of truth for guardrail compliance. For this specific ADR, proceed with confidence that the capability rename is structurally sound and aligns to strategy and principles.",
+            "rationale": "Guardrails are non-negotiable rules that reflect regulatory requirements, risk tolerance, and governance boundaries. Empty guardrails catalogues indicate that the organisation has not yet codified its mandatory constraints. A populated guardrails framework enables consistent, traceable decision-making and reduces governance friction by making expectations explicit. Until guardrails are defined, decisions can only be assessed against strategy and principles — which this ADR satisfies."
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T13:13:31.959Z",
