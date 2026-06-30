@@ -11,6 +11,21 @@
         "abstraction": "conceptual",
         "artefact": "BUS-BCM"
     },
+    "requirements": [],
+    "recommendations": [
+        {
+            "recommendation": "Explain the business rationale behind adding 'Monitor' to the capability name. What change in business model or operations makes this monitoring aspect now critical to call out? This context will help downstream steps validate the impact of the change."
+        },
+        {
+            "recommendation": "Replace technical identifiers with business language for a business audience. Instead of 'CAP-001-04' and 'BUS-BCM', refer to it as 'the \"Retain Customer\" capability in the Business Capabilities Model'."
+        },
+        {
+            "recommendation": "Add requirements to make this change testable. Include a requirement that the capability name is updated consistently wherever it appears, and consider whether other artefacts (like processes or application capabilities that reference this capability) need to be assessed for impact."
+        },
+        {
+            "recommendation": "Clarify scope: is this rename *only* a change to the name in the Business Capabilities Model, or does it trigger downstream changes to dependent artefacts (processes, applications, etc.)? If the latter, are those changes in or out of scope for this ADR?"
+        }
+    ],
     "activity": [
         {
             "timestamp": "2026-06-30T13:13:31.959Z",
