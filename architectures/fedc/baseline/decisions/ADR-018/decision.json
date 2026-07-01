@@ -20,19 +20,19 @@
     ],
     "recommendations": [
         {
-            "recommendation": "**Expand acronyms on first use.** Define **EAM** as Enterprise Asset Management and **FSM** as Field Service Management in the narrative introduction. Business stakeholders unfamiliar with these acronyms may struggle to follow the proposal without expansion."
+            "recommendation": "**Expand acronyms on first use.** Define **EAM** (Enterprise Asset Management) and **FSM** (Field Service Management) explicitly when first introduced in the narrative. Business stakeholders unfamiliar with these terms need clarity to understand the proposal and its business value."
         },
         {
-            "recommendation": "**Strengthen context with business justification.** The narrative states the problem (need asset lookups in the field) but omits *why* this matters to the business. Add a sentence explaining the business value—e.g., 'reducing engineer downtime by enabling first-contact problem resolution' or 'improving asset safety compliance by giving engineers access to maintenance history.' This helps stakeholders understand the urgency."
+            "recommendation": "**Strengthen the business justification.** The narrative identifies the problem but lacks business context. Add a sentence explaining *why* asset lookups matter operationally—e.g., 'enabling first-contact problem resolution, reducing engineer downtime' or 'improving compliance by giving engineers access to maintenance history and asset criticality.' This helps stakeholders understand the business value and urgency."
         },
         {
-            "recommendation": "**Add a requirements section.** The narrative is descriptive but has no measurable acceptance criteria. Define explicit requirements specifying: (1) **which asset information fields** must be returned (e.g., Asset ID, Name, Maintenance Status, Warranty Expiry); (2) **acceptable lookup latency** (e.g., <500ms); (3) **availability/SLA target** (e.g., 99.9%); (4) **access controls** (read-only access by field engineers, audit logging); (5) **error handling** (behavior when asset not found, network unavailable). These are essential for downstream architecture analysis and testing."
+            "recommendation": "**Add explicit requirements section.** The narrative is currently descriptive but has no measurable acceptance criteria. Define a **requirements** array with atomic, testable statements covering: (1) **Data scope**: which asset information fields are returned (Asset ID, Name, Maintenance Status, Criticality, Warranty Expiry, etc.); (2) **Performance**: acceptable lookup latency and availability SLA (e.g., <500ms latency, 99.9% availability); (3) **Access model**: read-only access by field engineers with audit logging; (4) **Offline capability**: whether real-time synchronous lookup is required or caching/offline access is permitted; (5) **Error handling**: behavior when asset not found, unauthorized, or network unavailable. These requirements are essential for downstream architecture and testing."
         },
         {
-            "recommendation": "**Clarify scope boundaries.** Specify whether this applies to all asset types in EAM or only specific categories (e.g., equipment, vehicles, facilities). Also clarify whether access is **read-only** (engineers look up asset information only) or whether engineers may also **update** asset data (e.g., log maintenance completion, update status) through this interface. This prevents implementation surprises."
+            "recommendation": "**Clarify scope boundaries.** Specify: (a) **which asset types** are in scope (all equipment, vehicles, facilities, or specific categories); (b) **access direction**: read-only lookup or do engineers also update asset data (e.g., log maintenance completion, update asset status). This prevents misalignment between proposal intent and implementation."
         },
         {
-            "recommendation": "**Specify offline-vs-online model.** Field engineers may work in areas with poor connectivity. Clarify whether the asset lookup is **real-time synchronous** (requires network availability) or whether **caching is permitted** (e.g., cached on engineer devices for offline access, refreshed daily). If caching is allowed, note the cache expiry window and how stale data is communicated to engineers."
+            "recommendation": "**Specify the sync model explicitly.** Field engineers may work offline or in areas with poor connectivity. Clarify whether the asset lookup is: (a) **real-time synchronous** (always requires network, fails gracefully offline), or (b) **cache-enabled** (engineers can access cached asset data locally, refreshed at defined intervals). If caching is permitted, document the cache expiry window, refresh frequency, and how stale data is flagged to engineers ('data may be out of date')."
         }
     ],
     "impact-assessment": [
