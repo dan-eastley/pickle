@@ -6,7 +6,6 @@ import { loadVersionMetrics } from '../lib/metrics'
 import { versionStatusBadge } from '../lib/theme'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
-import Illustration from '../components/ui/Illustration'
 import ClientLogo from '../components/ui/ClientLogo'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
@@ -61,22 +60,18 @@ export default function VersionsPage() {
           ← All architectures
         </Link>
       </div>
-      <div className="mb-8 flex items-center justify-between gap-8">
-        <div className="flex items-center gap-4 min-w-0">
-          <ClientLogo clientId={clientId} name={clientName} className="w-12 h-12" />
-          <div className="min-w-0">
-            <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Select a transition state to browse its architecture.
-            </p>
-          </div>
+      <div className="mb-8 flex items-center gap-4 min-w-0">
+        <ClientLogo clientId={clientId} name={clientName} className="w-12 h-12" />
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Select a transition state to browse its architecture.
+          </p>
         </div>
-        <Illustration name="timeline" className="hidden md:block w-52 flex-shrink-0" />
       </div>
 
       {versions.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Illustration name="no-data" className="w-56 mb-6" />
           <p className="text-sm font-semibold text-gray-700">No transition states yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
             Each transition state lives in its own folder under this architecture.

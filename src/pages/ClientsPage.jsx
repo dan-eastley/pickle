@@ -4,7 +4,6 @@ import { useArchitecture } from '../context/ArchitectureContext'
 import { loadClientRollup } from '../lib/metrics'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
-import Illustration from '../components/ui/Illustration'
 import ClientLogo from '../components/ui/ClientLogo'
 import { ChevronRight } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
@@ -82,20 +81,16 @@ export default function ClientsPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
-      <div className="mb-8 flex items-center justify-between gap-8">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Select an architecture to view its transition states. The bars compare how populated
-            each architecture is.
-          </p>
-        </div>
-        <Illustration name="select-option" className="hidden md:block w-52 flex-shrink-0" />
+      <div className="mb-8">
+        <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Select an architecture to view its transition states. The bars compare how populated each
+          architecture is.
+        </p>
       </div>
 
       {clients.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Illustration name="no-data" className="w-56 mb-6" />
           <p className="text-sm font-semibold text-gray-700">No architectures yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
             Each architecture lives in its own folder. Add one under{' '}
