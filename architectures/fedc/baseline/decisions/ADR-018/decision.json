@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-018",
     "title": "Interface between EAM and FSM",
-    "status": "draft",
+    "status": "proposed",
     "context": "Currently we only have work order dispatch and completion",
     "problem": "We need a way to perform asset lookups whilst out in the field.",
     "proposal": "A new interface between EAM and FSM, where field engineers can enter an asset ID in the field, which collects asset information from the EAM system",
