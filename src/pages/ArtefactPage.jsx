@@ -14,6 +14,7 @@ import Skeleton from '../components/ui/Skeleton'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import MetricBars from '../components/common/MetricBars'
+import ShareLink from '../components/ui/ShareLink'
 import { extractContentItems } from '../lib/metrics'
 import ActivityHistory from '../components/common/ActivityHistory'
 import ActionBar from '../components/ui/ActionBar'
@@ -425,15 +426,18 @@ export default function ArtefactPage() {
                 empty={null}
               />
             </div>
-            {artefact.format !== 'matrix' && (
-              <ArtefactDownload
-                artefact={artefact}
-                schema={schema}
-                data={data}
-                selectedDocument={selectedDocument}
-                diagramRef={diagramRef}
-              />
-            )}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <ShareLink />
+              {artefact.format !== 'matrix' && (
+                <ArtefactDownload
+                  artefact={artefact}
+                  schema={schema}
+                  data={data}
+                  selectedDocument={selectedDocument}
+                  diagramRef={diagramRef}
+                />
+              )}
+            </div>
           </div>
           <div ref={diagramRef}>
             {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
