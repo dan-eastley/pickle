@@ -135,5 +135,25 @@
             "recommendation": "Maintain this stateless design in implementation. Ensure FSM does not shadow-replicate or cache asset data persistently in its primary database. If temporary caching is needed (e.g., in-memory during a field session), document that as a derivation, not a replica.",
             "rationale": "Stateless services are the foundation of independent deployability and scaling. By externalising asset state to EAM, the decision strengthens FSM's architecture and reduces coupling. This design decision is sound."
         }
+    ],
+    "guardrails-alignment": [
+        {
+            "finding": "**Integration Guardrails** (`INT-GRD`) — **Empty catalogue.** No guardrails rules are currently defined in the **Integration Guardrails** catalogue. The catalogue exists but contains no specific guardrail rules to assess against.",
+            "impact": "Without defined guardrails, compliance assessment cannot be completed. The decision cannot be cleared against integration discipline standards, creating a governance gap. Any guardrails that should constrain integration interface design, API contracts, authentication, data flows, or resilience requirements are not yet documented.",
+            "recommendation": "Before this decision is finalised, populate the **Integration Guardrails** (`INT-GRD`) catalogue with mandatory rules for integration interfaces, such as: API versioning requirements, authentication/authorisation standards, rate limiting, timeout/retry policies, contract stability rules, and audit/logging requirements. Once guardrails are defined, re-assess this decision's compliance.",
+            "rationale": "Guardrails are the non-negotiable constraints that protect integration reliability, security, and governance. Without defined guardrails, implementation teams lack clarity on integration discipline, leading to inconsistency and rework. A populated guardrails catalogue is prerequisite for effective architecture governance."
+        },
+        {
+            "finding": "**Application Guardrails** (`APP-GRD`) — **Empty catalogue.** No guardrails rules are currently defined in the **Application Guardrails** catalogue. The catalogue exists but contains no specific rules to assess against.",
+            "impact": "Without defined guardrails, compliance for the application platforms (EAM and FSM) cannot be assessed. Any rules constraining application integration, platform dependencies, third-party software governance, or application lifecycle management are missing. This decision references two platforms but has no documented guardrails to ensure they operate within acceptable constraints.",
+            "recommendation": "Populate the **Application Guardrails** (`APP-GRD`) catalogue with mandatory rules covering platform integration constraints, licensing terms, vendor support obligations, platform EOL policies, and application governance requirements. Once defined, re-assess whether EAM and FSM comply with these guardrails as used in this decision.",
+            "rationale": "Application guardrails ensure that platform choices are sustainable, compliant, and governed. Without them, organisations risk vendor lock-in, unsupported platforms, or compliance violations. Documenting guardrails for EAM and FSM makes governance expectations explicit."
+        },
+        {
+            "finding": "**Data Guardrails** (`DAT-GRD`) — **Empty catalogue.** No guardrails rules are currently defined in the **Data Guardrails** catalogue. The catalogue exists but contains no specific rules to assess against.",
+            "impact": "Without defined guardrails, data governance for the asset information flowing through the new interface cannot be assessed. Any rules constraining data classification, retention, privacy (GDPR, CCPA), encryption, audit trails, or quality standards are missing. This decision exposes asset data across platforms but has no guardrails to ensure it is handled securely and compliantly.",
+            "recommendation": "Populate the **Data Guardrails** (`DAT-GRD`) catalogue with mandatory rules covering data classification, encryption in transit and at rest, access control and audit trails, retention policies, privacy compliance, data quality standards, and breach notification. Once guardrails are defined, assess whether the asset-lookup interface meets data protection and governance requirements.",
+            "rationale": "Data guardrails protect customer, operational, and regulatory data from misuse and breaches. Asset information may include sensitive operational data (e.g., critical equipment, maintenance history) that requires protection. Without documented guardrails, data governance is ad-hoc and inconsistent."
+        }
     ]
 }
