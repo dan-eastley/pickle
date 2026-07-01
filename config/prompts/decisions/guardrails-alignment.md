@@ -31,10 +31,10 @@ Write a JSON **array** to the decision JSON's `guardrails-alignment` property. E
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed — name the guardrail (quote its rule briefly) and state whether it is complied with, breached, or not applicable. Max ~500 characters. |
-| `impact` | What a breach means for the decision — regulatory, operational, or governance risk introduced if it proceeds unchanged. Max ~500 characters. |
-| `recommendation` | What the author should do — bring the decision into compliance, raise a formal exception via the catalogue's exception process, or narrow the scope. Max ~500 characters. |
-| `rationale` | Why this guardrail is mandatory and why compliance matters for this decision. Max ~500 characters. |
+| `finding` | What you observed — name the guardrail (quote its rule briefly) and state whether it is complied with, breached, or not applicable. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What a breach means for the decision — regulatory, operational, or governance risk introduced if it proceeds unchanged. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What the author should do — bring the decision into compliance, raise a formal exception via the catalogue's exception process, or narrow the scope. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this guardrail is mandatory and why compliance matters for this decision. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold guardrails catalogue names, `code spans` for IDs, guardrail rules in *italics*.
 

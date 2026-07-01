@@ -31,10 +31,10 @@ Write a JSON **array** to the decision JSON's `principles-alignment` property. E
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed — name the principle (quote its name briefly) and state whether it is adhered to, violated, or silent. Max ~500 characters. |
-| `impact` | What a violation or silence means for the quality of the decision and the risk it introduces. Max ~500 characters. |
-| `recommendation` | What the author should do — acknowledge the tension, seek an exception, adjust the decision scope, or strengthen the narrative. Max ~500 characters. |
-| `rationale` | Why this principle exists and why complying with it matters for this decision. Max ~500 characters. |
+| `finding` | What you observed — name the principle (quote its name briefly) and state whether it is adhered to, violated, or silent. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What a violation or silence means for the quality of the decision and the risk it introduces. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What the author should do — acknowledge the tension, seek an exception, adjust the decision scope, or strengthen the narrative. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this principle exists and why complying with it matters for this decision. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold principles catalogue names, `code spans` for IDs, principle names in *italics*.
 

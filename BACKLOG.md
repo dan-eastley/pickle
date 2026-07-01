@@ -131,9 +131,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### UI-16 · ✅ Capability/Process L2: ID above the name · Low
 **Done (this pass):** On the level-2 capability and process models the entity ID now sits **above** the name (was to the left), matching the slide-out and the rest of the UI.
 
-### UI-17 · ⬜ Analysis/change output too verbose · Medium
-**Context:** The seven analysis streams and the change description render as long prose.
-**Proposed fix:** Update the decision-analysis prompts (`config/prompts/decisions/*.md`) so Finding / Impact / Recommendation / Rationale (and the change description) come back as **succinct bullets or single statements**, not paragraphs.
+### UI-17 · ✅ Analysis/change output too verbose · Medium
+**Done:** The decision-analysis prompts now instruct succinct output — each Finding / Impact / Recommendation / Rationale field is "a single statement or a few short bullets, not a paragraph" (max ~300 chars, was ~500) across all six analysis streams plus narrative-validation; the architecture-change `description` is now a single precise instruction. Prompt-only change.
 
 ### UI-18 · ✅ "To Top" link in left-hand nav · Low
 **Done (this pass):** The documents / decisions / discovery contents rail now has a **To Top** link at the bottom (same small text as expand/collapse).
