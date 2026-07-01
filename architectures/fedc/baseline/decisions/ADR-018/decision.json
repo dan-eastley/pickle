@@ -91,5 +91,49 @@
             "recommendation": "Confirm in the proposal narrative that EAM is the authoritative domain owner for asset information, and FSM is a designated consumer with read-only access via the asset-lookup interface. Document any data transformation or caching rules (e.g., whether FSM is permitted to cache asset data locally, for how long). This clarifies the federated ownership model.",
             "rationale": "Explicit ownership prevents data silos and shadow data pipelines. This is especially important for field service operations, where asset information must be current — cached or replicated data that becomes stale creates operational and compliance risk."
         }
+    ],
+    "principles-alignment": [
+        {
+            "finding": "*Contracts before code* (**Integration Principles** `INT-PRN-002`): The proposal is **silent**. No API schema, OpenAPI spec, or contract design is described for the asset-lookup interface.",
+            "impact": "Implementation without a pre-reviewed contract risks internal model leakage, incomplete error handling, and consumer codec generation delays. Quality gates will be missed if the contract is discovered during coding rather than through architecture review.",
+            "recommendation": "Require API schema design and review as a prerequisite to implementation. Include a contract specification (OpenAPI or AsyncAPI) in the decision narrative or in a follow-up decision gate. This ensures the contract is stable and reusable before any code is written.",
+            "rationale": "Publishing a contract before implementation is foundational to the organisation's integration discipline. It ensures architects review the data shape, consumers can mock the service early, and breaking changes are explicit. Without this, integration velocity is constrained by rework and versioning surprises."
+        },
+        {
+            "finding": "*Internal model does not leak into the integration model* (**Integration Principles** `INT-PRN-006`): The proposal is **silent**. There is no specification of whether the asset-lookup response uses shared, canonical data concepts (from `DAT-DAC`) or exposes EAM's internal asset structure directly.",
+            "impact": "If EAM's internal asset model is exposed as-is (e.g., internal field names, proprietary IDs), FSM and future consumers become tightly coupled to EAM's internal design. Changes to EAM's data model force updates downstream, accumulating maintenance debt.",
+            "recommendation": "Commit in the proposal to translating EAM's internal asset model to a published, canonical data contract using shared concepts from **Data Domains & Concepts** (`DAT-DAC`). Document which internal EAM fields are included and how they map to canonical concepts. This decouples consumers from implementation details.",
+            "rationale": "A clean integration boundary means EAM can refactor internally without affecting FSM. Publishing canonical concepts (rather than internal structures) enables reuse and makes the asset-lookup interface a genuine product, not a leak of internal complexity."
+        },
+        {
+            "finding": "*Every data domain has an owner* (**Data Principles** `DAT-PRN-001`): The proposal is **implicit but unconfirmed**. The decision names EAM and FSM but does not explicitly state which team owns 'Asset Information' as a data domain or who is accountable for its quality and definitions.",
+            "impact": "Without a named owner, data quality disputes are unresolved, definitions drift, and changes to asset structure lack governance. Ownership accountability is essential for a field-service operation where asset data directly affects engineer safety and productivity decisions.",
+            "recommendation": "Name the EAM domain owner (team or person) as accountable for the Asset Information product. Include a commitment in the narrative that this owner is responsible for defining canonical asset attributes, quality SLAs, and data governance rules. This formalises the stewardship model.",
+            "rationale": "Unowned data has no steward to resolve definition disputes or enforce quality standards. Making ownership explicit aligns the decision with data governance maturity and ensures stakeholders know whom to escalate data quality issues to."
+        },
+        {
+            "finding": "*Define once, use everywhere* (**Data Principles** `DAT-PRN-002`): The proposal is **silent**. There is no reference to a canonical definition of 'Asset' in **Data Domains & Concepts** (`DAT-DAC`), nor confirmation that the asset information exposed through the lookup interface uses those canonical definitions rather than local variants.",
+            "impact": "Multiple definitions of 'Asset' (one in EAM, one exposed via the interface, possibly others in analytics or regulatory systems) create divergence and undermine cross-domain impact analysis. Queries and reports will produce inconsistent results.",
+            "recommendation": "Review **Data Domains & Concepts** (`DAT-DAC`) to confirm a canonical 'Asset Master' or equivalent concept exists. If it exists, ensure the asset-lookup interface respects it. If not, raise a follow-up decision to define it before the asset-lookup interface is finalised. This establishes the single source of truth.",
+            "rationale": "A single, canonical definition of core entities (like assets) is the foundation of trustworthy cross-domain analysis. Field engineers, asset teams, and governance all rely on consistent asset definitions; divergence breeds errors and friction."
+        },
+        {
+            "finding": "*Quality is a producer responsibility* (**Data Principles** `DAT-PRN-003`): The proposal is **silent**. There is no commitment that EAM (the producer) will be accountable for asset data quality or that FSM (the consumer) should not be required to re-cleanse asset information routinely.",
+            "impact": "If quality accountability is ambiguous, FSM engineers will invent workarounds to check or correct asset data locally, creating shadow data and undermining trust in the primary source. Operational efficiency gains from the asset-lookup interface are eroded.",
+            "recommendation": "Include in the proposal a commitment that EAM is accountable for asset data quality, with a defined SLA (e.g., accuracy, timeliness, completeness). Document that FSM engineers should be able to rely on EAM data without re-validation. Define escalation paths for quality issues.",
+            "rationale": "Field engineers cannot afford to second-guess data quality in the field. Assigning quality accountability to the producer (EAM) makes the interface trustworthy and operational for field-service teams. It also signals to EAM that asset data is a business-critical product."
+        },
+        {
+            "finding": "*Avoid replicating canonical data* (**Data Principles** `DAT-PRN-006`): The proposal is **silent** on whether FSM is permitted to cache asset information locally. If caching is allowed, there is no mention of expiry, reconciliation, or how to surface stale-data risks.",
+            "impact": "Uncontrolled caching of canonical asset data (e.g., on field engineer devices or in the mobile app) creates offline variants that diverge from the source. If an asset is updated in EAM but the cache is stale, engineers make decisions based on outdated information, creating safety and compliance risks.",
+            "recommendation": "Clarify caching intent: is this a real-time synchronous lookup, or is FSM permitted to cache asset data? If caching is necessary (e.g., for offline field operations), document the cache expiry window, reconciliation frequency, and how stale data is flagged to engineers. If real-time lookup is required, state that explicitly.",
+            "rationale": "Field service operations depend on current asset data for safety and compliance. Uncontrolled caching multiplies governance surface area and creates hidden divergence. Making the sync model explicit prevents operational surprises."
+        },
+        {
+            "finding": "*Stateless services, externalised state* (**Application Principles** `APP-PRN-004`): The proposal is **not directly applicable** (no mention of the FSM application's statefulness), but the asset-lookup interface as described (a read-only synchronous call) is **consistent** with stateless service design — the FSM service does not maintain its own asset master, but queries it from EAM.",
+            "impact": "The decision adheres to the principle by design: FSM does not replicate or own asset state; it externalises asset lookup to EAM. This supports FSM's replaceability and scaling.",
+            "recommendation": "Maintain this stateless design in implementation. Ensure FSM does not shadow-replicate or cache asset data persistently in its primary database. If temporary caching is needed (e.g., in-memory during a field session), document that as a derivation, not a replica.",
+            "rationale": "Stateless services are the foundation of independent deployability and scaling. By externalising asset state to EAM, the decision strengthens FSM's architecture and reduces coupling. This design decision is sound."
+        }
     ]
 }
