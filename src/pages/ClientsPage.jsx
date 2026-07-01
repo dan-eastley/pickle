@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { usePermissions } from '../context/PermissionsContext'
 import { ACTIONS } from '../lib/permissions'
@@ -7,8 +7,10 @@ import { loadClientRollup } from '../lib/metrics'
 import { githubAction } from '../lib/api'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
+import Button from '../components/ui/Button'
 import ClientLogo from '../components/ui/ClientLogo'
 import EditSettingsModal from '../components/settings/EditSettingsModal'
+import CreateEntityModal from '../components/settings/CreateEntityModal'
 import { ChevronRight, EditIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -73,12 +75,15 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
 export default function ClientsPage() {
   const { clients, clientsMetadata, loading } = useArchitecture()
   const { can } = usePermissions()
+  const navigate = useNavigate()
   usePageTitle('Architectures')
 
   const [metrics, setMetrics] = useState({})
   // Optimistic name/status overrides after an edit (context isn't re-fetched).
   const [overrides, setOverrides] = useState({})
   const [editingId, setEditingId] = useState(null)
+  const [creating, setCreating] = useState(false)
+  const canCreate = can(ACTIONS.ARCHITECTURE_CREATE)
 
   useEffect(() => {
     let live = true
@@ -108,12 +113,19 @@ export default function ClientsPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Select an architecture to view its transition states. The bars compare how populated each
-          architecture is.
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Select an architecture to view its transition states. The bars compare how populated
+            each architecture is.
+          </p>
+        </div>
+        {canCreate && (
+          <Button onClick={() => setCreating(true)} size="sm" className="flex-shrink-0">
+            New Architecture
+          </Button>
+        )}
       </div>
 
       {clients.length === 0 ? (
@@ -155,6 +167,20 @@ export default function ClientsPage() {
             setOverrides((prev) => ({ ...prev, [editing.id]: { ...prev[editing.id], ...fields } }))
           }
           onClose={() => setEditingId(null)}
+        />
+      )}
+
+      {creating && (
+        <CreateEntityModal
+          title="New architecture"
+          subtitle="Create an empty architecture with a baseline transition. You become its owner."
+          idLabel="Architecture ID"
+          idHint="Lowercase letters, numbers and dashes — becomes the folder name and URL."
+          onSubmit={(fields) =>
+            githubAction({ action: 'create-architecture', architectureId: fields.id, name: fields.name })
+          }
+          onCreated={(fields) => navigate(`/architectures/${fields.id}/transitions`)}
+          onClose={() => setCreating(false)}
         />
       )}
     </div>

@@ -16,6 +16,7 @@
  * actions (next-id, config) are open. When auth is not configured (e.g. local
  * dev without a database), writes are allowed and attributed to 'System'.
  */
+import { randomUUID } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { eq } from 'drizzle-orm'
 import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github.js'
@@ -511,6 +512,8 @@ const POST_ACTIONS: Record<string, Action> = {
   'refresh-discovery': refreshDiscovery,
   'update-architecture': updateArchitecture,
   'update-transition': updateTransition,
+  'create-architecture': createArchitecture,
+  'create-transition': createTransition,
 }
 
 // ── Architecture / transition metadata writes ───────────────────────────────────
@@ -545,6 +548,67 @@ async function updateTransition(gh: GitHubClient, params: Doc, actor: string): P
   return { ok: true, architectureId, transitionId }
 }
 
+// ── Create architecture / transition ([EDIT-2]) ─────────────────────────────────
+
+const j = (o: unknown): string => JSON.stringify(o, null, 4)
+
+// Seed a new, empty architecture in one commit: metadata + a single `baseline`
+// transition (empty decisions/discovery indexes) + the architectures index.
+async function createArchitecture(gh: GitHubClient, params: Doc, actor: string): Promise<Doc> {
+  const { architectureId, name } = params
+  if (!name || typeof name !== 'string') throw new HttpError('Name is required', 400)
+  const idxPath = 'architectures/architectures.json'
+  const { content: idx } = await gh.readJson<{ architectures?: Array<Record<string, string>> }>(
+    idxPath,
+    BASE
+  )
+  const list = idx.architectures ?? []
+  if (list.some((a) => a['architecture-id'] === architectureId)) {
+    throw new HttpError(`Architecture "${architectureId}" already exists`, 409)
+  }
+  const base = `architectures/${architectureId}`
+  await gh.commitFiles(BASE, `Create architecture ${architectureId} (${actor})`, [
+    { path: `${base}/architecture.json`, content: j({ 'architecture-id': architectureId, name, status: 'active' }) },
+    { path: `${base}/transitions.json`, content: j({ transitions: [{ 'transition-id': 'baseline' }] }) },
+    { path: `${base}/baseline/transition.json`, content: j({ 'transition-id': 'baseline', name: 'Baseline', status: 'draft' }) },
+    { path: `${base}/baseline/decisions/decisions.json`, content: j({ decisions: [] }) },
+    { path: `${base}/baseline/discovery/discovery.json`, content: j({ discoveries: [] }) },
+    { path: idxPath, content: j({ architectures: [...list, { 'architecture-id': architectureId }] }) },
+  ])
+  return { ok: true, architectureId }
+}
+
+// Create a new transition by cloning an existing one (default `baseline`) in a
+// single Git Trees commit, then overriding its metadata + the transitions index.
+async function createTransition(gh: GitHubClient, params: Doc, actor: string): Promise<Doc> {
+  const { architectureId, transitionId, name, fromTransitionId } = params
+  if (!name || typeof name !== 'string') throw new HttpError('Name is required', 400)
+  const from = (typeof fromTransitionId === 'string' && fromTransitionId) || 'baseline'
+  const idxPath = `architectures/${architectureId}/transitions.json`
+  const { content: idx } = await gh.readJson<{ transitions?: Array<Record<string, string>> }>(
+    idxPath,
+    BASE
+  )
+  const list = idx.transitions ?? []
+  if (list.some((t) => t['transition-id'] === transitionId)) {
+    throw new HttpError(`Transition "${transitionId}" already exists`, 409)
+  }
+  await gh.cloneDir(
+    BASE,
+    `Create transition ${architectureId}/${transitionId} from ${from} (${actor})`,
+    `architectures/${architectureId}/${from}`,
+    `architectures/${architectureId}/${transitionId}`,
+    [
+      {
+        path: `architectures/${architectureId}/${transitionId}/transition.json`,
+        content: j({ 'transition-id': transitionId, name, status: 'draft' }),
+      },
+      { path: idxPath, content: j({ transitions: [...list, { 'transition-id': transitionId }] }) },
+    ]
+  )
+  return { ok: true, architectureId, transitionId }
+}
+
 // ── Authorization ([RAS-3]) ─────────────────────────────────────────────────────
 
 interface PermissionState {
@@ -552,6 +616,7 @@ interface PermissionState {
   isAdmin: boolean
   memberships: Record<string, string>
   actor: string
+  userId: string | null
 }
 
 function inAdminAllowlist(email?: string): boolean {
@@ -568,14 +633,14 @@ function inAdminAllowlist(email?: string): boolean {
 // fail-soft on the membership query so an un-migrated DB can't 500 a write.
 async function resolvePermissions(req: VercelRequest): Promise<PermissionState> {
   if (missingAuthEnv().length > 0) {
-    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR }
+    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
   }
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
   if (!user) {
     if (process.env.VERCEL) {
-      return { authenticated: false, isAdmin: false, memberships: {}, actor: SYSTEM_ACTOR }
+      return { authenticated: false, isAdmin: false, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
     }
-    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR }
+    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
   }
   const isAdmin = user.accessTier === 'admin' || inAdminAllowlist(user.email)
   let memberships: Record<string, string> = {}
@@ -590,7 +655,7 @@ async function resolvePermissions(req: VercelRequest): Promise<PermissionState> 
   }
   const actor =
     [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.name || user.email
-  return { authenticated: true, isAdmin, memberships, actor }
+  return { authenticated: true, isAdmin, memberships, actor, userId: user.id }
 }
 
 // Per-action permission rule: which permission it needs and which param carries
@@ -599,6 +664,8 @@ async function resolvePermissions(req: VercelRequest): Promise<PermissionState> 
 const ACTION_PERMS: Record<string, { perm: string; archKey: string }> = {
   'update-architecture': { perm: ACTIONS.ARCHITECTURE_EDIT, archKey: 'architectureId' },
   'update-transition': { perm: ACTIONS.TRANSITION_EDIT, archKey: 'architectureId' },
+  'create-architecture': { perm: ACTIONS.ARCHITECTURE_CREATE, archKey: 'architectureId' },
+  'create-transition': { perm: ACTIONS.TRANSITION_CREATE, archKey: 'architectureId' },
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -670,7 +737,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(403).json({ error: 'You do not have permission to do that' })
         }
       }
-      return res.json(await fn(gh, params, perm.actor))
+      const result = await fn(gh, params, perm.actor)
+      // Creating an architecture grants the creator Owner ([RAS-3]/[EDIT-2]).
+      if (action === 'create-architecture' && perm.userId && result?.architectureId) {
+        try {
+          await db.insert(architectureMembership).values({
+            id: randomUUID(),
+            userId: perm.userId,
+            architectureId: String(result.architectureId),
+            role: 'owner',
+            grantedBy: perm.userId,
+          })
+        } catch {
+          // Fail-soft: DB not migrated, or a duplicate membership — the write itself
+          // succeeded; the grant can be reconciled later.
+        }
+      }
+      return res.json(result)
     }
 
     return res.status(405).json({ error: 'Method not allowed' })
