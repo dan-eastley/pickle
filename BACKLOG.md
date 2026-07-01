@@ -155,8 +155,12 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Deferred:** **Icon** and **Colour** categories; draggable modal ([UI-13]); the create flows ([EDIT-2]).
 
 ### EDIT-2 · ⬜ New Architecture / New Transition · Medium
-**Context:** Creating architectures/transitions is not yet possible in-app (only editing).
-**Proposed fix:** "New Architecture" (creator becomes **Owner**, [RAS-3]) and "New Transition" flows reusing the [EDIT-1] modal shell — new-arch seeds `architecture.json` + `transitions.json` + a `baseline`; new-transition can **clone from** an existing transition. Add `create-architecture` / `create-transition` API actions with index updates.
+**Context:** Creating architectures/transitions is not yet possible in-app (only editing, [EDIT-1]). Reuses the [EDIT-1] `SettingsModal` shell and the [RAS-3] gate.
+**Scoped implementation plan:**
+- **New Architecture (empty):** creator becomes **Owner**. A `create-architecture` action seeds, in one Git Trees commit, `architecture.json` + `transitions.json` (a single `baseline`) + `baseline/transition.json` + `baseline/decisions/decisions.json` (empty), and appends the id to `architectures.json`. Then insert an `architecture_membership` (owner) row (fail-soft). Domains fill in as content is added (no seed content — decided). Gate: `ACTIONS.ARCHITECTURE_CREATE` (any authenticated member).
+- **New Transition (clone):** a transition carries ~50 files, so copy via the **GitHub Git Trees API** — read the recursive tree, re-point the source subtree's blob SHAs at the new prefix, override the new `transition.json` (id/name/status), append to `transitions.json`, and commit **once** (no per-file writes). Gate: `ACTIONS.TRANSITION_CREATE` (Owner/Admin).
+- Needs new `GitHubClient` helpers (`commitFiles`, `cloneDir`) over the existing `request()` primitive. New-Architecture/New-Transition buttons on `/architectures` and `/architectures/<id>/transitions`, gated.
+**Note:** New production write paths against `main` (Git Trees) — build carefully and verify on first live use, as with the decision/discovery writes ([DEC-1]).
 
 ---
 
