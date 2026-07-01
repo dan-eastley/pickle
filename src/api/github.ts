@@ -17,8 +17,12 @@
  * dev without a database), writes are allowed and attributed to 'System'.
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { eq } from 'drizzle-orm'
 import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github.js'
 import { getSessionUser, missingAuthEnv } from '../lib/auth.js'
+import { db } from '../db/index.js'
+import { architectureMembership } from '../db/schema.js'
+import { can, ACTIONS, buildContext } from '../lib/permissions.js'
 
 const BASE = 'main'
 
@@ -479,7 +483,7 @@ async function refreshDiscovery(
 // the architectures tree. (Dots are allowed in ids.)
 const SAFE_ID = /^[A-Za-z0-9._-]+$/
 function assertSafeIds(params: Record<string, unknown>): void {
-  for (const k of ['clientId', 'versionId', 'decisionId', 'discoveryId']) {
+  for (const k of ['clientId', 'versionId', 'decisionId', 'discoveryId', 'architectureId', 'transitionId']) {
     const v = params[k]
     if (v == null) continue
     const s = String(v)
@@ -505,28 +509,96 @@ const POST_ACTIONS: Record<string, Action> = {
   'create-discovery': createDiscovery,
   'update-discovery': updateDiscovery,
   'refresh-discovery': refreshDiscovery,
+  'update-architecture': updateArchitecture,
+  'update-transition': updateTransition,
 }
 
-// Resolve the actor for a write and enforce authentication. A valid session is
-// required on **deployed** (Vercel) environments when auth is configured —
-// otherwise a 401 is sent and null is returned. Local dev is intentionally
-// unauthenticated for convenience: a session is still used for attribution if
-// present, but its absence is not blocked (writes attribute to the System
-// actor). When auth isn't configured at all, the same System fallback applies.
-async function resolveActor(req: VercelRequest, res: VercelResponse): Promise<string | null> {
-  if (missingAuthEnv().length > 0) return SYSTEM_ACTOR
+// ── Architecture / transition metadata writes ───────────────────────────────────
+
+// Edit an architecture's metadata (architectures/<id>/architecture.json). Only
+// name / description / status / industry are editable; the id is immutable.
+async function updateArchitecture(gh: GitHubClient, params: Doc, actor: string): Promise<Doc> {
+  const { architectureId, ...updates } = params
+  const path = `architectures/${architectureId}/architecture.json`
+  const { content, sha } = await gh.readJson<Doc>(path, BASE)
+  const next = { ...content }
+  for (const k of ['name', 'description', 'status', 'industry']) {
+    if (updates[k] !== undefined) next[k] = updates[k]
+  }
+  await gh.writeJson(path, next, `Update architecture ${architectureId} (${actor})`, { sha, branch: BASE })
+  return { ok: true, architectureId }
+}
+
+// Edit a transition's metadata (architectures/<id>/<transition>/transition.json).
+async function updateTransition(gh: GitHubClient, params: Doc, actor: string): Promise<Doc> {
+  const { architectureId, transitionId, ...updates } = params
+  const path = `architectures/${architectureId}/${transitionId}/transition.json`
+  const { content, sha } = await gh.readJson<Doc>(path, BASE)
+  const next = { ...content }
+  for (const k of ['name', 'description', 'status', 'release-date']) {
+    if (updates[k] !== undefined) next[k] = updates[k]
+  }
+  await gh.writeJson(path, next, `Update transition ${architectureId}/${transitionId} (${actor})`, {
+    sha,
+    branch: BASE,
+  })
+  return { ok: true, architectureId, transitionId }
+}
+
+// ── Authorization ([RAS-3]) ─────────────────────────────────────────────────────
+
+interface PermissionState {
+  authenticated: boolean
+  isAdmin: boolean
+  memberships: Record<string, string>
+  actor: string
+}
+
+function inAdminAllowlist(email?: string): boolean {
+  const list = (process.env.PICKLE_ADMIN_EMAILS ?? '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean)
+  return !!email && list.includes(email.toLowerCase())
+}
+
+// Resolve the caller's authorization state: authenticated?, global admin?, and
+// their per-architecture memberships. Mirrors resolveActor's local-permissive
+// behaviour (auth unconfigured or local dev → treated as admin), and is
+// fail-soft on the membership query so an un-migrated DB can't 500 a write.
+async function resolvePermissions(req: VercelRequest): Promise<PermissionState> {
+  if (missingAuthEnv().length > 0) {
+    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR }
+  }
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
-  if (user) {
-    return (
-      [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.name || user.email
-    )
+  if (!user) {
+    if (process.env.VERCEL) {
+      return { authenticated: false, isAdmin: false, memberships: {}, actor: SYSTEM_ACTOR }
+    }
+    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR }
   }
-  // No session: enforce only on Vercel deployments; allow locally.
-  if (process.env.VERCEL) {
-    res.status(401).json({ error: 'Authentication required' })
-    return null
+  const isAdmin = user.accessTier === 'admin' || inAdminAllowlist(user.email)
+  let memberships: Record<string, string> = {}
+  try {
+    const rows = await db
+      .select()
+      .from(architectureMembership)
+      .where(eq(architectureMembership.userId, user.id))
+    memberships = Object.fromEntries(rows.map((r) => [r.architectureId, r.role]))
+  } catch {
+    memberships = {} // table not migrated yet → no per-architecture rights
   }
-  return SYSTEM_ACTOR
+  const actor =
+    [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.name || user.email
+  return { authenticated: true, isAdmin, memberships, actor }
+}
+
+// Per-action permission rule: which permission it needs and which param carries
+// the architecture id. Actions absent here require only authentication (existing
+// decision/discovery flows keep session-only gating until memberships are seeded).
+const ACTION_PERMS: Record<string, { perm: string; archKey: string }> = {
+  'update-architecture': { perm: ACTIONS.ARCHITECTURE_EDIT, archKey: 'architectureId' },
+  'update-transition': { perm: ACTIONS.TRANSITION_EDIT, archKey: 'architectureId' },
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -569,6 +641,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           branchUrl: process.env.VERCEL_BRANCH_URL ?? null,
         })
       }
+      // Current caller's authorization state, for the client to gate controls.
+      if (action === 'permissions') {
+        const { authenticated, isAdmin, memberships } = await resolvePermissions(req)
+        return res.json({ authenticated, isAdmin, memberships })
+      }
       // GET actions (next-id, config) are read-only — no session required.
       const fn = GET_ACTIONS[action as string]
       if (!fn) return res.status(400).json({ error: `Unknown GET action: ${action}` })
@@ -581,9 +658,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const fn = POST_ACTIONS[action as string]
       if (!fn) return res.status(400).json({ error: `Unknown POST action: ${action}` })
       // Writes require a valid session (when auth is configured).
-      const actor = await resolveActor(req, res)
-      if (actor === null) return
-      return res.json(await fn(gh, params, actor))
+      const perm = await resolvePermissions(req)
+      if (!perm.authenticated) {
+        return res.status(401).json({ error: 'Authentication required' })
+      }
+      // Actions that declare a permission rule are additionally RBAC-gated ([RAS-3]).
+      const rule = ACTION_PERMS[action as string]
+      if (rule) {
+        const architectureId = params[rule.archKey] as string | undefined
+        if (!can(buildContext(perm), rule.perm, { architectureId })) {
+          return res.status(403).json({ error: 'You do not have permission to do that' })
+        }
+      }
+      return res.json(await fn(gh, params, perm.actor))
     }
 
     return res.status(405).json({ error: 'Method not allowed' })
