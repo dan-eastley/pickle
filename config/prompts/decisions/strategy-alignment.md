@@ -31,10 +31,10 @@ Write a JSON **array** to the decision JSON's `strategy-alignment` property. Eac
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed — name the strategic statement (quote it briefly) and state the relationship. Max ~500 characters. |
-| `impact` | What this means for the decision — does it strengthen the business case, create a risk, or leave a strategic question unanswered? Max ~500 characters. |
-| `recommendation` | What the author should do in response — strengthen the narrative, adjust scope, or acknowledge the tension explicitly. Max ~500 characters. |
-| `rationale` | Why this strategic relationship matters for this decision. Max ~500 characters. |
+| `finding` | What you observed — name the strategic statement (quote it briefly) and state the relationship. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What this means for the decision — does it strengthen the business case, create a risk, or leave a strategic question unanswered? Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What the author should do in response — strengthen the narrative, adjust scope, or acknowledge the tension explicitly. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this strategic relationship matters for this decision. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold strategy catalogue names, `code spans` for IDs, quoted strategy statements in *italics*.
 
