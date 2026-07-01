@@ -22,6 +22,7 @@ Per-architecture metadata file living inside each architecture's folder. Carries
 |---|---|---|---|
 | `architecture-id` | string | yes | Unique identifier: must match the architecture folder name |
 | `name` | string | yes | Human-readable architecture name |
+| `status` | enum | no | `active` \| `archived` — lifecycle status |
 
 ## Conventions
 

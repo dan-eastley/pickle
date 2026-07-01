@@ -1,22 +1,35 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getVersions, getVersion } from '../lib/api'
+import { usePermissions } from '../context/PermissionsContext'
+import { ACTIONS } from '../lib/permissions'
+import { getVersions, getVersion, githubAction } from '../lib/api'
 import { loadVersionMetrics } from '../lib/metrics'
 import { versionStatusBadge } from '../lib/theme'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
 import ClientLogo from '../components/ui/ClientLogo'
-import { ChevronRight } from '../components/ui/icons'
+import EditSettingsModal from '../components/settings/EditSettingsModal'
+import { ChevronRight, EditIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
+
+const TRANSITION_STATUS_OPTIONS = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'published', label: 'Published' },
+  { value: 'archived', label: 'Archived' },
+]
 
 export default function VersionsPage() {
   const { clientId } = useParams()
   const { clientsMetadata } = useArchitecture()
+  const { can } = usePermissions()
   const [versions, setVersions] = useState([])
   const [versionMeta, setVersionMeta] = useState({})
   const [versionMetrics, setVersionMetrics] = useState({})
   const [loading, setLoading] = useState(true)
+  const [editingId, setEditingId] = useState(null)
+
+  const canEditTransition = can(ACTIONS.TRANSITION_EDIT, { architectureId: clientId })
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} · Transitions`)
@@ -109,6 +122,20 @@ export default function VersionsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
+                    {canEditTransition && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setEditingId(vId)
+                        }}
+                        className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-100 transition-colors"
+                        title="Edit transition"
+                        aria-label={`Edit ${meta?.name ?? vId}`}
+                      >
+                        <EditIcon className="w-4 h-4" />
+                      </button>
+                    )}
                     <span className="text-xs font-mono text-gray-500">{vId}</span>
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
                   </div>
@@ -134,6 +161,31 @@ export default function VersionsPage() {
             )
           })}
         </div>
+      )}
+
+      {editingId && (
+        <EditSettingsModal
+          title="Edit transition"
+          subtitle={`Settings for ${versionMeta[editingId]?.name ?? editingId}`}
+          initialName={versionMeta[editingId]?.name ?? editingId}
+          initialStatus={versionMeta[editingId]?.status ?? 'draft'}
+          statusOptions={TRANSITION_STATUS_OPTIONS}
+          onSubmit={(fields) =>
+            githubAction({
+              action: 'update-transition',
+              architectureId: clientId,
+              transitionId: editingId,
+              ...fields,
+            })
+          }
+          onSaved={(fields) =>
+            setVersionMeta((prev) => ({
+              ...prev,
+              [editingId]: { ...prev[editingId], ...fields },
+            }))
+          }
+          onClose={() => setEditingId(null)}
+        />
       )}
     </div>
   )
