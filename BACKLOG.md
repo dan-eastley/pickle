@@ -38,6 +38,18 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** A change can be self-approved end-to-end. No artefact ownership, no required reviewers, no quorum/approval policy, no audit of who approved what.
 **Proposed fix:** A governance model layered onto the pipeline: (1) **artefact ownership** — each catalogue/document declares owning role(s)/people; (2) **approval policy per transition** — e.g. ACCEPTED requires N approvals from owners of the impacted domains plus an architecture-authority role; (3) **reviewer assignment & sign-off UI** — approvers recorded as activity entries with identity, decision can't advance until policy met; (4) **separation of duties** — the proposer can't be the sole approver. Ties into [RAS-2] (authentication — real identities), [RAS-3] (authorization/RBAC + ACL), and per-artefact owners. High impact, large effort; sequence after authentication lands.
 
+### DEC-7 · ⬜ Hide the action bar while editing · Low
+**Context:** On the decision/discovery detail pages the stage/action bar stays visible during inline editing.
+**Proposed fix:** Hide the action bar whenever the record is in edit mode, so editing and stage actions don't compete.
+
+### DEC-8 · ⬜ Gate stage advance on the workflow having run · High
+**Context:** Stages can be advanced from the UI regardless of whether the prior workflow has completed (e.g. you can move PROPOSED → ACCEPTED before the analysis streams have run). Overlaps with [DEC-1] (workflow-owned status).
+**Proposed fix:** You cannot advance to the next stage until the current stage's workflow has finished. While a workflow is running, the **"now running" box replaces the action bar** (not shown alongside it), so the only state visible is "analysis in progress". Advance controls reappear, gated, once it completes.
+
+### DEC-9 · ⬜ Lock accept/reject once STAGED · Medium
+**Context:** After a decision is STAGED, the Architecture Changes can still appear accept/rejectable, and the interaction is the row-toggle used by the analysis streams — wrong affordance for a locked state.
+**Proposed fix:** Once STAGED, accept/reject on the changes is **locked** and rendered as a distinct locked state (visually different from the analysis streams — not a clickable row toggle).
+
 ---
 
 ## Epic: Discovery (Virtual Architect Agent)
@@ -94,6 +106,60 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** No way to traverse the architecture graph from one entity to its related entities, and no single place that shows *all* relationships an entity participates in.
 **Proposed fix:** A **slide-out relationship explorer** (reuse/extend `EntityPanel`). When viewing an entity (e.g. a capability) the panel shows a **table of every relationship** that entity participates in, grouped by relationship type and **sourced from the matrices** (each matrix defines a typed mapping between two artefact types). Clicking a related entity (e.g. a process) **slides out a new panel from the right, overlaying** the previous one (a breadcrumb stack); from a process you can step to its data, and so on. Clicking the backdrop/off dismisses the whole stack.
 **Design notes:** Requires a **relationship resolver** that, given an entity id, finds all matrices referencing its artefact type and collects the mapped entities (both directions). Define this over the matrix data model (and `config/artefact-relationships.json`). Cap stack depth for sanity; animate the overlay; make each level independently closeable. Strongly related to [AMC-5] (we can only navigate relationships we actually model — missing matrices = missing edges) and [UI-5] (deep-linkable panel state) and [QV-5] (focus management across stacked panels).
+
+### UI-10 · ⬜ Header: search on the right, combined architecture/transition selector on the left · Medium
+**Context:** The global search (command palette, [UI-4]) and the architecture/transition switchers live separately; the header layout doesn't group them.
+**Proposed fix:** Move the search control to the **right** of the header (next to the user icon). On the **left**, keep the logo + an architecture selector that shows **architectures and transitions in the same dropdown** (grouped/indented), styled consistently with the search bar. One cohesive header row.
+
+### UI-11 · ⬜ Share link on every artefact (copy to clipboard) · Low
+**Proposed fix:** A "Share"/copy-link affordance on each artefact view that copies the deep link to that artefact (and, where relevant, the selected entity). Reuse the deep-link scheme from [UI-5].
+
+### UI-12 · ✅ Rename "AI-generated" → "PICKLE-generated" · Low
+**Done (this pass):** Every user-facing "AI-generated" label is now "PICKLE-generated".
+
+### UI-13 · ⬜ Draggable modal windows · Low
+**Proposed fix:** Make modal dialogs draggable by their header so they can be moved aside. Build into the shared modal shell ([EDIT-1]) so New Decision / New Discovery / settings modals all inherit it.
+
+### UI-14 · ⬜ Slide-out: "New Decision" call-to-action · Low
+**Context:** The entity slide-out ([UI-9]) shows relationships but no route to change the entity.
+**Proposed fix:** A **New Decision** button at the bottom of the slide-out with the narrative *"Changes to this entity must go through a Decision Record."* — pre-scoped to the entity.
+
+### UI-15 · ⬜ Standardised enum meta on models (legend + inline) · Medium
+**Context:** Entities carry enum attributes (capability `importance`, process `type`, application `status`) that diagrams don't surface consistently.
+**Proposed fix:** A common way to render a typed enum against an entity — a **legend** on the model plus consistent inline formatting (colour/badge) driven by the schema's enum definition, so every enum meta looks and behaves the same across catalogues and diagrams.
+
+### UI-16 · ✅ Capability/Process L2: ID above the name · Low
+**Done (this pass):** On the level-2 capability and process models the entity ID now sits **above** the name (was to the left), matching the slide-out and the rest of the UI.
+
+### UI-17 · ⬜ Analysis/change output too verbose · Medium
+**Context:** The seven analysis streams and the change description render as long prose.
+**Proposed fix:** Update the decision-analysis prompts (`config/prompts/decisions/*.md`) so Finding / Impact / Recommendation / Rationale (and the change description) come back as **succinct bullets or single statements**, not paragraphs.
+
+### UI-18 · ✅ "To Top" link in left-hand nav · Low
+**Done (this pass):** The documents / decisions / discovery contents rail now has a **To Top** link at the bottom (same small text as expand/collapse).
+
+### UI-19 · ⬜ Catalogues: main columns only, name is the link · Medium
+**Context:** Catalogue tables show every column and scroll horizontally.
+**Proposed fix:** Show only the main columns (name/title + description) so there's no horizontal scroll; the **name is a link that opens the right-hand entity popout** (traverse the architecture, per [UI-9]). Visually flag the name as the link.
+
+### UI-20 · ✅ Drop marketing illustrations from list pages · Low
+**Done (this pass):** The architectures list and the transitions list no longer show the decorative illustrations.
+
+### UI-21 · ✅ Page `<title>` uses a hyphen, not an em-dash · Low
+**Done (this pass):** The separator in the browser tab `<title>` is a single hyphen.
+
+---
+
+## Epic: Editing, Modals & Settings
+
+### EDIT-1 · ⬜ Edit Architecture / Transition via a reusable settings modal · Medium
+**Proposed fix:** A shared **SettingsModal** shell — left-hand category rail that jump-scrolls to the relevant settings section, and a **Save Settings / Cancel** footer in the same format as the New Decision / New Discovery modals — reused for both architecture and transition editing. **Edit** entry points on each card of `/architectures` and on `/architectures/<id>/transitions`, visible only to **Owner/Admin** (gated through the [RAS-3] `can()` seam). First settings categories: **Name** and **Status**; writes persist via new `/api/github` actions (`update-architecture`, `update-transition`) to `architecture.json` / `transition.json` on `main`.
+**Deferred:** **Icon** and **Colour** categories; draggable modal ([UI-13]); the create flows ([EDIT-2]).
+**Note:** This is the shared-modal foundation several other items reference ([UI-13] draggable, [EDIT-2] create). Best built as its own focused pass — it needs the modal shell, two API write actions, and the permission seam wired together. Sequenced right after [RAS-3]'s `can()` seam exists (even in placeholder form).
+
+### EDIT-2 · ⬜ New Architecture / New Transition · Medium
+**Context:** Creating architectures/transitions is not yet possible in-app (only editing).
+**Proposed fix:** "New Architecture" (creator becomes **Owner**, [RAS-3]) and "New Transition" flows reusing the [EDIT-1] modal shell — new-arch seeds `architecture.json` + `transitions.json` + a `baseline`; new-transition can **clone from** an existing transition. Add `create-architecture` / `create-transition` API actions with index updates.
 
 ---
 
@@ -185,9 +251,59 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Production-only fixes en route (Vercel native ESM):** SPA catch-all rewrite scoped to non-`/api`; explicit `/api/auth/(.*)` rewrite for multi-segment routing; all relative server imports given explicit `.js`/`index.js` (the dev shim had masked these). See [[vercel-esm-functions]].
 **Deferred (own items):** email verification / password reset need an email provider; authorization (who-can-do-what) is [RAS-3].
 
-### RAS-3 · ⬜ Authorization (RBAC + ACL) · High
-**Context:** Roles exist as data but don't gate anything.
-**Proposed fix:** Map roles to permissions (e.g. who can commit a decision); enforce in the API.
+### RAS-3 · ⬜ Authorization (RBAC + per-architecture access) · High
+**Context:** Roles exist as data but don't gate anything. Two *different* role concepts must be kept separate:
+- **Content roles** — `config/roles.json` (27 job titles) + `user.jobRole`. Used as artefact `audience`/`author` and for tailored UI. **Not** access control. Unchanged by this item.
+- **Access roles** (new, below) — who can *do* what. This item.
+
+Today the only access primitive is `user.accessTier` (`admin`/`member`/`viewer`, `input:false`), which gates nothing beyond "is authenticated". `/api/github` writes are session-gated but not permission-gated: any signed-in user can drive any decision on any architecture.
+
+**Proposed model — four access roles**
+
+| Role | Scope | Can |
+|---|---|---|
+| **Admin** | Global (platform) | Everything: view + edit **every** architecture, add architectures, create/edit transitions anywhere, manage **all** access (grant any role to anyone), promote other admins. The super-user. |
+| **Owner** | Per-architecture | View + edit their architecture's content and settings; create + edit transitions within it; assign **Contributors** and **Consumers** (and co-**Owners**) to it. Creating a new architecture makes the creator its Owner. No rights over architectures they don't own. |
+| **Contributor** | Per-architecture | View all content; create/edit **decisions, discoveries, and scouts** within the architecture. **Cannot** change architecture/transition settings or manage access. |
+| **Consumer** | Per-architecture | **View only.** No writes of any kind. |
+
+**Permission matrix** (✓ allowed · ✗ denied · *self* = only records they authored)
+
+| Action | Admin | Owner | Contributor | Consumer |
+|---|:--:|:--:|:--:|:--:|
+| View architecture content | ✓ | ✓ | ✓ | ✓ |
+| Create / edit decisions, discoveries, scouts | ✓ | ✓ | ✓ | ✗ |
+| Advance decision workflow stages | ✓ | ✓ | ✗¹ | ✗ |
+| Edit architecture settings (name, status, icon, colour) | ✓ | ✓ | ✗ | ✗ |
+| Create / edit transitions | ✓ | ✓ | ✗ | ✗ |
+| Add a new architecture | ✓ | ✓² | ✓² | ✗ |
+| Assign Contributors / Consumers | ✓ | ✓ (own) | ✗ | ✗ |
+| Assign co-Owners | ✓ | ✓ (own)³ | ✗ | ✗ |
+| Manage global access / all architectures / admins | ✓ | ✗ | ✗ | ✗ |
+
+¹ Advancing to ACCEPTED/STAGED/COMMITTED is a governance act — reserve for Owner/Admin (ties to [DEC-6]). ² See open question 1. ³ See open question 2.
+
+**Data model (Postgres, extends [RAS-4])**
+- Keep `user.accessTier` as the **global tier**: `admin` (platform super-user) vs `member` (normal, gains rights via memberships) vs `viewer` (read-only everywhere, no memberships).
+- New table `architecture_membership`: `(id, userId → user.id, architectureId text, role enum('owner','contributor','consumer'), grantedBy → user.id, createdAt)`, unique on `(userId, architectureId)`. A user's effective rights on an architecture = **global admin** OR their membership `role` for that `architectureId`.
+- Drizzle migration + `db:generate`/`db:migrate`. Seed: promote initial admin(s) (email allowlist / manual), and backfill an Owner onto the existing sample architectures so they're manageable.
+
+**Enforcement — single permission seam**
+- One module, `can(user, memberships, action, { architectureId })`, is the *only* place the matrix lives. **Server** (`/api/github`) calls it per action (`create-decision`, `create-discovery`, `update-architecture`, `create-transition`, `grant-access`, workflow-advance, …) → **403** on failure; this is authoritative. **Client** mirrors it (a `usePermissions()` hook fed by `/api/me` returning user + memberships) to hide/disable controls — defence-in-depth, never the gate of record.
+- The Edit-architecture button (see [EDIT-1]) and every write control resolve visibility through `can()`. Until this lands, [EDIT-1] wires the button to a **placeholder `can()`** (currently: admin tier, or any authenticated user in dev) so the seam exists and only its body changes when memberships arrive.
+
+**UI**
+- "Access" category in the architecture settings modal (Owner/Admin): list members, add by email, set/remove role.
+- Admin console: manage architectures + every user's global tier.
+
+**Sequencing:** depends on [RAS-2] (auth ✓) and [RAS-4] (DB ✓). [DEC-6] (multi-party governance/approvals) builds **on top** — Owners become approvers, separation-of-duties uses these roles. [EDIT-1] ships the settings modal now against the `can()` seam.
+
+**Open questions (for review):**
+1. Can any authenticated `member` self-serve a new architecture (becoming its Owner), or is "create architecture" an Admin-granted capability?
+2. May Owners appoint co-Owners, or only Admins?
+3. Is Consumer purely per-architecture, or is there also a global read-only `viewer` tier (and how do they interact)?
+4. Do Contributors get scoped writes (only records they authored) or full write on all decisions/discoveries in the architecture?
+5. How are grants surfaced and audited (activity log entries, notifications)?
 
 ### RAS-4 · 🟡 Storage for non-GitHub state · Medium
 **Context:** Architecture content stays in Git (the source of truth); other state needs a database.
