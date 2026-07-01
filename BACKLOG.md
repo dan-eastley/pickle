@@ -111,14 +111,14 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Context:** The global search (command palette, [UI-4]) and the architecture/transition switchers live separately; the header layout doesn't group them.
 **Proposed fix:** Move the search control to the **right** of the header (next to the user icon). On the **left**, keep the logo + an architecture selector that shows **architectures and transitions in the same dropdown** (grouped/indented), styled consistently with the search bar. One cohesive header row.
 
-### UI-11 · ⬜ Share link on every artefact (copy to clipboard) · Low
-**Proposed fix:** A "Share"/copy-link affordance on each artefact view that copies the deep link to that artefact (and, where relevant, the selected entity). Reuse the deep-link scheme from [UI-5].
+### UI-11 · ✅ Share link on every artefact (copy to clipboard) · Low
+**Done:** A **Share** button on the artefact header copies the current deep link (`ShareLink`, `components/ui/ShareLink.jsx`) with a brief "Copied" confirmation; sits beside the download control.
 
 ### UI-12 · ✅ Rename "AI-generated" → "PICKLE-generated" · Low
 **Done (this pass):** Every user-facing "AI-generated" label is now "PICKLE-generated".
 
-### UI-13 · ⬜ Draggable modal windows · Low
-**Proposed fix:** Make modal dialogs draggable by their header so they can be moved aside. Build into the shared modal shell ([EDIT-1]) so New Decision / New Discovery / settings modals all inherit it.
+### UI-13 · ✅ Draggable modal windows · Low
+**Done:** `useDraggable` hook (drag by the header, ignores clicks on controls). Applied to the shared SettingsModal and the New Decision / New Discovery modals.
 
 ### UI-14 · ⬜ Slide-out: "New Decision" call-to-action · Low
 **Context:** The entity slide-out ([UI-9]) shows relationships but no route to change the entity.
