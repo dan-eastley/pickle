@@ -41,7 +41,7 @@
         {
             "decision-id": "ADR-018",
             "title": "Interface between EAM and FSM",
-            "status": "accepted",
+            "status": "staged",
             "scope": {
                 "domain": "integration",
                 "abstraction": "logical",
