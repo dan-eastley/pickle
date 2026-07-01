@@ -1,0 +1,21 @@
+{
+    "decision-id": "ADR-018",
+    "title": "Interface between EAM and FSM",
+    "status": "draft",
+    "context": "Currently we only have work order dispatch and completion",
+    "problem": "We need a way to perform asset lookups whilst out in the field.",
+    "proposal": "A new interface between EAM and FSM, where field engineers can enter an asset ID in the field, which collects asset information from the EAM system",
+    "narrative": "## Context\n\nCurrently we only have work order dispatch and completion\n\n## Problem\n\nWe need a way to perform asset lookups whilst out in the field.\n\n## Proposal\n\nA new interface between EAM and FSM, where field engineers can enter an asset ID in the field, which collects asset information from the EAM system",
+    "scope": {
+        "domain": "integration",
+        "abstraction": "logical",
+        "artefact": "INT-WRD"
+    },
+    "activity": [
+        {
+            "timestamp": "2026-07-01T07:21:53.794Z",
+            "action": "Created",
+            "who": "Joe B"
+        }
+    ]
+}
