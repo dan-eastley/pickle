@@ -37,6 +37,16 @@
                 "abstraction": "conceptual",
                 "artefact": "BUS-BCM"
             }
+        },
+        {
+            "decision-id": "ADR-018",
+            "title": "Interface between EAM and FSM",
+            "status": "draft",
+            "scope": {
+                "domain": "integration",
+                "abstraction": "logical",
+                "artefact": "INT-WRD"
+            }
         }
     ]
 }
