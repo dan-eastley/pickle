@@ -222,5 +222,19 @@
             "recommendation": "**Broaden the scope to frame asset information as a publishable data product:** The proposal should identify 'Asset Information' as a data product owned and published by the EAM domain, available to multiple consumers (FSM immediate, analytics and compliance downstream). Document which asset attributes comprise the product (e.g., Asset Master, Maintenance History, Warranty Status), define the ownership and SLA, and commit to versioning the contract. This enables governance and positions the interface for ecosystem reuse without additional rework.",
             "rationale": "Data products are how organisations scale integration without linear cost growth. Framing asset-lookup as a product (not just a tactical FSM feature) attracts other consumers, justifies investment in quality and documentation, and compounds the business value of the initial investment. This aligns the decision with data strategy and prevents the premature narrowing that forecloses future leverage."
         }
+    ],
+    "architecture-changes": [
+        {
+            "artefact-id": "INT-IFC",
+            "artefact-name": "Interface Catalogue",
+            "change-type": "create",
+            "description": "Add new interface entry INT-IFC-025 'Asset Information Lookup' to the interfaces array. Source: PLAT-EAM, Target: PLAT-FSM, Direction: target-to-source (FSM queries EAM for asset information). Description: 'Field Service Management looks up asset information from Enterprise Asset Management to enable field engineers to access real-time asset details (e.g. asset master, maintenance history) whilst out in the field.'"
+        },
+        {
+            "artefact-id": "INT-DAC-IFC",
+            "artefact-name": "Data Domains & Concepts ↔ Interface Catalogue",
+            "change-type": "create",
+            "description": "Add mapping relationship between INT-IFC-025 and asset-related data concepts from DAT-DAC. Create entries mapping column-id: CON-ASSET to row-id: INT-IFC-025. This documents that asset information entities (Asset Master, Asset Type, Maintenance History) flow across the new asset-lookup interface from EAM to FSM."
+        }
     ]
 }
