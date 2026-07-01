@@ -6,6 +6,7 @@ import { buildScope } from '../../lib/scope'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
+import useDraggable from '../../hooks/useDraggable'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
@@ -34,6 +35,7 @@ export default function NewDecisionModal({
 
   const colors = DOMAIN_COLORS[artefact.domain]
   const trapRef = useFocusTrap()
+  const { dragHandleProps, style: dragStyle } = useDraggable()
   const titleRef = useRef(null)
   useEffect(() => {
     titleRef.current?.focus()
@@ -97,7 +99,7 @@ export default function NewDecisionModal({
   ]
     .filter(Boolean)
     .join('&')
-  const fullEditorUrl = `/clients/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
+  const fullEditorUrl = `/architectures/${clientId}/${versionId}/decisions/new${scopeParams ? `?${scopeParams}` : ''}`
 
   return createPortal(
     <>
@@ -112,11 +114,13 @@ export default function NewDecisionModal({
           role="dialog"
           aria-modal="true"
           aria-label="New Architecture Decision"
+          style={dragStyle}
           className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
         >
-          {/* Header — plain coloured bar, icon, title + purpose */}
+          {/* Header: plain coloured bar, icon, title + purpose (drag handle) */}
           <div
-            className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}
+            {...dragHandleProps}
+            className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0 cursor-move`}
           >
             <div className="flex items-start gap-3 min-w-0">
               <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
@@ -125,7 +129,7 @@ export default function NewDecisionModal({
               <div className="min-w-0">
                 <h2 className="text-base font-semibold text-gray-900">New Architecture Decision</h2>
                 <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                  How a change to the architecture gets proposed and governed — capture the context,
+                  How a change to the architecture gets proposed and governed: capture the context,
                   problem, and proposed direction; the agents analyse it and, once accepted, the
                   change is applied through a reviewed pull request.
                 </p>
@@ -133,7 +137,7 @@ export default function NewDecisionModal({
             </div>
             <button
               onClick={requestClose}
-              className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
+              className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
               <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
@@ -154,11 +158,11 @@ export default function NewDecisionModal({
                 <div className="text-success-700 font-medium text-sm mb-1">
                   {result.decisionId} created as a draft.
                 </div>
-                <p className="text-xs text-gray-400 mb-3">
+                <p className="text-xs text-gray-500 mb-3">
                   Narrative Review is running to suggest improvements.
                 </p>
                 <TextLink
-                  to={`/clients/${clientId}/${versionId}/decisions/${result.decisionId}`}
+                  to={`/architectures/${clientId}/${versionId}/decisions/${result.decisionId}`}
                   state={{ cacheBust: true }}
                   onClick={onClose}
                   className="text-sm font-medium"
@@ -195,9 +199,9 @@ export default function NewDecisionModal({
                   >
                     Context <span className="text-error-500">*</span>
                   </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
-                    The current situation — what is happening that prompts this decision. Written
-                    for a business audience.
+                  <p className="text-xs text-gray-500 mb-1.5">
+                    The current situation: what is happening that prompts this decision. Written for
+                    a business audience.
                   </p>
                   <AutoGrowTextarea
                     id={`${fid}-context`}
@@ -216,8 +220,8 @@ export default function NewDecisionModal({
                   >
                     Problem <span className="text-error-500">*</span>
                   </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
-                    What needs to be fixed or addressed — the gap or pain in the current situation.
+                  <p className="text-xs text-gray-500 mb-1.5">
+                    What needs to be fixed or addressed, the gap or pain in the current situation.
                   </p>
                   <AutoGrowTextarea
                     id={`${fid}-problem`}
@@ -236,8 +240,8 @@ export default function NewDecisionModal({
                   >
                     Proposal <span className="text-error-500">*</span>
                   </label>
-                  <p className="text-xs text-gray-400 mb-1.5">
-                    How we propose to solve it — the direction, at a business level.
+                  <p className="text-xs text-gray-500 mb-1.5">
+                    How we propose to solve it, the direction, at a business level.
                   </p>
                   <AutoGrowTextarea
                     id={`${fid}-proposal`}

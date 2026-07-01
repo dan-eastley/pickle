@@ -1,4 +1,4 @@
-# BUS-CAP — Business Capabilities Catalogue
+# BUS-CAP: Business Capabilities Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/business/conceptual/BUS-CAP.json`](../../../../../../config/schemas/artefacts/domains/business/conceptual/BUS-CAP.json)
 **Architecture Domain / Layer:** Business / Conceptual
@@ -6,10 +6,10 @@
 
 ## Industry alignment
 
-- **TOGAF** — Capability-based planning concepts (capability ≠ process ≠ function)
-- **Business Architecture Guild (BIZBOK)** — Capability map structure (levels, parent/child)
-- **CMMI** — Maturity scale used for `maturity-current` / `maturity-target`
-- **Strategic classification** — `strategic` / `differentiating` / `foundational` follows common practice for portfolio prioritisation
+- **TOGAF**: Capability-based planning concepts (capability ≠ process ≠ function)
+- **Business Architecture Guild (BIZBOK)**: Capability map structure (levels, parent/child)
+- **CMMI**: Maturity scale used for `maturity-current` / `maturity-target`
+- **Strategic classification**: `strategic` / `differentiating` / `foundational` follows common practice for portfolio prioritisation
 
 ## Example
 
@@ -42,7 +42,7 @@
 | `id` | string | yes | Unique identifier (e.g. `CAP-001`) |
 | `name` | string | yes | Capability name |
 | `description` | string | no | Free-text description |
-| `level` | integer (1–3) | yes | Capability level — 1 highest, 3 most granular |
+| `level` | integer (1–3) | yes | Capability level: 1 highest, 3 most granular |
 | `parent-id` | string | conditional | ID of the parent capability. Required for level 2 and 3; omit for level 1. |
 | `owner` | string | no | Accountable business unit or role |
 | `importance` | enum | no | `strategic` \| `differentiating` \| `foundational` |

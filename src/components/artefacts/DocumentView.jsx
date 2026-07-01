@@ -75,7 +75,7 @@ function DocumentRoles({ doc }) {
     <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2">
       {groups.map(([label, roles]) => (
         <div key={label} className="flex items-baseline gap-2">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
             {label}
           </span>
           <span className="flex flex-wrap gap-1.5">
@@ -145,7 +145,7 @@ function CardList({ items, config }) {
         <div key={item.id ?? i} className="border border-gray-200 px-4 py-3 bg-white">
           <div className="flex items-start gap-3">
             {item.id && (
-              <span className="text-xs font-mono text-gray-400 pt-0.5 flex-shrink-0">
+              <span className="text-xs font-mono text-gray-500 pt-0.5 flex-shrink-0">
                 {item.id}
               </span>
             )}
@@ -193,7 +193,7 @@ function RiskList({ items }) {
         <div key={risk.id ?? i} className="border border-gray-200 px-4 py-3 bg-white">
           <div className="flex items-start gap-3">
             {risk.id && (
-              <span className="text-xs font-mono text-gray-400 pt-0.5 flex-shrink-0">
+              <span className="text-xs font-mono text-gray-500 pt-0.5 flex-shrink-0">
                 {risk.id}
               </span>
             )}
@@ -234,7 +234,7 @@ function OptionList({ items }) {
       {items.map((opt, i) => (
         <div key={opt.id ?? i} className="border border-gray-200 bg-white">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-            <span className="text-xs font-mono text-gray-400">{opt.id}</span>
+            <span className="text-xs font-mono text-gray-500">{opt.id}</span>
             <span className="text-sm font-semibold text-gray-900">{opt.name}</span>
           </div>
           {opt.description && (
@@ -298,7 +298,7 @@ function FlowList({ items }) {
       {items.map((flow, i) => (
         <div key={flow.id ?? i} className="border border-gray-200 bg-white">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-            <span className="text-xs font-mono text-gray-400">{flow.id}</span>
+            <span className="text-xs font-mono text-gray-500">{flow.id}</span>
             <span className="text-sm font-semibold text-gray-900">{flow.name}</span>
           </div>
           {flow.description && (
@@ -433,7 +433,7 @@ function DiagramRefs({ refs, clientId, versionId }) {
             </div>
             {artefact && (
               <Link
-                to={`/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
+                to={`/architectures/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`}
                 className="flex-shrink-0 text-xs px-3 py-1.5 border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 View →
@@ -594,14 +594,14 @@ function ContextLinks({ items, clientId, versionId }) {
       {items.map((link, i) => {
         const artefact = getArtefact(link['artefact-id'])
         const href = artefact
-          ? `/clients/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
+          ? `/architectures/${clientId}/${versionId}/domains/${artefact.domain}/${artefact.abstraction}/${artefact.id}`
           : null
         return (
           <div
             key={i}
             className="border border-gray-200 bg-white px-4 py-3 flex items-center gap-3"
           >
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0 w-28">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex-shrink-0 w-28">
               {REL_LABEL[link.relationship] ?? link.relationship}
             </span>
             <div className="flex-1 min-w-0">
@@ -609,7 +609,7 @@ function ContextLinks({ items, clientId, versionId }) {
                 {nameWithId(link.title, link['document-id'])}
               </p>
               {artefact && (
-                <p className="text-xs text-gray-400 mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   {nameWithId(artefact.name, artefact.id)}
                 </p>
               )}
@@ -638,7 +638,7 @@ function RequirementList({ items }) {
         <div key={req.id ?? i} className="border border-gray-200 px-4 py-3 bg-white">
           <div className="flex items-start gap-3">
             {req.id && (
-              <span className="text-xs font-mono text-gray-400 pt-0.5 flex-shrink-0">{req.id}</span>
+              <span className="text-xs font-mono text-gray-500 pt-0.5 flex-shrink-0">{req.id}</span>
             )}
             <div className="flex-1 min-w-0">
               <p className="text-sm text-gray-800">{req.requirement}</p>
@@ -682,7 +682,7 @@ function FeatureList({ items }) {
         <div key={feat.id ?? i} className="border border-gray-200 px-4 py-3 bg-white">
           <div className="flex items-baseline gap-3">
             {feat.id && (
-              <span className="text-xs font-mono text-gray-400 flex-shrink-0">{feat.id}</span>
+              <span className="text-xs font-mono text-gray-500 flex-shrink-0">{feat.id}</span>
             )}
             <span className="text-sm font-semibold text-gray-900">{feat.name}</span>
           </div>
@@ -756,7 +756,7 @@ function FlowSection({ items }) {
       {items.map((flow, i) => (
         <div key={flow.id ?? i} className="border border-gray-200 bg-white">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
-            {flow.id && <span className="text-xs font-mono text-gray-400">{flow.id}</span>}
+            {flow.id && <span className="text-xs font-mono text-gray-500">{flow.id}</span>}
             <span className="text-sm font-semibold text-gray-900">{flow.title}</span>
             {flow.format && (
               <span className="ml-auto text-xs px-2 py-0.5 bg-gray-50 border border-gray-200 text-gray-500">
@@ -924,7 +924,7 @@ function IspMetaTable({ doc }) {
     <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-px border border-gray-200 bg-gray-200 overflow-hidden">
       {rows.map(([label, value]) => (
         <div key={label} className="bg-white px-3 py-2">
-          <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">
+          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">
             {label}
           </p>
           <p className="text-sm font-mono text-gray-800">{value}</p>
@@ -939,7 +939,7 @@ function IspMetaTable({ doc }) {
 export function DocumentSelector({ artefact, documents, selectedIdx, onSelect }) {
   return (
     <div className="mb-5 px-5 py-4 bg-white shadow-xl">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
         {nameWithId(artefact?.name, artefact?.id)}
       </p>
       <div className="flex items-center gap-3 flex-wrap">
@@ -956,7 +956,7 @@ export function DocumentSelector({ artefact, documents, selectedIdx, onSelect })
             ))}
           </select>
           <svg
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
             viewBox="0 0 16 16"
             fill="none"
           >
@@ -969,7 +969,7 @@ export function DocumentSelector({ artefact, documents, selectedIdx, onSelect })
             />
           </svg>
         </div>
-        <span className="text-xs text-gray-400 flex-shrink-0">
+        <span className="text-xs text-gray-500 flex-shrink-0">
           {documents.length} document{documents.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -1036,24 +1036,24 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
   return (
     <>
       <div className="flex gap-8">
-        {/* Contents nav — H1 + H2 only, stays on the page background */}
+        {/* Contents nav: H1 + H2 only, stays on the page background */}
         <aside className="hidden lg:block w-64 flex-shrink-0">
           <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 Contents
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={expandAll}
-                  className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+                  className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   Expand all
                 </button>
                 <span className="text-gray-300">·</span>
                 <button
                   onClick={collapseAll}
-                  className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
+                  className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   Collapse all
                 </button>
@@ -1070,7 +1070,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <span className="text-gray-400 font-mono text-xs pt-0.5">{section.number}</span>
+                    <span className="text-gray-500 font-mono text-xs pt-0.5">{section.number}</span>
                     <span className="min-w-0">{section.title}</span>
                   </button>
                   <ul className="space-y-0.5">
@@ -1093,10 +1093,18 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
                 </li>
               ))}
             </ul>
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                ↑ To top
+              </button>
+            </div>
           </nav>
         </aside>
 
-        {/* Document body — white box with drop shadow, the 'document' surface */}
+        {/* Document body: white box with drop shadow, the 'document' surface */}
         <article className="flex-1 min-w-0 bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
           {/* Document title (H0) */}
           <header className="mb-8 pb-5 border-b border-gray-200">
@@ -1126,7 +1134,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
                     <DisclosureChevron open={!sectionCollapsed} />
                   </span>
                   <h2 className="text-xl font-bold text-gray-900">
-                    <span className="text-gray-400 font-mono text-base mr-2">{section.number}</span>
+                    <span className="text-gray-500 font-mono text-base mr-2">{section.number}</span>
                     {section.title}
                   </h2>
                 </button>
@@ -1167,7 +1175,7 @@ function SchemaDrivenDocument({ doc, sections, clientId, versionId, storageKey }
                               <DisclosureChevron open={!subCollapsed} className="w-3 h-3" />
                             </span>
                             <h3 className="text-base font-semibold text-gray-900">
-                              <span className="text-gray-400 font-mono text-sm mr-2">
+                              <span className="text-gray-500 font-mono text-sm mr-2">
                                 {sub.number}
                               </span>
                               {sub.title}
@@ -1228,7 +1236,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
     <div className="flex gap-8">
       <aside className="hidden lg:block w-48 flex-shrink-0">
         <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
             Contents
           </p>
           <ul className="space-y-0.5">
@@ -1338,7 +1346,7 @@ export default function DocumentView({
 
   if (documents.length === 0) {
     return (
-      <div className="py-12 text-center text-gray-400 text-sm border border-gray-200 bg-white">
+      <div className="py-12 text-center text-gray-500 text-sm border border-gray-200 bg-white">
         No documents yet. Add entries to the{' '}
         <code className="font-mono text-xs bg-gray-100 px-1">documents</code> array.
       </div>

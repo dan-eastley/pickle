@@ -29,26 +29,26 @@ export async function getNextDecisionId(clientId, versionId) {
 }
 
 export async function getClients() {
-  const data = await fetchJson('/api/arch/clients/clients.json')
-  return data?.clients ?? []
+  const data = await fetchJson('/api/arch/architectures.json')
+  return data?.architectures ?? []
 }
 
 export async function getClient(clientId) {
-  return fetchJson(`/api/arch/clients/${clientId}/client.json`)
+  return fetchJson(`/api/arch/${clientId}/architecture.json`)
 }
 
 export async function getVersions(clientId) {
-  const data = await fetchJson(`/api/arch/clients/${clientId}/versions.json`)
-  return data?.versions ?? []
+  const data = await fetchJson(`/api/arch/${clientId}/transitions.json`)
+  return data?.transitions ?? []
 }
 
 export async function getVersion(clientId, versionId) {
-  return fetchJson(`/api/arch/clients/${clientId}/${versionId}/version.json`)
+  return fetchJson(`/api/arch/${clientId}/${versionId}/transition.json`)
 }
 
 export async function getArtefactData(clientId, versionId, domain, abstraction, artefactId) {
   return fetchJson(
-    `/api/arch/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}/${artefactId}.json`
+    `/api/arch/${clientId}/${versionId}/domains/${domain}/${abstraction}/${artefactId}.json`
   )
 }
 
@@ -64,7 +64,7 @@ const BRANCH_STATUSES = new Set(['draft', 'proposed', 'accepted', 'staged'])
  * (for in-flight decisions), then falls back to main (for committed/rejected).
  */
 export async function getDecision(clientId, versionId, decisionId, status, { bust = false } = {}) {
-  const basePath = `/api/arch/clients/${clientId}/${versionId}/decisions/${decisionId}/decision.json`
+  const basePath = `/api/arch/${clientId}/${versionId}/decisions/${decisionId}/decision.json`
   const nc = bust ? '&nocache=1' : ''
 
   // If status is known and terminal, go straight to main

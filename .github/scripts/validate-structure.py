@@ -4,15 +4,15 @@ Validate the folder/file structure of architectures/.
 
 Asserts these invariants:
 
-  1.  architectures/clients/clients.json exists.
-  2.  Every client-id in clients.json has a matching architectures/clients/<id>/ folder.
-  3.  Every architectures/clients/<id>/ folder has an entry in clients.json (no orphans).
-  4.  Each client folder has client.json and versions.json.
-  5.  The client.json's client-id field equals the folder name.
-  6.  Every version-id in versions.json has a matching <client>/<version>/ folder.
-  7.  Every <client>/<version>/ folder has an entry in versions.json (no orphans).
-  8.  Each version folder has version.json, domains/, decisions/.
-  9.  The version.json's version-id field equals the folder name.
+  1.  architectures/architectures.json exists.
+  2.  Every architecture-id in architectures.json has a matching architectures/<id>/ folder.
+  3.  Every architectures/<id>/ folder has an entry in architectures.json (no orphans).
+  4.  Each architecture folder has architecture.json and transitions.json.
+  5.  The architecture.json's architecture-id field equals the folder name.
+  6.  Every transition-id in transitions.json has a matching <architecture>/<transition>/ folder.
+  7.  Every <architecture>/<transition>/ folder has an entry in transitions.json (no orphans).
+  8.  Each transition folder has transition.json, domains/, decisions/.
+  9.  The transition.json's transition-id field equals the folder name.
  10.  Under domains/, the 5 architecture-domain folders are present
       (business, data, integration, application, solution) and each contains
       the 3 abstraction-layer folders (conceptual, logical, physical).
@@ -54,70 +54,70 @@ def child_dirs(parent: pathlib.Path) -> set[str]:
     return {p.name for p in parent.iterdir() if p.is_dir()}
 
 
-def check_clients() -> set[str]:
-    """Returns the set of client-ids both declared and present on disk."""
-    idx_path = ARCH / "clients" / "clients.json"
+def check_architectures() -> set[str]:
+    """Returns the set of architecture-ids both declared and present on disk."""
+    idx_path = ARCH / "architectures.json"
     if not idx_path.is_file():
         err(f"Missing index: {idx_path}")
         return set()
 
     idx = load_json(idx_path)
-    declared = {e["client-id"] for e in idx.get("clients", [])}
-    present = child_dirs(ARCH / "clients")
+    declared = {e["architecture-id"] for e in idx.get("architectures", [])}
+    present = child_dirs(ARCH)
 
     for c in declared - present:
-        err(f'clients.json declares "{c}" but no folder architectures/clients/{c}/')
+        err(f'architectures.json declares "{c}" but no folder architectures/{c}/')
     for c in present - declared:
-        err(f"Folder architectures/clients/{c}/ has no entry in clients.json")
+        err(f"Folder architectures/{c}/ has no entry in architectures.json")
 
     return declared & present
 
 
-def check_client(client_id: str) -> set[tuple[str, str]]:
-    """Returns the set of (client, version) pairs both declared and present."""
-    base = ARCH / "clients" / client_id
+def check_architecture(arch_id: str) -> set[tuple[str, str]]:
+    """Returns the set of (architecture, transition) pairs both declared and present."""
+    base = ARCH / arch_id
 
-    client_file = base / "client.json"
-    if not client_file.is_file():
-        err(f"Missing: {client_file}")
+    arch_file = base / "architecture.json"
+    if not arch_file.is_file():
+        err(f"Missing: {arch_file}")
     else:
-        data = load_json(client_file)
-        if data.get("client-id") != client_id:
+        data = load_json(arch_file)
+        if data.get("architecture-id") != arch_id:
             err(
-                f'{client_file}: client-id "{data.get("client-id")}" does not '
-                f'match folder name "{client_id}"'
+                f'{arch_file}: architecture-id "{data.get("architecture-id")}" does not '
+                f'match folder name "{arch_id}"'
             )
 
-    versions_idx_path = base / "versions.json"
-    if not versions_idx_path.is_file():
-        err(f"Missing index: {versions_idx_path}")
+    transitions_idx_path = base / "transitions.json"
+    if not transitions_idx_path.is_file():
+        err(f"Missing index: {transitions_idx_path}")
         return set()
 
-    idx = load_json(versions_idx_path)
-    declared = {e["version-id"] for e in idx.get("versions", [])}
-    # Folders only — client.json and versions.json are files
+    idx = load_json(transitions_idx_path)
+    declared = {e["transition-id"] for e in idx.get("transitions", [])}
+    # Folders only — architecture.json and transitions.json are files
     present = child_dirs(base)
 
     for v in declared - present:
-        err(f'{versions_idx_path} declares "{v}" but no folder {base}/{v}/')
+        err(f'{transitions_idx_path} declares "{v}" but no folder {base}/{v}/')
     for v in present - declared:
-        err(f"Folder {base}/{v}/ has no entry in {versions_idx_path}")
+        err(f"Folder {base}/{v}/ has no entry in {transitions_idx_path}")
 
-    return {(client_id, v) for v in (declared & present)}
+    return {(arch_id, v) for v in (declared & present)}
 
 
-def check_version(client_id: str, version_id: str) -> None:
-    base = ARCH / "clients" / client_id / version_id
+def check_transition(arch_id: str, transition_id: str) -> None:
+    base = ARCH / arch_id / transition_id
 
-    version_file = base / "version.json"
-    if not version_file.is_file():
-        err(f"Missing: {version_file}")
+    transition_file = base / "transition.json"
+    if not transition_file.is_file():
+        err(f"Missing: {transition_file}")
     else:
-        data = load_json(version_file)
-        if data.get("version-id") != version_id:
+        data = load_json(transition_file)
+        if data.get("transition-id") != transition_id:
             err(
-                f'{version_file}: version-id "{data.get("version-id")}" does not '
-                f'match folder name "{version_id}"'
+                f'{transition_file}: transition-id "{data.get("transition-id")}" does not '
+                f'match folder name "{transition_id}"'
             )
 
     # domains/<dom>/<layer>/
@@ -169,10 +169,10 @@ def main() -> int:
     if not ARCH.is_dir():
         err(f"Missing root folder: {ARCH}/")
     else:
-        clients = check_clients()
-        for c in sorted(clients):
-            for client, version in sorted(check_client(c)):
-                check_version(client, version)
+        architectures = check_architectures()
+        for c in sorted(architectures):
+            for arch, transition in sorted(check_architecture(c)):
+                check_transition(arch, transition)
 
     if errors:
         print(f"\n{len(errors)} structural violation(s) detected", file=sys.stderr)

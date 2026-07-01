@@ -1,8 +1,8 @@
-# SOL-SVI — Solution Intent
+# SOL-SVI: Solution Intent
 
 **Domain:** Solution · **Layer:** Logical · **Format:** Document
 
-A logical-level Solution Intent, one instance per epic, feature, or initiative. Aligns to the SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed) from variable intent (under exploration). Organised into **numbered sections** that elaborate an Architecture Intent into a solution outline before detailed design.
+A logical-level Solution Intent, one instance per epic, feature, or initiative. Aligns to the SAFe Solution Intent, the single source of truth for what is being built and why, distinguishing fixed intent (committed) from variable intent (under exploration). Organised into **numbered sections** that elaborate an Architecture Intent into a solution outline before detailed design.
 
 ## Section structure
 
@@ -33,16 +33,16 @@ The section structure (titles, descriptions, ordering) lives in the schema under
 | `description` | string | yes | One-paragraph summary |
 | `status` | enum | yes | `draft` · `in-review` · `approved` · `superseded` |
 | `scope` | string | no | Epic, feature, or initiative this vision covers |
-| `executive-summary` | object | yes | §1.1 — `summary` (opening paragraph) + `points` (bullets) |
-| `context` | array | no | §1.2 — links to related documents. Each: `relationship` (`informed-by`/`informs`/`related`), `artefact-id`, `document-id`, `title` |
-| `problem-statement` | string | no | §2.1 — the problem being solved |
-| `solution-overview` | string | no | §2.2 — the proposed approach |
-| `key-capabilities` | array | no | §3.1 — capability references. Each: `artefact-id` (BUS-CAP), `note` |
-| `platforms-involved` | array | no | §3.2 — platform references. Each: `artefact-id` (APP-DAP), `note` |
-| `assumptions` | array | no | §4.1 — `id`, `description` |
-| `risks` | array | no | §4.2 — `id`, `description`, `likelihood`, `impact`, `mitigation` |
-| `open-questions` | array | no | §5 — `id`, `question`, `raised-by` |
+| `executive-summary` | object | yes | §1.1: `summary` (opening paragraph) + `points` (bullets) |
+| `context` | array | no | §1.2: links to related documents. Each: `relationship` (`informed-by`/`informs`/`related`), `artefact-id`, `document-id`, `title` |
+| `problem-statement` | string | no | §2.1, the problem being solved |
+| `solution-overview` | string | no | §2.2, the proposed approach |
+| `key-capabilities` | array | no | §3.1: capability references. Each: `artefact-id` (BUS-CAP), `note` |
+| `platforms-involved` | array | no | §3.2: platform references. Each: `artefact-id` (APP-DAP), `note` |
+| `assumptions` | array | no | §4.1: `id`, `description` |
+| `risks` | array | no | §4.2: `id`, `description`, `likelihood`, `impact`, `mitigation` |
+| `open-questions` | array | no | §5: `id`, `question`, `raised-by` |
 
 ## Usage
 
-Derived from Architecture Intents (`SOL-AIN`) and informs Solution Designs (`SOL-SDE`) — captured per instance in the §1.2 Context links. Reference lists (capabilities, platforms) render as a compact list plus a small card-diagram of the referenced entities.
+Derived from Architecture Intents (`SOL-AIN`) and informs Solution Designs (`SOL-SDE`): captured per instance in the §1.2 Context links. Reference lists (capabilities, platforms) render as a compact list plus a small card-diagram of the referenced entities.

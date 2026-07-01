@@ -10,7 +10,7 @@ The narrative and requirements will be read by business stakeholders, not techni
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`, including the `narrative` and `requirements` fields.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json`, including the `narrative` and `requirements` fields.
 - The artefact-type registry at `docs/artefacts.md` and schemas at `config/schemas/artefacts/`.
 
 ## Task
@@ -41,7 +41,7 @@ Write a JSON **array** to the decision JSON's `recommendations` property. Each e
 
 | Field | Description |
 |---|---|
-| `recommendation` | A concrete, actionable suggestion for how to improve the text. Max ~500 characters. |
+| `recommendation` | A concrete, actionable suggestion for how to improve the text. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 There is no accept/decline tracking for these — it is down to the author whether to act on each suggestion. Use **markdown** in the field — bullet points, bold, and code spans are encouraged where they aid readability.
 

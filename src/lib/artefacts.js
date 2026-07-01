@@ -32,7 +32,7 @@ const FORMATS_BASE = [
 ]
 export const FORMATS = FORMATS_BASE.map((f) => ({ ...f, ...tr('formats', f.id) }))
 
-// Diagram sub-types — stored in meta.diagramType on diagram artefacts and schemas.
+// Diagram sub-types: stored in meta.diagramType on diagram artefacts and schemas.
 // Card-based and flow-based are the primary current types; the others are recommended additions.
 const DIAGRAM_TYPES_BASE = [
   {
@@ -85,7 +85,7 @@ const DOMAINS_BASE = [
     name: 'Business',
     acronym: 'BUS',
     description:
-      "The organisation's capabilities, processes, and operating model — what the business does and why. This domain sets the context that all others serve.",
+      "The organisation's capabilities, processes, and operating model: what the business does and why. This domain sets the context that all others serve.",
     color: 'violet',
   },
   {
@@ -93,7 +93,7 @@ const DOMAINS_BASE = [
     name: 'Data',
     acronym: 'DAT',
     description:
-      'The data assets, structures, and governance that support business operations — ensuring data is well-defined, trusted, and available where it is needed.',
+      'The data assets, structures, and governance that support business operations, ensuring data is well-defined, trusted, and available where it is needed.',
     color: 'blue',
   },
   {
@@ -101,7 +101,7 @@ const DOMAINS_BASE = [
     name: 'Application',
     acronym: 'APP',
     description:
-      'The software applications and platforms that deliver business capabilities — what exists, how it is organised, and how it relates to business needs.',
+      'The software applications and platforms that deliver business capabilities: what exists, how it is organised, and how it relates to business needs.',
     color: 'amber',
   },
   {
@@ -109,7 +109,7 @@ const DOMAINS_BASE = [
     name: 'Integration',
     acronym: 'INT',
     description:
-      'How systems and services connect and communicate — covering APIs, events, messaging, and the rules that govern how information flows between them.',
+      'How systems and services connect and communicate, covering APIs, events, messaging, and the rules that govern how information flows between them.',
     color: 'emerald',
   },
   {
@@ -117,7 +117,7 @@ const DOMAINS_BASE = [
     name: 'Solution',
     acronym: 'SOL',
     description:
-      'Joined-up designs that span multiple domains to address a specific business need or initiative — bringing together business, data, integration, and application concerns.',
+      'Joined-up designs that span multiple domains to address a specific business need or initiative, bringing together business, data, integration, and application concerns.',
     color: 'rose',
   },
 ]
@@ -129,7 +129,7 @@ const ABSTRACTIONS_BASE = [
     name: 'Conceptual',
     label: 'What & Why',
     description:
-      'Sets the direction — what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs).',
+      'Sets the direction: what the architecture needs to achieve and why, independent of any technology choices. In TOGAF terms, conceptual artefacts are Architecture Building Blocks (ABBs).',
   },
   {
     id: 'logical',
@@ -160,7 +160,7 @@ const ARTEFACTS_BASE = [
     key: true,
     name: 'Business Architecture Strategy',
     description:
-      'A catalogue of strategic goals and direction for the Business domain — the outcomes the organisation is trying to achieve and why.',
+      'A catalogue of strategic goals and direction for the Business domain, the outcomes the organisation is trying to achieve and why.',
     relatedTo: [
       { artefactId: 'BUS-CAP', relationship: 'informs' },
       { artefactId: 'BUS-PRO', relationship: 'informs' },
@@ -420,7 +420,7 @@ const ARTEFACTS_BASE = [
     key: false,
     name: 'Interface Wiring Diagram',
     description:
-      'Visual map of the integration landscape — platform-to-platform connections with flow counts and per-pair interface drill-down.',
+      'Visual map of the integration landscape: platform-to-platform connections with flow counts and per-pair interface drill-down.',
     diagramType: 'wiring',
     relatedTo: [
       { artefactId: 'INT-IFC', relationship: 'derived-from' },
@@ -697,7 +697,7 @@ const ARTEFACTS_BASE = [
       { artefactId: 'SOL-GRD', relationship: 'derived-from' },
     ],
   },
-  // Solution — Documents
+  // Solution: Documents
   {
     id: 'SOL-AVI',
     domain: 'solution',
@@ -706,7 +706,7 @@ const ARTEFACTS_BASE = [
     key: false,
     name: 'Architecture Vision(s)',
     description:
-      'TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain — together with the stakeholders involved and the concerns they hold. Multiple instances — one per initiative.',
+      'TOGAF Phase A: Architecture Vision. One or more architecture vision documents capturing the strategic intent, objectives, drivers, and constraints for a programme or domain, together with the stakeholders involved and the concerns they hold. Multiple instances, one per initiative.',
     relatedTo: [
       { artefactId: 'BUS-CAP', relationship: 'informs' },
       { artefactId: 'SOL-AIN', relationship: 'informs' },
@@ -720,7 +720,7 @@ const ARTEFACTS_BASE = [
     key: false,
     name: 'Architecture Intent(s)',
     description:
-      'TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs — capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances — one per domain or capability area.',
+      'TOGAF Phase A: Architecture Vision. Structured records of architecture direction before formal ADRs, capturing context, the stakeholders and concerns in play, options considered, and the recommended direction. Multiple instances, one per domain or capability area.',
     relatedTo: [
       { artefactId: 'SOL-AVI', relationship: 'derived-from' },
       { artefactId: 'SOL-SVI', relationship: 'informs' },
@@ -734,7 +734,7 @@ const ARTEFACTS_BASE = [
     key: false,
     name: 'Solution Intent(s)',
     description:
-      'TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent — the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature — problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances — one per epic or initiative.',
+      'TOGAF Phases B–D: Architecture Definition. The SAFe Solution Intent, the single source of truth for what is being built and why, distinguishing fixed intent (committed requirements and decisions) from variable intent (options still under exploration). High-level solution descriptions per epic or feature: problem statement, solution overview, platforms involved, risks, and assumptions. Multiple instances, one per epic or initiative.',
     relatedTo: [
       { artefactId: 'SOL-AIN', relationship: 'derived-from' },
       { artefactId: 'SOL-SDE', relationship: 'informs' },
@@ -749,7 +749,7 @@ const ARTEFACTS_BASE = [
     key: false,
     name: 'Solution Design(s)',
     description:
-      'TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature — solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances — one per feature or design area.',
+      'TOGAF Phases B–D: Architecture Definition. Detailed logical solution designs per feature: solution components, data flows, UML diagrams (Mermaid/PlantUML), interface requirements, and NFRs. Multiple instances, one per feature or design area.',
     relatedTo: [
       { artefactId: 'SOL-SVI', relationship: 'derived-from' },
       { artefactId: 'INT-IFC', relationship: 'informs' },
@@ -764,7 +764,7 @@ const ARTEFACTS_BASE = [
     key: false,
     name: 'Interface Specification(s)',
     description:
-      'TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces — protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances — one per interface.',
+      'TOGAF Phases B–D: Architecture Definition (Technology Architecture). Physical-level technical specifications for integration interfaces: protocol, auth, data format, endpoints, data model, error handling, SLA, and test scenarios. Multiple instances, one per interface.',
     relatedTo: [
       { artefactId: 'SOL-SDE', relationship: 'derived-from' },
       { artefactId: 'INT-IFC', relationship: 'derived-from' },
@@ -799,12 +799,12 @@ export const getArtefactsForDomain = (domainId, abstractionId = null) =>
     (a) => a.domain === domainId && (!abstractionId || a.abstraction === abstractionId)
   )
 
-// Per-domain colour kit. One entry per domain — every component that needs a
+// Per-domain colour kit. One entry per domain: every component that needs a
 // domain-coloured element reads from here rather than defining its own map.
-//   bg/text/border/dot — tints for chips, icon tiles and indicators
-//   accent — solid left-border accent on cards and rows
-//   button — solid call-to-action button colours
-//   nav    — active state for the domain navigation tabs
+//   bg/text/border/dot: tints for chips, icon tiles and indicators
+//   accent: solid left-border accent on cards and rows
+//   button: solid call-to-action button colours
+//   nav   : active state for the domain navigation tabs
 export const DOMAIN_COLORS = {
   business: {
     bg: 'bg-violet-50',

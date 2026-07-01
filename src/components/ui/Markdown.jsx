@@ -2,7 +2,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-// Renders the markdown used in authored and AI-generated decision/discovery and
+// Renders the markdown used in authored and Pickle-generated decision/discovery and
 // document content. Beyond inline marks (bold, italics, code, links) it styles
 // the block elements an AI-authored document actually uses — headings, tables,
 // blockquotes, rules — so a findings field reads like a formatted document

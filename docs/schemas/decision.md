@@ -1,7 +1,7 @@
 # Decision Record Schema
 
 **File:** [`/config/schemas/decision.json`](../../config/schemas/decision.json)
-**Validates:** `/architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json`
+**Validates:** `/architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json`
 
 ## Purpose
 
@@ -9,7 +9,7 @@ Machine-readable Architecture Decision Record. Replaces the prior `adr-<number>.
 
 ## Structure at a glance
 
-A decision JSON has three zones — author-written metadata, a deterministic gate filled by Validate Context, and seven analysis sections filled by Claude through the decision pipeline.
+A decision JSON has three zones: author-written metadata, a deterministic gate filled by Validate Context, and seven analysis sections filled by Claude through the decision pipeline.
 
 ```mermaid
 flowchart TB
@@ -38,9 +38,9 @@ flowchart TB
 
 ## Lifecycle
 
-1. **Author** creates `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
-2. **Push** to a `decisions/<client-id>/<version-id>/<decision-id>` branch fires `Validate Context` (gate; deterministic — writes `context-validation`).
-3. When the author moves the decision from **DRAFT to PROPOSED**, the Pickle API dispatches `Decisions Analysis` — one workflow with seven sequential jobs:
+1. **Author** creates `architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json` at branch start, populating `decision-id`, `title`, `status: "draft"`, and `narrative`. This is the only file the author hand-writes for the decision.
+2. **Push** to a `decisions/<architecture-id>/<transition-id>/<decision-id>` branch fires `Validate Context` (gate; deterministic: writes `context-validation`).
+3. When the author moves the decision from **DRAFT to PROPOSED**, the Pickle API dispatches `Decisions Analysis`, one workflow with seven sequential jobs:
    1. Impact Assessment
    2. Referential Integrity
    3. Strategy Alignment
@@ -48,7 +48,7 @@ flowchart TB
    5. Guardrails Alignment
    6. Proponent Analysis
    7. Challenger Analysis
-4. Each analysis job checks out the decisions branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next job runs via `needs:` ordering — one workflow, sequential jobs, no `workflow_run` chaining. See [decisions-analysis.md](../workflows/decisions-analysis.md).
+4. Each analysis job checks out the decisions branch, reads the decision JSON, fills in its own section, commits back with the GITHUB_TOKEN identity, and pushes. The next job runs via `needs:` ordering, one workflow, sequential jobs, no `workflow_run` chaining. See [decisions-analysis.md](../workflows/decisions-analysis.md).
 
 ## Section property names match step names
 
@@ -67,16 +67,16 @@ Each step writes to a property whose name is the kebab-cased step name:
 
 ## Section shape (seven analyses)
 
-The seven analysis sections — Impact Assessment, Referential Integrity, Strategy Alignment, Principles Alignment, Guardrails Alignment, Proponent Analysis, and Challenger Analysis — are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
+The seven analysis sections: Impact Assessment, Referential Integrity, Strategy Alignment, Principles Alignment, Guardrails Alignment, Proponent Analysis, and Challenger Analysis: are each an **array of findings**. Each finding is an object defined once at `$defs/section` in the schema:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `finding` | string | yes | What the workflow observed — the analytical output |
-| `impact` | string | yes | Why the finding matters — consequence for the proposed change |
+| `finding` | string | yes | What the workflow observed, the analytical output |
+| `impact` | string | yes | Why the finding matters: consequence for the proposed change |
 | `recommendation` | string | yes | What the author should do in response to the finding |
 | `rationale` | string | yes | Why the recommendation is the right course of action |
 
-`additionalProperties: false` on each finding — only the four strings, no metadata. A section can carry a single finding (one-element array) or several distinct findings.
+`additionalProperties: false` on each finding: only the four strings, no metadata. A section can carry a single finding (one-element array) or several distinct findings.
 
 Validate Context is structurally different (deterministic outcome + violation list) and uses its own permissive shape.
 

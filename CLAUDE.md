@@ -36,8 +36,8 @@ For full context on the architecture model — architecture domains, abstraction
 │   ├── prompts/                    # Prompts loaded by Claude-driven workflows
 │   │   └── decisions/              # One markdown prompt per decision-analysis workflow
 │   └── schemas/                    # JSON Schema definitions — mirrors architectures/ layout
-│       ├── clients.json, client.json
-│       ├── versions.json, version.json
+│       ├── architectures.json, architecture.json
+│       ├── transitions.json, transition.json
 │       ├── decisions.json, decision.json   # Decisions index + per-decision ADR schema
 │       ├── artefacts.json          # Schema index — artefact-type ID -> catalogue schema $ref
 │       └── artefacts/
@@ -57,7 +57,7 @@ For full context on the architecture model — architecture domains, abstraction
 │   ├── artefacts.md                # Artefact-type registry
 │   ├── schemas/                    # One markdown page per JSON Schema
 │   │   ├── index.md
-│   │   ├── clients.md, client.md, versions.md, version.md
+│   │   ├── architectures.md, architecture.md, transitions.md, transition.md
 │   │   ├── artefacts.md            # The schema-index file
 │   │   ├── decision.md             # Machine-readable ADR
 │   │   └── artefacts/
@@ -75,32 +75,30 @@ For full context on the architecture model — architecture domains, abstraction
 │       └── decisions-analysis.md   # Covers all decisions-* workflows
 │
 ├── architectures/                  # Architecture state
-│   ├── clients/                    # Per-client architecture, versioned by release
-│   │   ├── clients.json            # Index of clients (IDs only)
-│   │   └── <client>/
-│   │       ├── client.json         # Client metadata (id, name, description)
-│   │       ├── versions.json       # Index of versions for this client (IDs only)
-│   │       └── <version>/
-│   │           ├── version.json    # Version metadata (id, name, status, description)
-│   │           ├── domains/
-│   │           │   ├── business/{conceptual,logical,physical}/
-│   │           │   │   └── <ARTEFACT-ID>.json   # one file per artefact type (e.g. BUS-CAP.json)
-│   │           │   ├── data/{conceptual,logical,physical}/
-│   │           │   │   └── <ARTEFACT-ID>.json
-│   │           │   ├── integration/{conceptual,logical,physical}/
-│   │           │   ├── application/{conceptual,logical,physical}/
-│   │           │   │   └── <ARTEFACT-ID>.json
-│   │           │   └── solution/{conceptual,logical,physical}/
-│   │           └── decisions/
-│   │               ├── decisions.json          # Index of decision IDs for this version
-│   │               └── <decision-id>/          # One folder per ADR (id form: adr-NNN)
-│   │                   └── decision.json       # The ADR content
-│   └── references/                 # Cross-client reference data (purpose TBD)
+│   ├── architectures.json          # Index of architectures (IDs only)
+│   └── <architecture>/             # Per-architecture state, organised by transition
+│       ├── architecture.json       # Architecture metadata (id, name, description)
+│       ├── transitions.json        # Index of transitions for this architecture (IDs only)
+│       └── <transition>/           # e.g. baseline, 2026-q2
+│           ├── transition.json     # Transition metadata (id, name, status, description)
+│           ├── domains/
+│           │   ├── business/{conceptual,logical,physical}/
+│           │   │   └── <ARTEFACT-ID>.json   # one file per artefact type (e.g. BUS-CAP.json)
+│           │   ├── data/{conceptual,logical,physical}/
+│           │   │   └── <ARTEFACT-ID>.json
+│           │   ├── integration/{conceptual,logical,physical}/
+│           │   ├── application/{conceptual,logical,physical}/
+│           │   │   └── <ARTEFACT-ID>.json
+│           │   └── solution/{conceptual,logical,physical}/
+│           └── decisions/
+│               ├── decisions.json          # Index of decision IDs for this transition
+│               └── <decision-id>/          # One folder per ADR (id form: adr-NNN)
+│                   └── decision.json       # The ADR content
 │
 └── CLAUDE.md                       # This file
 ```
 
-The `config/schemas/artefacts/domains/` tree mirrors `architectures/clients/<client>/<version>/domains/` — schema and instance for the same artefact type share a relative path under those roots (e.g. `config/schemas/artefacts/domains/business/conceptual/BUS-CAP.json` ↔ `architectures/clients/<client>/<version>/domains/business/conceptual/BUS-CAP.json`).
+The `config/schemas/artefacts/domains/` tree mirrors `architectures/<architecture>/<transition>/domains/` — schema and instance for the same artefact type share a relative path under those roots (e.g. `config/schemas/artefacts/domains/business/conceptual/BUS-CAP.json` ↔ `architectures/<architecture>/<transition>/domains/business/conceptual/BUS-CAP.json`).
 
 ---
 
@@ -108,8 +106,8 @@ The `config/schemas/artefacts/domains/` tree mirrors `architectures/clients/<cli
 
 All architecture changes are driven by **Architecture Decision Records (ADRs)**. An ADR is the only way to propose a change to the architecture state.
 
-- ADR branch naming: `decisions/<client-id>/<version-id>/<decision-id>`
-- Each ADR lives under `architectures/clients/<client>/<version>/decisions/`
+- ADR branch naming: `decisions/<architecture-id>/<transition-id>/<decision-id>`
+- Each ADR lives under `architectures/<architecture>/<transition>/decisions/`
 - Branch naming for all branches is enforced by `.github/workflows/validate-branch.yml` (see Branch Naming below)
 
 ---
@@ -140,20 +138,20 @@ The only branch names accepted by the remote are:
 | `main` | Default branch |
 | `develop` | Integration branch |
 | `features/<feature-id>` | Codebase changes (anything not driven by an ADR) |
-| `decisions/<client-id>/<version-id>/<decision-id>` | Architecture changes driven by an ADR |
+| `decisions/<architecture-id>/<transition-id>/<decision-id>` | Architecture changes driven by an ADR |
 
 Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate-branch.yml), which runs on the GitHub `create` event whenever a new branch ref lands on the remote (including renames). The workflow fails — and the branch creation is flagged — if the name doesn't match one of the patterns above. Existing branches at the time the workflow was introduced are grandfathered in.
 
 ### Indexes
-- `architectures/clients/clients.json` is the authoritative list of client IDs (no metadata — that lives in `architectures/clients/<client>/client.json`)
-- `architectures/clients/<client>/versions.json` is the authoritative list of version IDs for a client (no metadata — that lives in `architectures/clients/<client>/<version>/version.json`)
-- `architectures/clients/<client>/<version>/decisions/decisions.json` is the authoritative list of decision IDs for a version (no metadata — that lives in `<decision-id>/decision.json` inside a folder named after the decision ID)
-- `config/schemas/clients.json` / `config/schemas/versions.json` / `config/schemas/decisions.json` validate the index files; `config/schemas/client.json` / `config/schemas/version.json` / `config/schemas/decision.json` validate the corresponding singular metadata / content files
+- `architectures/architectures.json` is the authoritative list of architecture IDs (no metadata — that lives in `architectures/<architecture>/architecture.json`)
+- `architectures/<architecture>/transitions.json` is the authoritative list of transition IDs for an architecture (no metadata — that lives in `architectures/<architecture>/<transition>/transition.json`)
+- `architectures/<architecture>/<transition>/decisions/decisions.json` is the authoritative list of decision IDs for a transition (no metadata — that lives in `<decision-id>/decision.json` inside a folder named after the decision ID)
+- `config/schemas/architectures.json` / `config/schemas/transitions.json` / `config/schemas/decisions.json` validate the index files; `config/schemas/architecture.json` / `config/schemas/transition.json` / `config/schemas/decision.json` validate the corresponding singular metadata / content files
 - `config/schemas/artefacts.json` is a **schema index** — a flat map of artefact-type ID → catalogue schema `$ref`. The full artefact-type registry (catalogues, diagrams, matrices) lives in `docs/artefacts.md`.
-- When adding or removing a client/version folder, update the corresponding index file
+- When adding or removing an architecture/transition folder, update the corresponding index file
 
 ### Schema Conventions
-- The `config/schemas/artefacts/domains/` tree mirrors `architectures/clients/<client>/<version>/domains/` — schema and instance for the same artefact type live at the same relative path
+- The `config/schemas/artefacts/domains/` tree mirrors `architectures/<architecture>/<transition>/domains/` — schema and instance for the same artefact type live at the same relative path
 - Catalogue schemas live at `config/schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.json`
 - Each catalogue schema has a corresponding markdown page in `docs/schemas/artefacts/domains/<domain>/<layer>/<ARTEFACT-ID>.md`
 - Each catalogue schema includes a `meta` object with `domain`, `abstraction`, and `format` fields
@@ -163,23 +161,23 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 - Artefact types conform to one of three formats: **Catalogue**, **Diagram**, or **Matrix** (see [`/docs/output-formats.md`](docs/output-formats.md))
 - Use the term **Format** (not "Type") when referring to Catalogue / Diagram / Matrix
 
-### Versioning
-- Architecture state is versioned per client: `architectures/clients/<client>/<semver>/` (folder name is the semver itself, e.g. `1.0.0`)
-- A new version folder represents a new release baseline
-- Do not edit data in a previous version folder — create a new version instead
+### Transition States
+- Architecture state is organised per architecture by transition: `architectures/<architecture>/<transition>/` (folder name is the transition id, e.g. `baseline`, `2026-q2`)
+- A new transition folder represents a new transition state (e.g. a target state for a planning horizon)
+- Do not edit data in a previous transition folder once it is `published` or `archived` — create a new transition instead
 
 ---
 
 ## Working with Claude
 
 ### Common Tasks
-- **Add a new artefact type:** See the procedure documented in [`/docs/artefacts.md`](docs/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-version folders
-- **Add architecture data for a client:** Create or update the `<ARTEFACT-ID>.json` instance file under `domains/<domain>/<abstraction>/`
-- **Raise an ADR:** Create a `decisions/<client-id>/<version-id>/<decision-id>` branch, add the ADR file to the matching `architectures/clients/<client>/<version>/decisions/` folder
+- **Add a new artefact type:** See the procedure documented in [`/docs/artefacts.md`](docs/artefacts.md) — add registry entry, schema (if catalogue), schema doc page, and per-transition folders
+- **Add architecture data for an architecture:** Create or update the `<ARTEFACT-ID>.json` instance file under `domains/<domain>/<abstraction>/`
+- **Raise an ADR:** Create a `decisions/<architecture-id>/<transition-id>/<decision-id>` branch, add the ADR file to the matching `architectures/<architecture>/<transition>/decisions/` folder
 - **Query the architecture:** Read the relevant JSON files in `architectures/` against the schemas in `config/schemas/`
 
 ### Things to Preserve
-- The mirroring of `config/schemas/artefacts/`, `architectures/clients/<client>/<version>/domains/`, and `docs/schemas/artefacts/` paths — this is how schemas, instances, and docs are kept in lockstep
+- The mirroring of `config/schemas/artefacts/`, `architectures/<architecture>/<transition>/domains/`, and `docs/schemas/artefacts/` paths — this is how schemas, instances, and docs are kept in lockstep
 - Artefact-type ID prefixes (`BUS-`, `DAT-`, `APP-`, `INT-`, `SOL-`) — they encode the architecture domain
 - Branch naming patterns (`main`, `develop`, `features/...`, `decisions/...`) — enforced by `validate-branch.yml`; other tooling will depend on these
 - The three abstraction layers within each architecture domain — don't flatten or skip levels

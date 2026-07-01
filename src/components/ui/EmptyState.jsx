@@ -18,7 +18,7 @@ export default function EmptyState({
         <Illustration name="no-data" className="w-44 mb-5" />
       ) : Icon ? (
         <div className="w-12 h-12 bg-gray-100 flex items-center justify-center mb-4">
-          <Icon className="w-6 h-6 text-gray-400" />
+          <Icon className="w-6 h-6 text-gray-500" />
         </div>
       ) : null}
       <p className="text-sm font-semibold text-gray-700">{title}</p>

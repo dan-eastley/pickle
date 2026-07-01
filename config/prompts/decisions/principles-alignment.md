@@ -10,13 +10,13 @@ Your findings will be read by business architects, enterprise architects, and go
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
 - The **Principles** catalogues (artefact format: **Catalogue**, abstraction layer: **Logical**) for each affected domain:
-  - **Business Principles** (`BUS-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/business/logical/BUS-PRN/`
-  - **Data Principles** (`DAT-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/data/logical/DAT-PRN/`
-  - **Integration Principles** (`INT-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/integration/logical/INT-PRN/`
-  - **Application Principles** (`APP-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/application/logical/APP-PRN/`
-  - **Solution Principles** (`SOL-PRN`) at `architectures/clients/<client>/<version>/artefacts/domains/solution/logical/SOL-PRN/`
+  - **Business Principles** (`BUS-PRN`) at `architectures/<client>/<version>/artefacts/domains/business/logical/BUS-PRN/`
+  - **Data Principles** (`DAT-PRN`) at `architectures/<client>/<version>/artefacts/domains/data/logical/DAT-PRN/`
+  - **Integration Principles** (`INT-PRN`) at `architectures/<client>/<version>/artefacts/domains/integration/logical/INT-PRN/`
+  - **Application Principles** (`APP-PRN`) at `architectures/<client>/<version>/artefacts/domains/application/logical/APP-PRN/`
+  - **Solution Principles** (`SOL-PRN`) at `architectures/<client>/<version>/artefacts/domains/solution/logical/SOL-PRN/`
 
 ## Task
 
@@ -31,10 +31,10 @@ Write a JSON **array** to the decision JSON's `principles-alignment` property. E
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed — name the principle (quote its name briefly) and state whether it is adhered to, violated, or silent. Max ~500 characters. |
-| `impact` | What a violation or silence means for the quality of the decision and the risk it introduces. Max ~500 characters. |
-| `recommendation` | What the author should do — acknowledge the tension, seek an exception, adjust the decision scope, or strengthen the narrative. Max ~500 characters. |
-| `rationale` | Why this principle exists and why complying with it matters for this decision. Max ~500 characters. |
+| `finding` | What you observed — name the principle (quote its name briefly) and state whether it is adhered to, violated, or silent. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What a violation or silence means for the quality of the decision and the risk it introduces. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What the author should do — acknowledge the tension, seek an exception, adjust the decision scope, or strengthen the narrative. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this principle exists and why complying with it matters for this decision. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold principles catalogue names, `code spans` for IDs, principle names in *italics*.
 

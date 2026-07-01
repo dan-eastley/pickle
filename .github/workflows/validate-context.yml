@@ -1,11 +1,11 @@
 name: Validate Context
 
 # Context-of-change gate. The allowed change surface depends on the branch type:
-#   * decisions/<client>/<version>/<decision-id>
-#       — changes restricted to architectures/clients/<client>/
+#   * decisions/<architecture>/<transition>/<decision-id>
+#       — changes restricted to architectures/<architecture>/
 #         (writes the outcome to the decision JSON's context-validation property)
 #   * features/<feature-id>
-#       — changes restricted to everything OUTSIDE architectures/<any-client>/
+#       — changes restricted to everything OUTSIDE architectures/<any-architecture>/
 #         (no decision JSON exists; result is reported via build status only)
 
 on:
@@ -65,16 +65,16 @@ jobs:
               ]
 
           if parts[0] == 'decisions':
-              # decisions/<client>/<version>/<decision-id> — changes confined to
-              # architectures/clients/<client>/.
+              # decisions/<architecture>/<transition>/<decision-id> — changes confined to
+              # architectures/<architecture>/.
               if len(parts) != 4:
                   print(f"::error::Unexpected decision branch shape: {branch}")
                   sys.exit(1)
               _, client_id, version_id, decision_id = parts
 
-              allowed_prefix = f"architectures/clients/{client_id}/"
+              allowed_prefix = f"architectures/{client_id}/"
               decision_path = pathlib.Path(
-                  f"architectures/clients/{client_id}/{version_id}/decisions/{decision_id}/decision.json"
+                  f"architectures/{client_id}/{version_id}/decisions/{decision_id}/decision.json"
               )
               if not decision_path.exists():
                   print(f"::error::Decision file not found at {decision_path}.")
@@ -110,7 +110,7 @@ jobs:
 
           elif parts[0] == 'features':
               # features/<feature-id> — changes must NOT touch any
-              # architectures/clients/<client>/ folder, with one exception: the
+              # architectures/<architecture>/ folder, with one exception: the
               # decisions.json index files are organisational metadata and
               # may be updated from a feature branch (e.g. when registering
               # a new decision id).
@@ -118,7 +118,10 @@ jobs:
 
               def in_client_folder(path):
                   segs = path.split('/')
-                  if len(segs) < 4 or segs[0] != 'architectures' or segs[1] != 'clients':
+                  # Per-architecture data lives at architectures/<architecture>/...
+                  # (length >= 3). The top-level architectures/architectures.json
+                  # index (length 2) is organisational metadata, not data.
+                  if len(segs) < 3 or segs[0] != 'architectures':
                       return False
                   # Allowed exception: decisions.json index files.
                   if segs[-1] == 'decisions.json':
@@ -129,15 +132,15 @@ jobs:
 
               if violations:
                   print(f"::error::Feature branch context violation — "
-                        f"{len(violations)} file(s) inside a client folder:")
+                        f"{len(violations)} file(s) inside an architecture folder:")
                   for v in violations:
                       print(f"  - {v}")
-                  print("Feature branches must not modify client architecture data.")
-                  print("Raise the change via a decisions/<client>/<version>/"
+                  print("Feature branches must not modify architecture data.")
+                  print("Raise the change via a decisions/<architecture>/<transition>/"
                         "<decision-id> branch instead.")
                   sys.exit(1)
               print(f"::notice::Feature context OK: {len(changed)} file(s) "
-                    f"changed, none touching architectures/clients/<client>/")
+                    f"changed, none touching architectures/<architecture>/")
 
           else:
               # Trigger filter restricts us to the two cases above, but keep an
@@ -155,7 +158,7 @@ jobs:
           DECISION_FILE_PATH=$(python3 - "$BRANCH" <<'PYEOF'
           import sys
           parts = sys.argv[1].split('/')
-          print(f"architectures/clients/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json")
+          print(f"architectures/{parts[1]}/{parts[2]}/decisions/{parts[3]}/decision.json")
           PYEOF
           )
           if [ ! -f "$DECISION_FILE_PATH" ]; then

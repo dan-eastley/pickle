@@ -40,7 +40,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
 
   return (
     <div className="border border-gray-200 bg-white">
-      {/* Abstraction header — inverted (dark background for distinction) */}
+      {/* Abstraction header: inverted (dark background for distinction) */}
       <Link
         to={`${base}/domains/${domain}/${abstraction.id}`}
         className={`group flex items-center justify-between px-5 py-3 border-b border-gray-200 transition-colors ${colors.header} hover:opacity-90`}
@@ -64,8 +64,8 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
             key={`h-${row.format}`}
             className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100"
           >
-            <FormatIcon format={row.format} className="w-3 h-3 text-gray-400" />
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <FormatIcon format={row.format} className="w-3 h-3 text-gray-500" />
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {row.fmt?.label ?? row.format} ({row.count})
             </span>
           </div>
@@ -86,7 +86,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
 
 export default function DomainPage() {
   const { clientId, versionId, domain } = useParams()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
   const domainData = getDomain(domain)
   const colors = DOMAIN_COLORS[domain]
   usePageTitle(domainData ? `${domainData.name} Architecture` : null)
@@ -105,7 +105,7 @@ export default function DomainPage() {
           <h1 className="text-xl font-semibold text-gray-900">{domainData.name} Architecture</h1>
           <p className="mt-1 text-sm text-gray-500 max-w-3xl">{domainData.description}</p>
           <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-gray-400">View for this domain</span>
+            <span className="text-xs text-gray-500">View for this domain</span>
             <Button to={`${base}/decisions?domain=${domain}`} variant="secondary" size="sm">
               Decisions
             </Button>

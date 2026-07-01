@@ -22,13 +22,13 @@ function NavSection({ section }) {
   const groups = groupItems(section.items)
   return (
     <div className="mb-6">
-      <div className="px-3 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+      <div className="px-3 mb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
         {section.title}
       </div>
       {groups.map((group, gi) => (
         <div key={gi}>
           {group.label && (
-            <div className="px-3 pt-2 pb-0.5 text-xs font-medium text-gray-400">{group.label}</div>
+            <div className="px-3 pt-2 pb-0.5 text-xs font-medium text-gray-500">{group.label}</div>
           )}
           {group.items.map((item) => (
             <NavLink

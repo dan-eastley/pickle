@@ -12,6 +12,7 @@ import {
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
 import { ChevronDown, ChevronRight, KeyStar, DecisionIcon, RobotIcon } from '../ui/icons'
+import useClickOutside from '../../hooks/useClickOutside'
 
 function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose }) {
   const fmt = getFormat(format)
@@ -22,8 +23,8 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex items-center gap-1.5 px-2 py-1 mb-1 bg-gray-50">
-        <FormatIcon format={format} className="w-3 h-3 text-gray-400" />
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <FormatIcon format={format} className="w-3 h-3 text-gray-500" />
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
           {fmt.label}
         </span>
       </div>
@@ -54,7 +55,7 @@ function DomainDropdown({ domain, base, onClose }) {
   return (
     <div className="absolute left-0 right-0 top-full bg-white border-b-2 border-gray-200 shadow-lg z-40">
       <div className="max-w-[1400px] mx-auto px-6 py-5">
-        {/* Domain header — links to the domain overview page */}
+        {/* Domain header: links to the domain overview page */}
         <Link
           to={`${base}/domains/${domain.id}`}
           onClick={onClose}
@@ -69,7 +70,7 @@ function DomainDropdown({ domain, base, onClose }) {
             <p className="text-sm font-bold text-gray-800 group-hover:text-brand-700 transition-colors">
               {domain.name} Architecture
             </p>
-            <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{domain.description}</p>
+            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{domain.description}</p>
           </div>
           <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 ml-auto flex-shrink-0 transition-colors" />
         </Link>
@@ -83,7 +84,7 @@ function DomainDropdown({ domain, base, onClose }) {
 
             return (
               <div key={abstraction.id}>
-                {/* Abstraction column header — links to abstraction page */}
+                {/* Abstraction column header: links to abstraction page */}
                 <Link
                   to={`${base}/domains/${domain.id}/${abstraction.id}`}
                   onClick={onClose}
@@ -122,20 +123,14 @@ export default function DomainNav() {
   const [activeDropdown, setActiveDropdown] = useState(null)
   const navRef = useRef(null)
   const { clientId, versionId, domain: activeDomain } = useParams()
-  const base = `/clients/${clientId}/${versionId}`
+  const base = `/architectures/${clientId}/${versionId}`
 
-  const decisionsMatch = useMatch('/clients/:clientId/:versionId/decisions/*')
+  const decisionsMatch = useMatch('/architectures/:clientId/:versionId/decisions/*')
   const onDecisionsPage = !!decisionsMatch
-  const discoveryMatch = useMatch('/clients/:clientId/:versionId/discovery/*')
+  const discoveryMatch = useMatch('/architectures/:clientId/:versionId/discovery/*')
   const onDiscoveryPage = !!discoveryMatch
 
-  useEffect(() => {
-    function handleClick(e) {
-      if (navRef.current && !navRef.current.contains(e.target)) setActiveDropdown(null)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
+  useClickOutside(navRef, () => setActiveDropdown(null))
 
   useEffect(() => {
     setActiveDropdown(null)
@@ -191,7 +186,7 @@ export default function DomainNav() {
             )
           })}
 
-          {/* Decisions + Discovery — right-aligned */}
+          {/* Decisions + Discovery: right-aligned */}
           <div className="flex-1" />
           <Link
             to={`${base}/decisions`}

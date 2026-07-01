@@ -5,7 +5,7 @@ const selectClass =
 
 function FilterIcon() {
   return (
-    <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" viewBox="0 0 16 16" fill="none">
+    <svg className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" viewBox="0 0 16 16" fill="none">
       <path
         d="M2 4h12M4 8h8M6 12h4"
         stroke="currentColor"
@@ -75,7 +75,7 @@ export default function ScopeSelector({ domain, abstraction, artefact, onChange 
       {(domain || abstraction || artefact) && (
         <button
           onClick={clear}
-          className="text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1"
+          className="text-xs text-gray-500 hover:text-gray-600 transition-colors px-2 py-1"
         >
           Clear
         </button>

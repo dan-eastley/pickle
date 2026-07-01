@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import ScopeChip from '../components/decisions/ScopeChip'
@@ -9,10 +9,85 @@ import ActivityHistory from '../components/common/ActivityHistory'
 import Button from '../components/ui/Button'
 import ActionBar from '../components/ui/ActionBar'
 import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
-import { RobotIcon, EditIcon } from '../components/ui/icons'
+import { RobotIcon, EditIcon, DisclosureChevron } from '../components/ui/icons'
 import { githubAction } from '../lib/api'
 import { formatDate } from '../lib/format'
 import usePageTitle from '../hooks/usePageTitle'
+import useActiveSection from '../hooks/useActiveSection'
+import usePersistedSet from '../hooks/usePersistedSet'
+import { toggleInSet } from '../lib/collections'
+
+// Document-style left contents rail (mirrors the decision detail page): jump to
+// a section, with the active section highlighted, plus expand/collapse all.
+function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }) {
+  return (
+    <aside className="hidden lg:block w-64 flex-shrink-0">
+      <nav className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Contents</p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onExpandAll}
+              className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              Expand all
+            </button>
+            <span className="text-gray-300">·</span>
+            <button
+              onClick={onCollapseAll}
+              className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              Collapse all
+            </button>
+          </div>
+        </div>
+        <ul className="space-y-0.5">
+          {sections.map((s, i) => (
+            <li key={s.key}>
+              <button
+                onClick={() => onJump(s.key)}
+                className={`w-full text-left text-sm px-3 py-1.5 transition-colors flex items-center gap-2 border-l-2 ${
+                  activeKey === s.key
+                    ? 'bg-blue-50 text-blue-700 border-blue-500 font-medium'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent'
+                }`}
+              >
+                <span className="font-mono text-xs text-gray-500">{i + 1}</span>
+                <span className="min-w-0 flex-1 truncate">{s.label}</span>
+                {typeof s.count === 'number' && s.count > 0 && (
+                  <span className="text-[11px] font-mono text-gray-400 tabular-nums">
+                    {s.count}
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            ↑ To top
+          </button>
+        </div>
+      </nav>
+    </aside>
+  )
+}
+
+// Collapsible section with a ref (for jump-to / active highlighting).
+function Section({ id, title, collapsed, onToggle, refCb, children }) {
+  return (
+    <section ref={refCb} data-section={id} className="scroll-mt-20 mt-6 first:mt-0">
+      <button onClick={onToggle} className="w-full flex items-center gap-2 mb-3 group">
+        <DisclosureChevron open={!collapsed} className="w-3.5 h-3.5 text-gray-400" />
+        <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+      </button>
+      {!collapsed && children}
+    </section>
+  )
+}
 
 const STATUS_BADGE = {
   active: 'bg-emerald-50 text-emerald-700',
@@ -38,14 +113,48 @@ export default function DiscoveryDetailPage() {
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   const canEdit = discovery?.status === 'active'
 
-  usePageTitle(discovery?.title ? `${discovery.title} — Discovery` : 'Discovery')
+  usePageTitle(discovery?.title ? `${discovery.title} · Discovery` : 'Discovery')
 
   useEffect(() => {
-    fetch(`/api/arch/clients/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`)
+    let cancelled = false
+    fetch(`/api/arch/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`)
       .then((r) => (r.ok ? r.json() : null))
-      .then(setDiscovery)
-      .catch(() => setDiscovery(null))
+      .then((d) => !cancelled && setDiscovery(d))
+      .catch(() => !cancelled && setDiscovery(null))
+    return () => {
+      cancelled = true
+    }
   }, [clientId, versionId, discoveryId])
+
+  const navSections = [
+    { key: 'context', label: 'Context' },
+    { key: 'request', label: 'Request' },
+    { key: 'findings', label: 'Findings' },
+    { key: 'activity', label: 'Activity', count: discovery?.activity?.length ?? 0 },
+  ]
+  const sectionRefs = useRef({})
+  const [activeSection] = useActiveSection(sectionRefs, [discovery])
+  const [collapsed, setCollapsed] = usePersistedSet(
+    `discovery-collapsed:${clientId}/${versionId}/${discoveryId}`
+  )
+  const setSectionRef = (key) => (el) => {
+    sectionRefs.current[key] = el
+  }
+  const toggleSection = (key) => setCollapsed((prev) => toggleInSet(prev, key))
+  const scrollToSection = (key) => {
+    setCollapsed((prev) => {
+      const n = new Set(prev)
+      n.delete(key)
+      return n
+    })
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() =>
+        sectionRefs.current[key]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      )
+    )
+  }
+  const expandAll = () => setCollapsed(new Set())
+  const collapseAll = () => setCollapsed(new Set(navSections.map((s) => s.key)))
 
   async function setStatus(status) {
     const prev = discovery.status
@@ -116,15 +225,8 @@ export default function DiscoveryDetailPage() {
     )
   }
   if (discovery === null) {
-    return <Navigate to={`/clients/${clientId}/${versionId}/discovery`} replace />
+    return <Navigate to={`/architectures/${clientId}/${versionId}/discovery`} replace />
   }
-
-  const Section = ({ title, children }) => (
-    <section className="mt-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-3">{title}</h2>
-      {children}
-    </section>
-  )
 
   return (
     <div>
@@ -194,124 +296,156 @@ export default function DiscoveryDetailPage() {
           <Spinner size="sm" />
           <span className="flex-1 min-w-0">
             🤖 The Virtual Architect Agent is regenerating this point-in-time view. This usually
-            takes a couple of minutes — refresh the page to see the updated findings.
+            takes a couple of minutes: refresh the page to see the updated findings.
           </span>
         </div>
       )}
 
-      <article className="bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
-        <div className="mb-6 pb-5 border-b border-gray-200">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
-              <RobotIcon className="w-5 h-5 text-white" />
+      <div className="flex gap-8">
+        <ContentsNav
+          sections={navSections}
+          activeKey={activeSection}
+          onJump={scrollToSection}
+          onExpandAll={expandAll}
+          onCollapseAll={collapseAll}
+        />
+
+        <div className="flex-1 min-w-0">
+          <article className="bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
+            <div className="mb-6 pb-5 border-b border-gray-200">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
+                  <RobotIcon className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  {edit ? (
+                    <input
+                      value={edit.title}
+                      onChange={(e) => setEdit((p) => ({ ...p, title: e.target.value }))}
+                      aria-label="Discovery title"
+                      className="w-full text-xl font-semibold text-gray-900 border-b border-gray-300 focus:border-brand-500 focus:outline-none pb-1"
+                    />
+                  ) : (
+                    <h1 className="text-xl font-semibold text-gray-900">{discovery.title}</h1>
+                  )}
+                  <p className="mt-1 text-sm text-gray-500">
+                    {clientName} · v{versionId}
+                  </p>
+                  {discovery.scope && (
+                    <div className="mt-2">
+                      <ScopeChip scope={discovery.scope} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col items-end gap-2 flex-shrink-0 self-start">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs font-medium px-2 py-1 capitalize ${STATUS_BADGE[discovery.status] ?? 'bg-gray-100 text-gray-600'}`}
+                    >
+                      {discovery.status}
+                    </span>
+                    <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1">
+                      {discovery['discovery-id']}
+                    </span>
+                  </div>
+                  {discoveredAt(discovery) && (
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-1">
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none">
+                        <rect
+                          x="2.5"
+                          y="3"
+                          width="11"
+                          height="10.5"
+                          rx="1"
+                          stroke="currentColor"
+                          strokeWidth="1.25"
+                        />
+                        <path
+                          d="M2.5 6h11M5.5 1.5v3M10.5 1.5v3"
+                          stroke="currentColor"
+                          strokeWidth="1.25"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      As at {formatDate(discoveredAt(discovery))}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
+
+            <Section
+              id="context"
+              title="Context"
+              collapsed={collapsed.has('context')}
+              onToggle={() => toggleSection('context')}
+              refCb={setSectionRef('context')}
+            >
               {edit ? (
-                <input
-                  value={edit.title}
-                  onChange={(e) => setEdit((p) => ({ ...p, title: e.target.value }))}
-                  aria-label="Discovery title"
-                  className="w-full text-xl font-semibold text-gray-900 border-b border-gray-300 focus:border-brand-500 focus:outline-none pb-1"
+                <AutoGrowTextarea
+                  value={edit.context}
+                  onChange={(e) => setEdit((p) => ({ ...p, context: e.target.value }))}
+                  minRows={3}
+                  aria-label="Context"
+                  className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
                 />
               ) : (
-                <h1 className="text-xl font-semibold text-gray-900">{discovery.title}</h1>
+                <Markdown className="text-sm text-gray-700 leading-relaxed">
+                  {discovery.context}
+                </Markdown>
               )}
-              <p className="mt-1 text-sm text-gray-500">
-                {clientName} · v{versionId}
-              </p>
-              {discovery.scope && (
-                <div className="mt-2">
-                  <ScopeChip scope={discovery.scope} />
+            </Section>
+
+            <Section
+              id="request"
+              title="Request"
+              collapsed={collapsed.has('request')}
+              onToggle={() => toggleSection('request')}
+              refCb={setSectionRef('request')}
+            >
+              {edit ? (
+                <AutoGrowTextarea
+                  value={edit.request}
+                  onChange={(e) => setEdit((p) => ({ ...p, request: e.target.value }))}
+                  minRows={3}
+                  aria-label="Request"
+                  className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
+                />
+              ) : (
+                <Markdown className="text-sm text-gray-700 leading-relaxed">
+                  {discovery.request}
+                </Markdown>
+              )}
+            </Section>
+
+            <Section
+              id="findings"
+              title="Findings"
+              collapsed={collapsed.has('findings')}
+              onToggle={() => toggleSection('findings')}
+              refCb={setSectionRef('findings')}
+            >
+              {discovery.findings ? (
+                <Markdown className="text-sm text-gray-700 leading-relaxed">
+                  {discovery.findings}
+                </Markdown>
+              ) : (
+                <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-500">
+                  No findings yet. The Virtual Architect Agent is interrogating the architecture to
+                  produce a point-in-time view, this takes a couple of minutes. Refresh to check.
                 </div>
               )}
-            </div>
-            <div className="flex flex-col items-end gap-2 flex-shrink-0 self-start">
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-xs font-medium px-2 py-1 capitalize ${STATUS_BADGE[discovery.status] ?? 'bg-gray-100 text-gray-600'}`}
-                >
-                  {discovery.status}
-                </span>
-                <span className="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1">
-                  {discovery['discovery-id']}
-                </span>
-              </div>
-              {discoveredAt(discovery) && (
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-1">
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none">
-                    <rect
-                      x="2.5"
-                      y="3"
-                      width="11"
-                      height="10.5"
-                      rx="1"
-                      stroke="currentColor"
-                      strokeWidth="1.25"
-                    />
-                    <path
-                      d="M2.5 6h11M5.5 1.5v3M10.5 1.5v3"
-                      stroke="currentColor"
-                      strokeWidth="1.25"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  As at {formatDate(discoveredAt(discovery))}
-                </span>
-              )}
-            </div>
-          </div>
+            </Section>
+          </article>
+
+          {/* Activity sits outside the document surface (no white box / shadow) */}
+          <section ref={setSectionRef('activity')} data-section="activity" className="scroll-mt-20">
+            <ActivityHistory activity={discovery.activity} />
+          </section>
+
+          <JsonPreview data={discovery} label={`${discovery['discovery-id']}.json`} />
         </div>
-
-        <Section title="Context">
-          {edit ? (
-            <AutoGrowTextarea
-              value={edit.context}
-              onChange={(e) => setEdit((p) => ({ ...p, context: e.target.value }))}
-              minRows={3}
-              aria-label="Context"
-              className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
-            />
-          ) : (
-            <Markdown className="text-sm text-gray-700 leading-relaxed">
-              {discovery.context}
-            </Markdown>
-          )}
-        </Section>
-
-        <Section title="Request">
-          {edit ? (
-            <AutoGrowTextarea
-              value={edit.request}
-              onChange={(e) => setEdit((p) => ({ ...p, request: e.target.value }))}
-              minRows={3}
-              aria-label="Request"
-              className="w-full text-sm text-gray-700 leading-relaxed border border-gray-300 focus:border-brand-500 focus:outline-none px-3 py-2"
-            />
-          ) : (
-            <Markdown className="text-sm text-gray-700 leading-relaxed">
-              {discovery.request}
-            </Markdown>
-          )}
-        </Section>
-
-        <Section title="Findings">
-          {discovery.findings ? (
-            <Markdown className="text-sm text-gray-700 leading-relaxed">
-              {discovery.findings}
-            </Markdown>
-          ) : (
-            <div className="border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-400">
-              No findings yet. The Virtual Architect Agent is interrogating the architecture to
-              produce a point-in-time view — this takes a couple of minutes. Refresh to check.
-            </div>
-          )}
-        </Section>
-      </article>
-
-      {/* Activity sits outside the document surface (no white box / shadow) */}
-      <ActivityHistory activity={discovery.activity} />
-
-      <JsonPreview data={discovery} label={`${discovery['discovery-id']}.json`} />
+      </div>
     </div>
   )
 }

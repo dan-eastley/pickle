@@ -1,4 +1,4 @@
-# INT-PRN-GRD — Integration Architecture Principles ↔ Guardrails Matrix
+# INT-PRN-GRD: Integration Architecture Principles ↔ Guardrails Matrix
 
 **File:** [`/config/schemas/artefacts/domains/integration/physical/INT-PRN-GRD.json`](../../../../../../config/schemas/artefacts/domains/integration/physical/INT-PRN-GRD.json)
 **Architecture Domain / Layer:** Integration / Physical
@@ -10,7 +10,7 @@ Maps each [INT-PRN](../logical/INT-PRN.md) principle to the [INT-GRD](INT-GRD.md
 
 ## Shape
 
-Relationships are stored as a **sparse list** — only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
+Relationships are stored as a **sparse list**: only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
 
 INT-GRD is currently empty for this client/version, so this matrix ships with no relationships. It will populate once guardrails are defined.
 

@@ -1,4 +1,4 @@
-# BUS-CAP-PRO — Business Capabilities ↔ Business Processes
+# BUS-CAP-PRO: Business Capabilities ↔ Business Processes
 
 **File:** [`/config/schemas/artefacts/domains/business/conceptual/BUS-CAP-PRO.json`](../../../../../../config/schemas/artefacts/domains/business/conceptual/BUS-CAP-PRO.json)
 **Architecture Domain / Layer:** Business / Conceptual
@@ -8,7 +8,7 @@
 
 Maps [BUS-CAP](BUS-CAP.md) business capabilities to [BUS-PRO](BUS-PRO.md) business processes at Level 1 (strategic) and Level 2 (operational). The matrix answers: *which processes realise each capability?*
 
-Relationships are same-level only — Level 1 capabilities map to Level 1 processes, and Level 2 capabilities map to Level 2 processes. This preserves the intended decomposition hierarchy.
+Relationships are same-level only: Level 1 capabilities map to Level 1 processes, and Level 2 capabilities map to Level 2 processes. This preserves the intended decomposition hierarchy.
 
 ## Matrix axes
 

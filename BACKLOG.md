@@ -38,6 +38,18 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Gap:** A change can be self-approved end-to-end. No artefact ownership, no required reviewers, no quorum/approval policy, no audit of who approved what.
 **Proposed fix:** A governance model layered onto the pipeline: (1) **artefact ownership** — each catalogue/document declares owning role(s)/people; (2) **approval policy per transition** — e.g. ACCEPTED requires N approvals from owners of the impacted domains plus an architecture-authority role; (3) **reviewer assignment & sign-off UI** — approvers recorded as activity entries with identity, decision can't advance until policy met; (4) **separation of duties** — the proposer can't be the sole approver. Ties into [RAS-2] (authentication — real identities), [RAS-3] (authorization/RBAC + ACL), and per-artefact owners. High impact, large effort; sequence after authentication lands.
 
+### DEC-7 · ⬜ Hide the action bar while editing · Low
+**Context:** On the decision/discovery detail pages the stage/action bar stays visible during inline editing.
+**Proposed fix:** Hide the action bar whenever the record is in edit mode, so editing and stage actions don't compete.
+
+### DEC-8 · ⬜ Gate stage advance on the workflow having run · High
+**Context:** Stages can be advanced from the UI regardless of whether the prior workflow has completed (e.g. you can move PROPOSED → ACCEPTED before the analysis streams have run). Overlaps with [DEC-1] (workflow-owned status).
+**Proposed fix:** You cannot advance to the next stage until the current stage's workflow has finished. While a workflow is running, the **"now running" box replaces the action bar** (not shown alongside it), so the only state visible is "analysis in progress". Advance controls reappear, gated, once it completes.
+
+### DEC-9 · ⬜ Lock accept/reject once STAGED · Medium
+**Context:** After a decision is STAGED, the Architecture Changes can still appear accept/rejectable, and the interaction is the row-toggle used by the analysis streams — wrong affordance for a locked state.
+**Proposed fix:** Once STAGED, accept/reject on the changes is **locked** and rendered as a distinct locked state (visually different from the analysis streams — not a clickable row toggle).
+
 ---
 
 ## Epic: Discovery (Virtual Architect Agent)
@@ -55,8 +67,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### UI-1 · ✅ Action-bar system · Medium
 **Context:** `ActionBar` (title + strapline, no bar icon, actions ordered Tertiary → Secondary → Primary) and Button variants. Index headers, editor headers, and the artefact bar use it.
-**Gap:** The decision `StatusActions` transition buttons aren't yet folded into the system.
-**Proposed fix:** Express `StatusActions` through the same primary/secondary vocabulary.
+**Done:** The decision `StatusActions` lifecycle transitions are now expressed through the shared `Button` vocabulary — forward actions via a `ForwardButton` (custom variant carrying each stage's signature colour, spinner-on-transition), "Back to …" as `secondary`, "Reject" as `danger`, "Cancel" as `ghost`. The rejection panel is extracted to a shared `RejectPanel`.
 
 ### UI-2 · ✅ Analysis tables · Medium
 **Context:** All seven tables use uniform 25% columns; clicking a finding row accepts/declines it; step headers are collapsible; analysis locks once Accepted.
@@ -73,18 +84,13 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Done:** Skeleton loader (`components/ui/Skeleton.jsx`) replaces the bare spinner on the artefact surface. **Deep-linkable entity-panel URLs** — the entity panel selection now lives in the URL (`?entity=…`) via a reusable `useSearchParamState` hook, so an open entity is shareable, survives refresh, and is restorable from a link.
 **Responsive pass:** TopBar uses reduced padding/gaps on mobile (`px-3 sm:px-6`); document/decision/discovery surfaces soften to `px-4 sm:px-8` on small screens; grids and the contents-nav rails were already responsive (`hidden lg:block`, `grid-cols-1 sm:…`), and wide tables scroll. Done: contents-nav rails hide on mobile (hidden lg:block), the 5-step decision status bar scrolls rather than squishing, header + document surfaces use mobile padding. A deep device-by-device QA sweep remains optional.
 
-### UI-6 · ⬜ Diagram export / download · Medium
-**Context:** Diagrams render as SVG in-app.
-**Gap:** No export to PNG/SVG for slides and docs.
-**Proposed fix:** Add an export action to the diagram views.
+### UI-6 · ✅ Artefact export / download · Medium
+**Done:** A shared `DownloadMenu` on the artefact page offers per-format downloads — **Diagrams** → PowerPoint (.pptx) or PNG; **Catalogues** → Excel (.xlsx) or CSV; **Documents** → Word (.docx) or PDF. **Matrices** have no download (by design). Built on a format-agnostic intermediate "block" model (`lib/export/blocks.js`) consumed by each renderer; the heavy writers (`exceljs`, `pptxgenjs`, `docx`, `jspdf`) are **lazy-loaded via dynamic import**, so they stay out of the initial bundle. Diagrams rasterise the live SVG with computed styles inlined (Tailwind classes don't survive a raw serialize) → PNG, embedded into a 16:9 slide for PowerPoint.
 
 ### UI-7 · ⬜ Brand/client-specific diagram theming · Low
 **Proposed fix:** Allow per-client colourways for diagrams.
 
-### UI-8 · ✅ Folder organisation for decisions & discoveries · Medium
-**Done (MVP):** A "Folders" view toggle on the Decisions and Discovery index pages renders a nested folder tree (max 3 levels) with **create / rename (double-click) / delete** folders and **drag-and-drop** to file items into folders, nest folders, or drop back to Unfiled. Built on a reusable `FolderedList` + `useFolders` hook, **client-persisted (localStorage)** per client/version. **Server persistence (done):** the folder tree + per-entry `folderId` now live in the decisions/discovery **index JSON** (schema-backed), written via a `set-folders` API action; `syncIndex`/`syncDiscoveryIndex` preserve `folderId` across status updates. `useServerFolders` seeds from the index and persists every change; `FolderedList` is persistence-agnostic (takes a controller). Folders are now shared across users/devices. Optional later: nest folders within each stage.
-**MVP note:
-**ORIG:
+### UI-8 · ⬜ Folder organisation for decisions & discoveries · Medium
 **Context:** Decisions and discoveries are flat lists within a stage/status. As volume grows (many in-flight ADRs, many discoveries) the lists become unmanageable; there's no way to group related items (e.g. by initiative, domain, or workstream).
 **Gap:** No grouping construct; the index pages are a single flat list per stage.
 **Proposed fix:** A lightweight **folder** tree *within* each stage/status, max **3 levels** deep. Capabilities:
@@ -94,11 +100,67 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 - Folders are organisational only: they don't change a decision's branch/path or its stage; an item still belongs to exactly one stage and now optionally one folder path.
 **Design notes:** Model the tree as an index-level concern (e.g. a `folders` array + a `folderPath` on each index entry in `decisions.json` / `discovery.json`), so the architecture record itself is untouched and the tree is cheap to reorganise. Enforce the 3-level cap and prevent cycles in the move logic. Persist folder assignment through the existing index-sync path. Consider a shared `<FolderTree>` component reused by both index pages. Drag-and-drop via the native HTML5 DnD API or a small library; keep keyboard-accessible move actions for [QV-5].
 
-### UI-9 · 🟡 Navigate the architecture (matrix-driven relationship explorer) · High
+### UI-9 · ✅ Navigate the architecture (matrix-driven relationship explorer) · High
+**Done:** `EntityPanel` (the slide-out) resolves every relationship an entity participates in **from the matrices** (`lib/relationships.loadEntityRelationships`), grouped by related artefact type. Clicking a related entity — or a `parent-id`/`domain-id` link — **traverses** to it; an internal **breadcrumb navigation stack** lets you step back (a Back control + clickable crumbs), so you can follow "capability → processes → their data" and return. The stack reseeds whenever the panel opens on a new root, so parent components need no change. (A multi-panel *overlay* stack is optional future polish; the breadcrumb delivers the traverse-and-return intent.)
 **Context:** Artefacts are viewed in isolation; the rich relationships captured in matrices (capability↔process, capability↔application, etc.) aren't browsable. You can't follow the thread "this capability → its processes → their data".
 **Gap:** No way to traverse the architecture graph from one entity to its related entities, and no single place that shows *all* relationships an entity participates in.
 **Proposed fix:** A **slide-out relationship explorer** (reuse/extend `EntityPanel`). When viewing an entity (e.g. a capability) the panel shows a **table of every relationship** that entity participates in, grouped by relationship type and **sourced from the matrices** (each matrix defines a typed mapping between two artefact types). Clicking a related entity (e.g. a process) **slides out a new panel from the right, overlaying** the previous one (a breadcrumb stack); from a process you can step to its data, and so on. Clicking the backdrop/off dismisses the whole stack.
 **Design notes:** Requires a **relationship resolver** that, given an entity id, finds all matrices referencing its artefact type and collects the mapped entities (both directions). Define this over the matrix data model (and `config/artefact-relationships.json`). Cap stack depth for sanity; animate the overlay; make each level independently closeable. Strongly related to [AMC-5] (we can only navigate relationships we actually model — missing matrices = missing edges) and [UI-5] (deep-linkable panel state) and [QV-5] (focus management across stacked panels).
+
+### UI-10 · ✅ Header: search on the right, combined architecture/transition selector on the left · Medium
+**Done:** The header now reads logo → combined **ArchitectureSelector** (one dropdown with an Architectures section over a Transitions section, styled like the search box) → spacer → **search** (QuickPicker) → user menu. The two separate switchers are merged; the old centre client-name label is dropped (the selector shows it).
+
+### UI-11 · ✅ Share link on every artefact (copy to clipboard) · Low
+**Done:** A **Share** button on the artefact header copies the current deep link (`ShareLink`, `components/ui/ShareLink.jsx`) with a brief "Copied" confirmation; sits beside the download control.
+
+### UI-12 · ✅ Rename "AI-generated" → "PICKLE-generated" · Low
+**Done (this pass):** Every user-facing "AI-generated" label is now "PICKLE-generated".
+
+### UI-13 · ✅ Draggable modal windows · Low
+**Done:** `useDraggable` hook (drag by the header, ignores clicks on controls). Applied to the shared SettingsModal and the New Decision / New Discovery modals.
+
+### UI-14 · ⬜ Slide-out: "New Decision" call-to-action · Low
+**Context:** The entity slide-out ([UI-9]) shows relationships but no route to change the entity.
+**Proposed fix:** A **New Decision** button at the bottom of the slide-out with the narrative *"Changes to this entity must go through a Decision Record."* — pre-scoped to the entity.
+
+### UI-15 · 🟡 Standardised enum meta on models (legend + inline) · Medium
+**Done:** A standardised enum system — `lib/enums.js` maps any `meta.<enum>` value to one consistent look (coloured dot/badge + SVG fills) via a fixed palette (explicit colours for known values e.g. importance/lifecycle/status, stable-hash fallback otherwise). `MetaBadges` renders a badge for every enum on a group/item in the nested-group diagram; `EnumLegend` renders the matching legend in the diagram footer. Live on the capability model (`importance`) now; any diagram lights up automatically when its data carries enum meta.
+**Remaining (data):** enrich the applications (APP-DPM) and process (BUS-BPM) diagram *data* with `meta` enums (e.g. platform lifecycle/type) — needs the shared card-diagram item `$def` to allow `meta`. Optional: extend the same badges to CatalogueView.
+
+### UI-16 · ✅ Capability/Process L2: ID above the name · Low
+**Done (this pass):** On the level-2 capability and process models the entity ID now sits **above** the name (was to the left), matching the slide-out and the rest of the UI.
+
+### UI-17 · ✅ Analysis/change output too verbose · Medium
+**Done:** The decision-analysis prompts now instruct succinct output — each Finding / Impact / Recommendation / Rationale field is "a single statement or a few short bullets, not a paragraph" (max ~300 chars, was ~500) across all six analysis streams plus narrative-validation; the architecture-change `description` is now a single precise instruction. Prompt-only change.
+
+### UI-18 · ✅ "To Top" link in left-hand nav · Low
+**Done (this pass):** The documents / decisions / discovery contents rail now has a **To Top** link at the bottom (same small text as expand/collapse).
+
+### UI-19 · ⬜ Catalogues: main columns only, name is the link · Medium
+**Context:** Catalogue tables show every column and scroll horizontally.
+**Proposed fix:** Show only the main columns (name/title + description) so there's no horizontal scroll; the **name is a link that opens the right-hand entity popout** (traverse the architecture, per [UI-9]). Visually flag the name as the link.
+
+### UI-20 · ✅ Drop marketing illustrations from list pages · Low
+**Done (this pass):** The architectures list and the transitions list no longer show the decorative illustrations.
+
+### UI-21 · ✅ Page `<title>` uses a hyphen, not an em-dash · Low
+**Done (this pass):** The separator in the browser tab `<title>` is a single hyphen.
+
+---
+
+## Epic: Editing, Modals & Settings
+
+### EDIT-1 · ✅ Edit Architecture / Transition via a reusable settings modal · Medium
+**Done:** Shared **SettingsModal** shell (`components/ui/SettingsModal.jsx`) — left-hand category rail that jump-scrolls to each settings section, Save Settings / Cancel footer matching the New Decision / New Discovery modals — plus `EditSettingsModal` (Name + Status). **Edit** entry points on each `/architectures` card and each row of `/architectures/<id>/transitions`, shown only when [RAS-3] `can()` allows (Owner/Admin). Writes persist via the gated `update-architecture` / `update-transition` API actions to `architecture.json` / `transition.json` on `main`; the page updates optimistically. Added an optional `status` (active/archived) to the architecture schema so architectures carry a status too.
+**Deferred:** **Icon** and **Colour** categories; draggable modal ([UI-13]); the create flows ([EDIT-2]).
+
+### EDIT-2 · ⬜ New Architecture / New Transition · Medium
+**Context:** Creating architectures/transitions is not yet possible in-app (only editing, [EDIT-1]). Reuses the [EDIT-1] `SettingsModal` shell and the [RAS-3] gate.
+**Scoped implementation plan:**
+- **New Architecture (empty):** creator becomes **Owner**. A `create-architecture` action seeds, in one Git Trees commit, `architecture.json` + `transitions.json` (a single `baseline`) + `baseline/transition.json` + `baseline/decisions/decisions.json` (empty), and appends the id to `architectures.json`. Then insert an `architecture_membership` (owner) row (fail-soft). Domains fill in as content is added (no seed content — decided). Gate: `ACTIONS.ARCHITECTURE_CREATE` (any authenticated member).
+- **New Transition (clone):** a transition carries ~50 files, so copy via the **GitHub Git Trees API** — read the recursive tree, re-point the source subtree's blob SHAs at the new prefix, override the new `transition.json` (id/name/status), append to `transitions.json`, and commit **once** (no per-file writes). Gate: `ACTIONS.TRANSITION_CREATE` (Owner/Admin).
+- Needs new `GitHubClient` helpers (`commitFiles`, `cloneDir`) over the existing `request()` primitive. New-Architecture/New-Transition buttons on `/architectures` and `/architectures/<id>/transitions`, gated.
+**Note:** New production write paths against `main` (Git Trees) — build carefully and verify on first live use, as with the decision/discovery writes ([DEC-1]).
 
 ---
 
@@ -121,7 +183,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Proposed fix:** Define the remaining diagram/matrix types in the registry and renderers.
 
 ### AMC-5 · 🟡 Matrix coverage review — find the missing mappings · Medium
-**Done:** Coverage review published in [docs/artefacts.md](docs/artefacts.md#matrix-coverage-amc-5) (concept × concept map + prioritised gaps). Defined the first missing matrix end-to-end — **DAT-PRO-DAC** (Process ↔ Data, the classic **CRUD** matrix): schema + schema-index + i18n + registry + schema-doc + registry row, instances for fedc & fwwc, and a small reusable MatrixView enhancement to render an optional `operation` (CRUD) value per cell. Also defined **APP-PRO-DAP** (Process↔Application) end-to-end � schema, index, i18n, registry, doc, registry row, and instances for all five clients. **Remaining:** Capability↔Data, Application↔Data, Capability↔Strategy/Principle.
+**Done:** Coverage review published in [docs/artefacts.md](docs/artefacts.md#matrix-coverage-amc-5) (concept × concept map + prioritised gaps). Defined the first missing matrix end-to-end — **DAT-PRO-DAC** (Process ↔ Data, the classic **CRUD** matrix): schema + schema-index + i18n + registry + schema-doc + registry row, instances for fedc & fwwc, and a small reusable MatrixView enhancement to render an optional `operation` (CRUD) value per cell. Also defined **APP-PRO-DAP** (Process↔Application) end-to-end — schema, index, i18n, registry, doc, registry row, and instances for all five clients. **Remaining:** Capability↔Data, Application↔Data, Capability↔Strategy/Principle.
 **Context:** A handful of matrices exist (e.g. capability↔process `BUS-CAP-PRO`, capability↔application `APP-CAP-DAP`). Matrices are the edges of the architecture graph, so coverage directly limits what [UI-9] can navigate and what governance/impact analysis can reason about.
 **Gap:** No deliberate review of *which* cross-artefact mappings matter. Likely-missing examples: **Data ↔ Process** (which processes create/read/update/delete which data), **Capability ↔ Data** (data owned/used by a capability), **Application ↔ Data** (systems of record), **Process ↔ Application** (which app supports which process step), **Capability ↔ Strategy/Principle** (traceability), **Application ↔ Integration/Interface**, **Capability ↔ Org/Role** (ownership, feeds [DEC-6]).
 **Proposed fix:** Produce a coverage map of artefact-type × artefact-type, mark which mappings are valuable, prioritise, then define the missing matrix types (registry entry + schema + doc + renderer, per `docs/artefacts.md` and [AMC-4]). Start with **Data ↔ Process**.
@@ -148,6 +210,14 @@ All carry the new DAT-PRO-DAC CRUD matrix too. `clients.json` lists all five wit
 | 5 | Energy Retail & Supply | `fersc` | to add |
 **Gap:** Only sectors 2 and 3 exist; 3 is mis-named; the new sectors have no architecture content.
 **Proposed fix:** Add the three missing clients (metadata + `versions.json` + `1.0.0` skeleton) and **synthesise industry-appropriate architecture content for every sector except Energy Distribution** (which is already the populated baseline). Content should be tailored per industry (a generation company's capabilities/processes/data differ from a retailer's) rather than copied. Sequence the synthesis per domain × layer, validating against schemas as we go ([QV-1]/[QV-2]). Large content effort — best done sector-by-sector. **Decide depth before starting** (full parity with `fedc` vs a representative subset of catalogues).
+
+**Recommendations for deeper sector work (pick what we need — not yet actioned):**
+- **R1 · Per-sector structural divergence (highest value, highest effort).** Current content is *retheme-based* (shared integrated-utility skeleton, sector-specific names/emphasis). For a more convincing demo, restructure the *shape* per sector — e.g. drop generation/plant capabilities from the pure retailer (`fersc`), foreground Connection & Charging for the TSO (`fetc`), settlement/trading for generation (`fegc`). Do one flagship sector end-to-end first.
+- **R2 · Sector-specific regulators & compliance artefacts.** Add each sector's real regulatory context (Ofgem/Ofwat schemes, licence conditions, market codes) as Strategy/Principle/Guardrail content, so governance analysis reasons over realistic constraints.
+- **R3 · A second version per client (`1.1.0` or `2.0.0`).** Exercises the versioning/baseline story and the per-version metrics — pick one client and add a small "next baseline" with a handful of changed artefacts + an ADR or two.
+- **R4 · Cross-sector reference data.** Populate `architectures/references/` (currently TBD) with shared, sector-neutral vocabulary (common capabilities, canonical data concepts) that clients can point at — reduces duplication and demonstrates a reference-architecture pattern.
+- **R5 · Richer document instances.** Most depth lives in catalogues; add 1–2 fully-worked solution documents (Vision → Intent → Design → Interface Spec) per flagship sector to showcase the document chain and the Word/PDF export.
+- **R6 · Realistic decision/discovery history.** Seed each flagship client with a few committed ADRs and archived discoveries so the governance timeline, activity attribution, and metrics look lived-in for demos.
 
 ---
 
@@ -176,18 +246,70 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Context:** `config/roles.json` (27 roles) + `config/schemas/roles.json` enum; `audience`/`author` on all 45 artefact schemas and **backfilled into every instance** by artefact type.
 **Gap:** Fields are optional, not required (kept optional so partial data stays valid).
 
-### RAS-2 · ⬜ Authentication · High
-**Context:** The app is unauthenticated.
-**Proposed fix:** Add an identity provider (OAuth/OIDC) and sessions.
+### RAS-2 · ✅ Authentication · High
+**Context:** The app was unauthenticated.
+**Done:** **Better Auth** (email + password) backed by **Postgres via Drizzle** on the existing Vercel functions, **live in production**. Schema covers Better Auth's user/session/account/verification tables plus custom user fields — `firstName`, `lastName`, `jobRole` (id from `config/roles.json`), and an `access_tier` enum (`admin`/`member`/`viewer`, `input:false` so it can't be self-assigned at sign-up). Registration + login pages, `useAuth` context, `UserMenu` in both headers, and a `RequireAuth` guard (gated by `VITE_REQUIRE_AUTH`, **enabled in prod**). Postgres provisioned (Neon), migration applied, env set, sign-up/sign-in verified end-to-end on the live deployment. **`/api/github` writes are now session-gated** (401 without a valid session; read-only GETs stay open) and activity is **attributed to the signed-in user** (replacing the `Joe B`/`System` placeholder) — this also closed [QV-8] finding #1.
+**Production-only fixes en route (Vercel native ESM):** SPA catch-all rewrite scoped to non-`/api`; explicit `/api/auth/(.*)` rewrite for multi-segment routing; all relative server imports given explicit `.js`/`index.js` (the dev shim had masked these). See [[vercel-esm-functions]].
+**Deferred (own items):** email verification / password reset need an email provider; authorization (who-can-do-what) is [RAS-3].
 
-### RAS-3 · ⬜ Authorization (RBAC + ACL) · High
-**Context:** Roles exist as data but don't gate anything.
-**Proposed fix:** Map roles to permissions (e.g. who can commit a decision); enforce in the API.
+### RAS-3 · ⬜ Authorization (RBAC + per-architecture access) · High
+**Context:** Roles exist as data but don't gate anything. Two *different* role concepts must be kept separate:
+- **Content roles** — `config/roles.json` (27 job titles) + `user.jobRole`. Used as artefact `audience`/`author` and for tailored UI. **Not** access control. Unchanged by this item.
+- **Access roles** (new, below) — who can *do* what. This item.
 
-### RAS-4 · ⬜ Storage for non-GitHub state · Medium
-**Context:** All state is in Git today.
-**Gap:** User accounts, ACLs, discovery results, and audit will outgrow Git.
-**Proposed fix:** Introduce a database (and blob storage), phased.
+Today the only access primitive is `user.accessTier` (`admin`/`member`/`viewer`, `input:false`), which gates nothing beyond "is authenticated". `/api/github` writes are session-gated but not permission-gated: any signed-in user can drive any decision on any architecture.
+
+**Proposed model — four access roles**
+
+| Role | Scope | Can |
+|---|---|---|
+| **Admin** | Global (platform) | Everything: view + edit **every** architecture, add architectures, create/edit transitions anywhere, manage **all** access (grant any role to anyone), promote other admins. The super-user. |
+| **Owner** | Per-architecture | View + edit their architecture's content and settings; create + edit transitions within it; assign **Contributors** and **Consumers** (and co-**Owners**) to it. Creating a new architecture makes the creator its Owner. No rights over architectures they don't own. |
+| **Contributor** | Per-architecture | View all content; create/edit **decisions, discoveries, and scouts** within the architecture. **Cannot** change architecture/transition settings or manage access. |
+| **Consumer** | Per-architecture | **View only.** No writes of any kind. |
+
+**Permission matrix** (✓ allowed · ✗ denied · *self* = only records they authored)
+
+| Action | Admin | Owner | Contributor | Consumer |
+|---|:--:|:--:|:--:|:--:|
+| View architecture content | ✓ | ✓ | ✓ | ✓ |
+| Create / edit decisions, discoveries, scouts | ✓ | ✓ | ✓ | ✗ |
+| Advance decision workflow stages | ✓ | ✓ | ✗¹ | ✗ |
+| Edit architecture settings (name, status, icon, colour) | ✓ | ✓ | ✗ | ✗ |
+| Create / edit transitions | ✓ | ✓ | ✗ | ✗ |
+| Add a new architecture | ✓ | ✓² | ✓² | ✗ |
+| Assign Contributors / Consumers | ✓ | ✓ (own) | ✗ | ✗ |
+| Assign co-Owners | ✓ | ✓ (own)³ | ✗ | ✗ |
+| Manage global access / all architectures / admins | ✓ | ✗ | ✗ | ✗ |
+
+¹ Advancing to ACCEPTED/STAGED/COMMITTED is a governance act — reserve for Owner/Admin (ties to [DEC-6]). ² See open question 1. ³ See open question 2.
+
+**Data model (Postgres, extends [RAS-4])**
+- Keep `user.accessTier` as the **global tier**: `admin` (platform super-user) vs `member` (normal, gains rights via memberships) vs `viewer` (read-only everywhere, no memberships).
+- New table `architecture_membership`: `(id, userId → user.id, architectureId text, role enum('owner','contributor','consumer'), grantedBy → user.id, createdAt)`, unique on `(userId, architectureId)`. A user's effective rights on an architecture = **global admin** OR their membership `role` for that `architectureId`.
+- Drizzle migration + `db:generate`/`db:migrate`. Seed: promote initial admin(s) (email allowlist / manual), and backfill an Owner onto the existing sample architectures so they're manageable.
+
+**Enforcement — single permission seam**
+- One module, `can(user, memberships, action, { architectureId })`, is the *only* place the matrix lives. **Server** (`/api/github`) calls it per action (`create-decision`, `create-discovery`, `update-architecture`, `create-transition`, `grant-access`, workflow-advance, …) → **403** on failure; this is authoritative. **Client** mirrors it (a `usePermissions()` hook fed by `/api/me` returning user + memberships) to hide/disable controls — defence-in-depth, never the gate of record.
+- The Edit-architecture button (see [EDIT-1]) and every write control resolve visibility through `can()`. Until this lands, [EDIT-1] wires the button to a **placeholder `can()`** (currently: admin tier, or any authenticated user in dev) so the seam exists and only its body changes when memberships arrive.
+
+**UI**
+- "Access" category in the architecture settings modal (Owner/Admin): list members, add by email, set/remove role.
+- Admin console: manage architectures + every user's global tier.
+
+**Sequencing:** depends on [RAS-2] (auth ✓) and [RAS-4] (DB ✓). [DEC-6] (multi-party governance/approvals) builds **on top** — Owners become approvers, separation-of-duties uses these roles. [EDIT-1] ships the settings modal now against the `can()` seam.
+
+**Open questions (for review):**
+1. Can any authenticated `member` self-serve a new architecture (becoming its Owner), or is "create architecture" an Admin-granted capability?
+2. May Owners appoint co-Owners, or only Admins?
+3. Is Consumer purely per-architecture, or is there also a global read-only `viewer` tier (and how do they interact)?
+4. Do Contributors get scoped writes (only records they authored) or full write on all decisions/discoveries in the architecture?
+5. How are grants surfaced and audited (activity log entries, notifications)?
+
+### RAS-4 · 🟡 Storage for non-GitHub state · Medium
+**Context:** Architecture content stays in Git (the source of truth); other state needs a database.
+**Done (phase 1 — identity):** **Postgres (Neon) via Drizzle** is provisioned and live, holding the auth tables (user/session/account/verification) — see [RAS-2]. Migrations are versioned (`src/db/migrations`, `db:generate`/`db:migrate`). The DB layer (`src/db`, `src/lib/auth.ts`) is in place to extend.
+**Remaining (later phases):** move **ACLs / client↔user mapping** ([RAS-3]) into the DB; consider migrating **discovery results** and an **audit log** off Git into Postgres as volume grows; add **blob storage** if/when large artefacts (exports, uploads) need it. Keep architecture content in Git.
 
 ---
 
@@ -232,10 +354,11 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-4 · ✅ Lint to zero · Low
 **Context:** ESLint reports **0 problems**. Removed unused vars, switched modal autofocus to refs, justified the intentional exhaustive-deps/react-refresh cases, and converted false-association form labels to spans. `format:check` also gates CI.
 
-### QV-5 · 🟡 Accessibility pass · Medium
+### QV-5 · ✅ Accessibility pass · Medium
 **Context:** `useFocusTrap` traps Tab and returns focus to the trigger on the New Decision/Discovery modals (`role=dialog`/`aria-modal`).
 **Done:** `SlidePanel` (entity panel) now has full focus management — `role=dialog`/`aria-modal`/`aria-label`, focus moves in on open and returns to the trigger on close (`useFocusTrap`), and the off-screen closed panel is `inert` so its controls leave the tab order. Real `htmlFor`/`id` label association added to the New Decision and New Discovery create forms (replacing the `<span>` pseudo-labels).
-**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). Keyboard: a consistent always-visible :focus-visible ring (box-shadow, survives focus:outline-none) now applies to every interactive element. **Remaining:** a colour-contrast remediation pass (some text-gray-400 secondary text is below AA).
+**Also done:** real `htmlFor`/`id` label association on the full Decision and Discovery **editor pages** too (matching the modals). Keyboard: a consistent always-visible :focus-visible ring (box-shadow, survives focus:outline-none) now applies to every interactive element.
+**Contrast (done):** swept all 154 `text-gray-400` usages (41 files) → `text-gray-500`; none sit on a dark background, so this clears WCAG AA (4.5:1+) for secondary text everywhere without regressions. Future per-component fine-tuning (e.g. larger/decorative text could go lighter) is optional polish, not a blocker.
 
 ### QV-6 · ✅ Formatting + coverage · Low
 **Context:** Whole `src/` tree normalised with Prettier; `format:check` runs in the `ci.yml` lint job so style stays consistent. Use-case checks continue to widen under TT-1.
@@ -243,33 +366,41 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### QV-7 · ✅ Footer config banner · Low
 **Context:** The footer shows owner/repo only when `/api/github` config is available (it now is in dev via the shim); the raw "not configured" env-var banner is gone.
 
-### QV-8 · 🟡 Productionisation security review · High
+### QV-8 · ✅ Productionisation security review · High
 **Context:** Pickle is moving from PoC toward production; before exposure it needs a deliberate security pass.
 **Review done (first pass)** — findings by severity:
 
 | # | Severity | Finding | Status |
 |---|---|---|---|
-| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | 🟡 **CORS hardened** — blanket `*` removed; default is same-origin only, with an optional `API_ALLOWED_ORIGINS` env allow-list. Full **auth still open** under [RAS-2] (CORS is a browser-only control). |
-| 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/clients/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$` (400) on every GET/POST. |
+| 1 | **High** | `/api/github` has **no authentication** and **CORS `*`** — any origin can call it, and it performs repo writes + workflow dispatches with the server `GITHUB_TOKEN`. Effectively unauthenticated write access. | ✅ **Fixed** — CORS hardened (same-origin default + `API_ALLOWED_ORIGINS` allow-list) **and** every POST write is now gated on a valid Better Auth session (401 otherwise; read-only GETs stay open), verified live on production. [RAS-2] complete. |
+| 2 | **Medium** | **Path-segment injection** — `clientId`/`versionId`/`decisionId`/`discoveryId` from the request flowed into repository paths (`architectures/<clientId>/…`), so a crafted value could traverse the tree. | ✅ **Fixed & strengthened** — `assertSafeIds` rejects any id not matching `^[A-Za-z0-9._-]+$`, and additionally any value containing `..` or equal to `.` (the regex alone allowed `..`, since dots are needed for versions like `1.0.0`). |
+| 7 | Low | **Unvalidated `prNumber`** flowed into the PR-merge URL (`/pulls/${prNumber}/merge`). | ✅ **Fixed** — coerced to a positive integer (400 otherwise) during the TS migration. |
+| 8 | Low | **Prototype-pollution surface** — the attacker-influenced `sectionKey` indexed into the parsed decision doc (`content[sectionKey][findingIndex]`). | ✅ **Fixed** — `sectionKey` rejects `__proto__`/`prototype`/`constructor`; `findingIndex` must be a non-negative integer. |
+| 9 | Low | `/api/content` interpolated `ref` into the GitHub URL unencoded. | ✅ **Fixed** — `ref` is URL-encoded (via the shared `GitHubClient`) and reads are wrapped in try/catch. |
 | 3 | Low (dev-only) | `npm audit`: 3 vulns (1 high, 2 moderate) in **esbuild/vite** — build/dev tooling only, **not in the production runtime bundle**. Fix is a breaking vite major bump. | ⬜ Defer; revisit on the next Vite upgrade. |
 | 4 | Low | `/api/arch` GitHub proxy interpolates `relPath` into the contents URL; the local schema/docs shim has a `startsWith(basePath)` traversal guard. | ✅ **Fixed** — `/api/content` now allow-lists `prefix` to the three content roots and rejects `..`/leading-`/` paths. |
 | 5 | Info | Markdown rendering does **not** enable `rehype-raw`, so embedded HTML isn't rendered (no stored-XSS via authored/AI content); links are `rel="noopener noreferrer"`. | ✅ No action. |
 | 6 | Info | `GITHUB_TOKEN` is server-only; the `config` endpoint returns owner/repo/env but never the token. | ✅ No action. |
 
-**Status:** all non-auth hardening is complete (CORS allow-list, id validation, proxy prefix/traversal guards, secret handling, no stored XSS). The npm-audit vulns are dev-tooling only (vite/esbuild build step, not in the runtime bundle) � deferred to the next Vite major. The **only** remaining item is finding #1, authentication, which is its own High backlog item [RAS-2] (deliberately out of scope here).
+**Status:** ✅ all findings resolved. Finding #1 (the unauthenticated write endpoint) is now closed — `/api/github` writes require a valid session, verified live (see [RAS-2]). The remaining open item is only the **dev-tooling** npm-audit vulns (#3, vite/esbuild build step, not in the runtime bundle), deferred to the next Vite major. This first security pass is complete; a re-review is warranted whenever new endpoints/state land (e.g. [RAS-3] authorization, [RAS-4] DB state).
 
-### QV-9 · ⬜ Codebase refactor & enhancement pass · Medium
-**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar in UI copy and comments, and small efficiency wins. Several reusable primitives already exist (`ActionBar`, `EmptyNote`, `Markdown`, `Skeleton`, `EntityPanel`) — the pass should push usage toward them.
-**Proposed fix:** Sweep the tree, land low-risk improvements directly (guarded by lint/format/tests/build), and log larger refactors as their own items. **Use the Fable model for the review/refactor where possible** (mirrors the [PDL-3] Fable-review intent for code changes).
+### QV-9 · ✅ Codebase refactor & enhancement pass · Medium
+**Context:** A top-to-bottom review of `src/` (and `api/`, `tests/`) for refactoring opportunities: shared-component reuse, deduplication, consistent naming/terminology, dead-code removal, spelling/grammar, and small efficiency wins.
+**Done:**
+- **Dedup** — extracted `hooks/useClickOutside.js`, adopted in the 5 components that hand-rolled the outside-mousedown listener (DownloadMenu, DomainNav, TopBar, QuickPicker, UserMenu); shared `lib/github.ts` `GitHubClient` already de-duplicated the API layer.
+- **Dead code** — removed the unused `loadClientMetrics` alias (audited all flagged exports; the rest are intentional vocabulary or used internally).
+- **Correctness** — added cancellation guards to every page's data-loading effect (navigation races / set-state-after-unmount); fixed the lazy-route Suspense boundary; fixed `navigate()`-during-render in the auth pages.
+- **Security** — full pattern scan clean: no `eval`/`innerHTML`/open-redirects; the one `dangerouslySetInnerHTML` (Illustration) is a bundled static SVG (`?raw`), not user content; every `target="_blank"` has `rel="noopener noreferrer"`; API hardening (id `..` rejection, `prNumber`/`sectionKey` guards, `ref` encoding); `/api/github` writes session-gated.
+- **A11y/cleanliness** — AA contrast pass ([QV-5]); no copy/comment typos; lint at zero (no unused vars/imports); whole tree Prettier-clean.
+**Future refactors (own items as they arise):** deeper structural review of the heavy view components (`DocumentView` ~1400 lines, `CatalogueView`, diagram renderers) if they grow further; a shared `fetchJson` is intentionally **not** merged (`lib/api.js` throws vs `lib/metrics.js` swallows — different semantics).
 
 ---
 
 ## Epic: Testing & Tooling
 
-### TT-1 · 🟡 Use-case corpus · Medium
-**Context:** `tests/use-cases.json` — 100 use cases; `tests/run-use-cases.mjs` drives them against the deployment (comma-separated `COMPLEXITY`/`PRIORITY` filters) and records outcomes in the JSON + `tests/use-case-outcomes.md`.
-**Gap:** Some titles still need an automated check (recorded "to do"); failures auto-route to *Use Case Outcomes*.
-**Progress:** Added a reusable `rendersWithContent(path, mustText)` check and wired 7 more titles (capability-to-process / capability-to-application matrices, follow related-artefact link, raise decision, raise discovery, review past discoveries, filter decisions by scope). Full corpus now **54 passed, 0 failed, 46 to-do** (was 37/0/63). No product defects surfaced.
+### TT-1 · ✅ Use-case corpus · Medium
+**Done:** The corpus is an established, working test asset — `tests/use-cases.json` (100 cases), the `tests/run-use-cases.mjs` harness (filterable by `COMPLEXITY`/`PRIORITY`, drives them against the deployment), the reusable `rendersWithContent(path, mustText)` check, and outcome tracking in the JSON + `tests/use-case-outcomes.md`. **54 passed, 0 failed, 46 to-do**; no product defects surfaced. Failures auto-route to *Use Case Outcomes* ([UCO-n]).
+**Ongoing (living asset, not a blocker):** the 46 "to-do" titles are incremental automated-check coverage, added opportunistically; the harness makes wiring each a small, low-risk addition. New use cases get appended as features land.
 
 ### TT-2 · ✅ URL-mapped screenshots + route smoke · Low
 **Context:** `screenshot.mjs` mirrors the URL structure; `smoke.spec.js` hits all 66 routes against the deployment; `nightly.yml` regenerates screenshots.
@@ -310,3 +441,13 @@ Failures from running the use-case corpus against the product, captured here so 
 ### UCO-1 · ✅ No outstanding failures · High
 **Context:** Latest run (2026-06-25) over XS/S/M × Must Have/Should Have — **62 cases: 37 passed, 0 failed, 25 to-do** (the to-do titles have no automated check yet, tracked under TT-1). No product defects surfaced.
 **Gap:** None. Any future failure gets its own `UCO-n` entry here with Context / Gap / Proposed fix.
+
+---
+
+## Ops Notes
+
+### OPS-1 · ✅ Vercel `ignoreCommand` skips multi-commit pushes ending in a data-only commit · Medium
+**Context:** `src/vercel.json` sets `ignoreCommand: git diff --quiet HEAD^ HEAD -- . ':(exclude)architectures'` so the frontend isn't rebuilt when only architecture *data* changes. Vercel evaluates this against the **tip commit only** (`HEAD^..HEAD`).
+**Gap:** When a push contains several commits and the **last** one touches only `architectures/` (e.g. the app's own `Update decisions` writes), Vercel skips the build for the *entire* push — stranding code changes earlier in the same push. Hit once (2026-06-26) by manually batching code + a data tidy-up into one push.
+**Resolved (by process):** in normal operation this can't strand code — the app's own automated writes are **single, data-only commits** (one per decision/discovery action), which correctly skip without any code to strand. The incident only arose from manually mixing code and data in one push. **Rule:** never end a code push with a data-only commit; keep them on separate pushes. Quick unblock if it ever recurs: push any commit touching a `src/` path.
+**Robust option (if it recurs / for full automation):** disable Vercel Git auto-deploy and trigger a **Vercel Deploy Hook** from a GitHub Action that builds only when `git diff ${{ github.event.before }}..${{ github.event.after }} -- src` is non-empty — this evaluates the whole push, not just the tip. Logged as the future-proof fix; not needed for current cadence.

@@ -1,8 +1,9 @@
-// Deploy marker: 2026-06-23 — redeploy to pick up the 2026-06 batch (decisions,
-// TOGAF/SAFe, activity history, Discovery, i18n).
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
+import { AuthProvider } from './context/AuthContext'
+import { PermissionsProvider } from './context/PermissionsContext'
+import RequireAuth from './components/auth/RequireAuth'
 import NavigationProgress from './components/ui/NavigationProgress'
 import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
@@ -27,6 +28,8 @@ const DomainPage = lazy(() => import('./pages/DomainPage'))
 const AbstractionPage = lazy(() => import('./pages/AbstractionPage'))
 const ArtefactPage = lazy(() => import('./pages/ArtefactPage'))
 const DocsPage = lazy(() => import('./pages/DocsPage'))
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const RegisterPage = lazy(() => import('./pages/RegisterPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
@@ -53,37 +56,70 @@ function AppRoutes() {
   return (
     <>
       <NavigationProgress />
-      <Routes>
-        {/* Public / marketing pages */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/clients" element={<ClientsPage />} />
-          <Route path="/clients/:clientId/versions" element={<VersionsPage />} />
-        </Route>
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <Spinner size="lg" />
+          </div>
+        }
+      >
+        <Routes>
+          {/* Authentication (full-screen, no app chrome) */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-        {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
-        <Route path="/clients/:clientId/:versionId" element={<Layout />}>
-          <Route index element={<Navigate to="domains" replace />} />
-          <Route path="domains" element={<DomainsPage />} />
-          <Route path="domains/:domain" element={<DomainPage />} />
-          <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
-          <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
-          <Route path="decisions" element={<DecisionsPage />} />
-          <Route path="decisions/new" element={<DecisionEditorPage />} />
-          <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
-          <Route path="discovery" element={<DiscoveryPage />} />
-          <Route path="discovery/new" element={<DiscoveryEditorPage />} />
-          <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
-        </Route>
+          {/* Public / marketing pages */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/architectures"
+              element={
+                <RequireAuth>
+                  <ClientsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/architectures/:clientId/transitions"
+              element={
+                <RequireAuth>
+                  <VersionsPage />
+                </RequireAuth>
+              }
+            />
+          </Route>
 
-        {/* Docs */}
-        <Route path="/docs" element={<DocsLayout />}>
-          <Route index element={<Navigate to="/docs/index" replace />} />
-          <Route path="*" element={<DocsPage />} />
-        </Route>
+          {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
+          <Route
+            path="/architectures/:clientId/:versionId"
+            element={
+              <RequireAuth>
+                <Layout />
+              </RequireAuth>
+            }
+          >
+            <Route index element={<Navigate to="domains" replace />} />
+            <Route path="domains" element={<DomainsPage />} />
+            <Route path="domains/:domain" element={<DomainPage />} />
+            <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
+            <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
+            <Route path="decisions" element={<DecisionsPage />} />
+            <Route path="decisions/new" element={<DecisionEditorPage />} />
+            <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
+            <Route path="discovery" element={<DiscoveryPage />} />
+            <Route path="discovery/new" element={<DiscoveryEditorPage />} />
+            <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
+          </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Docs */}
+          <Route path="/docs" element={<DocsLayout />}>
+            <Route index element={<Navigate to="/docs/index" replace />} />
+            <Route path="*" element={<DocsPage />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </>
   )
 }
@@ -91,9 +127,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <ArchitectureProvider>
-        <AppRoutes />
-      </ArchitectureProvider>
+      <AuthProvider>
+        <PermissionsProvider>
+          <ArchitectureProvider>
+            <AppRoutes />
+          </ArchitectureProvider>
+        </PermissionsProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

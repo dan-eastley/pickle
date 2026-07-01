@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useParams, Navigate, Link } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+import { useParams, Navigate, Link, useSearchParams } from 'react-router-dom'
 import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
@@ -13,11 +13,83 @@ import EmptyState from '../components/ui/EmptyState'
 import Skeleton from '../components/ui/Skeleton'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
+import MetricBars from '../components/common/MetricBars'
+import ShareLink from '../components/ui/ShareLink'
+import { extractContentItems } from '../lib/metrics'
 import ActivityHistory from '../components/common/ActivityHistory'
 import ActionBar from '../components/ui/ActionBar'
+import DownloadMenu from '../components/ui/DownloadMenu'
 import { KeyStar, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 import useCollapsed from '../hooks/useCollapsed'
+import { downloadCatalogueCsv, downloadCatalogueExcel } from '../lib/export/catalogue'
+import { downloadDocumentWord, downloadDocumentPdf } from '../lib/export/document'
+import { downloadDiagramPng, downloadDiagramPptx } from '../lib/export/diagram'
+
+// Per-format download options. Matrices intentionally have none.
+function ArtefactDownload({ artefact, schema, data, selectedDocument, diagramRef }) {
+  if (artefact.format === 'catalogue') {
+    return (
+      <DownloadMenu
+        options={[
+          {
+            label: 'Excel (.xlsx)',
+            sublabel: 'One sheet per catalogue',
+            onSelect: () => downloadCatalogueExcel(data, artefact),
+          },
+          {
+            label: 'CSV (.csv)',
+            sublabel: 'Plain comma-separated values',
+            onSelect: () => downloadCatalogueCsv(data, artefact),
+          },
+        ]}
+      />
+    )
+  }
+  if (artefact.format === 'document' && selectedDocument) {
+    const sections = schema?.meta?.sections
+    return (
+      <DownloadMenu
+        options={[
+          {
+            label: 'Word (.docx)',
+            sublabel: 'Editable document',
+            onSelect: () => downloadDocumentWord(selectedDocument, sections, artefact),
+          },
+          {
+            label: 'PDF (.pdf)',
+            sublabel: 'Print-ready document',
+            onSelect: () => downloadDocumentPdf(selectedDocument, sections, artefact),
+          },
+        ]}
+      />
+    )
+  }
+  if (artefact.format === 'diagram') {
+    const getSvg = () => {
+      const svg = diagramRef.current?.querySelector('svg')
+      if (!svg) throw new Error('No diagram is rendered to export.')
+      return svg
+    }
+    return (
+      <DownloadMenu
+        options={[
+          {
+            label: 'PowerPoint (.pptx)',
+            sublabel: 'Diagram on a slide',
+            onSelect: () => downloadDiagramPptx(getSvg(), artefact),
+          },
+          {
+            label: 'Image (.png)',
+            sublabel: 'High-resolution raster',
+            onSelect: () => downloadDiagramPng(getSvg(), artefact),
+          },
+        ]}
+      />
+    )
+  }
+  return null
+}
 
 function AdrActionBar({ artefact, documents, selectedDocument, clientId, versionId }) {
   const [decisionOpen, setDecisionOpen] = useState(false)
@@ -25,7 +97,7 @@ function AdrActionBar({ artefact, documents, selectedDocument, clientId, version
   const colors = DOMAIN_COLORS[artefact.domain]
   const bgClass = colors?.bg ?? 'bg-gray-50'
   const btnClass = colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
-  const viewDecisionsUrl = `/clients/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
+  const viewDecisionsUrl = `/architectures/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
 
   return (
     <>
@@ -116,7 +188,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
             <div className="mt-4">
               <button
                 onClick={togglePurpose}
-                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
               >
                 <svg
                   viewBox="0 0 16 16"
@@ -149,7 +221,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
             <div className="mt-4">
               <button
                 onClick={toggleRelated}
-                className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 hover:text-gray-600 transition-colors"
               >
                 <svg
                   viewBox="0 0 16 16"
@@ -174,12 +246,12 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
                     return (
                       <Link
                         key={artefactId}
-                        to={`/clients/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
+                        to={`/architectures/${clientId}/${versionId}/domains/${related.domain}/${related.abstraction}/${related.id}`}
                         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300 transition-colors"
                       >
-                        <span className="text-gray-400">{relationship}</span>
+                        <span className="text-gray-500">{relationship}</span>
                         <span className="font-medium">{related.name}</span>
-                        <span className="font-mono text-gray-400">[{related.id}]</span>
+                        <span className="font-mono text-gray-500">[{related.id}]</span>
                       </Link>
                     )
                   })}
@@ -199,6 +271,7 @@ function ArtefactHeader({ artefact, schema, clientId, versionId }) {
 export default function ArtefactPage() {
   const { clientId, versionId, domain, abstraction, artefactId } = useParams()
   const { selectedClientId, selectedVersionId } = useArchitecture()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [data, setData] = useState(undefined)
   const [schema, setSchema] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -210,6 +283,10 @@ export default function ArtefactPage() {
 
   useEffect(() => {
     if (!artefact) return
+    // Guard against races: navigating between artefacts fires a new load, and a
+    // slower earlier response must not overwrite the current one (or set state
+    // after unmount).
+    let cancelled = false
     setLoading(true)
     setData(undefined)
     setError(null)
@@ -223,23 +300,55 @@ export default function ArtefactPage() {
       getSchema(domain, abstraction, artefactId),
     ])
       .then(([artefactData, schemaData]) => {
+        if (cancelled) return
         setData(artefactData)
         setSchema(schemaData)
       })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+      .catch((err) => {
+        if (!cancelled) setError(err.message)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId, versionId, domain, abstraction, artefactId])
 
+  const diagramRef = useRef(null)
+
+  const isDocument = artefact?.format === 'document'
+  const documents = isDocument ? (data?.documents ?? []) : []
+  const docParam = searchParams.get('doc')
+
+  // Apply a ?doc=<document-id> deep-link (e.g. from the quick-jump menu) once the
+  // documents have loaded.
+  useEffect(() => {
+    if (!isDocument || documents.length === 0 || !docParam) return
+    const idx = documents.findIndex((d) => d.id === docParam)
+    if (idx >= 0) setDocIdx(idx)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [docParam, data, isDocument])
+
   if (!artefact) {
     return (
-      <Navigate to={`/clients/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
+      <Navigate to={`/architectures/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
     )
   }
 
-  const isDocument = artefact.format === 'document'
-  const documents = isDocument ? (data?.documents ?? []) : []
   const selectedDocument = documents[docIdx] ?? null
+
+  // Change the selected document and reflect it in the URL so the view is
+  // shareable / deep-linkable.
+  const selectDoc = (idx) => {
+    setDocIdx(idx)
+    const next = new URLSearchParams(searchParams)
+    const id = documents[idx]?.id
+    if (id) next.set('doc', id)
+    else next.delete('doc')
+    setSearchParams(next, { replace: true })
+  }
 
   return (
     <div>
@@ -254,7 +363,7 @@ export default function ArtefactPage() {
           artefact={artefact}
           documents={documents}
           selectedIdx={docIdx}
-          onSelect={setDocIdx}
+          onSelect={selectDoc}
         />
       )}
       <AdrActionBar
@@ -306,34 +415,60 @@ export default function ArtefactPage() {
 
       {!loading && !error && data !== null && data !== undefined && (
         <>
-          {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
-          {artefact.format === 'matrix' && (
-            <MatrixView
-              data={data}
-              schema={schema}
-              clientId={clientId ?? selectedClientId}
-              versionId={versionId ?? selectedVersionId}
-            />
-          )}
-          {artefact.format === 'diagram' && (
-            <DiagramView
-              data={data}
-              artefact={artefact}
-              schema={schema}
-              clientId={clientId ?? selectedClientId}
-              versionId={versionId ?? selectedVersionId}
-            />
-          )}
-          {artefact.format === 'document' && (
-            <DocumentView
-              data={data}
-              artefact={artefact}
-              schema={schema}
-              selectedIdx={docIdx}
-              clientId={clientId ?? selectedClientId}
-              versionId={versionId ?? selectedVersionId}
-            />
-          )}
+          {/* Count strip (left) + downloads (right) — consistent metric formatting. */}
+          <div className="mb-3 flex items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <MetricBars
+                perDomain={{
+                  [artefact.domain]: { items: extractContentItems(data, artefact.domain) },
+                }}
+                single
+                empty={null}
+              />
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <ShareLink />
+              {artefact.format !== 'matrix' && (
+                <ArtefactDownload
+                  artefact={artefact}
+                  schema={schema}
+                  data={data}
+                  selectedDocument={selectedDocument}
+                  diagramRef={diagramRef}
+                />
+              )}
+            </div>
+          </div>
+          <div ref={diagramRef}>
+            {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
+            {artefact.format === 'matrix' && (
+              <MatrixView
+                data={data}
+                schema={schema}
+                clientId={clientId ?? selectedClientId}
+                versionId={versionId ?? selectedVersionId}
+              />
+            )}
+            {artefact.format === 'diagram' && (
+              <DiagramView
+                data={data}
+                artefact={artefact}
+                schema={schema}
+                clientId={clientId ?? selectedClientId}
+                versionId={versionId ?? selectedVersionId}
+              />
+            )}
+            {artefact.format === 'document' && (
+              <DocumentView
+                data={data}
+                artefact={artefact}
+                schema={schema}
+                selectedIdx={docIdx}
+                clientId={clientId ?? selectedClientId}
+                versionId={versionId ?? selectedVersionId}
+              />
+            )}
+          </div>
           <ActivityHistory activity={data.activity} />
         </>
       )}

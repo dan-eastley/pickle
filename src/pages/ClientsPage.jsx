@@ -1,87 +1,68 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
-import { getVersions } from '../lib/api'
-import { loadClientMetrics } from '../lib/metrics'
+import { usePermissions } from '../context/PermissionsContext'
+import { ACTIONS } from '../lib/permissions'
+import { loadClientRollup } from '../lib/metrics'
+import { githubAction } from '../lib/api'
+import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
-import Illustration from '../components/ui/Illustration'
 import ClientLogo from '../components/ui/ClientLogo'
-import { ChevronRight } from '../components/ui/icons'
+import EditSettingsModal from '../components/settings/EditSettingsModal'
+import { ChevronRight, EditIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
-// A labelled value with a comparison bar (normalised to the max across clients,
-// so the bars are directly comparable card-to-card).
-function StatBar({ label, value, max }) {
-  const pct = max > 0 ? Math.round((value / max) * 100) : 0
-  return (
-    <div>
-      <div className="flex items-baseline justify-between text-xs">
-        <span className="text-gray-500">{label}</span>
-        <span className="font-semibold text-gray-700 tabular-nums">{value}</span>
-      </div>
-      <div className="mt-0.5 h-1.5 bg-gray-100">
-        <div className="h-full bg-brand-400" style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  )
-}
+const ARCH_STATUS_OPTIONS = [
+  { value: 'active', label: 'Active' },
+  { value: 'archived', label: 'Archived' },
+]
 
-function MaturityBar({ m }) {
-  const pct = Math.round(m.maturity * 100)
-  return (
-    <div>
-      <div className="flex items-baseline justify-between text-xs mb-1">
-        <span className="font-semibold text-gray-700">Maturity</span>
-        <span className="text-gray-500">
-          {m.maturityTier} · {pct}%
-        </span>
-      </div>
-      <div className="h-2 bg-gray-100">
-        <div
-          className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-    </div>
-  )
-}
-
-function ClientCard({ client, clientsMetadata, m, maxes }) {
-  const clientId = client['client-id']
-  const meta = clientsMetadata[clientId]
-  const name = meta?.name ?? clientId
-
+function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
   return (
     <Link
-      to={`/clients/${clientId}/versions`}
-      className="group bg-white border border-gray-200 hover:border-gray-400 transition-colors flex flex-col"
+      to={`/architectures/${clientId}/transitions`}
+      className="group flex flex-col sm:flex-row sm:items-stretch bg-white border border-gray-200 hover:border-gray-400 transition-colors"
     >
-      <div className="flex items-center gap-4 px-5 py-5 border-b border-gray-100">
+      {/* Identity column */}
+      <div className="flex items-center gap-4 px-5 py-5 sm:w-72 sm:flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100">
         <ClientLogo clientId={clientId} name={name} className="w-12 h-12" />
         <div className="min-w-0 flex-1">
           <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
             {name}
           </h3>
-          <p className="text-xs font-mono text-gray-400 mt-0.5">{clientId}</p>
+          <p className="text-xs font-mono text-gray-500 mt-0.5">{clientId}</p>
         </div>
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
+        {canEdit && (
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onEdit()
+            }}
+            className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-50 transition-colors flex-shrink-0"
+            title="Edit architecture"
+            aria-label={`Edit ${name}`}
+          >
+            <EditIcon className="w-4 h-4" />
+          </button>
+        )}
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors sm:hidden" />
       </div>
 
-      <div className="px-5 py-4 space-y-3">
-        {m ? (
-          <>
-            <MaturityBar m={m} />
-            <div className="grid grid-cols-2 gap-x-5 gap-y-2.5 pt-1">
-              <StatBar label="Artefacts" value={m.artefacts.populated} max={maxes.artefacts} />
-              <StatBar label="Documents" value={m.documents} max={maxes.documents} />
-              <StatBar label="Decisions" value={m.decisions} max={maxes.decisions} />
-              <StatBar label="Discoveries" value={m.discoveries} max={maxes.discoveries} />
-            </div>
-          </>
-        ) : (
-          <div className="flex items-center gap-2 py-2 text-xs text-gray-400">
+      {/* Metrics column */}
+      <div className="flex-1 min-w-0 px-5 py-4">
+        {m === undefined ? (
+          <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
             <Spinner size="sm" /> Loading metrics…
           </div>
+        ) : m === null ? (
+          <p className="py-2 text-xs text-gray-500">No architecture content yet.</p>
+        ) : (
+          <MetricBars
+            perDomain={m.perDomain}
+            governance={{ decisions: m.decisions, discoveries: m.discoveries }}
+            empty={<p className="text-xs text-gray-500">No architecture content yet.</p>}
+          />
         )}
       </div>
     </Link>
@@ -90,37 +71,26 @@ function ClientCard({ client, clientsMetadata, m, maxes }) {
 
 export default function ClientsPage() {
   const { clients, clientsMetadata, loading } = useArchitecture()
-  usePageTitle('Clients')
+  const { can } = usePermissions()
+  usePageTitle('Architectures')
 
-  // Per-client metrics (keyed by client-id), loaded against each client's latest
-  // version. Cards render immediately; metrics fill in as they resolve.
   const [metrics, setMetrics] = useState({})
+  // Optimistic name/status overrides after an edit (context isn't re-fetched).
+  const [overrides, setOverrides] = useState({})
+  const [editingId, setEditingId] = useState(null)
+
   useEffect(() => {
     let live = true
     for (const c of clients) {
-      const id = c['client-id']
-      getVersions(id)
-        .then((vs) => {
-          const v = vs[vs.length - 1]?.['version-id']
-          if (!v) return null
-          return loadClientMetrics(id, v)
-        })
-        .then((m) => live && m && setMetrics((prev) => ({ ...prev, [id]: m })))
-        .catch(() => {})
+      const id = c['architecture-id']
+      loadClientRollup(id)
+        .then((m) => live && setMetrics((prev) => ({ ...prev, [id]: m })))
+        .catch(() => live && setMetrics((prev) => ({ ...prev, [id]: null })))
     }
     return () => {
       live = false
     }
   }, [clients])
-
-  // Normalise the comparison bars to the max across all loaded clients.
-  const resolved = Object.values(metrics)
-  const maxes = {
-    artefacts: Math.max(1, ...resolved.map((m) => m.artefacts.populated)),
-    documents: Math.max(1, ...resolved.map((m) => m.documents)),
-    decisions: Math.max(1, ...resolved.map((m) => m.decisions)),
-    discoveries: Math.max(1, ...resolved.map((m) => m.discoveries)),
-  }
 
   if (loading) {
     return (
@@ -130,41 +100,61 @@ export default function ClientsPage() {
     )
   }
 
+  const nameFor = (id) => overrides[id]?.name ?? clientsMetadata[id]?.name ?? id
+  const editing = editingId
+    ? { id: editingId, name: nameFor(editingId), status: overrides[editingId]?.status ?? clientsMetadata[editingId]?.status ?? 'active' }
+    : null
+
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
-      <div className="mb-8 flex items-center justify-between gap-8">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">Clients</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Select a client to view its architecture versions. The bars compare how populated each
-            client&rsquo;s architecture is.
-          </p>
-        </div>
-        <Illustration name="select-option" className="hidden md:block w-52 flex-shrink-0" />
+      <div className="mb-8">
+        <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Select an architecture to view its transition states. The bars compare how populated each
+          architecture is.
+        </p>
       </div>
 
       {clients.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Illustration name="no-data" className="w-56 mb-6" />
-          <p className="text-sm font-semibold text-gray-700">No clients yet</p>
+          <p className="text-sm font-semibold text-gray-700">No architectures yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
-            Architecture is organised per client. Add a client folder under{' '}
-            <code className="font-mono text-xs bg-gray-100 px-1">architectures/clients/</code> to
-            get started.
+            Each architecture lives in its own folder. Add one under{' '}
+            <code className="font-mono text-xs bg-gray-100 px-1">architectures/</code> to get
+            started.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {clients.map((client) => (
-            <ClientCard
-              key={client['client-id']}
-              client={client}
-              clientsMetadata={clientsMetadata}
-              m={metrics[client['client-id']]}
-              maxes={maxes}
-            />
-          ))}
+        <div className="flex flex-col gap-3">
+          {clients.map((client) => {
+            const id = client['architecture-id']
+            return (
+              <ClientCard
+                key={id}
+                clientId={id}
+                name={nameFor(id)}
+                metrics={metrics[id]}
+                canEdit={can(ACTIONS.ARCHITECTURE_EDIT, { architectureId: id })}
+                onEdit={() => setEditingId(id)}
+              />
+            )
+          })}
         </div>
+      )}
+
+      {editing && (
+        <EditSettingsModal
+          title="Edit architecture"
+          subtitle={`Settings for ${editing.name}`}
+          initialName={editing.name}
+          initialStatus={editing.status}
+          statusOptions={ARCH_STATUS_OPTIONS}
+          onSubmit={(fields) => githubAction({ action: 'update-architecture', architectureId: editing.id, ...fields })}
+          onSaved={(fields) =>
+            setOverrides((prev) => ({ ...prev, [editing.id]: { ...prev[editing.id], ...fields } }))
+          }
+          onClose={() => setEditingId(null)}
+        />
       )}
     </div>
   )

@@ -1,4 +1,4 @@
-# APP-PRN — Application Architecture Principles Catalogue
+# APP-PRN: Application Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/application/logical/APP-PRN.json`](../../../../../../config/schemas/artefacts/domains/application/logical/APP-PRN.json)
 **Architecture Domain / Layer:** Application / Logical
@@ -10,7 +10,7 @@ Vendor-neutral guidelines that shape design decisions in the Application archite
 
 ## Industry alignment
 
-- **TOGAF Architecture Principles** — Name, Statement, Rationale, Implications (the de-facto standard)
+- **TOGAF Architecture Principles**: Name, Statement, Rationale, Implications (the de-facto standard)
 
 ## Example
 
@@ -39,5 +39,5 @@ Vendor-neutral guidelines that shape design decisions in the Application archite
 | `id` | string | yes | Unique identifier (e.g. `APP-PRN-001`) |
 | `name` | string | yes | Short, memorable principle name |
 | `statement` | string | yes | The principle, stated as a directive |
-| `rationale` | string | yes | Why this principle exists — the underlying motivation |
+| `rationale` | string | yes | Why this principle exists, the underlying motivation |
 | `implications` | array of strings | no | Consequences for design and decision-making if this principle is adopted |

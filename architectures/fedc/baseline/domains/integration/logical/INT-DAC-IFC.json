@@ -1,0 +1,267 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:integration:logical:INT-DAC-IFC",
+    "audience": [
+        "Enterprise Architect",
+        "Integration Architect"
+    ],
+    "author": [
+        "Integration Architect",
+        "Systems Analyst"
+    ],
+    "relationships": [
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "INT-IFC-001"
+        },
+        {
+            "column-id": "CON-ACCOUNT",
+            "row-id": "INT-IFC-001"
+        },
+        {
+            "column-id": "CON-CONTRACT",
+            "row-id": "INT-IFC-001"
+        },
+        {
+            "column-id": "CON-ACCOUNT",
+            "row-id": "INT-IFC-002"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "INT-IFC-002"
+        },
+        {
+            "column-id": "CON-PAYMENT",
+            "row-id": "INT-IFC-002"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "INT-IFC-003"
+        },
+        {
+            "column-id": "CON-METER-POINT",
+            "row-id": "INT-IFC-003"
+        },
+        {
+            "column-id": "CON-METER-READING",
+            "row-id": "INT-IFC-004"
+        },
+        {
+            "column-id": "CON-METER",
+            "row-id": "INT-IFC-004"
+        },
+        {
+            "column-id": "CON-TARIFF",
+            "row-id": "INT-IFC-005"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "INT-IFC-005"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "INT-IFC-005"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "INT-IFC-006"
+        },
+        {
+            "column-id": "CON-COST-CENTRE",
+            "row-id": "INT-IFC-006"
+        },
+        {
+            "column-id": "CON-MAINT-WORK-ORDER",
+            "row-id": "INT-IFC-007"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "INT-IFC-007"
+        },
+        {
+            "column-id": "CON-FIELD-CREW",
+            "row-id": "INT-IFC-007"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "INT-IFC-008"
+        },
+        {
+            "column-id": "CON-NETWORK-NODE",
+            "row-id": "INT-IFC-008"
+        },
+        {
+            "column-id": "CON-ASSET-TYPE",
+            "row-id": "INT-IFC-008"
+        },
+        {
+            "column-id": "CON-NETWORK-NODE",
+            "row-id": "INT-IFC-009"
+        },
+        {
+            "column-id": "CON-CONNECTION-POINT",
+            "row-id": "INT-IFC-009"
+        },
+        {
+            "column-id": "CON-NETWORK-CAPACITY",
+            "row-id": "INT-IFC-009"
+        },
+        {
+            "column-id": "CON-NETWORK-OUTAGE",
+            "row-id": "INT-IFC-010"
+        },
+        {
+            "column-id": "CON-POWER-FLOW",
+            "row-id": "INT-IFC-010"
+        },
+        {
+            "column-id": "CON-NETWORK-OUTAGE",
+            "row-id": "INT-IFC-011"
+        },
+        {
+            "column-id": "CON-CUST-INTERACTION",
+            "row-id": "INT-IFC-011"
+        },
+        {
+            "column-id": "CON-NETWORK-OUTAGE",
+            "row-id": "INT-IFC-012"
+        },
+        {
+            "column-id": "CON-FIELD-CREW",
+            "row-id": "INT-IFC-012"
+        },
+        {
+            "column-id": "CON-MAINT-WORK-ORDER",
+            "row-id": "INT-IFC-012"
+        },
+        {
+            "column-id": "CON-NETWORK-CAPACITY",
+            "row-id": "INT-IFC-013"
+        },
+        {
+            "column-id": "CON-POWER-FLOW",
+            "row-id": "INT-IFC-013"
+        },
+        {
+            "column-id": "CON-GEN-UNIT",
+            "row-id": "INT-IFC-013"
+        },
+        {
+            "column-id": "CON-MARKET-PRICE",
+            "row-id": "INT-IFC-014"
+        },
+        {
+            "column-id": "CON-TRADE",
+            "row-id": "INT-IFC-015"
+        },
+        {
+            "column-id": "CON-POSITION",
+            "row-id": "INT-IFC-015"
+        },
+        {
+            "column-id": "CON-COUNTERPARTY",
+            "row-id": "INT-IFC-015"
+        },
+        {
+            "column-id": "CON-SETTLEMENT",
+            "row-id": "INT-IFC-016"
+        },
+        {
+            "column-id": "CON-COST-CENTRE",
+            "row-id": "INT-IFC-016"
+        },
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "INT-IFC-017"
+        },
+        {
+            "column-id": "CON-ACCOUNT",
+            "row-id": "INT-IFC-017"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "INT-IFC-017"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "INT-IFC-018"
+        },
+        {
+            "column-id": "CON-METER-READING",
+            "row-id": "INT-IFC-018"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "INT-IFC-019"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "INT-IFC-019"
+        },
+        {
+            "column-id": "CON-ARREARS",
+            "row-id": "INT-IFC-019"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "INT-IFC-020"
+        },
+        {
+            "column-id": "CON-ASSET-CONDITION",
+            "row-id": "INT-IFC-020"
+        },
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "INT-IFC-021"
+        },
+        {
+            "column-id": "CON-PREMISE",
+            "row-id": "INT-IFC-021"
+        },
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "INT-IFC-022"
+        },
+        {
+            "column-id": "CON-EMISSION",
+            "row-id": "INT-IFC-023"
+        },
+        {
+            "column-id": "CON-CARBON-CREDIT",
+            "row-id": "INT-IFC-023"
+        },
+        {
+            "column-id": "CON-RENEWABLE-SOURCE",
+            "row-id": "INT-IFC-023"
+        },
+        {
+            "column-id": "CON-EMISSION",
+            "row-id": "INT-IFC-024"
+        },
+        {
+            "column-id": "CON-COMPLIANCE-REPORT",
+            "row-id": "INT-IFC-024"
+        },
+        {
+            "column-id": "CON-REG-OBLIGATION",
+            "row-id": "INT-IFC-024"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "INT-IFC-025"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-# INT-PRN — Integration Architecture Principles Catalogue
+# INT-PRN: Integration Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/integration/logical/INT-PRN.json`](../../../../../../config/schemas/artefacts/domains/integration/logical/INT-PRN.json)
 **Architecture Domain / Layer:** Integration / Logical
@@ -10,7 +10,7 @@ Vendor-neutral guidelines that shape design decisions in the Integration archite
 
 ## Industry alignment
 
-- **TOGAF Architecture Principles** — Name, Statement, Rationale, Implications (the de-facto standard)
+- **TOGAF Architecture Principles**: Name, Statement, Rationale, Implications (the de-facto standard)
 
 ## Example
 
@@ -39,5 +39,5 @@ Vendor-neutral guidelines that shape design decisions in the Integration archite
 | `id` | string | yes | Unique identifier (e.g. `INT-PRN-001`) |
 | `name` | string | yes | Short, memorable principle name |
 | `statement` | string | yes | The principle, stated as a directive |
-| `rationale` | string | yes | Why this principle exists — the underlying motivation |
+| `rationale` | string | yes | Why this principle exists, the underlying motivation |
 | `implications` | array of strings | no | Consequences for design and decision-making if this principle is adopted |

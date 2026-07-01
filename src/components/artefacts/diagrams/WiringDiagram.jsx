@@ -1,158 +1,240 @@
 import { useEffect, useState, useMemo } from 'react'
 import Spinner from '../../ui/Spinner'
-import SlidePanel from '../../ui/SlidePanel'
+import EntityPanel from '../EntityPanel'
+import { getDiagramColors, wrapText } from '../../../lib/diagramTheme'
 
-// Grid placement of the 11 APP-DOM domains — arranged to minimise cross-domain edge lengths
-const DOMAIN_GRID = [
-  ['APP-DOM-CUSTOMER', 'APP-DOM-BILLING', 'APP-DOM-DATA'],
-  ['APP-DOM-NETWORK', 'APP-DOM-METERING', 'APP-DOM-ENTERPRISE'],
-  ['APP-DOM-FIELD', 'APP-DOM-SUSTAIN', 'APP-DOM-TRADING'],
-  ['APP-DOM-REGULATORY', 'APP-DOM-INTEGRATION', null],
-]
+// Wiring diagram for INT-IFC (platform-to-platform interfaces), rendered in the
+// same block/colour language as the platforms model (APP-DPM): amber application
+// blocks, emerald integration connections, square corners, simple.
+//
+// Two views, drilled one into the other:
+//   • System view — one focus platform plus every directly connected platform.
+//     Each connection line shows how many interfaces run between the pair;
+//     clicking it drills into the source/target view for that pair.
+//   • Source/target view — a single pair of platforms with every interface that
+//     flows between them, one line per interface (id + name, directional arrow).
+//
+// Clicking a platform block or an interface line opens the usual entity popout.
 
-const COLS = 3
-const COL_W = 340
-const COL_GAP = 20
-const ROW_GAP = 20
-const OUTER_PAD = 20
-const HEADER_H = 28
-const DOM_PAD = 10
-const PLAT_H = 28
-const PLAT_GAP = 5
-const SVG_W = OUTER_PAD * 2 + COLS * COL_W + (COLS - 1) * COL_GAP // 1100
+const BLOCK_W = 240
+const BLOCK_H = 52
+const PAD = 24
+const ROW_GAP = 18
+const FLOW_ROW_H = 50
+const SVG_W = 900
+const NEIGHBOUR_X = SVG_W - PAD - BLOCK_W
 
-const DIRECTION_ICONS = {
-  'source-to-target': '→',
-  'target-to-source': '←',
-  'bi-directional': '↔',
-}
+const EMERALD = '#34d399' // emerald-400 — connection lines
+const EMERALD_DK = '#059669' // emerald-600 — active / arrowheads
 
-// Domain colours — emerald/green theme (integration domain)
-const DOM_COLORS = [
-  '#0891b2', // cyan  — Customer
-  '#ea580c', // orange — Billing
-  '#6366f1', // indigo — Data
-  '#7c3aed', // purple — Network
-  '#0891b2', // cyan  — Metering
-  '#64748b', // slate  — Enterprise
-  '#16a34a', // green  — Field
-  '#059669', // emerald — Sustain
-  '#dc2626', // red   — Trading
-  '#d97706', // amber  — Regulatory
-  '#0d9488', // teal  — Integration
-]
+const app = getDiagramColors('application')
 
-function domHeight(nPlats) {
-  return HEADER_H + DOM_PAD * 2 + nPlats * PLAT_H + Math.max(0, nPlats - 1) * PLAT_GAP
-}
+// Short platform label, dropping the PLAT- prefix used everywhere else.
+const shortId = (id) => id.replace(/^PLAT-/, '')
 
-function buildLayout(orderedDomains) {
-  const domById = Object.fromEntries(orderedDomains.map((d) => [d.id, d]))
-
-  // Row heights = max domain height per row
-  const rowHeights = DOMAIN_GRID.map((row) =>
-    Math.max(...row.map((id) => (id && domById[id] ? domHeight(domById[id].platforms.length) : 0)))
+function PlatformBlock({ x, y, platform, id, focused, onClick }) {
+  const name = platform?.name ?? id
+  const lines = wrapText(name, 28, 2)
+  const rectFill = focused ? app.selectedFill : app.itemFill
+  const rectHover = focused ? '' : app.itemHover
+  const idFill = focused ? app.selectedId : app.label
+  const nameFill = focused ? 'fill-white' : app.itemText
+  return (
+    <g className="group cursor-pointer" onClick={onClick}>
+      <title>{name}</title>
+      <rect
+        x={x}
+        y={y}
+        width={BLOCK_W}
+        height={BLOCK_H}
+        className={`${rectFill} ${rectHover} transition-colors`}
+      />
+      <text x={x + 12} y={y + 16} className={`${idFill} text-[10px] font-mono`}>
+        {shortId(id)}
+      </text>
+      {lines.map((ln, i) => (
+        <text
+          key={i}
+          x={x + 12}
+          y={y + 30 + i * 12}
+          className={`${nameFill} text-[12px] font-semibold`}
+        >
+          {ln}
+        </text>
+      ))}
+    </g>
   )
-
-  // Accumulate y offsets per row
-  const rowY = []
-  let y = OUTER_PAD
-  rowHeights.forEach((h) => {
-    rowY.push(y)
-    y += h + ROW_GAP
-  })
-  const svgH = y - ROW_GAP + OUTER_PAD
-
-  // Domain box positions
-  const domBoxes = {}
-  DOMAIN_GRID.forEach((row, ri) => {
-    row.forEach((domId, ci) => {
-      if (!domId || !domById[domId]) return
-      const dom = domById[domId]
-      const bx = OUTER_PAD + ci * (COL_W + COL_GAP)
-      const by = rowY[ri]
-      const bh = domHeight(dom.platforms.length)
-      domBoxes[domId] = { x: bx, y: by, w: COL_W, h: bh, dom }
-    })
-  })
-
-  // Platform box positions & centres
-  const platBoxes = {}
-  Object.values(domBoxes).forEach(({ x, y: by, w, dom }) => {
-    dom.platforms.forEach((platId, pi) => {
-      const px = x + DOM_PAD
-      const py = by + HEADER_H + DOM_PAD + pi * (PLAT_H + PLAT_GAP)
-      const pw = w - DOM_PAD * 2
-      platBoxes[platId] = {
-        x: px,
-        y: py,
-        w: pw,
-        h: PLAT_H,
-        cx: px + pw / 2,
-        cy: py + PLAT_H / 2,
-        domId: dom.id,
-      }
-    })
-  })
-
-  return { domBoxes, platBoxes, svgH, rowHeights, rowY }
 }
 
-function PlatformDetail({ plat, domName }) {
-  const fields = [
-    { label: 'Domain', value: domName },
-    { label: 'Type', value: plat?.type },
-    { label: 'Lifecycle', value: plat?.lifecycle },
-    { label: 'Description', value: plat?.description },
-  ].filter((f) => f.value)
+// ── System view: focus platform + its connected platforms ───────────────────
+function SystemView({ focusId, neighbours, platformsById, onOpenPair, onOpenEntity }) {
+  const focus = platformsById[focusId]
+  const contentH = Math.max(neighbours.length * (BLOCK_H + ROW_GAP) - ROW_GAP, BLOCK_H)
+  const svgH = contentH + PAD * 2
+  const focusY = PAD + contentH / 2 - BLOCK_H / 2
+  const focusCx = PAD + BLOCK_W
+  const focusCy = focusY + BLOCK_H / 2
+
+  if (neighbours.length === 0) {
+    return (
+      <p className="px-4 py-10 text-center text-sm text-gray-500">
+        {focus?.name ?? focusId} has no interfaces to other platforms.
+      </p>
+    )
+  }
 
   return (
-    <div className="p-4 space-y-3">
-      {fields.map((f) => (
-        <div key={f.label}>
-          <dt className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{f.label}</dt>
-          <dd className="mt-0.5 text-sm text-gray-800">{f.value}</dd>
-        </div>
-      ))}
+    <div className="overflow-x-auto">
+      <svg viewBox={`0 0 ${SVG_W} ${svgH}`} className="w-full min-w-[640px]" style={{ maxHeight: 680 }}>
+        {/* Connections (drawn under the blocks) */}
+        {neighbours.map((n, i) => {
+          const ny = PAD + i * (BLOCK_H + ROW_GAP)
+          const ncy = ny + BLOCK_H / 2
+          const midX = (focusCx + NEIGHBOUR_X) / 2
+          return (
+            <g
+              key={n.id}
+              className="group cursor-pointer"
+              onClick={() => onOpenPair(n.id)}
+            >
+              <title>
+                {n.count} interface{n.count !== 1 ? 's' : ''} — click to view
+              </title>
+              {/* hit area */}
+              <line x1={focusCx} y1={focusCy} x2={NEIGHBOUR_X} y2={ncy} stroke="transparent" strokeWidth="18" />
+              <line
+                x1={focusCx}
+                y1={focusCy}
+                x2={NEIGHBOUR_X}
+                y2={ncy}
+                stroke={EMERALD}
+                strokeWidth="1.5"
+                className="group-hover:stroke-emerald-600 transition-colors"
+              />
+              {/* count label */}
+              <g>
+                <rect x={midX - 52} y={ncy - 11} width="104" height="22" rx="2" className="fill-emerald-50" />
+                <text
+                  x={midX}
+                  y={ncy + 1}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  className="fill-emerald-700 text-[11px] font-semibold"
+                >
+                  {n.count} × Interface{n.count !== 1 ? 's' : ''}
+                </text>
+              </g>
+            </g>
+          )
+        })}
+
+        {/* Focus platform */}
+        <PlatformBlock
+          x={PAD}
+          y={focusY}
+          id={focusId}
+          platform={focus}
+          focused
+          onClick={() => onOpenEntity(focusId)}
+        />
+
+        {/* Connected platforms */}
+        {neighbours.map((n, i) => {
+          const ny = PAD + i * (BLOCK_H + ROW_GAP)
+          return (
+            <PlatformBlock
+              key={n.id}
+              x={NEIGHBOUR_X}
+              y={ny}
+              id={n.id}
+              platform={platformsById[n.id]}
+              onClick={() => onOpenEntity(n.id)}
+            />
+          )
+        })}
+      </svg>
     </div>
   )
 }
 
-function PairDetail({ pair, platformsById }) {
+// ── Source/target view: one pair, every interface between them ───────────────
+function PairView({ leftId, rightId, interfaces, platformsById, onOpenEntity }) {
+  const contentH = Math.max(interfaces.length * FLOW_ROW_H, BLOCK_H)
+  const svgH = contentH + PAD * 2
+  const blockY = PAD + contentH / 2 - BLOCK_H / 2
+  const leftEdge = PAD + BLOCK_W
+  const rightEdge = NEIGHBOUR_X
+
   return (
-    <div>
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-        <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-          <span className="font-mono">{pair.src}</span>
-          <span>↔</span>
-          <span className="font-mono">{pair.tgt}</span>
-        </div>
-        <p className="mt-1 text-xs text-gray-400">
-          {pair.interfaces.length} interface{pair.interfaces.length !== 1 ? 's' : ''}
-        </p>
-      </div>
-      <div className="divide-y divide-gray-100">
-        {pair.interfaces.map((iface) => {
-          const icon = DIRECTION_ICONS[iface.direction] ?? '—'
-          const ifcSrc = platformsById[iface.source]?.name ?? iface.source
-          const ifcTgt = platformsById[iface.target]?.name ?? iface.target
+    <div className="overflow-x-auto">
+      <svg viewBox={`0 0 ${SVG_W} ${svgH}`} className="w-full min-w-[640px]" style={{ maxHeight: 680 }}>
+        <defs>
+          <marker id="wd-arrow-r" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill={EMERALD_DK} />
+          </marker>
+          <marker id="wd-arrow-l" markerWidth="9" markerHeight="9" refX="2" refY="4.5" orient="auto">
+            <path d="M9,0 L0,4.5 L9,9 Z" fill={EMERALD_DK} />
+          </marker>
+        </defs>
+
+        {/* Flows */}
+        {interfaces.map((iface, i) => {
+          const cy = PAD + i * FLOW_ROW_H + FLOW_ROW_H / 2
+          const bi = iface.direction === 'bi-directional'
+          const fromId = iface.direction === 'target-to-source' ? iface.target : iface.source
+          const pointsRight = fromId === leftId
           return (
-            <div key={iface.id} className="px-4 py-3">
-              <div className="flex items-baseline gap-2">
-                <span className="text-base font-bold text-gray-500 leading-none">{icon}</span>
-                <span className="font-mono text-xs text-gray-400">{iface.id}</span>
-                <span className="text-sm font-medium text-gray-900">{iface.name}</span>
-              </div>
-              {iface.description && (
-                <p className="mt-1 text-xs text-gray-500 ml-6">{iface.description}</p>
-              )}
-              <p className="mt-1 text-xs text-gray-400 ml-6">
-                {ifcSrc} <span className="font-bold">{icon}</span> {ifcTgt}
-              </p>
-            </div>
+            <g key={iface.id} className="group cursor-pointer" onClick={() => onOpenEntity(iface.id)}>
+              <title>{`${iface.id} · ${iface.name}`}</title>
+              <line x1={leftEdge} y1={cy} x2={rightEdge} y2={cy} stroke="transparent" strokeWidth="20" />
+              <line
+                x1={leftEdge + 4}
+                y1={cy}
+                x2={rightEdge - 4}
+                y2={cy}
+                stroke={EMERALD}
+                strokeWidth="1.5"
+                className="group-hover:stroke-emerald-600 transition-colors"
+                markerEnd={bi || pointsRight ? 'url(#wd-arrow-r)' : undefined}
+                markerStart={bi || !pointsRight ? 'url(#wd-arrow-l)' : undefined}
+              />
+              <text
+                x={(leftEdge + rightEdge) / 2}
+                y={cy - 8}
+                textAnchor="middle"
+                className="fill-gray-900 text-[12px] font-semibold"
+              >
+                {iface.name}
+              </text>
+              <text
+                x={(leftEdge + rightEdge) / 2}
+                y={cy + 15}
+                textAnchor="middle"
+                className="fill-gray-400 text-[10px] font-mono"
+              >
+                {iface.id}
+              </text>
+            </g>
           )
         })}
-      </div>
+
+        {/* Endpoints */}
+        <PlatformBlock
+          x={PAD}
+          y={blockY}
+          id={leftId}
+          platform={platformsById[leftId]}
+          focused
+          onClick={() => onOpenEntity(leftId)}
+        />
+        <PlatformBlock
+          x={NEIGHBOUR_X}
+          y={blockY}
+          id={rightId}
+          platform={platformsById[rightId]}
+          onClick={() => onOpenEntity(rightId)}
+        />
+      </svg>
     </div>
   )
 }
@@ -162,10 +244,14 @@ export default function WiringDiagram({ clientId, versionId }) {
   const [dap, setDap] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [selection, setSelection] = useState(null) // { type: 'platform'|'pair', id }
+
+  const [focusId, setFocusId] = useState(null)
+  const [pairTargetId, setPairTargetId] = useState(null) // non-null => source/target view
+  const [selectedEntityId, setSelectedEntityId] = useState(null)
 
   useEffect(() => {
-    const base = `/api/arch/clients/${clientId}/${versionId}/domains`
+    setLoading(true)
+    const base = `/api/arch/${clientId}/${versionId}/domains`
     Promise.all([
       fetch(`${base}/integration/logical/INT-IFC.json`).then((r) => (r.ok ? r.json() : null)),
       fetch(`${base}/application/logical/APP-DAP.json`).then((r) => (r.ok ? r.json() : null)),
@@ -178,39 +264,49 @@ export default function WiringDiagram({ clientId, versionId }) {
       .finally(() => setLoading(false))
   }, [clientId, versionId])
 
-  const derived = useMemo(() => {
+  const model = useMemo(() => {
     if (!ifc || !dap) return null
-
     const platformsById = Object.fromEntries(dap.platforms.map((p) => [p.id, p]))
-    const domainsById = Object.fromEntries(dap.domains.map((d) => [d.id, d]))
 
-    const orderedDomains = dap.domains.map((d) => ({
-      ...d,
-      colorIndex: dap.domains.indexOf(d),
-      platforms: dap.platforms.filter((p) => p['domain-id'] === d.id).map((p) => p.id),
-    }))
-
-    const pairMap = {}
-    for (const iface of ifc.interfaces) {
-      const [a, b] = [iface.source, iface.target].sort()
-      const key = `${a}|${b}`
-      if (!pairMap[key]) pairMap[key] = { src: a, tgt: b, interfaces: [] }
-      pairMap[key].interfaces.push(iface)
+    // Adjacency: focusId -> [{ id, count, interfaces }], sorted by interface count.
+    const adjacency = {}
+    const add = (a, b, iface) => {
+      if (!adjacency[a]) adjacency[a] = {}
+      if (!adjacency[a][b]) adjacency[a][b] = []
+      adjacency[a][b].push(iface)
+    }
+    for (const iface of ifc.interfaces ?? []) {
+      if (!iface.source || !iface.target || iface.source === iface.target) continue
+      add(iface.source, iface.target, iface)
+      add(iface.target, iface.source, iface)
     }
 
-    const layout = buildLayout(orderedDomains)
+    const neighboursOf = (id) =>
+      Object.entries(adjacency[id] ?? {})
+        .map(([nid, list]) => ({ id: nid, count: list.length, interfaces: list }))
+        .filter((n) => platformsById[n.id])
+        .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id))
 
-    const edges = Object.entries(pairMap)
-      .map(([key, pair]) => {
-        const sp = layout.platBoxes[pair.src]
-        const tp = layout.platBoxes[pair.tgt]
-        if (!sp || !tp) return null
-        return { key, ...pair, sp, tp }
-      })
-      .filter(Boolean)
+    // Platforms that actually have at least one interface, for the picker.
+    const connectedIds = Object.keys(adjacency)
+      .filter((id) => platformsById[id])
+      .sort((a, b) => (platformsById[a].name ?? a).localeCompare(platformsById[b].name ?? b))
 
-    return { platformsById, domainsById, orderedDomains, pairMap, edges, layout }
+    // Default focus: the most connected platform.
+    const defaultFocus = connectedIds
+      .slice()
+      .sort((a, b) => neighboursOf(b).length - neighboursOf(a).length)[0]
+
+    return { platformsById, neighboursOf, connectedIds, defaultFocus }
   }, [ifc, dap])
+
+  // Seed / re-seed focus when the model (or architecture/transition) changes.
+  useEffect(() => {
+    if (model) {
+      setFocusId((cur) => (cur && model.platformsById[cur] ? cur : (model.defaultFocus ?? null)))
+      setPairTargetId(null)
+    }
+  }, [model])
 
   if (loading)
     return (
@@ -220,261 +316,98 @@ export default function WiringDiagram({ clientId, versionId }) {
     )
   if (error)
     return <div className="p-4 text-sm text-red-600 bg-red-50 border border-red-200">{error}</div>
-  if (!derived)
+  if (!model || !model.connectedIds.length)
     return <div className="p-4 text-sm text-gray-500">No integration data available.</div>
 
-  const { platformsById, domainsById, orderedDomains, pairMap, edges, layout } = derived
-  const { domBoxes, platBoxes, svgH } = layout
+  const { platformsById, neighboursOf, connectedIds } = model
+  const neighbours = focusId ? neighboursOf(focusId) : []
+  const focus = platformsById[focusId]
 
-  const selectedPair = selection?.type === 'pair' ? pairMap[selection.id] : null
-  const selectedPlatId = selection?.type === 'platform' ? selection.id : null
-
-  const domColorMap = Object.fromEntries(
-    orderedDomains.map((d, i) => [d.id, DOM_COLORS[i % DOM_COLORS.length]])
-  )
-
-  const panelTitle = selectedPair
-    ? `${platformsById[selectedPair.src]?.name ?? selectedPair.src} ↔ ${platformsById[selectedPair.tgt]?.name ?? selectedPair.tgt}`
-    : selectedPlatId
-      ? (platformsById[selectedPlatId]?.name ?? selectedPlatId)
-      : ''
-
-  const panelSubtitle = selectedPair
-    ? `${selectedPair.interfaces.length} interface${selectedPair.interfaces.length !== 1 ? 's' : ''}`
-    : selectedPlatId
-      ? domainsById[platformsById[selectedPlatId]?.['domain-id']]?.name
-      : ''
+  const pair = pairTargetId
+    ? neighbours.find((n) => n.id === pairTargetId)
+    : null
+  const inPairView = !!pair
 
   return (
     <div className="bg-white overflow-hidden shadow-xl">
-      <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center gap-3 text-xs text-gray-500">
-        <span>{Object.keys(platformsById).length} platforms</span>
-        <span>·</span>
-        <span>{ifc.interfaces.length} interfaces</span>
-        <span>·</span>
-        <span>{Object.keys(pairMap).length} connected pairs</span>
-        {selection && (
-          <button
-            onClick={() => setSelection(null)}
-            className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            ✕ Clear selection
-          </button>
+      {/* Header / controls */}
+      <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-200 flex items-center gap-3 flex-wrap text-xs">
+        {inPairView ? (
+          <>
+            <button
+              onClick={() => setPairTargetId(null)}
+              className="inline-flex items-center gap-1 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+            >
+              ‹ Back
+            </button>
+            <span className="text-gray-300">|</span>
+            <span className="font-semibold text-gray-900">
+              <span className="font-mono text-gray-500">{shortId(focusId)}</span> {focus?.name}
+              <span className="mx-1.5 text-gray-400">↔</span>
+              <span className="font-mono text-gray-500">{shortId(pairTargetId)}</span>{' '}
+              {platformsById[pairTargetId]?.name}
+            </span>
+            <span className="ml-auto text-gray-500">
+              {pair.count} interface{pair.count !== 1 ? 's' : ''}
+            </span>
+          </>
+        ) : (
+          <>
+            <label htmlFor="wd-focus" className="text-gray-500">
+              Platform
+            </label>
+            <select
+              id="wd-focus"
+              value={focusId ?? ''}
+              onChange={(e) => {
+                setFocusId(e.target.value)
+                setPairTargetId(null)
+              }}
+              className="px-2 py-1 border border-gray-300 bg-white text-gray-900 text-xs focus:outline-none focus:border-brand-500 max-w-[16rem]"
+            >
+              {connectedIds.map((id) => (
+                <option key={id} value={id}>
+                  {platformsById[id]?.name ?? id} ({shortId(id)})
+                </option>
+              ))}
+            </select>
+            <span className="ml-auto text-gray-500">
+              {neighbours.length} connected platform{neighbours.length !== 1 ? 's' : ''}
+            </span>
+          </>
         )}
       </div>
 
-      <div className="overflow-x-auto">
-        <svg
-          viewBox={`0 0 ${SVG_W} ${svgH}`}
-          className="w-full min-w-[640px]"
-          style={{ maxHeight: '680px' }}
-        >
-          {/* Edges — drawn first so they appear beneath boxes */}
-          {edges.map((edge) => {
-            const { key, sp, tp } = edge
-            const isSel = selection?.type === 'pair' && selection.id === key
-            const isRelated =
-              selectedPair &&
-              (edge.src === selectedPair.src ||
-                edge.src === selectedPair.tgt ||
-                edge.tgt === selectedPair.src ||
-                edge.tgt === selectedPair.tgt)
-            const isPlatRelated =
-              selectedPlatId && (edge.src === selectedPlatId || edge.tgt === selectedPlatId)
+      {inPairView ? (
+        <PairView
+          leftId={focusId}
+          rightId={pairTargetId}
+          interfaces={pair.interfaces}
+          platformsById={platformsById}
+          onOpenEntity={setSelectedEntityId}
+        />
+      ) : (
+        <SystemView
+          focusId={focusId}
+          neighbours={neighbours}
+          platformsById={platformsById}
+          onOpenPair={setPairTargetId}
+          onOpenEntity={setSelectedEntityId}
+        />
+      )}
 
-            const opacity = selection ? (isSel ? 1 : isRelated || isPlatRelated ? 0.6 : 0.1) : 0.55
-
-            const stroke = isSel ? '#2563eb' : '#94a3b8'
-            const strokeW = isSel ? 2.5 : 1.5
-
-            // For same-domain edges, use a curve that exits to the right
-            const sameDomain = sp.domId === tp.domId
-            let d = ''
-            if (sameDomain) {
-              const rightEdge = (domBoxes[sp.domId]?.x ?? 0) + COL_W + 14
-              d = `M ${sp.cx} ${sp.cy} C ${rightEdge} ${sp.cy} ${rightEdge} ${tp.cy} ${tp.cx} ${tp.cy}`
-            } else {
-              d = `M ${sp.cx} ${sp.cy} L ${tp.cx} ${tp.cy}`
-            }
-
-            const midX = (sp.cx + tp.cx) / 2
-            const midY = (sp.cy + tp.cy) / 2
-
-            return (
-              <g
-                key={key}
-                style={{ cursor: 'pointer' }}
-                onClick={() => setSelection(isSel ? null : { type: 'pair', id: key })}
-              >
-                {/* Wide invisible hit area */}
-                {sameDomain ? (
-                  <path d={d} stroke="transparent" strokeWidth="14" fill="none" />
-                ) : (
-                  <line
-                    x1={sp.cx}
-                    y1={sp.cy}
-                    x2={tp.cx}
-                    y2={tp.cy}
-                    stroke="transparent"
-                    strokeWidth="14"
-                  />
-                )}
-                {sameDomain ? (
-                  <path d={d} stroke={stroke} strokeWidth={strokeW} fill="none" opacity={opacity} />
-                ) : (
-                  <line
-                    x1={sp.cx}
-                    y1={sp.cy}
-                    x2={tp.cx}
-                    y2={tp.cy}
-                    stroke={stroke}
-                    strokeWidth={strokeW}
-                    opacity={opacity}
-                  />
-                )}
-                {edge.interfaces.length > 1 && !sameDomain && (
-                  <g opacity={opacity}>
-                    <rect x={midX - 8} y={midY - 7} width="16" height="14" fill="white" rx="2" />
-                    <text
-                      x={midX}
-                      y={midY}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fontSize="9"
-                      fontWeight="700"
-                      fill={isSel ? '#2563eb' : '#64748b'}
-                      fontFamily="system-ui, sans-serif"
-                    >
-                      {edge.interfaces.length}
-                    </text>
-                  </g>
-                )}
-              </g>
-            )
-          })}
-
-          {/* Domain group boxes */}
-          {Object.entries(domBoxes).map(([domId, box]) => {
-            const color = domColorMap[domId] ?? '#94a3b8'
-            const dom = box.dom
-            return (
-              <g key={domId}>
-                {/* Domain border */}
-                <rect
-                  x={box.x}
-                  y={box.y}
-                  width={box.w}
-                  height={box.h}
-                  fill="white"
-                  stroke={color}
-                  strokeWidth="1.5"
-                  strokeOpacity="0.35"
-                />
-                {/* Domain header */}
-                <rect
-                  x={box.x}
-                  y={box.y}
-                  width={box.w}
-                  height={HEADER_H}
-                  fill={color}
-                  fillOpacity="0.1"
-                />
-                <text
-                  x={box.x + DOM_PAD}
-                  y={box.y + HEADER_H / 2}
-                  dominantBaseline="middle"
-                  fontSize="9.5"
-                  fontWeight="700"
-                  fill={color}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  letterSpacing="0.025em"
-                >
-                  {dom.name.toUpperCase()}
-                </text>
-
-                {/* Platform boxes */}
-                {dom.platforms.map((platId) => {
-                  const pb = platBoxes[platId]
-                  if (!pb) return null
-                  const plat = platformsById[platId]
-                  const isSel = selectedPlatId === platId
-                  const isRelated =
-                    selectedPair && (platId === selectedPair.src || platId === selectedPair.tgt)
-                  const dim = selection && !isSel && !isRelated ? 0.25 : 1
-                  const shortId = platId.replace(/^PLAT-/, '')
-
-                  return (
-                    <g
-                      key={platId}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => setSelection(isSel ? null : { type: 'platform', id: platId })}
-                    >
-                      <title>
-                        {plat?.name ?? platId}
-                        {plat?.description ? `\n${plat.description}` : ''}
-                      </title>
-                      <rect
-                        x={pb.x}
-                        y={pb.y}
-                        width={pb.w}
-                        height={pb.h}
-                        fill={isSel ? color : '#f9fafb'}
-                        fillOpacity={isSel ? 0.15 : 1}
-                        stroke={isSel ? color : '#e2e8f0'}
-                        strokeWidth={isSel ? 1.5 : 1}
-                        opacity={dim}
-                      />
-                      <text
-                        x={pb.x + 6}
-                        y={pb.cy}
-                        dominantBaseline="middle"
-                        fontSize="8"
-                        fontWeight="700"
-                        fill="#94a3b8"
-                        fontFamily="system-ui, sans-serif"
-                        opacity={dim}
-                      >
-                        {shortId}
-                      </text>
-                      <text
-                        x={pb.x + 6 + shortId.length * 5.5 + 6}
-                        y={pb.cy}
-                        dominantBaseline="middle"
-                        fontSize="10"
-                        fontWeight="500"
-                        fill={isSel ? color : '#374151'}
-                        fontFamily="system-ui, -apple-system, sans-serif"
-                        opacity={dim}
-                      >
-                        {plat?.name ?? platId}
-                      </text>
-                    </g>
-                  )
-                })}
-              </g>
-            )
-          })}
-        </svg>
+      <div className="px-4 py-2 border-t border-gray-100 text-xs text-gray-500 text-center">
+        {inPairView
+          ? 'Click an interface line or a platform to view details'
+          : 'Click a connection to see its interfaces, or a platform for details'}
       </div>
 
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-gray-400 text-center">
-        Click a platform or connection line to view details
-      </div>
-
-      <SlidePanel
-        open={!!selection}
-        onClose={() => setSelection(null)}
-        title={panelTitle}
-        subtitle={panelSubtitle}
-      >
-        {selectedPair && <PairDetail pair={selectedPair} platformsById={platformsById} />}
-        {selectedPlatId && platformsById[selectedPlatId] && (
-          <PlatformDetail
-            plat={platformsById[selectedPlatId]}
-            domName={domainsById[platformsById[selectedPlatId]?.['domain-id']]?.name}
-          />
-        )}
-      </SlidePanel>
+      <EntityPanel
+        entityId={selectedEntityId}
+        clientId={clientId}
+        versionId={versionId}
+        onClose={() => setSelectedEntityId(null)}
+      />
     </div>
   )
 }

@@ -1,0 +1,52 @@
+{
+    "decisions": [
+        {
+            "decision-id": "ADR-013",
+            "title": "Implement Self-Service Analytics for Operational and Commercial Teams",
+            "status": "committed",
+            "scope": {
+                "domain": "data",
+                "abstraction": "logical",
+                "artefact": "DAT-PRN"
+            }
+        },
+        {
+            "decision-id": "ADR-014",
+            "title": "Offboarding Customers",
+            "status": "committed",
+            "scope": {
+                "domain": "business"
+            }
+        },
+        {
+            "decision-id": "ADR-015",
+            "title": "Contractor Driven Work",
+            "status": "accepted"
+        },
+        {
+            "decision-id": "ADR-016",
+            "title": "Implement a Contact Centre as a Service",
+            "status": "accepted"
+        },
+        {
+            "decision-id": "ADR-017",
+            "title": "Rename CAP-001-04",
+            "status": "staged",
+            "scope": {
+                "domain": "business",
+                "abstraction": "conceptual",
+                "artefact": "BUS-BCM"
+            }
+        },
+        {
+            "decision-id": "ADR-018",
+            "title": "Interface between EAM and FSM",
+            "status": "committed",
+            "scope": {
+                "domain": "integration",
+                "abstraction": "logical",
+                "artefact": "INT-WRD"
+            }
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-# DAT-PRN — Data Architecture Principles Catalogue
+# DAT-PRN: Data Architecture Principles Catalogue
 
 **File:** [`/config/schemas/artefacts/domains/data/logical/DAT-PRN.json`](../../../../../../config/schemas/artefacts/domains/data/logical/DAT-PRN.json)
 **Architecture Domain / Layer:** Data / Logical
@@ -10,7 +10,7 @@ Vendor-neutral guidelines that shape design decisions in the Data architecture d
 
 ## Industry alignment
 
-- **TOGAF Architecture Principles** — Name, Statement, Rationale, Implications (the de-facto standard)
+- **TOGAF Architecture Principles**: Name, Statement, Rationale, Implications (the de-facto standard)
 
 ## Example
 
@@ -39,5 +39,5 @@ Vendor-neutral guidelines that shape design decisions in the Data architecture d
 | `id` | string | yes | Unique identifier (e.g. `DAT-PRN-001`) |
 | `name` | string | yes | Short, memorable principle name |
 | `statement` | string | yes | The principle, stated as a directive |
-| `rationale` | string | yes | Why this principle exists — the underlying motivation |
+| `rationale` | string | yes | Why this principle exists, the underlying motivation |
 | `implications` | array of strings | no | Consequences for design and decision-making if this principle is adopted |

@@ -22,7 +22,7 @@ flowchart TB
 
 | Layer | Description | Audience |
 |---|---|---|
-| **Conceptual** | The *what* and *why*. Sets direction and intent — what the architecture needs to achieve and why, without any technology choices. | Business stakeholders and architects aligning on direction |
+| **Conceptual** | The *what* and *why*. Sets direction and intent: what the architecture needs to achieve and why, without any technology choices. | Business stakeholders and architects aligning on direction |
 | **Logical** | The *how*. Defines the rules and principles that guide design decisions, without committing to any specific tool or product. | Architects and senior engineers designing solutions |
 | **Physical** | The *where* and *with what*. Specifies the concrete standards and technology decisions that govern how the architecture is built and operated. | Engineers building and operating the architecture |
 

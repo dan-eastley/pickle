@@ -1,0 +1,820 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:business:conceptual:BUS-BPM",
+    "audience": [
+        "Enterprise Architect",
+        "Business Architect",
+        "Chief Operating Officer"
+    ],
+    "author": [
+        "Business Architect",
+        "Business Analyst"
+    ],
+    "groups": [
+        {
+            "id": "PROC-001",
+            "name": "Customer Lifecycle Management",
+            "items": [
+                {
+                    "id": "PROC-001-01",
+                    "name": "Acquire New Customers",
+                    "items": [
+                        {
+                            "id": "PROC-001-01-01",
+                            "name": "Generate Sales Leads"
+                        },
+                        {
+                            "id": "PROC-001-01-02",
+                            "name": "Process Customer Applications"
+                        },
+                        {
+                            "id": "PROC-001-01-03",
+                            "name": "Activate Customer Accounts"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-001-02",
+                    "name": "Onboard Customers",
+                    "items": [
+                        {
+                            "id": "PROC-001-02-01",
+                            "name": "Verify Identity & Address"
+                        },
+                        {
+                            "id": "PROC-001-02-02",
+                            "name": "Register Supply Point & Meter"
+                        },
+                        {
+                            "id": "PROC-001-02-03",
+                            "name": "Communicate Welcome & Setup"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-001-03",
+                    "name": "Service & Manage Customers",
+                    "items": [
+                        {
+                            "id": "PROC-001-03-01",
+                            "name": "Handle Customer Enquiries"
+                        },
+                        {
+                            "id": "PROC-001-03-02",
+                            "name": "Process Account Changes"
+                        },
+                        {
+                            "id": "PROC-001-03-03",
+                            "name": "Resolve Complaints & Disputes"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-001-04",
+                    "name": "Retain & Grow Customers",
+                    "items": [
+                        {
+                            "id": "PROC-001-04-01",
+                            "name": "Identify At-Risk Customers"
+                        },
+                        {
+                            "id": "PROC-001-04-02",
+                            "name": "Execute Retention Campaigns"
+                        },
+                        {
+                            "id": "PROC-001-04-03",
+                            "name": "Manage Contract Renewals"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-001-05",
+                    "name": "Manage Customer Insights",
+                    "items": [
+                        {
+                            "id": "PROC-001-05-01",
+                            "name": "Collect & Analyse Customer Data"
+                        },
+                        {
+                            "id": "PROC-001-05-02",
+                            "name": "Segment Customer Base"
+                        },
+                        {
+                            "id": "PROC-001-05-03",
+                            "name": "Distribute Insights to Business"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-002",
+            "name": "Energy Generation & Dispatch",
+            "items": [
+                {
+                    "id": "PROC-002-01",
+                    "name": "Plan Generation Capacity",
+                    "items": [
+                        {
+                            "id": "PROC-002-01-01",
+                            "name": "Assess Future Demand & Capacity"
+                        },
+                        {
+                            "id": "PROC-002-01-02",
+                            "name": "Evaluate Generation Options"
+                        },
+                        {
+                            "id": "PROC-002-01-03",
+                            "name": "Submit Capacity Plans & Bids"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-002-02",
+                    "name": "Schedule & Dispatch Generation",
+                    "items": [
+                        {
+                            "id": "PROC-002-02-01",
+                            "name": "Receive & Confirm Dispatch Instructions"
+                        },
+                        {
+                            "id": "PROC-002-02-02",
+                            "name": "Schedule Unit Commitment"
+                        },
+                        {
+                            "id": "PROC-002-02-03",
+                            "name": "Report Actuals to System Operator"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-002-03",
+                    "name": "Operate Generation Assets",
+                    "items": [
+                        {
+                            "id": "PROC-002-03-01",
+                            "name": "Start Up & Shut Down Units"
+                        },
+                        {
+                            "id": "PROC-002-03-02",
+                            "name": "Monitor Real-Time Performance"
+                        },
+                        {
+                            "id": "PROC-002-03-03",
+                            "name": "Respond to Alarms & Incidents"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-002-04",
+                    "name": "Manage Fuel & Input Supply",
+                    "items": [
+                        {
+                            "id": "PROC-002-04-01",
+                            "name": "Forecast Fuel Consumption"
+                        },
+                        {
+                            "id": "PROC-002-04-02",
+                            "name": "Procure & Deliver Fuel"
+                        },
+                        {
+                            "id": "PROC-002-04-03",
+                            "name": "Manage Fuel Inventory"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-002-05",
+                    "name": "Optimise Generation Portfolio",
+                    "items": [
+                        {
+                            "id": "PROC-002-05-01",
+                            "name": "Analyse Portfolio Performance"
+                        },
+                        {
+                            "id": "PROC-002-05-02",
+                            "name": "Identify Optimisation Opportunities"
+                        },
+                        {
+                            "id": "PROC-002-05-03",
+                            "name": "Execute Portfolio Adjustments"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-003",
+            "name": "Energy Trading & Settlement",
+            "items": [
+                {
+                    "id": "PROC-003-01",
+                    "name": "Forecast Demand & Supply",
+                    "items": [
+                        {
+                            "id": "PROC-003-01-01",
+                            "name": "Build Short-Term Load Forecasts"
+                        },
+                        {
+                            "id": "PROC-003-01-02",
+                            "name": "Build Long-Term Supply Forecasts"
+                        },
+                        {
+                            "id": "PROC-003-01-03",
+                            "name": "Publish & Share Forecasts"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-003-02",
+                    "name": "Execute Energy Trades",
+                    "items": [
+                        {
+                            "id": "PROC-003-02-01",
+                            "name": "Identify Trading Opportunities"
+                        },
+                        {
+                            "id": "PROC-003-02-02",
+                            "name": "Execute Trades on Market"
+                        },
+                        {
+                            "id": "PROC-003-02-03",
+                            "name": "Confirm & Book Trades"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-003-03",
+                    "name": "Manage Trading Risk",
+                    "items": [
+                        {
+                            "id": "PROC-003-03-01",
+                            "name": "Monitor Market Exposure"
+                        },
+                        {
+                            "id": "PROC-003-03-02",
+                            "name": "Calculate Value-at-Risk"
+                        },
+                        {
+                            "id": "PROC-003-03-03",
+                            "name": "Execute Hedging Strategies"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-003-04",
+                    "name": "Settle & Clear Trades",
+                    "items": [
+                        {
+                            "id": "PROC-003-04-01",
+                            "name": "Reconcile Trade Positions"
+                        },
+                        {
+                            "id": "PROC-003-04-02",
+                            "name": "Submit Settlement Data to Market"
+                        },
+                        {
+                            "id": "PROC-003-04-03",
+                            "name": "Process Settlement Invoices & Payments"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-004",
+            "name": "Network Operations & Control",
+            "items": [
+                {
+                    "id": "PROC-004-01",
+                    "name": "Plan Network Investment",
+                    "items": [
+                        {
+                            "id": "PROC-004-01-01",
+                            "name": "Assess Network Capacity & Constraints"
+                        },
+                        {
+                            "id": "PROC-004-01-02",
+                            "name": "Develop Capital Investment Plans"
+                        },
+                        {
+                            "id": "PROC-004-01-03",
+                            "name": "Obtain Regulatory Approval for Investment"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-004-02",
+                    "name": "Control & Monitor the Grid",
+                    "items": [
+                        {
+                            "id": "PROC-004-02-01",
+                            "name": "Monitor Network Status in Real Time"
+                        },
+                        {
+                            "id": "PROC-004-02-02",
+                            "name": "Issue Control Instructions to Field"
+                        },
+                        {
+                            "id": "PROC-004-02-03",
+                            "name": "Manage Voltage & Frequency"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-004-03",
+                    "name": "Maintain Network Assets",
+                    "items": [
+                        {
+                            "id": "PROC-004-03-01",
+                            "name": "Schedule Preventive Maintenance"
+                        },
+                        {
+                            "id": "PROC-004-03-02",
+                            "name": "Execute Maintenance Works"
+                        },
+                        {
+                            "id": "PROC-004-03-03",
+                            "name": "Record & Close Maintenance Jobs"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-004-04",
+                    "name": "Manage Network Outages",
+                    "items": [
+                        {
+                            "id": "PROC-004-04-01",
+                            "name": "Detect & Log Network Faults"
+                        },
+                        {
+                            "id": "PROC-004-04-02",
+                            "name": "Dispatch Field Crews"
+                        },
+                        {
+                            "id": "PROC-004-04-03",
+                            "name": "Restore Supply & Notify Customers"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-004-05",
+                    "name": "Connect Customers & Distributed Resources",
+                    "items": [
+                        {
+                            "id": "PROC-004-05-01",
+                            "name": "Assess Connection Feasibility"
+                        },
+                        {
+                            "id": "PROC-004-05-02",
+                            "name": "Design & Quote Connection"
+                        },
+                        {
+                            "id": "PROC-004-05-03",
+                            "name": "Build & Commission Connection"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-005",
+            "name": "Asset Lifecycle Management",
+            "items": [
+                {
+                    "id": "PROC-005-01",
+                    "name": "Plan Asset Investment",
+                    "items": [
+                        {
+                            "id": "PROC-005-01-01",
+                            "name": "Assess Asset Condition & Remaining Life"
+                        },
+                        {
+                            "id": "PROC-005-01-02",
+                            "name": "Develop Asset Investment Plan"
+                        },
+                        {
+                            "id": "PROC-005-01-03",
+                            "name": "Prioritise & Approve Investment"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-005-02",
+                    "name": "Acquire & Construct Assets",
+                    "items": [
+                        {
+                            "id": "PROC-005-02-01",
+                            "name": "Source & Tender for Contractors"
+                        },
+                        {
+                            "id": "PROC-005-02-02",
+                            "name": "Manage Construction & Delivery"
+                        },
+                        {
+                            "id": "PROC-005-02-03",
+                            "name": "Inspect & Accept Completed Works"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-005-03",
+                    "name": "Commission & Handover Assets",
+                    "items": [
+                        {
+                            "id": "PROC-005-03-01",
+                            "name": "Test & Certify New Assets"
+                        },
+                        {
+                            "id": "PROC-005-03-02",
+                            "name": "Register Asset in Asset Register"
+                        },
+                        {
+                            "id": "PROC-005-03-03",
+                            "name": "Hand Over Asset to Operations"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-005-04",
+                    "name": "Operate & Maintain Assets",
+                    "items": [
+                        {
+                            "id": "PROC-005-04-01",
+                            "name": "Execute Preventive Maintenance Schedule"
+                        },
+                        {
+                            "id": "PROC-005-04-02",
+                            "name": "Respond to Asset Failures"
+                        },
+                        {
+                            "id": "PROC-005-04-03",
+                            "name": "Track Asset Performance & KPIs"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-005-05",
+                    "name": "Decommission & Dispose Assets",
+                    "items": [
+                        {
+                            "id": "PROC-005-05-01",
+                            "name": "Plan Safe Decommissioning"
+                        },
+                        {
+                            "id": "PROC-005-05-02",
+                            "name": "Execute Asset Removal"
+                        },
+                        {
+                            "id": "PROC-005-05-03",
+                            "name": "Update Asset Register & Dispose"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-006",
+            "name": "Retail & Revenue Management",
+            "items": [
+                {
+                    "id": "PROC-006-01",
+                    "name": "Manage Tariffs & Products",
+                    "items": [
+                        {
+                            "id": "PROC-006-01-01",
+                            "name": "Design Tariff Structures & Products"
+                        },
+                        {
+                            "id": "PROC-006-01-02",
+                            "name": "Obtain Regulatory Approval for Tariffs"
+                        },
+                        {
+                            "id": "PROC-006-01-03",
+                            "name": "Publish & Activate New Tariffs"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-006-02",
+                    "name": "Read & Validate Meters",
+                    "items": [
+                        {
+                            "id": "PROC-006-02-01",
+                            "name": "Schedule & Execute Meter Reads"
+                        },
+                        {
+                            "id": "PROC-006-02-02",
+                            "name": "Validate & Estimate Reads"
+                        },
+                        {
+                            "id": "PROC-006-02-03",
+                            "name": "Distribute Validated Metering Data"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-006-03",
+                    "name": "Bill Customers",
+                    "items": [
+                        {
+                            "id": "PROC-006-03-01",
+                            "name": "Calculate Charges & Taxes"
+                        },
+                        {
+                            "id": "PROC-006-03-02",
+                            "name": "Generate & Distribute Bills"
+                        },
+                        {
+                            "id": "PROC-006-03-03",
+                            "name": "Handle Bill Queries & Disputes"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-006-04",
+                    "name": "Collect & Apply Payments",
+                    "items": [
+                        {
+                            "id": "PROC-006-04-01",
+                            "name": "Process Inbound Payments"
+                        },
+                        {
+                            "id": "PROC-006-04-02",
+                            "name": "Apply Payments to Customer Accounts"
+                        },
+                        {
+                            "id": "PROC-006-04-03",
+                            "name": "Reconcile Payment Accounts"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-006-05",
+                    "name": "Manage Debt & Arrears",
+                    "items": [
+                        {
+                            "id": "PROC-006-05-01",
+                            "name": "Identify & Prioritise Debt Cases"
+                        },
+                        {
+                            "id": "PROC-006-05-02",
+                            "name": "Execute Collections Activities"
+                        },
+                        {
+                            "id": "PROC-006-05-03",
+                            "name": "Manage Disconnections & Reconnections"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-007",
+            "name": "Regulatory Reporting & Compliance",
+            "items": [
+                {
+                    "id": "PROC-007-01",
+                    "name": "Manage Regulatory Licensing",
+                    "items": [
+                        {
+                            "id": "PROC-007-01-01",
+                            "name": "Track Licence Conditions & Obligations"
+                        },
+                        {
+                            "id": "PROC-007-01-02",
+                            "name": "Apply for & Renew Licences"
+                        },
+                        {
+                            "id": "PROC-007-01-03",
+                            "name": "Monitor & Report Licence Compliance"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-007-02",
+                    "name": "Report to Regulators",
+                    "items": [
+                        {
+                            "id": "PROC-007-02-01",
+                            "name": "Gather Regulatory Reporting Data"
+                        },
+                        {
+                            "id": "PROC-007-02-02",
+                            "name": "Prepare & Validate Regulatory Reports"
+                        },
+                        {
+                            "id": "PROC-007-02-03",
+                            "name": "Submit Reports to Regulator"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-007-03",
+                    "name": "Manage Audits & Investigations",
+                    "items": [
+                        {
+                            "id": "PROC-007-03-01",
+                            "name": "Prepare for Regulatory Audits"
+                        },
+                        {
+                            "id": "PROC-007-03-02",
+                            "name": "Respond to Audit Findings"
+                        },
+                        {
+                            "id": "PROC-007-03-03",
+                            "name": "Track & Close Remediation Actions"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-007-04",
+                    "name": "Manage Safety & Environmental Compliance",
+                    "items": [
+                        {
+                            "id": "PROC-007-04-01",
+                            "name": "Manage Health & Safety Obligations"
+                        },
+                        {
+                            "id": "PROC-007-04-02",
+                            "name": "Monitor & Report Environmental Conditions"
+                        },
+                        {
+                            "id": "PROC-007-04-03",
+                            "name": "Manage Environmental Incidents"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-008",
+            "name": "Sustainability & Carbon Management",
+            "items": [
+                {
+                    "id": "PROC-008-01",
+                    "name": "Measure & Track Emissions",
+                    "items": [
+                        {
+                            "id": "PROC-008-01-01",
+                            "name": "Collect Emissions Activity Data"
+                        },
+                        {
+                            "id": "PROC-008-01-02",
+                            "name": "Calculate Scope 1, 2 & 3 Emissions"
+                        },
+                        {
+                            "id": "PROC-008-01-03",
+                            "name": "Maintain Emissions Register"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-008-02",
+                    "name": "Integrate Renewable Generation",
+                    "items": [
+                        {
+                            "id": "PROC-008-02-01",
+                            "name": "Assess Renewable Capacity Opportunities"
+                        },
+                        {
+                            "id": "PROC-008-02-02",
+                            "name": "Connect & Commission Renewables"
+                        },
+                        {
+                            "id": "PROC-008-02-03",
+                            "name": "Manage Intermittency & Battery Storage"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-008-03",
+                    "name": "Manage Carbon Credits & Offsets",
+                    "items": [
+                        {
+                            "id": "PROC-008-03-01",
+                            "name": "Purchase Carbon Credits & Offsets"
+                        },
+                        {
+                            "id": "PROC-008-03-02",
+                            "name": "Retire Credits Against Obligations"
+                        },
+                        {
+                            "id": "PROC-008-03-03",
+                            "name": "Maintain Carbon Portfolio Register"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-008-04",
+                    "name": "Report ESG Performance",
+                    "items": [
+                        {
+                            "id": "PROC-008-04-01",
+                            "name": "Compile ESG Metrics & Data"
+                        },
+                        {
+                            "id": "PROC-008-04-02",
+                            "name": "Prepare ESG Reports & Narratives"
+                        },
+                        {
+                            "id": "PROC-008-04-03",
+                            "name": "Publish & File ESG Disclosures"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PROC-009",
+            "name": "Enterprise Services Delivery",
+            "items": [
+                {
+                    "id": "PROC-009-01",
+                    "name": "Manage Finance & Accounts",
+                    "items": [
+                        {
+                            "id": "PROC-009-01-01",
+                            "name": "Process Accounts Payable & Receivable"
+                        },
+                        {
+                            "id": "PROC-009-01-02",
+                            "name": "Manage General Ledger & Period Close"
+                        },
+                        {
+                            "id": "PROC-009-01-03",
+                            "name": "Manage Budgeting & Financial Forecasting"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-009-02",
+                    "name": "Manage People & HR",
+                    "items": [
+                        {
+                            "id": "PROC-009-02-01",
+                            "name": "Recruit & Onboard Employees"
+                        },
+                        {
+                            "id": "PROC-009-02-02",
+                            "name": "Manage Payroll & Benefits"
+                        },
+                        {
+                            "id": "PROC-009-02-03",
+                            "name": "Support Performance & Development"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-009-03",
+                    "name": "Manage Technology & Systems",
+                    "items": [
+                        {
+                            "id": "PROC-009-03-01",
+                            "name": "Operate & Maintain IT Systems"
+                        },
+                        {
+                            "id": "PROC-009-03-02",
+                            "name": "Manage Cybersecurity & Risk"
+                        },
+                        {
+                            "id": "PROC-009-03-03",
+                            "name": "Deliver Technology Change Projects"
+                        }
+                    ]
+                },
+                {
+                    "id": "PROC-009-04",
+                    "name": "Manage Procurement & Supply Chain",
+                    "items": [
+                        {
+                            "id": "PROC-009-04-01",
+                            "name": "Source & Evaluate Suppliers"
+                        },
+                        {
+                            "id": "PROC-009-04-02",
+                            "name": "Manage Contracts & Supplier Performance"
+                        },
+                        {
+                            "id": "PROC-009-04-03",
+                            "name": "Process Purchase Orders & Invoices"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-01-15T09:30:00Z",
+            "action": "Created",
+            "who": "Joe B",
+            "notes": "Initial baseline for version 1.0.0."
+        },
+        {
+            "timestamp": "2026-03-04T14:10:00Z",
+            "action": "Updated",
+            "who": "Joe B",
+            "notes": "Reviewed and refined during the 2026-Q1 architecture cycle."
+        }
+    ]
+}

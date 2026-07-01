@@ -4,16 +4,16 @@ Each schema in [`/config/schemas/`](../../config/schemas/) is documented here. C
 
 ## Schema / instance mirroring
 
-The `config/schemas/` tree mirrors the `architectures/` tree — every instance file has a schema at the matching relative path.
+The `config/schemas/` tree mirrors the `architectures/` tree: every instance file has a schema at the matching relative path.
 
 ```mermaid
 flowchart LR
     subgraph schemas["config/schemas/ — definitions"]
         direction TB
-        S1[clients.json]
-        S2[client.json]
-        S3[versions.json]
-        S4[version.json]
+        S1[architectures.json]
+        S2[architecture.json]
+        S3[transitions.json]
+        S4[transition.json]
         S5[decisions.json]
         S6[decision.json]
         S7["artefacts/domains/<br/>&lt;dom&gt;/&lt;layer&gt;/&lt;ID&gt;.json"]
@@ -21,10 +21,10 @@ flowchart LR
 
     subgraph arch["architectures/ — instances"]
         direction TB
-        I1[clients.json]
-        I2["&lt;client&gt;/<br/>client.json"]
-        I3["&lt;client&gt;/<br/>versions.json"]
-        I4["&lt;client&gt;/&lt;version&gt;/<br/>version.json"]
+        I1[architectures.json]
+        I2["&lt;client&gt;/<br/>architecture.json"]
+        I3["&lt;client&gt;/<br/>transitions.json"]
+        I4["&lt;client&gt;/&lt;version&gt;/<br/>transition.json"]
         I5["&lt;client&gt;/&lt;version&gt;/decisions/<br/>decisions.json"]
         I6["&lt;client&gt;/&lt;version&gt;/decisions/<br/>&lt;decision-id&gt;.json"]
         I7["&lt;client&gt;/&lt;version&gt;/domains/<br/>&lt;dom&gt;/&lt;layer&gt;/&lt;ID&gt;.json"]
@@ -51,18 +51,18 @@ Each pair below is one row of that mapping. Index files (plural) carry IDs only;
 
 | Schema | Documents | Purpose |
 |---|---|---|
-| [clients.md](clients.md) | `architectures/clients/clients.json` | Authoritative list of client IDs |
-| [versions.md](versions.md) | `architectures/clients/<client>/versions.json` | Authoritative list of version IDs for a client |
-| [decisions.md](decisions.md) | `architectures/clients/<client>/<version>/decisions/decisions.json` | Authoritative list of decision IDs for a version |
+| [architectures.md](architectures.md) | `architectures/architectures.json` | Authoritative list of architecture IDs |
+| [transitions.md](transitions.md) | `architectures/<architecture>/transitions.json` | Authoritative list of transition IDs for an architecture |
+| [decisions.md](decisions.md) | `architectures/<architecture>/<transition>/decisions/decisions.json` | Authoritative list of decision IDs for a transition |
 | [artefacts.md](artefacts.md) | `config/schemas/artefacts.json` | Index of all defined catalogue schemas |
 
 ## Singular metadata
 
 | Schema | Documents | Purpose |
 |---|---|---|
-| [client.md](client.md) | `architectures/clients/<client>/client.json` | Per-client metadata (name, description, industry) |
-| [version.md](version.md) | `architectures/clients/<client>/<version>/version.json` | Per-version metadata (name, status, description, release-date) |
-| [decision.md](decision.md) | `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` | Architecture Decision Record (machine-readable) |
+| [architecture.md](architecture.md) | `architectures/<architecture>/architecture.json` | Per-architecture metadata (name, description, industry) |
+| [transition.md](transition.md) | `architectures/<architecture>/<transition>/transition.json` | Per-transition metadata (name, status, description, release-date) |
+| [decision.md](decision.md) | `architectures/<architecture>/<transition>/decisions/<decision-id>/decision.json` | Architecture Decision Record (machine-readable) |
 
 ## Strategy / Principles / Guardrails (one per architecture domain)
 
@@ -124,11 +124,11 @@ Diagram artefacts are derived from a source catalogue rather than authored direc
 
 ### Diagram rendering
 
-`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group is rendered as a card containing its items. Groups and items carry an open `meta` object for additional display attributes — e.g. BUS-BCM uses `meta.importance` to badge each capability card. The `wiring` type (`INT-WRD`) derives its data from INT-IFC and APP-DAP at render time — no authored data in the instance file.
+`groups[].items[]` is the shared shape for "grouped card" diagrams (`card-based` and `entity-based` `diagramType`s): each group is rendered as a card containing its items. Groups and items carry an open `meta` object for additional display attributes: e.g. BUS-BCM uses `meta.importance` to badge each capability card. The `wiring` type (`INT-WRD`) derives its data from INT-IFC and APP-DAP at render time: no authored data in the instance file.
 
 ## Document schemas
 
-Document artefacts contain a `documents` array — each element is a named instance (e.g. one Architecture Vision per programme). See [output-formats.md](../output-formats.md#document-sections) for the section structure of each type.
+Document artefacts contain a `documents` array: each element is a named instance (e.g. one Architecture Vision per programme). See [output-formats.md](../output-formats.md#document-sections) for the section structure of each type.
 
 | Schema | Artefact Type | Architecture Domain / Layer |
 |---|---|---|

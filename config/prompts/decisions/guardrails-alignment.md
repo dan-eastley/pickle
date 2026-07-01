@@ -10,13 +10,13 @@ Your findings will be read by business architects, enterprise architects, and go
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `strategy-alignment`, and `principles-alignment`.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `strategy-alignment`, and `principles-alignment`.
 - The **Guardrails** catalogues (artefact format: **Catalogue**, abstraction layer: **Physical**) for each affected domain:
-  - **Business Guardrails** (`BUS-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/business/physical/BUS-GRD/`
-  - **Data Guardrails** (`DAT-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/data/physical/DAT-GRD/`
-  - **Integration Guardrails** (`INT-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/integration/physical/INT-GRD/`
-  - **Application Guardrails** (`APP-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/application/physical/APP-GRD/`
-  - **Solution Guardrails** (`SOL-GRD`) at `architectures/clients/<client>/<version>/artefacts/domains/solution/physical/SOL-GRD/`
+  - **Business Guardrails** (`BUS-GRD`) at `architectures/<client>/<version>/artefacts/domains/business/physical/BUS-GRD/`
+  - **Data Guardrails** (`DAT-GRD`) at `architectures/<client>/<version>/artefacts/domains/data/physical/DAT-GRD/`
+  - **Integration Guardrails** (`INT-GRD`) at `architectures/<client>/<version>/artefacts/domains/integration/physical/INT-GRD/`
+  - **Application Guardrails** (`APP-GRD`) at `architectures/<client>/<version>/artefacts/domains/application/physical/APP-GRD/`
+  - **Solution Guardrails** (`SOL-GRD`) at `architectures/<client>/<version>/artefacts/domains/solution/physical/SOL-GRD/`
 
 ## Task
 
@@ -31,10 +31,10 @@ Write a JSON **array** to the decision JSON's `guardrails-alignment` property. E
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed — name the guardrail (quote its rule briefly) and state whether it is complied with, breached, or not applicable. Max ~500 characters. |
-| `impact` | What a breach means for the decision — regulatory, operational, or governance risk introduced if it proceeds unchanged. Max ~500 characters. |
-| `recommendation` | What the author should do — bring the decision into compliance, raise a formal exception via the catalogue's exception process, or narrow the scope. Max ~500 characters. |
-| `rationale` | Why this guardrail is mandatory and why compliance matters for this decision. Max ~500 characters. |
+| `finding` | What you observed — name the guardrail (quote its rule briefly) and state whether it is complied with, breached, or not applicable. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What a breach means for the decision — regulatory, operational, or governance risk introduced if it proceeds unchanged. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What the author should do — bring the decision into compliance, raise a formal exception via the catalogue's exception process, or narrow the scope. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this guardrail is mandatory and why compliance matters for this decision. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold guardrails catalogue names, `code spans` for IDs, guardrail rules in *italics*.
 

@@ -7,7 +7,7 @@ An **artefact type** is a single, classified piece of architecture content. Ever
 - Conforms to exactly one [output format](output-formats.md)
 - Has a unique ID prefixed with the architecture domain acronym (e.g. `BUS-CAP`, `APP-DAP`)
 
-Each artefact type has a folder under `architectures/clients/<client>/<version>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `config/schemas/`.
+Each artefact type has a folder under `architectures/<architecture>/<transition>/artefacts/domains/<domain>/<layer>/<ID>/` containing its instance data. Catalogues are backed by a JSON Schema at the matching path under `config/schemas/`.
 
 ## Cross-domain baseline (Strategy / Principles / Guardrails)
 
@@ -31,9 +31,9 @@ flowchart LR
     class GRD p
 ```
 
-- **`<DOM>-STR`** (Conceptual) — strategic intent; the *what* and *why*
-- **`<DOM>-PRN`** (Logical) — design principles; the *how*
-- **`<DOM>-GRD`** (Physical) — non-negotiable guardrails; the *where* and *with what*
+- **`<DOM>-STR`** (Conceptual): strategic intent; the *what* and *why*
+- **`<DOM>-PRN`** (Logical): design principles; the *how*
+- **`<DOM>-GRD`** (Physical): non-negotiable guardrails; the *where* and *with what*
 
 The shapes are shared across all five architecture domains (so all five `<DOM>-STR` schemas have the same fields, just domain-specific examples), but each domain has its own schema doc page with a domain-specific example. See the matrix in [schemas/index.md](schemas/index.md).
 
@@ -43,11 +43,11 @@ This table is the authoritative registry of every defined artefact type. Every r
 
 | ID | Architecture Domain | Abstraction | Format | Name | Description |
 |---|---|---|---|---|---|
-| BUS-STR | Business | Conceptual | Catalogue | Business Architecture Strategy | Outcome-oriented strategic statements for the Business domain — the what and why at the highest level |
+| BUS-STR | Business | Conceptual | Catalogue | Business Architecture Strategy | Outcome-oriented strategic statements for the Business domain, the what and why at the highest level |
 | BUS-CAP | Business | Conceptual | Catalogue | Business Capabilities | Hierarchical catalogue of what the business does, independent of how it does it |
 | BUS-BCM | Business | Conceptual | Diagram | Business Capability Model | Visual map of the Business Capabilities Catalogue (BUS-CAP) |
 | BUS-PRO | Business | Conceptual | Catalogue | Business Processes | Hierarchical catalogue of sequences of activities that deliver business value (Levels 1–3) |
-| BUS-BPM | Business | Conceptual | Diagram | Business Process Model | Nested card diagram of the Business Processes Catalogue (BUS-PRO) — Level 1 overview with per-Level-1 drill-downs |
+| BUS-BPM | Business | Conceptual | Diagram | Business Process Model | Nested card diagram of the Business Processes Catalogue (BUS-PRO): Level 1 overview with per-Level-1 drill-downs |
 | BUS-CAP-PRO | Business | Conceptual | Matrix | Business Capabilities ↔ Business Processes | Many-to-many mapping between BUS-CAP capabilities and BUS-PRO processes at L1 and L2 |
 | BUS-PRN | Business | Logical | Catalogue | Business Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Business domain |
 | BUS-STR-PRN | Business | Logical | Matrix | Business Architecture Strategy ↔ Principles | Many-to-many mapping between BUS-STR strategies and BUS-PRN principles |
@@ -63,7 +63,7 @@ This table is the authoritative registry of every defined artefact type. Every r
 | DAT-PRN-GRD | Data | Physical | Matrix | Data Architecture Principles ↔ Guardrails | Many-to-many mapping between DAT-PRN principles and DAT-GRD guardrails |
 | INT-STR | Integration | Conceptual | Catalogue | Integration Architecture Strategy | Outcome-oriented strategic statements for the Integration domain |
 | INT-IFC | Integration | Logical | Catalogue | Interface Catalogue | The logical interfaces that connect platforms across the application landscape, and the direction of data flow between them |
-| INT-WRD | Integration | Logical | Diagram | Interface Wiring Diagram | Visual map of the integration landscape — platform-to-platform connections derived from the Interface Catalogue (INT-IFC), with per-pair interface drill-down |
+| INT-WRD | Integration | Logical | Diagram | Interface Wiring Diagram | Visual map of the integration landscape: platform-to-platform connections derived from the Interface Catalogue (INT-IFC), with per-pair interface drill-down |
 | INT-DAC-IFC | Integration | Logical | Matrix | Data Domains & Concepts ↔ Interface Catalogue | Maps each interface in the Interface Catalogue to the conceptual data entities that flow across it |
 | INT-PRN | Integration | Logical | Catalogue | Integration Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Integration domain |
 | INT-STR-PRN | Integration | Logical | Matrix | Integration Architecture Strategy ↔ Principles | Many-to-many mapping between INT-STR strategies and INT-PRN principles |
@@ -88,7 +88,7 @@ This table is the authoritative registry of every defined artefact type. Every r
 
 ## Matrix coverage (AMC-5)
 
-Matrices are the **edges of the architecture graph** — they're what makes the model navigable and what impact analysis reasons over. Beyond the per-domain Strategy↔Principles and Principles↔Guardrails boilerplate, the *content* matrices that connect different concept types are the high-value ones. This is a coverage review of which cross-concept mappings exist and which are still missing.
+Matrices are the **edges of the architecture graph**: they're what makes the model navigable and what impact analysis reasons over. Beyond the per-domain Strategy↔Principles and Principles↔Guardrails boilerplate, the *content* matrices that connect different concept types are the high-value ones. This is a coverage review of which cross-concept mappings exist and which are still missing.
 
 **Concept types:** Capability (BUS-CAP) · Process (BUS-PRO) · Data (DAT-DAC) · Application/Platform (APP-DAP) · Interface (INT-IFC) · Strategy/Principle (per-domain).
 
@@ -102,14 +102,14 @@ Matrices are the **edges of the architecture graph** — they're what makes the 
 
 **Existing content matrices:** BUS-CAP-PRO (capability↔process), APP-CAP-DAP (capability↔platform), APP-DAP-CAT (platform↔physical app), INT-DAC-IFC (data↔interface), and now **DAT-PRO-DAC** (process↔data, CRUD).
 
-**Done:** ✅ **Process ↔ Application** (`APP-PRO-DAP`) — which platforms support each Level 1 process. Pairs with DAT-PRO-DAC to complete the process's "what data, what system" picture.
+**Done:** ✅ **Process ↔ Application** (`APP-PRO-DAP`): which platforms support each Level 1 process. Pairs with DAT-PRO-DAC to complete the process's "what data, what system" picture.
 
 **Prioritised gaps** (next candidates, in rough order of value):
 
-1. **Capability ↔ Data** — the data a capability owns/uses; supports data-ownership by capability.
-2. **Application ↔ Data** — systems of record; which application masters which entity.
-3. **Capability ↔ Strategy / Principle** — traceability from motivation to capability.
-4. **Capability ↔ Org / Role** — ownership (feeds DEC-6 governance); needs an Org artefact first.
+1. **Capability ↔ Data**, the data a capability owns/uses; supports data-ownership by capability.
+2. **Application ↔ Data**: systems of record; which application masters which entity.
+3. **Capability ↔ Strategy / Principle**: traceability from motivation to capability.
+4. **Capability ↔ Org / Role**: ownership (feeds DEC-6 governance); needs an Org artefact first.
 
 Each new matrix follows the [Adding a new artefact type](#adding-a-new-artefact-type) procedure and [Matrix placement](output-formats.md#matrix-placement) rules. DAT-PRO-DAC is the worked example.
 
@@ -118,8 +118,8 @@ Each new matrix follows the [Adding a new artefact type](#adding-a-new-artefact-
 1. Add a row to the registry table above.
 2. Define a JSON Schema at `/config/schemas/artefacts/domains/<domain>/<layer>/<ID>.json`. Include a `meta` object with `domain`, `abstraction`, and `format` fields, and a top-level `description` that describes the artefact type.
    - For catalogues, define the full `properties` shape for the instance data.
-   - For diagrams and matrices whose storage format isn't finalised yet, a minimal schema is enough — `meta` plus `"type": "object", "additionalProperties": true`. Flesh it out once the format is decided.
+   - For diagrams and matrices whose storage format isn't finalised yet, a minimal schema is enough: `meta` plus `"type": "object", "additionalProperties": true`. Flesh it out once the format is decided.
    - For a matrix joining two artefacts, see [Matrix placement](output-formats.md#matrix-placement) to determine which domain/layer the new artefact type belongs to and which source becomes `columns` vs `rows`.
 3. Add an entry for the new artefact-type ID to `/config/schemas/artefacts.json` (the schema index).
 4. Document the schema with a markdown page in `/docs/schemas/artefacts/domains/<domain>/<layer>/<ID>.md`.
-5. Create the instance file in each affected client version: `/architectures/clients/<client>/<version>/domains/<domain>/<layer>/<ID>.json`.
+5. Create the instance file in each affected client version: `/architectures/<architecture>/<transition>/domains/<domain>/<layer>/<ID>.json`.

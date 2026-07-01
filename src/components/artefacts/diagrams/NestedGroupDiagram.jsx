@@ -1,9 +1,5 @@
-import {
-  getDiagramColors,
-  IMPORTANCE_COLORS,
-  DIAGRAM_VARIANTS,
-  wrapText,
-} from '../../../lib/diagramTheme'
+import { getDiagramColors, DIAGRAM_VARIANTS, wrapText } from '../../../lib/diagramTheme'
+import { enumValueStyle, enumValueLabel } from '../../../lib/enums'
 
 const VIEW_WIDTH = 1200
 const OUTER_PADDING = 20
@@ -28,25 +24,36 @@ function WrappedText({ text, x, y, maxChars, maxLines, lineHeight, className }) 
   )
 }
 
-function ImportanceBadge({ importance, right, top }) {
-  const colors = IMPORTANCE_COLORS[importance]
-  if (!colors) return null
-  const label = importance.charAt(0).toUpperCase() + importance.slice(1)
-  const width = label.length * 5.5 + 14
-  return (
-    <g>
-      <title>{`Importance: ${label}`}</title>
-      <rect x={right - width} y={top} width={width} height={16} className={colors.fill} />
-      <text
-        x={right - width / 2}
-        y={top + 11}
-        textAnchor="middle"
-        className={`text-[9px] font-medium ${colors.text}`}
-      >
-        {label}
-      </text>
-    </g>
-  )
+// Renders a badge for every enum value in a node's `meta`, laid out right-to-left
+// from `right`. Standardised colours/labels via lib/enums ([UI-15]).
+function MetaBadges({ meta, right, top }) {
+  if (!meta) return null
+  const entries = Object.entries(meta).filter(([, v]) => v != null && typeof v !== 'object')
+  if (entries.length === 0) return null
+  let x = right
+  const badges = entries.map(([key, value]) => {
+    const style = enumValueStyle(key, value)
+    const label = enumValueLabel(value)
+    const width = label.length * 5.5 + 14
+    x -= width
+    const bx = x
+    x -= 4
+    return (
+      <g key={key}>
+        <title>{`${enumValueLabel(key)}: ${label}`}</title>
+        <rect x={bx} y={top} width={width} height={16} className={style.fill} />
+        <text
+          x={bx + width / 2}
+          y={top + 11}
+          textAnchor="middle"
+          className={`text-[9px] font-medium ${style.textFill}`}
+        >
+          {label}
+        </text>
+      </g>
+    )
+  })
+  return <g>{badges}</g>
 }
 
 function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
@@ -110,13 +117,7 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
             >
               {group.id}
             </text>
-            {group.meta?.importance && (
-              <ImportanceBadge
-                importance={group.meta.importance}
-                right={x + groupWidth - GROUP_PADDING}
-                top={y + 10}
-              />
-            )}
+            <MetaBadges meta={group.meta} right={x + groupWidth - GROUP_PADDING} top={y + 10} />
             <WrappedText
               text={group.name}
               x={x + GROUP_PADDING}
@@ -171,6 +172,7 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
                     lineHeight={13}
                     className={`text-[11px] font-medium ${itemSelected ? 'fill-white' : colors.itemText}`}
                   />
+                  <MetaBadges meta={item.meta} right={ix + itemWidth - ITEM_PADDING} top={iy + 4} />
                 </g>
               )
             })}
@@ -208,7 +210,7 @@ export default function NestedGroupDiagram({
     <div>
       <div className="flex items-baseline gap-2 mb-3">
         <h4 className="text-sm font-semibold text-gray-800">Overview</h4>
-        <span className="text-xs text-gray-400">Level 1 and 2</span>
+        <span className="text-xs text-gray-500">Level 1 and 2</span>
       </div>
       <GroupGrid
         groups={groups}
@@ -219,10 +221,12 @@ export default function NestedGroupDiagram({
       />
       {groups.map((group) => (
         <div key={group.id} className="mt-6 pt-5 border-t border-gray-200">
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="font-mono text-xs text-gray-400">{group.id}</span>
-            <h4 className="text-sm font-semibold text-gray-800">{group.name}</h4>
-            <span className="text-xs text-gray-400">Level 2 and 3</span>
+          <div className="mb-3">
+            <span className="block font-mono text-xs text-gray-500">{group.id}</span>
+            <div className="flex items-baseline gap-2">
+              <h4 className="text-sm font-semibold text-gray-800">{group.name}</h4>
+              <span className="text-xs text-gray-500">Level 2 and 3</span>
+            </div>
           </div>
           <GroupGrid
             groups={(group.items ?? []).map((item) => ({ ...item, items: item.items ?? [] }))}

@@ -13,7 +13,7 @@ function architectureApiPlugin() {
     name: 'architecture-api',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        handleApiRequest(req, res, next).catch((err) => {
+        handleApiRequest(req, res, next, server).catch((err) => {
           res.statusCode = 500
           res.end(JSON.stringify({ error: err.message }))
         })
@@ -22,12 +22,18 @@ function architectureApiPlugin() {
   }
 }
 
-async function handleApiRequest(req, res, next) {
+async function handleApiRequest(req, res, next, server) {
   if (!req.url.startsWith('/api/')) {
     return next()
   }
 
   const url = new URL(req.url, 'http://localhost')
+
+  // /api/auth/** → Better Auth Node handler (sign-up/in/out, session).
+  if (url.pathname.startsWith('/api/auth/')) {
+    const { getAuthNodeHandler } = await server.ssrLoadModule('/lib/auth.ts')
+    return getAuthNodeHandler()(req, res)
+  }
 
   // /api/arch/** → always fetch live from GitHub
   if (url.pathname.startsWith('/api/arch/')) {
@@ -94,8 +100,14 @@ async function handleApiRequest(req, res, next) {
       const raw = Buffer.concat(chunks).toString('utf8')
       body = raw ? JSON.parse(raw) : {}
     }
-    const { default: handler } = await import('./api/github.js')
-    const shimReq = { method: req.method, query: Object.fromEntries(url.searchParams), body }
+    const { default: handler } = await server.ssrLoadModule('/api/github.ts')
+    const shimReq = {
+      method: req.method,
+      query: Object.fromEntries(url.searchParams),
+      body,
+      // Pass headers through so the session gate can read the auth cookie.
+      headers: req.headers,
+    }
     const shimRes = {
       statusCode: 200,
       setHeader: (k, v) => res.setHeader(k, v),
@@ -165,7 +177,16 @@ export default defineConfig(({ mode }) => {
   // Load .env (no prefix filter) so the /api/arch GitHub proxy can read
   // GITHUB_* from a local .env. Real shell env vars take precedence.
   const env = loadEnv(mode, __dirname, '')
-  for (const key of ['GITHUB_TOKEN', 'GITHUB_OWNER', 'GITHUB_REPO']) {
+  for (const key of [
+    'GITHUB_TOKEN',
+    'GITHUB_OWNER',
+    'GITHUB_REPO',
+    'API_ALLOWED_ORIGINS',
+    // Auth (Better Auth + Postgres) — needed by the /api/auth dev shim.
+    'DATABASE_URL',
+    'BETTER_AUTH_SECRET',
+    'BETTER_AUTH_URL',
+  ]) {
     if (!process.env[key] && env[key]) process.env[key] = env[key]
   }
 

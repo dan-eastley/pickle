@@ -1,4 +1,4 @@
-# APP-PRN-GRD — Application Architecture Principles ↔ Guardrails Matrix
+# APP-PRN-GRD: Application Architecture Principles ↔ Guardrails Matrix
 
 **File:** [`/config/schemas/artefacts/domains/application/physical/APP-PRN-GRD.json`](../../../../../../config/schemas/artefacts/domains/application/physical/APP-PRN-GRD.json)
 **Architecture Domain / Layer:** Application / Physical
@@ -10,7 +10,7 @@ Maps each [APP-PRN](../logical/APP-PRN.md) principle to the [APP-GRD](APP-GRD.md
 
 ## Shape
 
-Relationships are stored as a **sparse list** — only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
+Relationships are stored as a **sparse list**: only required (checked) cells are listed. An entry's presence means the guardrail is required to enforce the principle; absence means no required relationship.
 
 APP-GRD is currently empty for this client/version, so this matrix ships with no relationships. It will populate once guardrails are defined.
 

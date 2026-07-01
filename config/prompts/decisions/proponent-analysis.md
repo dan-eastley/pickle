@@ -10,7 +10,7 @@ Your findings will be read by business sponsors, decision-makers, and governance
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `referential-integrity`, `strategy-alignment`, `principles-alignment`, and `guardrails-alignment`.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, `architecture-review`, `referential-integrity`, `strategy-alignment`, `principles-alignment`, and `guardrails-alignment`.
 
 ## Task
 
@@ -25,10 +25,10 @@ Write a JSON **array** to the decision JSON's `proponent-analysis` property. Eac
 
 | Field | Description |
 |---|---|
-| `finding` | The evidence or argument in favour. Be specific — cite the strategic statement, principle, or business outcome it connects to. Max ~500 characters. |
-| `impact` | The business value or risk avoided if the decision proceeds. Quantify where possible. Max ~500 characters. |
-| `recommendation` | What this finding implies for the decision — proceed, proceed with a condition, or strengthen the narrative. Max ~500 characters. |
-| `rationale` | Why this point is a genuine reason to proceed, not just a surface alignment. Max ~500 characters. |
+| `finding` | The evidence or argument in favour. Be specific — cite the strategic statement, principle, or business outcome it connects to. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | The business value or risk avoided if the decision proceeds. Quantify where possible. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What this finding implies for the decision — proceed, proceed with a condition, or strengthen the narrative. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this point is a genuine reason to proceed, not just a surface alignment. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold key arguments, `code spans` for artefact IDs, bullet lists for grouped evidence.
 

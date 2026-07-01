@@ -2,7 +2,7 @@
 
 How Pickle is tested on the road to production. Two guiding constraints:
 
-1. **Minimise Claude usage.** Every automated test gate is deterministic (Node / Playwright / Ajv) and needs **no `ANTHROPIC_API_KEY`**. Claude runs only in the event-driven decision/discovery/apply workflows, which are human-triggered and billed — never in a test gate.
+1. **Minimise Claude usage.** Every automated test gate is deterministic (Node / Playwright / Ajv) and needs **no `ANTHROPIC_API_KEY`**. Claude runs only in the event-driven decision/discovery/apply workflows, which are human-triggered and billed: never in a test gate.
 2. **Only run what the change touches.** A data-only change doesn't run the SPA e2e suite; a component tweak doesn't re-validate every schema. Path filters scope each job.
 
 ## Layers
@@ -17,7 +17,7 @@ How Pickle is tested on the road to production. Two guiding constraints:
 | L5 | Build | `vite build` | No | Bundle compiles |
 | L6 | Smoke (e2e) | Playwright vs preview URL | No | All routes render, no error boundary |
 | L7 | Use-case acceptance | `tests/run-use-cases.mjs` vs preview | No | Behavioural checks from the use-case corpus |
-| — | AI pipelines | decisions / discovery / apply | **Yes** | Not tests — billed, human-triggered, separate |
+| — | AI pipelines | decisions / discovery / apply | **Yes** | Not tests: billed, human-triggered, separate |
 
 L1 + L2 are the highest production-readiness payoff: they catch data/schema regressions (including the class of bug where adding metadata arrays broke catalogue rendering) without any Claude cost.
 
@@ -41,16 +41,16 @@ Browser layers (L6/L7) run against the **per-PR Vercel preview deployment**, so 
 
 ## Workflows
 
-- **`ci.yml`** — PR gate. A `changes` job (paths-filter) drives conditional `lint`, `unit`, `build`, `validate-data`, `e2e` jobs.
-- **`validate-data.yml`** — reusable; runs L1 (Ajv) + L2 (integrity). Re-enables and replaces the dormant `validate-schema` / `validate-structure`.
-- **`post-deploy.yml`** — waits for the Vercel deployment, runs L6 (+ L7 subset) against the URL.
-- **`nightly.yml`** — cron: full use-cases + screenshots.
+- **`ci.yml`**: PR gate. A `changes` job (paths-filter) drives conditional `lint`, `unit`, `build`, `validate-data`, `e2e` jobs.
+- **`validate-data.yml`**: reusable; runs L1 (Ajv) + L2 (integrity). Re-enables and replaces the dormant `validate-schema` / `validate-structure`.
+- **`post-deploy.yml`**: waits for the Vercel deployment, runs L6 (+ L7 subset) against the URL.
+- **`nightly.yml`**: cron: full use-cases + screenshots.
 - Existing `decisions-*`, `discovery-to-active`, `decisions-apply-changes` are the only Claude consumers and stay event-driven.
 
 ## Rollout
 
-1. **L1** — Ajv schema validation (this is where data/schema bugs get caught). ✅
-2. **L2** — referential-integrity checks.
+1. **L1**: Ajv schema validation (this is where data/schema bugs get caught). ✅
+2. **L2**: referential-integrity checks.
 3. **Path scoping** in `ci.yml`.
 4. **Preview-URL e2e (L6) + L7 subset** on PR.
 5. **Component tests (L4)** for the renderers most prone to silent breakage.

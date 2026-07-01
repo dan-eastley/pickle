@@ -6,8 +6,8 @@ Your edits will be committed to the decision branch and opened as a PR against `
 
 ## Inputs
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read its `architecture-changes` array.
-- The architecture instance files under `architectures/clients/<client>/<version>/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json`.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read its `architecture-changes` array.
+- The architecture instance files under `architectures/<client>/<version>/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json`.
 - The matching JSON Schemas under `config/schemas/artefacts/domains/<domain>/<abstraction>/<ARTEFACT-ID>.json` — every edit must keep the instance valid against its schema (which it references via `$schema`).
 - **`config/artefact-relationships.json`** — the derivation map. For each artefact it lists the artefacts in its `derives` array that are built *from* it (e.g. `BUS-BPM` is derived from `BUS-PRO`; `BUS-BCM` from `BUS-CAP`; matrices from their two source catalogues).
 

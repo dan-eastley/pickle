@@ -1,7 +1,7 @@
 # Validate Branch
 
 **File:** [`/.github/workflows/validate-branch.yml`](../../.github/workflows/validate-branch.yml)
-**Trigger:** GitHub `create` event (a new branch ref lands on the remote — covers fresh branches and renames).
+**Trigger:** GitHub `create` event (a new branch ref lands on the remote: covers fresh branches and renames).
 
 ## Purpose
 
@@ -12,7 +12,7 @@ Reject branch names that don't fit one of the allowed patterns.
 | `main` | Default branch |
 | `develop` | Integration branch |
 | `features/<feature-id>` | Codebase changes |
-| `decisions/<client-id>/<version-id>/<decision-id>` | Architecture changes driven by an ADR |
+| `decisions/<architecture-id>/<transition-id>/<decision-id>` | Architecture changes driven by an ADR |
 
 ID segments accept `[A-Za-z0-9._-]+`.
 

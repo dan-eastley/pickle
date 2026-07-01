@@ -10,8 +10,8 @@ Your findings will be read by business architects and delivery leads reviewing t
 
 ## Inputs available
 
-- The decision JSON at `architectures/clients/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
-- The full catalogue instance data under `architectures/clients/<client>/<version>/artefacts/` for the affected client and version.
+- The decision JSON at `architectures/<client>/<version>/decisions/<decision-id>/decision.json` — read `narrative`, `requirements`, and the `architecture-review` section.
+- The full catalogue instance data under `architectures/<client>/<version>/artefacts/` for the affected client and version.
 - The schemas under `config/schemas/artefacts/` for the relevant artefact types.
 
 ## Task
@@ -29,10 +29,10 @@ Write a JSON **array** to the decision JSON's `referential-integrity` property. 
 
 | Field | Description |
 |---|---|
-| `finding` | What you found — name the artefact type (**full name** and `ID`), the specific item, and the broken reference. Max ~500 characters. |
-| `impact` | What this broken reference means for the architecture record — what would break downstream. Max ~500 characters. |
-| `recommendation` | The specific correction needed: add the missing entity, fix the reference value, or remove the orphan. Max ~500 characters. |
-| `rationale` | Why maintaining referential integrity matters for this catalogue and this decision. Max ~500 characters. |
+| `finding` | What you found — name the artefact type (**full name** and `ID`), the specific item, and the broken reference. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What this broken reference means for the architecture record — what would break downstream. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | The specific correction needed: add the missing entity, fix the reference value, or remove the orphan. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why maintaining referential integrity matters for this catalogue and this decision. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold artefact names, `code spans` for IDs and field names, and bullet lists for multiple violations.
 

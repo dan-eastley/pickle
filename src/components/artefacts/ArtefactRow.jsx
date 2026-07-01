@@ -84,7 +84,7 @@ function EntryCount({ count }) {
     const cl =
       cCount === 1 ? (labels?.child ?? 'item') : labels?.child ? labels.child + 's' : 'items'
     return (
-      <span className="text-xs text-gray-400 flex-shrink-0">
+      <span className="text-xs text-gray-500 flex-shrink-0">
         {pCount} {pl} · {cCount} {cl}
       </span>
     )
@@ -94,7 +94,7 @@ function EntryCount({ count }) {
     const l1label = labels?.level1 ?? 'Level 1'
     const l2label = labels?.level2 ?? 'Level 2'
     return (
-      <span className="text-xs text-gray-400 flex-shrink-0">
+      <span className="text-xs text-gray-500 flex-shrink-0">
         {level1} {l1label} · {total - level1} {l2label}
       </span>
     )
@@ -103,7 +103,7 @@ function EntryCount({ count }) {
   const sing = labels?.singular ?? 'entry'
   const plur = labels?.plural ?? 'entries'
   return (
-    <span className="text-xs text-gray-400 flex-shrink-0">
+    <span className="text-xs text-gray-500 flex-shrink-0">
       {total} {total === 1 ? sing : plur}
     </span>
   )
@@ -151,7 +151,7 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
         <span className="text-xs font-mono text-gray-300" title={artefact.name}>
           {artefact.id}
         </span>
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors" />
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
       </div>
     </Link>
   )

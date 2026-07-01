@@ -1,0 +1,29 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:architectures",
+    "title": "Architectures Index",
+    "description": "Authoritative list of architecture IDs. Per-architecture metadata lives in architectures/<architecture>/architecture.json.",
+    "type": "object",
+    "required": [
+        "architectures"
+    ],
+    "properties": {
+        "architectures": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "architecture-id"
+                ],
+                "properties": {
+                    "architecture-id": {
+                        "type": "string",
+                        "description": "Unique identifier — must match the architecture folder name"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

@@ -36,7 +36,7 @@ jobs:
       VERSION_ID:    ${{ inputs.version-id }}
       DECISION_ID:   ${{ inputs.decision-id }}
       GH_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
-      DECISION_FILE: architectures/clients/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
+      DECISION_FILE: architectures/${{ inputs.client-id }}/${{ inputs.version-id }}/decisions/${{ inputs.decision-id }}/decision.json
       APPLY_PROMPT:  config/prompts/decisions/apply-changes.md
     steps:
       - name: Started
@@ -78,7 +78,7 @@ jobs:
               2. Read the decision JSON at ${{ env.DECISION_FILE }} and its `architecture-changes`.
               3. Apply every change whose `review` is "accepted" or absent (skip "declined")
                  to the artefact files under
-                 architectures/clients/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
+                 architectures/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
                  keeping each file valid against its schema in config/schemas/.
               4. Do not edit the decision JSON. Do not commit or push.
 
