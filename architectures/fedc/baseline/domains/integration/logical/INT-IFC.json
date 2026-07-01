@@ -200,6 +200,14 @@
             "source": "PLAT-ESG",
             "target": "PLAT-REG-REPORTING",
             "direction": "source-to-target"
+        },
+        {
+            "id": "INT-IFC-025",
+            "name": "Asset Information Lookup",
+            "description": "Field Service Management looks up asset information from Enterprise Asset Management to enable field engineers to access real-time asset details (e.g. asset master, maintenance history) whilst out in the field.",
+            "source": "PLAT-EAM",
+            "target": "PLAT-FSM",
+            "direction": "target-to-source"
         }
     ],
     "activity": [
