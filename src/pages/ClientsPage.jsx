@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
+import { usePermissions } from '../context/PermissionsContext'
+import { ACTIONS } from '../lib/permissions'
 import { loadClientRollup } from '../lib/metrics'
+import { githubAction } from '../lib/api'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
 import ClientLogo from '../components/ui/ClientLogo'
-import { ChevronRight } from '../components/ui/icons'
+import EditSettingsModal from '../components/settings/EditSettingsModal'
+import { ChevronRight, EditIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
-function ClientCard({ client, clientsMetadata, m }) {
-  const clientId = client['architecture-id']
-  const meta = clientsMetadata[clientId]
-  const name = meta?.name ?? clientId
+const ARCH_STATUS_OPTIONS = [
+  { value: 'active', label: 'Active' },
+  { value: 'archived', label: 'Archived' },
+]
 
+function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
   return (
     <Link
       to={`/architectures/${clientId}/transitions`}
@@ -27,6 +32,20 @@ function ClientCard({ client, clientsMetadata, m }) {
           </h3>
           <p className="text-xs font-mono text-gray-500 mt-0.5">{clientId}</p>
         </div>
+        {canEdit && (
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onEdit()
+            }}
+            className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-50 transition-colors flex-shrink-0"
+            title="Edit architecture"
+            aria-label={`Edit ${name}`}
+          >
+            <EditIcon className="w-4 h-4" />
+          </button>
+        )}
         <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors sm:hidden" />
       </div>
 
@@ -52,12 +71,14 @@ function ClientCard({ client, clientsMetadata, m }) {
 
 export default function ClientsPage() {
   const { clients, clientsMetadata, loading } = useArchitecture()
+  const { can } = usePermissions()
   usePageTitle('Architectures')
 
-  // Per-client metrics (keyed by client-id), rolled up across every version.
-  // Cards render immediately; metrics fill in as they resolve. A resolved value
-  // of null means the client has no architecture content yet.
   const [metrics, setMetrics] = useState({})
+  // Optimistic name/status overrides after an edit (context isn't re-fetched).
+  const [overrides, setOverrides] = useState({})
+  const [editingId, setEditingId] = useState(null)
+
   useEffect(() => {
     let live = true
     for (const c of clients) {
@@ -79,6 +100,11 @@ export default function ClientsPage() {
     )
   }
 
+  const nameFor = (id) => overrides[id]?.name ?? clientsMetadata[id]?.name ?? id
+  const editing = editingId
+    ? { id: editingId, name: nameFor(editingId), status: overrides[editingId]?.status ?? clientsMetadata[editingId]?.status ?? 'active' }
+    : null
+
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-8">
@@ -94,21 +120,41 @@ export default function ClientsPage() {
           <p className="text-sm font-semibold text-gray-700">No architectures yet</p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
             Each architecture lives in its own folder. Add one under{' '}
-            <code className="font-mono text-xs bg-gray-100 px-1">architectures/</code> to
-            get started.
+            <code className="font-mono text-xs bg-gray-100 px-1">architectures/</code> to get
+            started.
           </p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {clients.map((client) => (
-            <ClientCard
-              key={client['architecture-id']}
-              client={client}
-              clientsMetadata={clientsMetadata}
-              m={metrics[client['architecture-id']]}
-            />
-          ))}
+          {clients.map((client) => {
+            const id = client['architecture-id']
+            return (
+              <ClientCard
+                key={id}
+                clientId={id}
+                name={nameFor(id)}
+                metrics={metrics[id]}
+                canEdit={can(ACTIONS.ARCHITECTURE_EDIT, { architectureId: id })}
+                onEdit={() => setEditingId(id)}
+              />
+            )
+          })}
         </div>
+      )}
+
+      {editing && (
+        <EditSettingsModal
+          title="Edit architecture"
+          subtitle={`Settings for ${editing.name}`}
+          initialName={editing.name}
+          initialStatus={editing.status}
+          statusOptions={ARCH_STATUS_OPTIONS}
+          onSubmit={(fields) => githubAction({ action: 'update-architecture', architectureId: editing.id, ...fields })}
+          onSaved={(fields) =>
+            setOverrides((prev) => ({ ...prev, [editing.id]: { ...prev[editing.id], ...fields } }))
+          }
+          onClose={() => setEditingId(null)}
+        />
       )}
     </div>
   )

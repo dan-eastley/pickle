@@ -152,10 +152,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ## Epic: Editing, Modals & Settings
 
-### EDIT-1 · ⬜ Edit Architecture / Transition via a reusable settings modal · Medium
-**Proposed fix:** A shared **SettingsModal** shell — left-hand category rail that jump-scrolls to the relevant settings section, and a **Save Settings / Cancel** footer in the same format as the New Decision / New Discovery modals — reused for both architecture and transition editing. **Edit** entry points on each card of `/architectures` and on `/architectures/<id>/transitions`, visible only to **Owner/Admin** (gated through the [RAS-3] `can()` seam). First settings categories: **Name** and **Status**; writes persist via new `/api/github` actions (`update-architecture`, `update-transition`) to `architecture.json` / `transition.json` on `main`.
+### EDIT-1 · ✅ Edit Architecture / Transition via a reusable settings modal · Medium
+**Done:** Shared **SettingsModal** shell (`components/ui/SettingsModal.jsx`) — left-hand category rail that jump-scrolls to each settings section, Save Settings / Cancel footer matching the New Decision / New Discovery modals — plus `EditSettingsModal` (Name + Status). **Edit** entry points on each `/architectures` card and each row of `/architectures/<id>/transitions`, shown only when [RAS-3] `can()` allows (Owner/Admin). Writes persist via the gated `update-architecture` / `update-transition` API actions to `architecture.json` / `transition.json` on `main`; the page updates optimistically. Added an optional `status` (active/archived) to the architecture schema so architectures carry a status too.
 **Deferred:** **Icon** and **Colour** categories; draggable modal ([UI-13]); the create flows ([EDIT-2]).
-**Note:** This is the shared-modal foundation several other items reference ([UI-13] draggable, [EDIT-2] create). Best built as its own focused pass — it needs the modal shell, two API write actions, and the permission seam wired together. Sequenced right after [RAS-3]'s `can()` seam exists (even in placeholder form).
 
 ### EDIT-2 · ⬜ New Architecture / New Transition · Medium
 **Context:** Creating architectures/transitions is not yet possible in-app (only editing).
