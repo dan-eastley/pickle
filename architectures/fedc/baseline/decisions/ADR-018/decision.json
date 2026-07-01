@@ -51,5 +51,13 @@
             "recommendation": "Once the new interface is defined in `INT-IFC`, review **Data Domains & Concepts ↔ Interface Catalogue** (`INT-DAC-IFC`) and add entries mapping the asset information entities to the new interface. Specifically, identify which conceptual data entities from `DAT-DAC` (e.g., 'Asset Master') are read by FSM through the asset-lookup interface. If data entities do not yet exist in `DAT-DAC`, raise a follow-up decision to define them.",
             "rationale": "The INT-DAC-IFC matrix is the bridge between the integration landscape and the data model. Documenting the data flows makes the decision's impact visible to data architects and supports analysis of data governance, quality, and lineage. Without this mapping, future changes to either the interface or the data model may not trigger appropriate reviews."
         }
+    ],
+    "referential-integrity": [
+        {
+            "finding": "**Referential integrity checks passed.** All catalogues scoped to this decision (**Interface Catalogue** (`INT-IFC`), **Application Domains & Platforms** (`APP-DAP`), **Data Domains & Concepts** (`DAT-DAC`), and **Data ↔ Interface Matrix** (`INT-DAC-IFC`)) contain no broken references, unresolved IDs, or orphaned entities.",
+            "impact": "The architecture data is structurally sound and ready for downstream integration and impact analysis. Platform references from INT-IFC resolve correctly to APP-DAP, data entity references in the INT-DAC-IFC matrix resolve to DAT-DAC, and all parent-child relationships within catalogues are intact.",
+            "recommendation": "No corrections are required at this stage. When the new asset-lookup interface is added to INT-IFC (as recommended in impact-assessment), ensure the new interface ID and referenced platforms exist before updating INT-DAC-IFC to map data entities to the new interface.",
+            "rationale": "Referential integrity is essential for maintaining traceability across the architecture model. Valid references ensure that architecture decisions can be analyzed for impact across domains, platforms, and data flows without discovering broken dependencies during implementation."
+        }
     ]
 }
