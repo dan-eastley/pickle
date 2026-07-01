@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useId } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
+import useDraggable from '../../hooks/useDraggable'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
@@ -21,6 +22,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
   const [result, setResult] = useState(null) // { ok, discoveryId } | { ok:false, error }
   const saved = !!result?.ok
   const trapRef = useFocusTrap()
+  const { dragHandleProps, style: dragStyle } = useDraggable()
   const titleRef = useRef(null)
   useEffect(() => {
     titleRef.current?.focus()
@@ -75,10 +77,14 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
           role="dialog"
           aria-modal="true"
           aria-label="New Architecture Discovery"
+          style={dragStyle}
           className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
         >
-          {/* Header: plain coloured bar, icon, title + purpose */}
-          <div className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0">
+          {/* Header: plain coloured bar, icon, title + purpose (drag handle) */}
+          <div
+            {...dragHandleProps}
+            className="flex items-start justify-between gap-3 px-5 py-4 bg-blue-50 flex-shrink-0 cursor-move"
+          >
             <div className="flex items-start gap-3 min-w-0">
               <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
                 <RobotIcon className="w-4 h-4 text-blue-600" />
