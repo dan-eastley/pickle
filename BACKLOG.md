@@ -124,9 +124,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Context:** The entity slide-out ([UI-9]) shows relationships but no route to change the entity.
 **Proposed fix:** A **New Decision** button at the bottom of the slide-out with the narrative *"Changes to this entity must go through a Decision Record."* — pre-scoped to the entity.
 
-### UI-15 · ⬜ Standardised enum meta on models (legend + inline) · Medium
-**Context:** Entities carry enum attributes (capability `importance`, process `type`, application `status`) that diagrams don't surface consistently.
-**Proposed fix:** A common way to render a typed enum against an entity — a **legend** on the model plus consistent inline formatting (colour/badge) driven by the schema's enum definition, so every enum meta looks and behaves the same across catalogues and diagrams.
+### UI-15 · 🟡 Standardised enum meta on models (legend + inline) · Medium
+**Done:** A standardised enum system — `lib/enums.js` maps any `meta.<enum>` value to one consistent look (coloured dot/badge + SVG fills) via a fixed palette (explicit colours for known values e.g. importance/lifecycle/status, stable-hash fallback otherwise). `MetaBadges` renders a badge for every enum on a group/item in the nested-group diagram; `EnumLegend` renders the matching legend in the diagram footer. Live on the capability model (`importance`) now; any diagram lights up automatically when its data carries enum meta.
+**Remaining (data):** enrich the applications (APP-DPM) and process (BUS-BPM) diagram *data* with `meta` enums (e.g. platform lifecycle/type) — needs the shared card-diagram item `$def` to allow `meta`. Optional: extend the same badges to CatalogueView.
 
 ### UI-16 · ✅ Capability/Process L2: ID above the name · Low
 **Done (this pass):** On the level-2 capability and process models the entity ID now sits **above** the name (was to the left), matching the slide-out and the rest of the UI.
