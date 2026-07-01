@@ -244,6 +244,10 @@
         {
             "column-id": "CON-REG-OBLIGATION",
             "row-id": "INT-IFC-024"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "INT-IFC-025"
         }
     ],
     "activity": [
