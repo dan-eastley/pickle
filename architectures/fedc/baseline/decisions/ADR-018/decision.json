@@ -20,16 +20,16 @@
     ],
     "recommendations": [
         {
-            "recommendation": "Add explicit requirements to the decision. Currently there are none. The proposal describes adding an interface but doesn't specify what must be true when complete—e.g., which asset information fields must be retrievable, how quickly, what security constraints apply, or what happens on lookup failure. A requirements section is essential for downstream architecture analysis."
+            "recommendation": "Define acronyms on first use. **EAM** and **FSM** are unexplained. Expand to Enterprise Asset Management and Field Service Management for business audience clarity."
         },
         {
-            "recommendation": "Define acronyms on first use. **EAM** (Enterprise Asset Management) and **FSM** (Field Service Management) are not explained. For a business audience unfamiliar with your systems, spell these out to improve clarity."
+            "recommendation": "Add a **Business Value** section explaining why asset lookup in the field matters—e.g., reduce engineer downtime, improve first-contact resolution, enable better maintenance decisions. This answers *why* the proposal is important to the business."
         },
         {
-            "recommendation": "Separate the narrative structure more clearly. The narrative currently conflates context, problem, and proposal. Consider: **Context** (what we do now), **Problem** (what's missing / why is it missing), **Proposal** (what will we build), and **Business Value** (why this matters to the business). This helps stakeholders understand not just *what* is being changed but *why*."
+            "recommendation": "Add explicit requirements. The proposal needs measurable acceptance criteria, such as: which asset information fields must be returned, acceptable lookup latency, security/access controls, and behavior on lookup failure or asset not found. These are essential for downstream architecture analysis."
         },
         {
-            "recommendation": "Clarify scope of asset information. The proposal says field engineers will 'collect asset information' but doesn't specify which fields, what system constraints exist, or whether all assets or only certain types are in scope. A requirements section should detail this."
+            "recommendation": "Specify scope boundaries. Clarify whether this applies to all assets or only certain types (e.g., equipment, vehicles), and whether read-only access is sufficient or if engineers need to update asset data in the field."
         }
     ]
 }
