@@ -9,11 +9,16 @@
  * Migrations are generated with `npm run db:generate` and applied with
  * `npm run db:migrate`. Do not hand-edit applied migrations.
  */
-import { pgEnum, pgTable, text, boolean, timestamp } from 'drizzle-orm/pg-core'
+import { pgEnum, pgTable, text, boolean, timestamp, unique } from 'drizzle-orm/pg-core'
 
-// Coarse access-control tier. Real enforcement (and client→user mapping) comes
-// later; for now every authenticated user can see everything.
+// Coarse access-control tier. `admin` is the platform super-user (sees and edits
+// everything). `member` gains rights per-architecture via architecture_membership
+// below. `viewer` is read-only everywhere. Not client-settable (see lib/auth).
 export const accessTier = pgEnum('access_tier', ['admin', 'member', 'viewer'])
+
+// Per-architecture access role. A user's effective rights on an architecture are
+// global-admin OR their membership role here. See src/lib/permissions.js.
+export const architectureRole = pgEnum('architecture_role', ['owner', 'contributor', 'consumer'])
 
 const timestamps = {
   createdAt: timestamp('created_at', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
@@ -76,4 +81,23 @@ export const verification = pgTable('verification', {
   ...timestamps,
 })
 
-export const schema = { user, session, account, verification }
+// Maps a user to an architecture with a role. Absence of a row = no per-architecture
+// rights (a global admin still has full access). One role per (user, architecture).
+export const architectureMembership = pgTable(
+  'architecture_membership',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    // The architecture id (folder name under architectures/, e.g. "fedc").
+    architectureId: text('architecture_id').notNull(),
+    role: architectureRole('role').notNull(),
+    // Who granted this membership (Owner or Admin); null if seeded/system.
+    grantedBy: text('granted_by').references(() => user.id, { onDelete: 'set null' }),
+    ...timestamps,
+  },
+  (t) => ({ uniqUserArchitecture: unique().on(t.userId, t.architectureId) })
+)
+
+export const schema = { user, session, account, verification, architectureMembership }

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
 import { AuthProvider } from './context/AuthContext'
+import { PermissionsProvider } from './context/PermissionsContext'
 import RequireAuth from './components/auth/RequireAuth'
 import NavigationProgress from './components/ui/NavigationProgress'
 import Layout from './components/layout/Layout'
@@ -127,9 +128,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ArchitectureProvider>
-          <AppRoutes />
-        </ArchitectureProvider>
+        <PermissionsProvider>
+          <ArchitectureProvider>
+            <AppRoutes />
+          </ArchitectureProvider>
+        </PermissionsProvider>
       </AuthProvider>
     </BrowserRouter>
   )
