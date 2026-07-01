@@ -102,12 +102,13 @@ export default function VersionsPage() {
               <div key={vId} className="border border-gray-200 bg-white">
                 <Link
                   to={`${base}/domains`}
-                  className="group flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+                  className="group flex items-center justify-between gap-3 px-5 py-4 bg-gray-50 border-b border-gray-200 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <div className="min-w-0">
+                      <p className="text-xs text-gray-500">Transition</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+                        <span className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
                           {meta?.name ?? vId}
                         </span>
                         {meta?.status && (
@@ -140,7 +141,7 @@ export default function VersionsPage() {
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
                   </div>
                 </Link>
-                <div className="px-5 pb-4 pt-1 border-t border-gray-100">
+                <div className="p-4">
                   {m === undefined ? (
                     <div className="flex items-center gap-2 py-1 text-xs text-gray-500">
                       <Spinner size="sm" /> Loading content…

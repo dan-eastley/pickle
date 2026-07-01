@@ -21,16 +21,16 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
   return (
     <Link
       to={`/architectures/${clientId}/transitions`}
-      className="group flex flex-col sm:flex-row sm:items-stretch bg-white border border-gray-200 hover:border-gray-400 transition-colors"
+      className="group block bg-white border border-gray-200 hover:border-gray-400 transition-colors"
     >
-      {/* Identity column */}
-      <div className="flex items-center gap-4 px-5 py-5 sm:w-72 sm:flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100">
-        <ClientLogo clientId={clientId} name={name} className="w-12 h-12" />
+      {/* Header */}
+      <div className="flex items-center gap-4 px-5 py-4 bg-gray-50 border-b border-gray-200">
+        <ClientLogo clientId={clientId} name={name} className="w-11 h-11 flex-shrink-0" />
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+          <p className="text-xs text-gray-500">Architecture</p>
+          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">
             {name}
           </h3>
-          <p className="text-xs font-mono text-gray-500 mt-0.5">{clientId}</p>
         </div>
         {canEdit && (
           <button
@@ -39,18 +39,19 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
               e.stopPropagation()
               onEdit()
             }}
-            className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-50 transition-colors flex-shrink-0"
+            className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-100 transition-colors flex-shrink-0"
             title="Edit architecture"
             aria-label={`Edit ${name}`}
           >
             <EditIcon className="w-4 h-4" />
           </button>
         )}
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors sm:hidden" />
+        <span className="text-sm font-mono text-gray-400 flex-shrink-0">{clientId}</span>
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
       </div>
 
-      {/* Metrics column */}
-      <div className="flex-1 min-w-0 px-5 py-4">
+      {/* Metrics */}
+      <div className="p-4">
         {m === undefined ? (
           <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
             <Spinner size="sm" /> Loading metrics…

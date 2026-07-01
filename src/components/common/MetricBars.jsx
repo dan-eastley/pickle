@@ -1,47 +1,22 @@
 import { DOMAINS, DOMAIN_COLORS } from '../../lib/artefacts'
 
 // Shared metric display: architecture content grouped by domain, colour-coded by
-// domain, as a simple bar chart with uniform text-xs. Used on the architectures
-// list, the transitions page, the domains page, and atop artefacts so the
-// numbers read the same everywhere. Bars are scaled to each group's own max so
-// every group stays readable; the number gives the precise value.
+// domain. Rendered as a compact table — each domain is a column with a coloured
+// header and label/count rows; counts sit right, in the domain colour. Used on
+// the architectures list, the transitions page, the domains page (single), and
+// atop artefacts, so the numbers read the same everywhere.
 
-function BarRow({ label, count, max, bar }) {
-  const pct = max > 0 ? Math.max(3, Math.round((count / max) * 100)) : 0
+function MetricRow({ label, count, countColor }) {
   return (
-    <div className="flex items-center gap-2 text-xs">
-      <span className="w-24 sm:w-32 flex-shrink-0 text-gray-500 truncate">{label}</span>
-      <div className="flex-1 h-1.5 bg-gray-100">
-        <div className={`h-full ${bar}`} style={{ width: `${pct}%` }} />
-      </div>
-      <span className="w-9 flex-shrink-0 text-right tabular-nums font-medium text-gray-700">
-        {count}
-      </span>
+    <div className="flex items-center justify-between gap-3 px-2.5 py-1 text-xs">
+      <span className="min-w-0 truncate text-gray-600">{label}</span>
+      <span className={`flex-shrink-0 tabular-nums font-semibold ${countColor}`}>{count}</span>
     </div>
   )
 }
 
-function Group({ title, text, dot, bar, items, showTitle = true }) {
-  const max = Math.max(1, ...items.map((i) => i.count))
-  return (
-    <div>
-      {showTitle && (
-        <div className={`mb-1.5 flex items-center gap-1.5 text-xs font-semibold ${text}`}>
-          <span className={`h-2 w-2 ${dot}`} />
-          {title}
-        </div>
-      )}
-      <div className={`space-y-1 ${showTitle ? 'pl-3.5' : ''}`}>
-        {items.map((i) => (
-          <BarRow key={i.label} label={i.label} count={i.count} max={max} bar={bar} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// Build one group per domain (in DOMAINS order) that has content, in the
-// domain's colour. Document instances are folded into their owning domain.
+// Build one group per domain (in DOMAINS order) that has content, in the domain's
+// colour. Document instances are folded into their owning domain.
 function domainGroups(perDomain) {
   const groups = []
   for (const d of DOMAINS) {
@@ -52,7 +27,7 @@ function domainGroups(perDomain) {
     if (dm?.documents) items.push({ label: 'Documents', count: dm.documents })
     if (items.length === 0) continue
     const c = DOMAIN_COLORS[d.id]
-    groups.push({ key: d.id, title: d.name, text: c.text, dot: c.dot, bar: c.dot, items })
+    groups.push({ key: d.id, title: d.name, headerColor: c.text, countColor: c.text, items })
   }
   return groups
 }
@@ -63,15 +38,14 @@ export default function MetricBars({ perDomain, governance, single = false, empt
   if (governance) {
     const items = [
       { label: 'Decisions', count: governance.decisions ?? 0 },
-      { label: 'Discoveries', count: governance.discoveries ?? 0 },
+      { label: 'Discovery', count: governance.discoveries ?? 0 },
     ].filter((i) => i.count > 0)
     if (items.length > 0) {
       groups.push({
         key: 'gov',
         title: 'Governance',
-        text: 'text-gray-600',
-        dot: 'bg-gray-400',
-        bar: 'bg-gray-400',
+        headerColor: 'text-gray-500',
+        countColor: 'text-gray-700',
         items,
       })
     }
@@ -79,12 +53,36 @@ export default function MetricBars({ perDomain, governance, single = false, empt
 
   if (groups.length === 0) return empty
 
-  // `single` (e.g. one domain card, or an artefact) hides the group heading,
-  // since the surrounding card already names the domain/artefact.
+  // Single mode (one domain card, or an artefact): a compact bordered table with
+  // no domain header — the surrounding card already names the domain/artefact.
+  if (single) {
+    const g = groups[0]
+    return (
+      <div className="inline-block min-w-[220px] border border-gray-200 divide-y divide-gray-100">
+        {g.items.map((i) => (
+          <MetricRow key={i.label} label={i.label} count={i.count} countColor={g.countColor} />
+        ))}
+      </div>
+    )
+  }
+
+  // Full mode: a grid of domain columns. The 1px grid gap over a gray background
+  // draws the clean dividing lines between columns/rows.
   return (
-    <div className="space-y-3">
+    <div className="grid gap-px border border-gray-200 bg-gray-200 [grid-template-columns:repeat(auto-fit,minmax(155px,1fr))]">
       {groups.map((g) => (
-        <Group key={g.key} {...g} showTitle={!single} />
+        <div key={g.key} className="flex flex-col bg-white">
+          <div
+            className={`px-2.5 py-1.5 text-xs font-bold border-b border-gray-200 ${g.headerColor}`}
+          >
+            {g.title}
+          </div>
+          <div className="divide-y divide-gray-100">
+            {g.items.map((i) => (
+              <MetricRow key={i.label} label={i.label} count={i.count} countColor={g.countColor} />
+            ))}
+          </div>
+        </div>
       ))}
     </div>
   )
