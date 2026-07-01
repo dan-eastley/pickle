@@ -30,10 +30,10 @@ Write a JSON **array** to the decision JSON's `architecture-review` property. Ea
 
 | Field | Description |
 |---|---|
-| `finding` | What you observed. Name artefact types by their full name and ID. Max ~500 characters. |
-| `impact` | What this means for the decision — which catalogues will need editing, what is at risk if they are not. Max ~500 characters. |
-| `recommendation` | What the author should do: which artefact types to update, add, or check. Be specific. Max ~500 characters. |
-| `rationale` | Why this is the right course of action — ground it in business outcomes or governance. Max ~500 characters. |
+| `finding` | What you observed. Name artefact types by their full name and ID. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | What this means for the decision — which catalogues will need editing, what is at risk if they are not. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What the author should do: which artefact types to update, add, or check. Be specific. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this is the right course of action — ground it in business outcomes or governance. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold artefact names, use `code spans` for IDs, and bullet lists where multiple items need enumerating.
 

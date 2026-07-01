@@ -25,10 +25,10 @@ Write a JSON **array** to the decision JSON's `challenger-analysis` property. Ea
 
 | Field | Description |
 |---|---|
-| `finding` | The risk, gap, or tension identified. Be specific — cite the upstream finding, principle, or strategic statement it relates to. Max ~500 characters. |
-| `impact` | The business consequence if this risk materialises — what would go wrong, and how hard would it be to reverse. Max ~500 characters. |
-| `recommendation` | What should happen before or instead of proceeding — a condition, a deferral, a narrower scope, or an explicit documented exception. Max ~500 characters. |
-| `rationale` | Why this is a genuine reason for caution, not a minor concern. Max ~500 characters. |
+| `finding` | The risk, gap, or tension identified. Be specific — cite the upstream finding, principle, or strategic statement it relates to. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `impact` | The business consequence if this risk materialises — what would go wrong, and how hard would it be to reverse. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `recommendation` | What should happen before or instead of proceeding — a condition, a deferral, a narrower scope, or an explicit documented exception. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
+| `rationale` | Why this is a genuine reason for caution, not a minor concern. Be succinct — a single statement or a few short bullets, not a paragraph. Max ~300 characters. |
 
 Use **markdown** in each field — bold key risks, `code spans` for artefact IDs, bullet lists for grouped concerns.
 
