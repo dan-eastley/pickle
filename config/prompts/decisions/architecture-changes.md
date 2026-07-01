@@ -32,7 +32,7 @@ Write a JSON **array** to the decision JSON's `architecture-changes` property. E
 | `artefact-id` | string | yes | Artefact type ID, e.g. `BUS-CAP` |
 | `artefact-name` | string | yes | Full artefact type name, e.g. `Business Capabilities` |
 | `change-type` | string | yes | One of: `create`, `update`, `delete`, `rename`, `move` |
-| `description` | string | yes | Precise instruction for what to change, including any implementor detail. E.g. `Add capability: Project & Programme Management at level 1 under CAP-006`. Include the target array key, parent ID, any required field values, and relevant schema constraints or the linked finding where it aids the implementor. |
+| `description` | string | yes | A single, precise instruction — one sentence, no narrative padding. E.g. `Add capability: Project & Programme Management at level 1 under CAP-006`. Include the target array key, parent ID, and required field values so it is directly actionable; reference the linked finding rather than restating it. |
 
 ## Constraints
 
