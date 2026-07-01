@@ -21,6 +21,14 @@
             "type": "string",
             "description": "Brief description of the architecture — who it belongs to and the context of this engagement"
         },
+        "status": {
+            "type": "string",
+            "enum": [
+                "active",
+                "archived"
+            ],
+            "description": "Lifecycle status of the architecture — active (in use) or archived (retained, no longer maintained)"
+        },
         "industry": {
             "type": "string",
             "description": "Industry sector the organisation operates in"
