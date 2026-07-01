@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import EmptyState from '../ui/EmptyState'
 import EntityPanel from './EntityPanel'
+import EnumLegend from './EnumLegend'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 import ProcessFlowDiagram from './diagrams/ProcessFlowDiagram'
 import WiringDiagram from './diagrams/WiringDiagram'
@@ -55,8 +56,11 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
               selectedId={selectedId}
             />
           </div>
-          <div className="bg-gray-50 border-t border-gray-200 px-4 py-2 text-xs text-gray-500">
-            {countSummary(groups, schema?.meta?.countLabels)}
+          <div className="bg-gray-50 border-t border-gray-200 px-4 py-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <EnumLegend groups={groups} />
+            <span className="text-xs text-gray-500">
+              {countSummary(groups, schema?.meta?.countLabels)}
+            </span>
           </div>
         </div>
         <EntityPanel
@@ -83,8 +87,11 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
               selectedId={selectedId}
             />
           </div>
-          <div className="bg-gray-50 border-t border-gray-200 px-4 py-2 text-xs text-gray-500">
-            {countSummary(groups, schema?.meta?.countLabels)}
+          <div className="bg-gray-50 border-t border-gray-200 px-4 py-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+            <EnumLegend groups={groups} />
+            <span className="text-xs text-gray-500">
+              {countSummary(groups, schema?.meta?.countLabels)}
+            </span>
           </div>
         </div>
         <EntityPanel
