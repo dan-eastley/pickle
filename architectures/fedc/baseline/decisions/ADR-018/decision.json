@@ -20,16 +20,19 @@
     ],
     "recommendations": [
         {
-            "recommendation": "Define acronyms on first use. **EAM** and **FSM** are unexplained. Expand to Enterprise Asset Management and Field Service Management for business audience clarity."
+            "recommendation": "**Expand acronyms on first use.** Define **EAM** as Enterprise Asset Management and **FSM** as Field Service Management in the narrative introduction. Business stakeholders unfamiliar with these acronyms may struggle to follow the proposal without expansion."
         },
         {
-            "recommendation": "Add a **Business Value** section explaining why asset lookup in the field matters—e.g., reduce engineer downtime, improve first-contact resolution, enable better maintenance decisions. This answers *why* the proposal is important to the business."
+            "recommendation": "**Strengthen context with business justification.** The narrative states the problem (need asset lookups in the field) but omits *why* this matters to the business. Add a sentence explaining the business value—e.g., 'reducing engineer downtime by enabling first-contact problem resolution' or 'improving asset safety compliance by giving engineers access to maintenance history.' This helps stakeholders understand the urgency."
         },
         {
-            "recommendation": "Add explicit requirements. The proposal needs measurable acceptance criteria, such as: which asset information fields must be returned, acceptable lookup latency, security/access controls, and behavior on lookup failure or asset not found. These are essential for downstream architecture analysis."
+            "recommendation": "**Add a requirements section.** The narrative is descriptive but has no measurable acceptance criteria. Define explicit requirements specifying: (1) **which asset information fields** must be returned (e.g., Asset ID, Name, Maintenance Status, Warranty Expiry); (2) **acceptable lookup latency** (e.g., <500ms); (3) **availability/SLA target** (e.g., 99.9%); (4) **access controls** (read-only access by field engineers, audit logging); (5) **error handling** (behavior when asset not found, network unavailable). These are essential for downstream architecture analysis and testing."
         },
         {
-            "recommendation": "Specify scope boundaries. Clarify whether this applies to all assets or only certain types (e.g., equipment, vehicles), and whether read-only access is sufficient or if engineers need to update asset data in the field."
+            "recommendation": "**Clarify scope boundaries.** Specify whether this applies to all asset types in EAM or only specific categories (e.g., equipment, vehicles, facilities). Also clarify whether access is **read-only** (engineers look up asset information only) or whether engineers may also **update** asset data (e.g., log maintenance completion, update status) through this interface. This prevents implementation surprises."
+        },
+        {
+            "recommendation": "**Specify offline-vs-online model.** Field engineers may work in areas with poor connectivity. Clarify whether the asset lookup is **real-time synchronous** (requires network availability) or whether **caching is permitted** (e.g., cached on engineer devices for offline access, refreshed daily). If caching is allowed, note the cache expiry window and how stale data is communicated to engineers."
         }
     ],
     "impact-assessment": [
