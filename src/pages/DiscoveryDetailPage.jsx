@@ -63,6 +63,14 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
             </li>
           ))}
         </ul>
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            ↑ To top
+          </button>
+        </div>
       </nav>
     </aside>
   )
