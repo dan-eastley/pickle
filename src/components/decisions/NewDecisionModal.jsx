@@ -6,6 +6,7 @@ import { buildScope } from '../../lib/scope'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
+import useDraggable from '../../hooks/useDraggable'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
@@ -34,6 +35,7 @@ export default function NewDecisionModal({
 
   const colors = DOMAIN_COLORS[artefact.domain]
   const trapRef = useFocusTrap()
+  const { dragHandleProps, style: dragStyle } = useDraggable()
   const titleRef = useRef(null)
   useEffect(() => {
     titleRef.current?.focus()
@@ -112,11 +114,13 @@ export default function NewDecisionModal({
           role="dialog"
           aria-modal="true"
           aria-label="New Architecture Decision"
+          style={dragStyle}
           className="bg-white w-full max-w-4xl flex flex-col shadow-xl max-h-[90vh]"
         >
-          {/* Header: plain coloured bar, icon, title + purpose */}
+          {/* Header: plain coloured bar, icon, title + purpose (drag handle) */}
           <div
-            className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0`}
+            {...dragHandleProps}
+            className={`flex items-start justify-between gap-3 px-5 py-4 ${colors.bg} flex-shrink-0 cursor-move`}
           >
             <div className="flex items-start gap-3 min-w-0">
               <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">

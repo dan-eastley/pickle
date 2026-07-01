@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
+import useDraggable from '../../hooks/useDraggable'
 import Button from './Button'
 
 // Reusable settings-modal shell ([EDIT-1]). A left-hand category rail that
@@ -34,6 +35,7 @@ export default function SettingsModal({
 }) {
   const trapRef = useFocusTrap()
   const bodyRef = useRef(null)
+  const { dragHandleProps, style: dragStyle } = useDraggable()
   const [active, setActive] = useState(categories[0]?.key ?? null)
 
   const requestClose = () => {
@@ -58,10 +60,14 @@ export default function SettingsModal({
           role="dialog"
           aria-modal="true"
           aria-label={title}
+          style={dragStyle}
           className="bg-white w-full max-w-3xl flex flex-col shadow-xl max-h-[90vh]"
         >
-          {/* Header */}
-          <div className="flex items-start justify-between gap-3 px-5 py-4 bg-brand-50 flex-shrink-0">
+          {/* Header (drag handle) */}
+          <div
+            {...dragHandleProps}
+            className="flex items-start justify-between gap-3 px-5 py-4 bg-brand-50 flex-shrink-0 cursor-move"
+          >
             <div className="flex items-start gap-3 min-w-0">
               {icon && (
                 <div className="w-8 h-8 bg-white/70 flex items-center justify-center flex-shrink-0">
