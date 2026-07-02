@@ -48,7 +48,7 @@ function DomainCard({ domain, base, dm, loading }) {
   const accent = colors.accent
 
   return (
-    <div className={`bg-white border-l-4 ${accent}`}>
+    <div className={`bg-white border border-gray-200 border-l-4 ${accent}`}>
       <Link
         to={`${base}/domains/${domain.id}`}
         className="group flex items-start gap-4 p-5 hover:bg-gray-50 transition-colors"
@@ -64,21 +64,17 @@ function DomainCard({ domain, base, dm, loading }) {
           </h3>
           <p className="mt-1 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
         </div>
+        <div className="flex-shrink-0 hidden sm:block">
+          {loading ? (
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <Spinner size="sm" /> Loading…
+            </div>
+          ) : (
+            <MetricBars perDomain={{ [domain.id]: dm }} single empty={null} />
+          )}
+        </div>
         <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" />
       </Link>
-      <div className="px-5 pb-4 -mt-1">
-        {loading ? (
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <Spinner size="sm" /> Loading content…
-          </div>
-        ) : (
-          <MetricBars
-            perDomain={{ [domain.id]: dm }}
-            single
-            empty={<p className="text-xs text-gray-500">No content yet in this domain.</p>}
-          />
-        )}
-      </div>
     </div>
   )
 }

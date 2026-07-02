@@ -218,6 +218,27 @@ export default defineConfig(({ mode }) => {
       setupFiles: ['./vitest.setup.js'],
       include: ['**/*.test.{js,jsx}'],
       exclude: ['node_modules/**', 'dist/**', '.vite/**', 'tests/e2e/**'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text-summary', 'text'],
+        // Coverage is enforced on the logic layer (lib + api + hooks). UI
+        // components/pages are exercised by the browser smoke/use-case tests
+        // (post-deploy.yml), not unit coverage. The big static registry
+        // (artefacts.js), the exceljs-based exporters, and the docs nav are
+        // data/format shims excluded from the ratchet.
+        include: ['lib/**/*.{js,ts}', 'api/**/*.{js,ts}', 'hooks/**/*.{js,ts}'],
+        exclude: ['**/*.test.*', 'lib/artefacts.js', 'lib/export/**', 'lib/docs.js'],
+        thresholds: {
+          // Floor for the whole logic layer — ratchets up, never down.
+          statements: 40,
+          branches: 70,
+          functions: 50,
+          lines: 40,
+          // Security- and write-critical modules held near-total.
+          'lib/permissions.ts': { statements: 95, branches: 90, functions: 100, lines: 95 },
+          'lib/gitTree.ts': { statements: 100, branches: 100, functions: 100, lines: 100 },
+        },
+      },
     },
   }
 })
