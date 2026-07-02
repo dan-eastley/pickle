@@ -46,6 +46,9 @@
         "APP-PRO-DAP": {
             "$ref": "./artefacts/domains/application/logical/APP-PRO-DAP.json"
         },
+        "APP-DAP-DAC": {
+            "$ref": "./artefacts/domains/application/logical/APP-DAP-DAC.json"
+        },
         "INT-IFC": {
             "$ref": "./artefacts/domains/integration/logical/INT-IFC.json"
         },
