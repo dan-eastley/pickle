@@ -207,6 +207,10 @@
       "name": "Business Processes ↔ Application Domains & Platforms",
       "description": "Maps which application platforms support which Level 1 business processes."
     },
+    "APP-DAP-DAC": {
+      "name": "Application Domains & Platforms ↔ Data Concepts",
+      "description": "Maps which application platform is the system of record for (or a consumer of) each data concept."
+    },
     "APP-PRN": {
       "name": "Application Architecture Principles",
       "description": "The guiding principles that shape how Application architecture decisions are made."

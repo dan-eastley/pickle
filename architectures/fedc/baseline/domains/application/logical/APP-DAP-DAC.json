@@ -1,0 +1,283 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DAP-DAC",
+    "relationships": [
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "PLAT-CRM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-ACCOUNT",
+            "row-id": "PLAT-CIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-CONTRACT",
+            "row-id": "PLAT-CIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "PLAT-CIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-PAYMENT",
+            "row-id": "PLAT-CIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-ARREARS",
+            "row-id": "PLAT-CIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-CUST-INTERACTION",
+            "row-id": "PLAT-CONTACT-CENTRE",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-PREMISE",
+            "row-id": "PLAT-GIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-NETWORK-NODE",
+            "row-id": "PLAT-GIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-CONNECTION-POINT",
+            "row-id": "PLAT-GIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "PLAT-EAM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-ASSET-TYPE",
+            "row-id": "PLAT-EAM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-ASSET-CONDITION",
+            "row-id": "PLAT-EAM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-MAINT-WORK-ORDER",
+            "row-id": "PLAT-EAM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-NETWORK-CAPACITY",
+            "row-id": "PLAT-ADMS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-POWER-FLOW",
+            "row-id": "PLAT-ADMS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-NETWORK-OUTAGE",
+            "row-id": "PLAT-OMS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-METER",
+            "row-id": "PLAT-MDM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-METER-POINT",
+            "row-id": "PLAT-MDM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "PLAT-MDM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-METER-READING",
+            "row-id": "PLAT-HES",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-TARIFF",
+            "row-id": "PLAT-TARIFF-ENGINE",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-LICENCE",
+            "row-id": "PLAT-REG-REPORTING",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-REG-OBLIGATION",
+            "row-id": "PLAT-REG-REPORTING",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-COMPLIANCE-REPORT",
+            "row-id": "PLAT-REG-REPORTING",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-EMPLOYEE",
+            "row-id": "PLAT-HRIS",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-FIELD-CREW",
+            "row-id": "PLAT-FSM",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-SUPPLIER",
+            "row-id": "PLAT-ERP",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-INVOICE-PAYABLE",
+            "row-id": "PLAT-ERP",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-COST-CENTRE",
+            "row-id": "PLAT-ERP",
+            "role": "system-of-record"
+        },
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "PLAT-CIS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "PLAT-DXP",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-CUSTOMER",
+            "row-id": "PLAT-CONTACT-CENTRE",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-ACCOUNT",
+            "row-id": "PLAT-CRM",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-ACCOUNT",
+            "row-id": "PLAT-DXP",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-PREMISE",
+            "row-id": "PLAT-CIS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-PREMISE",
+            "row-id": "PLAT-ADMS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-CUST-INTERACTION",
+            "row-id": "PLAT-CRM",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "PLAT-GIS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-ASSET",
+            "row-id": "PLAT-ADMS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-MAINT-WORK-ORDER",
+            "row-id": "PLAT-FSM",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-NETWORK-NODE",
+            "row-id": "PLAT-ADMS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-NETWORK-NODE",
+            "row-id": "PLAT-OMS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-NETWORK-OUTAGE",
+            "row-id": "PLAT-ADMS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-NETWORK-OUTAGE",
+            "row-id": "PLAT-DXP",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-METER",
+            "row-id": "PLAT-CIS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-METER-READING",
+            "row-id": "PLAT-MDM",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "PLAT-CIS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-CONSUMPTION",
+            "row-id": "PLAT-BI",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-TARIFF",
+            "row-id": "PLAT-CIS",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-BILL",
+            "row-id": "PLAT-DXP",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-PAYMENT",
+            "row-id": "PLAT-ERP",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-COMPLIANCE-REPORT",
+            "row-id": "PLAT-BI",
+            "role": "consumer"
+        },
+        {
+            "column-id": "CON-FIELD-CREW",
+            "row-id": "PLAT-HRIS",
+            "role": "consumer"
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-07-02T00:00:00Z",
+            "action": "Created",
+            "who": "System",
+            "notes": "Initial systems-of-record mapping for the distribution operating model."
+        }
+    ]
+}
