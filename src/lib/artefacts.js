@@ -559,6 +559,20 @@ const ARTEFACTS_BASE = [
     ],
   },
   {
+    id: 'APP-DAP-DAC',
+    domain: 'application',
+    abstraction: 'logical',
+    format: 'matrix',
+    key: false,
+    name: 'Application Domains & Platforms ↔ Data Concepts',
+    description:
+      'Maps which application platform is the system of record for (or a consumer of) each data concept.',
+    relatedTo: [
+      { artefactId: 'APP-DAP', relationship: 'derived-from' },
+      { artefactId: 'DAT-DAC', relationship: 'derived-from' },
+    ],
+  },
+  {
     id: 'APP-PRN',
     domain: 'application',
     abstraction: 'logical',

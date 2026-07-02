@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import SettingsModal, { SettingsSection } from '../ui/SettingsModal'
+import AccessManager from '../settings/AccessManager'
 
 // Name + Status settings, shared by architecture and transition editing ([EDIT-1]).
 // `statusOptions` is [{ value, label }]; `onSubmit(fields)` performs the write and
-// resolves on success. Icon / Colour categories land later ([EDIT-1] deferred).
+// resolves on success. When `accessArchitectureId` is set, an Access category
+// ([RAS-3]) lets Owners/Admins manage members. Icon / Colour land later.
 export default function EditSettingsModal({
   title,
   subtitle,
@@ -11,6 +13,7 @@ export default function EditSettingsModal({
   initialName = '',
   initialStatus = '',
   statusOptions = [],
+  accessArchitectureId = null,
   onSubmit,
   onSaved,
   onClose,
@@ -25,6 +28,7 @@ export default function EditSettingsModal({
   const categories = [
     { key: 'name', label: 'Name' },
     ...(statusOptions.length ? [{ key: 'status', label: 'Status' }] : []),
+    ...(accessArchitectureId ? [{ key: 'access', label: 'Access' }] : []),
   ]
 
   const save = async () => {
@@ -85,6 +89,12 @@ export default function EditSettingsModal({
               ))}
             </select>
           </label>
+        </SettingsSection>
+      )}
+
+      {accessArchitectureId && (
+        <SettingsSection sectionKey="access" title="Access">
+          <AccessManager architectureId={accessArchitectureId} />
         </SettingsSection>
       )}
     </SettingsModal>

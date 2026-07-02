@@ -43,12 +43,20 @@ vi.mock('../lib/auth', () => ({
   getSessionUser: (...args) => h.getSessionUser(...args),
 }))
 
-vi.mock('../db/index', () => ({
-  db: {
-    select: () => ({ from: () => ({ where: () => Promise.resolve(h.selectRows.value) }) }),
-    insert: () => ({ values: h.insertValues }),
-  },
-}))
+vi.mock('../db/index', () => {
+  // A chainable query stub: builder methods return the chain; awaiting it (or an
+  // .onConflictDoUpdate) resolves to the configured rows. `values()` records the
+  // inserted row via h.insertValues so create/grant can be asserted.
+  const makeChain = () => {
+    const c = {}
+    for (const m of ['from', 'where', 'innerJoin', 'limit']) c[m] = () => c
+    c.values = (v) => (h.insertValues(v), c)
+    c.onConflictDoUpdate = () => Promise.resolve()
+    c.then = (res, rej) => Promise.resolve(h.selectRows.value).then(res, rej)
+    return c
+  }
+  return { db: { select: makeChain, insert: makeChain, delete: makeChain } }
+})
 
 const { default: handler } = await import('./github')
 
@@ -152,5 +160,62 @@ describe('/api/github create actions ([EDIT-2])', () => {
     const [, , from, to] = h.gh.cloneDir.mock.calls[0]
     expect(from).toBe('architectures/fedc/baseline')
     expect(to).toBe('architectures/fedc/2026-q2')
+  })
+})
+
+describe('/api/github access management ([RAS-3])', () => {
+  it('403s a member without the access-grant right', async () => {
+    h.getSessionUser.mockResolvedValue(member) // no membership
+    const res = await post({
+      action: 'grant-access',
+      architectureId: 'fedc',
+      email: 'new@x.io',
+      role: 'contributor',
+    })
+    expect(res.statusCode).toBe(403)
+  })
+
+  it('404s when the email has no user', async () => {
+    h.getSessionUser.mockResolvedValue(admin)
+    h.selectRows.value = [] // user lookup finds nobody
+    const res = await post({
+      action: 'grant-access',
+      architectureId: 'fedc',
+      email: 'ghost@x.io',
+      role: 'owner',
+    })
+    expect(res.statusCode).toBe(404)
+  })
+
+  it('grants a role to a known user (admin)', async () => {
+    h.getSessionUser.mockResolvedValue(admin)
+    h.selectRows.value = [{ id: 'u9', email: 'new@x.io', name: 'New' }]
+    const res = await post({
+      action: 'grant-access',
+      architectureId: 'fedc',
+      email: 'new@x.io',
+      role: 'contributor',
+    })
+    expect(res.statusCode).toBe(200)
+    expect(res.body.member).toMatchObject({ userId: 'u9', role: 'contributor' })
+    expect(h.insertValues).toHaveBeenCalled()
+  })
+
+  it('rejects an invalid role with 400', async () => {
+    h.getSessionUser.mockResolvedValue(admin)
+    h.selectRows.value = [{ id: 'u9', email: 'new@x.io', name: 'New' }]
+    const res = await post({
+      action: 'grant-access',
+      architectureId: 'fedc',
+      email: 'new@x.io',
+      role: 'superuser',
+    })
+    expect(res.statusCode).toBe(400)
+  })
+
+  it('revokes a membership (admin)', async () => {
+    h.getSessionUser.mockResolvedValue(admin)
+    const res = await post({ action: 'revoke-access', architectureId: 'fedc', userId: 'u9' })
+    expect(res.statusCode).toBe(200)
   })
 })

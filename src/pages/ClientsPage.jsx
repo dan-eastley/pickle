@@ -162,6 +162,7 @@ export default function ClientsPage() {
           initialName={editing.name}
           initialStatus={editing.status}
           statusOptions={ARCH_STATUS_OPTIONS}
+          accessArchitectureId={editing.id}
           onSubmit={(fields) => githubAction({ action: 'update-architecture', architectureId: editing.id, ...fields })}
           onSaved={(fields) =>
             setOverrides((prev) => ({ ...prev, [editing.id]: { ...prev[editing.id], ...fields } }))
