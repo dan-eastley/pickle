@@ -12,6 +12,9 @@ const h = vi.hoisted(() => ({
     writeJson: vi.fn(() => Promise.resolve()),
     commitFiles: vi.fn(() => Promise.resolve()),
     cloneDir: vi.fn(() => Promise.resolve()),
+    getHeadSha: vi.fn(() => Promise.resolve('sha')),
+    createBranch: vi.fn(() => Promise.resolve()),
+    dispatch: vi.fn(() => Promise.resolve()),
   },
   insertValues: vi.fn(() => Promise.resolve()),
 }))
@@ -217,5 +220,38 @@ describe('/api/github access management ([RAS-3])', () => {
     h.getSessionUser.mockResolvedValue(admin)
     const res = await post({ action: 'revoke-access', architectureId: 'fedc', userId: 'u9' })
     expect(res.statusCode).toBe(200)
+  })
+})
+
+describe('/api/github governance writes are gated ([RAS-3])', () => {
+  const newDecision = {
+    action: 'create-decision',
+    clientId: 'fedc',
+    versionId: 'baseline',
+    decision: { 'decision-id': 'ADR-999', title: 'Test', status: 'draft' },
+  }
+
+  it('403s a consumer creating a decision', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    h.selectRows.value = [{ architectureId: 'fedc', role: 'consumer' }]
+    const res = await post(newDecision)
+    expect(res.statusCode).toBe(403)
+    expect(h.gh.createBranch).not.toHaveBeenCalled()
+  })
+
+  it('403s a member with no membership creating a decision', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    h.selectRows.value = []
+    const res = await post(newDecision)
+    expect(res.statusCode).toBe(403)
+  })
+
+  it('lets a contributor create a decision', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    h.selectRows.value = [{ architectureId: 'fedc', role: 'contributor' }]
+    h.gh.readJson.mockResolvedValue({ content: { decisions: [] }, sha: 's' })
+    const res = await post(newDecision)
+    expect(res.statusCode).toBe(200)
+    expect(h.gh.createBranch).toHaveBeenCalled()
   })
 })
