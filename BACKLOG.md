@@ -572,7 +572,7 @@ Today the only access primitive is `user.accessTier` (`admin`/`member`/`viewer`,
 
 **Done (0.5.1-alpha + 0.5.3-alpha):** the `can()` permission core (`lib/permissions.ts`, unit-tested), `architecture_membership` table + migration, server `resolvePermissions` (admin via accessTier / `PICKLE_ADMIN_EMAILS`, memberships fail-soft) + gated write actions, and the client `usePermissions` seam. **Access management** now ships: `grant-access` / `revoke-access` / `members` API actions (gated on `access:grant`) + an **Access** category in the architecture settings modal (`AccessManager`) to add members by email, set Owner/Contributor/Consumer, and remove them. Integration-tested.
 
-**Remaining:** flip decision/discovery **governance writes** from session-only to `can(GOVERNANCE_WRITE)` once memberships are seeded in prod; a global **admin console** (manage every architecture + users' global tier); optional view-gating for Consumers.
+**Remaining:** a global **admin console** (manage every architecture + users' global tier); optional view-gating for Consumers (read is still open to any authenticated user). Governance-write gating is now **live** — decision/discovery writes require `can(GOVERNANCE_WRITE)` (Owner/Contributor/Admin), so Consumers and non-members are write-blocked.
 
 **Proposed model — four access roles**
 
