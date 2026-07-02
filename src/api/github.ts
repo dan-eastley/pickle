@@ -713,8 +713,10 @@ async function resolvePermissions(req: VercelRequest): Promise<PermissionState> 
 }
 
 // Per-action permission rule: which permission it needs and which param carries
-// the architecture id. Actions absent here require only authentication (existing
-// decision/discovery flows keep session-only gating until memberships are seeded).
+// the architecture id. Actions absent here require only authentication. Decision
+// and discovery writes are GOVERNANCE_WRITE (Owner/Contributor/Admin), so
+// Consumers and non-members are view-only; the decision/discovery params carry
+// the architecture id as `clientId`.
 const ACTION_PERMS: Record<string, { perm: string; archKey: string }> = {
   'update-architecture': { perm: ACTIONS.ARCHITECTURE_EDIT, archKey: 'architectureId' },
   'update-transition': { perm: ACTIONS.TRANSITION_EDIT, archKey: 'architectureId' },
@@ -722,6 +724,14 @@ const ACTION_PERMS: Record<string, { perm: string; archKey: string }> = {
   'create-transition': { perm: ACTIONS.TRANSITION_CREATE, archKey: 'architectureId' },
   'grant-access': { perm: ACTIONS.ACCESS_GRANT, archKey: 'architectureId' },
   'revoke-access': { perm: ACTIONS.ACCESS_GRANT, archKey: 'architectureId' },
+  'create-decision': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'edit-decision': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'update-decision': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'update-finding': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'commit-decision': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'create-discovery': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'update-discovery': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
+  'refresh-discovery': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
