@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { usePermissions } from '../context/PermissionsContext'
 import { ACTIONS } from '../lib/permissions'
@@ -8,8 +8,10 @@ import { loadVersionMetrics } from '../lib/metrics'
 import { versionStatusBadge } from '../lib/theme'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
+import Button from '../components/ui/Button'
 import ClientLogo from '../components/ui/ClientLogo'
 import EditSettingsModal from '../components/settings/EditSettingsModal'
+import CreateEntityModal from '../components/settings/CreateEntityModal'
 import { ChevronRight, EditIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -23,13 +25,16 @@ export default function VersionsPage() {
   const { clientId } = useParams()
   const { clientsMetadata } = useArchitecture()
   const { can } = usePermissions()
+  const navigate = useNavigate()
   const [versions, setVersions] = useState([])
   const [versionMeta, setVersionMeta] = useState({})
   const [versionMetrics, setVersionMetrics] = useState({})
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState(null)
+  const [creating, setCreating] = useState(false)
 
   const canEditTransition = can(ACTIONS.TRANSITION_EDIT, { architectureId: clientId })
+  const canCreateTransition = can(ACTIONS.TRANSITION_CREATE, { architectureId: clientId })
 
   const clientName = clientsMetadata[clientId]?.name ?? clientId
   usePageTitle(`${clientName} · Transitions`)
@@ -73,14 +78,21 @@ export default function VersionsPage() {
           ← All architectures
         </Link>
       </div>
-      <div className="mb-8 flex items-center gap-4 min-w-0">
-        <ClientLogo clientId={clientId} name={clientName} className="w-12 h-12" />
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Select a transition state to browse its architecture.
-          </p>
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
+          <ClientLogo clientId={clientId} name={clientName} className="w-12 h-12" />
+          <div className="min-w-0">
+            <h1 className="text-xl font-semibold text-gray-900">{clientName}</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Select a transition state to browse its architecture.
+            </p>
+          </div>
         </div>
+        {canCreateTransition && (
+          <Button onClick={() => setCreating(true)} size="sm" className="flex-shrink-0">
+            New Transition
+          </Button>
+        )}
       </div>
 
       {versions.length === 0 ? (
@@ -102,12 +114,13 @@ export default function VersionsPage() {
               <div key={vId} className="border border-gray-200 bg-white">
                 <Link
                   to={`${base}/domains`}
-                  className="group flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+                  className="group flex items-center justify-between gap-3 px-5 py-4 bg-gray-50 border-b border-gray-200 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <div className="min-w-0">
+                      <p className="text-xs text-gray-500">Transition</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+                        <span className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
                           {meta?.name ?? vId}
                         </span>
                         {meta?.status && (
@@ -140,7 +153,7 @@ export default function VersionsPage() {
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
                   </div>
                 </Link>
-                <div className="px-5 pb-4 pt-1 border-t border-gray-100">
+                <div className="p-4">
                   {m === undefined ? (
                     <div className="flex items-center gap-2 py-1 text-xs text-gray-500">
                       <Spinner size="sm" /> Loading content…
@@ -185,6 +198,34 @@ export default function VersionsPage() {
             }))
           }
           onClose={() => setEditingId(null)}
+        />
+      )}
+
+      {creating && (
+        <CreateEntityModal
+          title="New transition"
+          subtitle="Clone an existing transition into a new one you can evolve independently."
+          idLabel="Transition ID"
+          idHint='Lowercase letters, numbers and dashes — e.g. "2026-q2".'
+          cloneOptions={{
+            label: 'Clone from',
+            options: versions.map((v) => ({
+              value: v['transition-id'],
+              label: versionMeta[v['transition-id']]?.name ?? v['transition-id'],
+            })),
+            default: 'baseline',
+          }}
+          onSubmit={(fields) =>
+            githubAction({
+              action: 'create-transition',
+              architectureId: clientId,
+              transitionId: fields.id,
+              name: fields.name,
+              fromTransitionId: fields.from,
+            })
+          }
+          onCreated={(fields) => navigate(`/architectures/${clientId}/${fields.id}/domains`)}
+          onClose={() => setCreating(false)}
         />
       )}
     </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { usePermissions } from '../context/PermissionsContext'
 import { ACTIONS } from '../lib/permissions'
@@ -7,8 +7,10 @@ import { loadClientRollup } from '../lib/metrics'
 import { githubAction } from '../lib/api'
 import MetricBars from '../components/common/MetricBars'
 import Spinner from '../components/ui/Spinner'
+import Button from '../components/ui/Button'
 import ClientLogo from '../components/ui/ClientLogo'
 import EditSettingsModal from '../components/settings/EditSettingsModal'
+import CreateEntityModal from '../components/settings/CreateEntityModal'
 import { ChevronRight, EditIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
 
@@ -21,16 +23,16 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
   return (
     <Link
       to={`/architectures/${clientId}/transitions`}
-      className="group flex flex-col sm:flex-row sm:items-stretch bg-white border border-gray-200 hover:border-gray-400 transition-colors"
+      className="group block bg-white border border-gray-200 hover:border-gray-400 transition-colors"
     >
-      {/* Identity column */}
-      <div className="flex items-center gap-4 px-5 py-5 sm:w-72 sm:flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100">
-        <ClientLogo clientId={clientId} name={name} className="w-12 h-12" />
+      {/* Header */}
+      <div className="flex items-center gap-4 px-5 py-4 bg-gray-50 border-b border-gray-200">
+        <ClientLogo clientId={clientId} name={name} className="w-11 h-11 flex-shrink-0" />
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+          <p className="text-xs text-gray-500">Architecture</p>
+          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">
             {name}
           </h3>
-          <p className="text-xs font-mono text-gray-500 mt-0.5">{clientId}</p>
         </div>
         {canEdit && (
           <button
@@ -39,18 +41,19 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
               e.stopPropagation()
               onEdit()
             }}
-            className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-50 transition-colors flex-shrink-0"
+            className="p-1.5 text-gray-400 hover:text-brand-700 hover:bg-gray-100 transition-colors flex-shrink-0"
             title="Edit architecture"
             aria-label={`Edit ${name}`}
           >
             <EditIcon className="w-4 h-4" />
           </button>
         )}
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors sm:hidden" />
+        <span className="text-sm font-mono text-gray-400 flex-shrink-0">{clientId}</span>
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
       </div>
 
-      {/* Metrics column */}
-      <div className="flex-1 min-w-0 px-5 py-4">
+      {/* Metrics */}
+      <div className="p-4">
         {m === undefined ? (
           <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
             <Spinner size="sm" /> Loading metrics…
@@ -72,12 +75,15 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
 export default function ClientsPage() {
   const { clients, clientsMetadata, loading } = useArchitecture()
   const { can } = usePermissions()
+  const navigate = useNavigate()
   usePageTitle('Architectures')
 
   const [metrics, setMetrics] = useState({})
   // Optimistic name/status overrides after an edit (context isn't re-fetched).
   const [overrides, setOverrides] = useState({})
   const [editingId, setEditingId] = useState(null)
+  const [creating, setCreating] = useState(false)
+  const canCreate = can(ACTIONS.ARCHITECTURE_CREATE)
 
   useEffect(() => {
     let live = true
@@ -107,12 +113,19 @@ export default function ClientsPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Select an architecture to view its transition states. The bars compare how populated each
-          architecture is.
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Select an architecture to view its transition states. The bars compare how populated
+            each architecture is.
+          </p>
+        </div>
+        {canCreate && (
+          <Button onClick={() => setCreating(true)} size="sm" className="flex-shrink-0">
+            New Architecture
+          </Button>
+        )}
       </div>
 
       {clients.length === 0 ? (
@@ -154,6 +167,20 @@ export default function ClientsPage() {
             setOverrides((prev) => ({ ...prev, [editing.id]: { ...prev[editing.id], ...fields } }))
           }
           onClose={() => setEditingId(null)}
+        />
+      )}
+
+      {creating && (
+        <CreateEntityModal
+          title="New architecture"
+          subtitle="Create an empty architecture with a baseline transition. You become its owner."
+          idLabel="Architecture ID"
+          idHint="Lowercase letters, numbers and dashes — becomes the folder name and URL."
+          onSubmit={(fields) =>
+            githubAction({ action: 'create-architecture', architectureId: fields.id, name: fields.name })
+          }
+          onCreated={(fields) => navigate(`/architectures/${fields.id}/transitions`)}
+          onClose={() => setCreating(false)}
         />
       )}
     </div>
