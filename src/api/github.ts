@@ -18,12 +18,12 @@
  */
 import { randomUUID } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { eq } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github.js'
 import { getSessionUser, missingAuthEnv } from '../lib/auth.js'
 import { db } from '../db/index.js'
-import { architectureMembership } from '../db/schema.js'
-import { can, ACTIONS, buildContext } from '../lib/permissions.js'
+import { architectureMembership, user } from '../db/schema.js'
+import { can, ACTIONS, buildContext, ARCHITECTURE_ROLES } from '../lib/permissions.js'
 
 const BASE = 'main'
 
@@ -514,6 +514,8 @@ const POST_ACTIONS: Record<string, Action> = {
   'update-transition': updateTransition,
   'create-architecture': createArchitecture,
   'create-transition': createTransition,
+  'grant-access': grantAccess,
+  'revoke-access': revokeAccess,
 }
 
 // ── Architecture / transition metadata writes ───────────────────────────────────
@@ -609,6 +611,58 @@ async function createTransition(gh: GitHubClient, params: Doc, actor: string): P
   return { ok: true, architectureId, transitionId }
 }
 
+// ── Access management ([RAS-3]) ─────────────────────────────────────────────────
+
+// Members of an architecture: their role + identity (for the Access UI).
+async function listMembers(architectureId: string) {
+  return db
+    .select({
+      userId: architectureMembership.userId,
+      role: architectureMembership.role,
+      email: user.email,
+      name: user.name,
+    })
+    .from(architectureMembership)
+    .innerJoin(user, eq(architectureMembership.userId, user.id))
+    .where(eq(architectureMembership.architectureId, architectureId))
+}
+
+// Grant (or change) a user's role on an architecture, looked up by email.
+async function grantAccess(_gh: GitHubClient, params: Doc): Promise<Doc> {
+  const { architectureId, email, role } = params
+  type Role = (typeof ARCHITECTURE_ROLES)[number]
+  if (typeof role !== 'string' || !ARCHITECTURE_ROLES.includes(role as Role)) {
+    throw new HttpError('Invalid role', 400)
+  }
+  const validRole = role as Role
+  const em = String(email ?? '').trim().toLowerCase()
+  if (!em) throw new HttpError('Email is required', 400)
+  const [u] = await db.select().from(user).where(eq(user.email, em)).limit(1)
+  if (!u) throw new HttpError(`No user found with email ${em}`, 404)
+  await db
+    .insert(architectureMembership)
+    .values({ id: randomUUID(), userId: u.id, architectureId: String(architectureId), role: validRole })
+    .onConflictDoUpdate({
+      target: [architectureMembership.userId, architectureMembership.architectureId],
+      set: { role: validRole, updatedAt: new Date() },
+    })
+  return { ok: true, member: { userId: u.id, email: u.email, name: u.name, role: validRole } }
+}
+
+// Remove a user's membership from an architecture.
+async function revokeAccess(_gh: GitHubClient, params: Doc): Promise<Doc> {
+  const { architectureId, userId } = params
+  await db
+    .delete(architectureMembership)
+    .where(
+      and(
+        eq(architectureMembership.userId, String(userId)),
+        eq(architectureMembership.architectureId, String(architectureId))
+      )
+    )
+  return { ok: true }
+}
+
 // ── Authorization ([RAS-3]) ─────────────────────────────────────────────────────
 
 interface PermissionState {
@@ -666,6 +720,8 @@ const ACTION_PERMS: Record<string, { perm: string; archKey: string }> = {
   'update-transition': { perm: ACTIONS.TRANSITION_EDIT, archKey: 'architectureId' },
   'create-architecture': { perm: ACTIONS.ARCHITECTURE_CREATE, archKey: 'architectureId' },
   'create-transition': { perm: ACTIONS.TRANSITION_CREATE, archKey: 'architectureId' },
+  'grant-access': { perm: ACTIONS.ACCESS_GRANT, archKey: 'architectureId' },
+  'revoke-access': { perm: ACTIONS.ACCESS_GRANT, archKey: 'architectureId' },
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -712,6 +768,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (action === 'permissions') {
         const { authenticated, isAdmin, memberships } = await resolvePermissions(req)
         return res.json({ authenticated, isAdmin, memberships })
+      }
+      // Members of an architecture — gated on the access-grant permission.
+      if (action === 'members') {
+        const perm = await resolvePermissions(req)
+        const architectureId = params.architectureId as string | undefined
+        if (!can(buildContext(perm), ACTIONS.ACCESS_GRANT, { architectureId })) {
+          return res.status(403).json({ error: 'You do not have permission to do that' })
+        }
+        return res.json({ members: await listMembers(String(architectureId)) })
       }
       // GET actions (next-id, config) are read-only — no session required.
       const fn = GET_ACTIONS[action as string]

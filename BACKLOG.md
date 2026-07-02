@@ -154,7 +154,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 **Done:** Shared **SettingsModal** shell (`components/ui/SettingsModal.jsx`) — left-hand category rail that jump-scrolls to each settings section, Save Settings / Cancel footer matching the New Decision / New Discovery modals — plus `EditSettingsModal` (Name + Status). **Edit** entry points on each `/architectures` card and each row of `/architectures/<id>/transitions`, shown only when [RAS-3] `can()` allows (Owner/Admin). Writes persist via the gated `update-architecture` / `update-transition` API actions to `architecture.json` / `transition.json` on `main`; the page updates optimistically. Added an optional `status` (active/archived) to the architecture schema so architectures carry a status too.
 **Deferred:** **Icon** and **Colour** categories; draggable modal ([UI-13]); the create flows ([EDIT-2]).
 
-### EDIT-2 · ⬜ New Architecture / New Transition · Medium
+### EDIT-2 · ✅ New Architecture / New Transition · Medium
+**Done (0.5.1-alpha):** create-architecture (empty seed, one Git Trees commit, creator granted Owner) + create-transition (single-commit clone via the Git Trees API); CreateEntityModal + gated New buttons. Integration-tested.
 **Context:** Creating architectures/transitions is not yet possible in-app (only editing, [EDIT-1]). Reuses the [EDIT-1] `SettingsModal` shell and the [RAS-3] gate.
 **Scoped implementation plan:**
 - **New Architecture (empty):** creator becomes **Owner**. A `create-architecture` action seeds, in one Git Trees commit, `architecture.json` + `transitions.json` (a single `baseline`) + `baseline/transition.json` + `baseline/decisions/decisions.json` (empty), and appends the id to `architectures.json`. Then insert an `architecture_membership` (owner) row (fail-soft). Domains fill in as content is added (no seed content — decided). Gate: `ACTIONS.ARCHITECTURE_CREATE` (any authenticated member).
@@ -252,12 +253,15 @@ Candidate document artefact types to add alongside the existing Interface Specif
 **Production-only fixes en route (Vercel native ESM):** SPA catch-all rewrite scoped to non-`/api`; explicit `/api/auth/(.*)` rewrite for multi-segment routing; all relative server imports given explicit `.js`/`index.js` (the dev shim had masked these). See [[vercel-esm-functions]].
 **Deferred (own items):** email verification / password reset need an email provider; authorization (who-can-do-what) is [RAS-3].
 
-### RAS-3 · ⬜ Authorization (RBAC + per-architecture access) · High
+### RAS-3 · 🟡 Authorization (RBAC + per-architecture access) · High
 **Context:** Roles exist as data but don't gate anything. Two *different* role concepts must be kept separate:
 - **Content roles** — `config/roles.json` (27 job titles) + `user.jobRole`. Used as artefact `audience`/`author` and for tailored UI. **Not** access control. Unchanged by this item.
 - **Access roles** (new, below) — who can *do* what. This item.
 
 Today the only access primitive is `user.accessTier` (`admin`/`member`/`viewer`, `input:false`), which gates nothing beyond "is authenticated". `/api/github` writes are session-gated but not permission-gated: any signed-in user can drive any decision on any architecture.
+
+**Done (0.5.1-alpha + 0.5.3-alpha):** the `can()` permission core (`lib/permissions.ts`, unit-tested), `architecture_membership` table + migration, server `resolvePermissions` (admin via accessTier / `PICKLE_ADMIN_EMAILS`, memberships fail-soft) + gated write actions, and the client `usePermissions` seam. **Access management** now ships: `grant-access` / `revoke-access` / `members` API actions (gated on `access:grant`) + an **Access** category in the architecture settings modal (`AccessManager`) to add members by email, set Owner/Contributor/Consumer, and remove them. Integration-tested.
+**Remaining:** flip decision/discovery **governance writes** from session-only to `can(GOVERNANCE_WRITE)` once memberships are seeded in prod; a global **admin console** (manage every architecture + users' global tier); optional view-gating for Consumers.
 
 **Proposed model — four access roles**
 
@@ -405,9 +409,8 @@ See [docs/testing-strategy.md](docs/testing-strategy.md) for the layered, path-s
 ### TT-2 · ✅ URL-mapped screenshots + route smoke · Low
 **Context:** `screenshot.mjs` mirrors the URL structure; `smoke.spec.js` hits all 66 routes against the deployment; `nightly.yml` regenerates screenshots.
 
-### TT-3 · ⬜ Decision schema & workflow docs · Low
-**Context:** `docs/schemas/decision.md` predates several fields; two decision workflows are undocumented.
-**Proposed fix:** Rewrite the schema doc and add the missing workflow pages.
+### TT-3 · ✅ Decision schema & workflow docs · Low
+**Done (0.5.2-alpha):** `docs/schemas/decision.md` rewritten to the current schema (context/problem/proposal, requirements, scope, recommendations, architecture-changes, history/activity, PR fields, full lifecycle); `docs/workflows/decisions-analysis.md` extended with the Accepted→Staged→Committed workflows.
 
 ---
 
