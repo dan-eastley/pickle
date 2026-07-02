@@ -170,7 +170,8 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 ### AMC-1 · 🟡 Artefact registry in config (i18n) · Low
 **Context:** User-facing names/descriptions live in `config/i18n/en.json`, overlaid onto the structural registry. The inline English in `artefacts.js` is kept as an intentional fallback (robustness if a key is missing); a coverage test (`lib/i18n.test.js`) now enforces that the locale covers every registry id, so the two can't drift and a new artefact can't ship without a locale entry.
 **Gap:** Per-client terminology overrides aren't supported.
-**Proposed fix:** Add a per-client locale overlay.
+**Scoping (investigated):** `src/i18n` imports `config/i18n/en.json` at build time and `lib/artefacts.js` bakes the labels into the static `DOMAINS` / `ARTEFACTS` / `FORMATS` exports at module load — before any architecture is selected. A per-architecture overlay therefore needs label resolution to become **dynamic/reactive** (a `useLabels()`-style layer keyed on the active architecture) and every consumer of the static exports migrated to it, or the overlay won't take effect. That is a cross-cutting refactor out of proportion to this Low item; do it deliberately, not inline.
+**Proposed fix:** (1) store overrides per architecture (e.g. `architectures/<id>/i18n.json` or a `terminology` field on `architecture.json`); (2) add a reactive label layer that merges base locale + active-architecture overrides; (3) migrate label consumers off the static exports. Sequence when a client actually needs bespoke terminology.
 
 ### AMC-2 · ✅ Derived-artefact cascade on apply · High
 **Context:** `config/artefact-relationships.json` maps each artefact to the artefacts `derived` from it. The Apply Changes prompt reads it and regenerates derivatives in the same PR when a source catalogue changes. **Verified live (ADR-015):** a `BUS-PRO` edit regenerated both `BUS-BPM` (diagram) and `BUS-CAP-PRO` (matrix).
