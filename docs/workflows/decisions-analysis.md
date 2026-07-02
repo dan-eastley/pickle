@@ -80,3 +80,13 @@ Iterate prompt content in `/config/prompts/decisions/` without touching the work
 ## Re-running a single step
 
 Because each step is a job (not a separate workflow), the Actions UI re-run-failed-jobs option will pick up from the first failed/skipped job. Re-running the whole workflow re-runs all seven analyses.
+
+## Beyond analysis: Accepted → Staged → Committed
+
+The seven analyses inform a human, who accepts or rejects. Once accepted, three further workflows carry the change from findings to merged code — all dispatched by the Pickle API on the relevant status transition, all writing back to the decision JSON (or the artefact files):
+
+1. **Architecture Changes** — fires on **PROPOSED → ACCEPTED**. Reads the accepted findings and the decision scope and writes an ordered `architecture-changes` array to the decision JSON: one atomic edit per entry (`change-type` + `description`). It plans the change; it does not apply it.
+2. **Apply Changes** — fires on **ACCEPTED → STAGED**. Executes each `architecture-changes` entry against the real artefact JSON files on the decision branch, then opens a pull request; the decision records `pr-number` / `pr-url`.
+3. **Commit** — fires on **STAGED → COMMITTED**. Merges the PR (squash), closes it, and deletes the decision branch, landing the change on `main`.
+
+Rejection at any point sets `status: rejected` and records a `rejection-reason`; no artefact files are touched. Prompt content for these steps lives alongside the analysis prompts in `/config/prompts/decisions/`.

@@ -3,6 +3,7 @@ import { useParams, Navigate, useLocation } from 'react-router-dom'
 import { getDecision, githubAction } from '../lib/api'
 import { decisionChangeFields } from '../lib/narrative'
 import { buildScope } from '../lib/scope'
+import { inferRunningWorkflow } from '../lib/decisionWorkflow'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
 import ScopeChip from '../components/decisions/ScopeChip'
 import ScopeSelector from '../components/decisions/ScopeSelector'
@@ -368,6 +369,27 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
   }
 
   return null
+}
+
+// ── Stage-advance gating on the in-flight workflow ([DEC-8]) ────────────────────
+// While a stage workflow runs (inferRunningWorkflow, in lib/decisionWorkflow),
+// the action bar is replaced by this box and the page polls until it finishes.
+function WorkflowRunning({ label, onCheck }) {
+  return (
+    <div className="mb-4 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-rose-50 border border-blue-200 text-sm text-gray-700">
+      <Spinner size="sm" />
+      <span className="flex-1 min-w-0">
+        🤖 The agents are {label}. The next step unlocks when this finishes — usually a couple of
+        minutes.
+      </span>
+      <button
+        onClick={onCheck}
+        className="flex-shrink-0 px-3 py-1 text-xs font-medium text-blue-700 bg-white border border-blue-200 hover:bg-blue-50 transition-colors"
+      >
+        Check now
+      </button>
+    </div>
+  )
 }
 
 // ── Analysis table ────────────────────────────────────────────────────────────
@@ -936,15 +958,10 @@ export default function DecisionDetailPage() {
           ? { action, clientId, versionId, decisionId, prNumber: decision?.['pr-number'] }
           : { action, clientId, versionId, decisionId, updates }
       await githubAction(body)
-      // These transitions dispatch a workflow that populates the next section
-      // asynchronously — flag it so the UI shows a "working" banner.
-      const WORKFLOW_LABELS = {
-        proposed: 'running the seven analysis streams over your decision',
-        accepted: 'working out the architecture changes',
-        staged: 'applying the accepted changes and opening the pull request',
-      }
-      if (WORKFLOW_LABELS[newStatus]) setPendingWorkflow({ label: WORKFLOW_LABELS[newStatus] })
-      // Re-fetch busting CDN cache so the new status is immediately visible
+      // Transitions to proposed/accepted/staged dispatch a workflow; the running
+      // state is derived from the decision (inferRunningWorkflow) and the poller
+      // takes over — no manual banner needed here. Re-fetch (cache-busted) so the
+      // new status, and thus the running box, shows immediately.
       getDecision(clientId, versionId, decisionId, newStatus, { bust: true })
         .then(setDecision)
         .catch(() => {})
@@ -1003,6 +1020,22 @@ export default function DecisionDetailPage() {
       setSavingEdit(false)
     }
   }
+
+  // A stage workflow is in flight when the decision's status implies output that
+  // hasn't landed yet ([DEC-8]). While running, the action bar is replaced by the
+  // running box and we poll until the output appears (then the next stage unlocks).
+  const runningWorkflow = inferRunningWorkflow(decision)
+  const refetchDecision = () =>
+    getDecision(clientId, versionId, decisionId, decision?.status, { bust: true })
+      .then((d) => d && setDecision(d))
+      .catch(() => {})
+
+  useEffect(() => {
+    if (!runningWorkflow) return
+    const id = setInterval(refetchDecision, 15000)
+    return () => clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [runningWorkflow?.status, runningWorkflow?.label, clientId, versionId, decisionId])
 
   if (decision === undefined) {
     return (
@@ -1189,15 +1222,21 @@ export default function DecisionDetailPage() {
 
           <StatusProgress status={decision.status} />
 
-          {/* Status actions + any error: above the sections */}
+          {/* Status actions + any error: above the sections. While a stage
+              workflow is running, the running box REPLACES the action bar so the
+              next stage can't be triggered until it finishes ([DEC-8]). */}
           <div className="mb-2">
-            <StatusActions
-              status={decision.status}
-              onTransition={handleTransition}
-              transitioning={transitioning}
-              decision={decision}
-              versionId={versionId}
-            />
+            {runningWorkflow ? (
+              <WorkflowRunning label={runningWorkflow.label} onCheck={refetchDecision} />
+            ) : (
+              <StatusActions
+                status={decision.status}
+                onTransition={handleTransition}
+                transitioning={transitioning}
+                decision={decision}
+                versionId={versionId}
+              />
+            )}
             {transitionError && (
               <div className="px-4 py-3 bg-error-50 border border-error-300 text-error-700 text-sm">
                 Failed to update: {transitionError}
@@ -1402,16 +1441,19 @@ export default function DecisionDetailPage() {
               renderSection('history', <HistorySection history={decision.history} />)}
           </div>
 
-          {/* Status actions: repeated below the sections for convenience */}
-          <div className="mt-8">
-            <StatusActions
-              status={decision.status}
-              onTransition={handleTransition}
-              transitioning={transitioning}
-              decision={decision}
-              versionId={versionId}
-            />
-          </div>
+          {/* Status actions: repeated below the sections for convenience.
+              Hidden while a stage workflow runs ([DEC-8]). */}
+          {!runningWorkflow && (
+            <div className="mt-8">
+              <StatusActions
+                status={decision.status}
+                onTransition={handleTransition}
+                transitioning={transitioning}
+                decision={decision}
+                versionId={versionId}
+              />
+            </div>
+          )}
         </article>
       </div>
 
