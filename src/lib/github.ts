@@ -6,6 +6,9 @@
  * through every call. Required env: GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO.
  */
 
+import { remapSubtree, fileEntries, mergeEntries } from './gitTree.js'
+import type { TreeEntry } from './gitTree.js'
+
 const GH_API = 'https://api.github.com'
 
 export interface GitHubConfig {
@@ -178,5 +181,69 @@ export class GitHubClient {
       ...(opts.title ? { commit_title: opts.title } : {}),
       merge_method: opts.method ?? 'squash',
     })
+  }
+
+  // ── Git Trees: multi-file and folder-copy commits ([EDIT-2]) ──────────────
+  /** The recursive tree of `branch`, with its commit and tree shas. */
+  async getBranchTree(
+    branch: string
+  ): Promise<{ commitSha: string; treeSha: string; tree: TreeEntry[]; truncated: boolean }> {
+    const commitSha = await this.getHeadSha(branch)
+    const commit = await this.request<{ tree: { sha: string } }>(
+      'GET',
+      this.repoPath(`/git/commits/${commitSha}`)
+    )
+    const treeRes = await this.request<{ tree: TreeEntry[]; truncated?: boolean }>(
+      'GET',
+      this.repoPath(`/git/trees/${commit.tree.sha}?recursive=1`)
+    )
+    return { commitSha, treeSha: commit.tree.sha, tree: treeRes.tree, truncated: !!treeRes.truncated }
+  }
+
+  private async commitTree(
+    branch: string,
+    message: string,
+    entries: TreeEntry[],
+    baseTreeSha: string,
+    parentSha: string
+  ): Promise<void> {
+    const newTree = await this.request<{ sha: string }>('POST', this.repoPath('/git/trees'), {
+      base_tree: baseTreeSha,
+      tree: entries,
+    })
+    const newCommit = await this.request<{ sha: string }>('POST', this.repoPath('/git/commits'), {
+      message,
+      tree: newTree.sha,
+      parents: [parentSha],
+    })
+    await this.request('PATCH', this.repoPath(`/git/refs/heads/${branch}`), { sha: newCommit.sha })
+  }
+
+  /** Create/update several files in a single commit. */
+  async commitFiles(
+    branch: string,
+    message: string,
+    files: { path: string; content: string }[]
+  ): Promise<void> {
+    const { commitSha, treeSha } = await this.getBranchTree(branch)
+    await this.commitTree(branch, message, fileEntries(files), treeSha, commitSha)
+  }
+
+  /**
+   * Copy every blob under `from` to `to` (referencing the existing blobs — no
+   * content re-upload), applying `overrides` (new/replacement files), in one
+   * commit. Used to clone a transition folder.
+   */
+  async cloneDir(
+    branch: string,
+    message: string,
+    from: string,
+    to: string,
+    overrides: { path: string; content: string }[] = []
+  ): Promise<void> {
+    const { commitSha, treeSha, tree, truncated } = await this.getBranchTree(branch)
+    if (truncated) throw new HttpError('Repository tree too large to copy in one request', 500)
+    const entries = mergeEntries(remapSubtree(tree, from, to), fileEntries(overrides))
+    await this.commitTree(branch, message, entries, treeSha, commitSha)
   }
 }
