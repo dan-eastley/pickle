@@ -132,7 +132,28 @@ export default function DiscoveryDetailPage() {
     { key: 'findings', label: 'Findings' },
     { key: 'activity', label: 'Activity', count: discovery?.activity?.length ?? 0 },
   ]
+  // Activity length captured when a regeneration is dispatched; the agent appends
+  // an activity entry when it finishes, so the poll below detects completion.
+  const regenBaseline = useRef(0)
   const sectionRefs = useRef({})
+
+  // Lightweight poll while regenerating ([PDL-4]) — Vercel serverless can't hold a
+  // WebSocket, so we poll the (cache-busted) record until a new activity entry
+  // lands, then stop and show the fresh findings automatically.
+  useEffect(() => {
+    if (!refreshing) return
+    const id = setInterval(() => {
+      fetch(`/api/arch/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json?nocache=1`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (!d) return
+          setDiscovery(d)
+          if ((d.activity?.length ?? 0) > regenBaseline.current) setRefreshing(false)
+        })
+        .catch(() => {})
+    }, 15000)
+    return () => clearInterval(id)
+  }, [refreshing, clientId, versionId, discoveryId])
   const [activeSection] = useActiveSection(sectionRefs, [discovery])
   const [collapsed, setCollapsed] = usePersistedSet(
     `discovery-collapsed:${clientId}/${versionId}/${discoveryId}`
@@ -178,6 +199,7 @@ export default function DiscoveryDetailPage() {
   }
 
   async function refresh() {
+    regenBaseline.current = discovery?.activity?.length ?? 0
     setRefreshing(true)
     setActionError(null)
     try {
@@ -208,6 +230,7 @@ export default function DiscoveryDetailPage() {
     try {
       await githubAction({ action: 'update-discovery', clientId, versionId, discoveryId, updates })
       setEdit(null)
+      regenBaseline.current = discovery?.activity?.length ?? 0
       setRefreshing(true)
     } catch (err) {
       setDiscovery((d) => (d ? { ...d, ...prev } : d)) // roll back; keep edit open
@@ -296,7 +319,7 @@ export default function DiscoveryDetailPage() {
           <Spinner size="sm" />
           <span className="flex-1 min-w-0">
             🤖 The Virtual Architect Agent is regenerating this point-in-time view. This usually
-            takes a couple of minutes: refresh the page to see the updated findings.
+            takes a couple of minutes — the findings update here automatically when it&rsquo;s done.
           </span>
         </div>
       )}

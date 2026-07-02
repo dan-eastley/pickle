@@ -1,0 +1,127 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:application:logical:APP-DAP-DAC",
+    "title": "Application Domains & Platforms ↔ Data Concepts",
+    "description": "Many-to-many mapping between APP-DAP application platforms and DAT-DAC data concepts. Answers: which platform holds (is the system of record for) or consumes each data concept, and which platforms touch a given concept?",
+    "meta": {
+        "domain": "application",
+        "abstraction": "logical",
+        "format": "matrix",
+        "description": "Maps each application platform to the data concepts it masters or consumes — the systems-of-record view of the data model.",
+        "purpose": [
+            "Show which platform is the system of record for each data concept, and which platforms consume it.",
+            "Expose data ownership, duplication and integration needs (a concept mastered in two systems).",
+            "Support impact analysis: changing or retiring a platform, read off the data concepts affected.",
+            "Pair with DAT-PRO-DAC (process↔data) to complete each concept's 'who uses it, where it lives' picture."
+        ],
+        "matrix": {
+            "columns": {
+                "artefact": "DAT-DAC",
+                "array": "concepts",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description"
+            },
+            "rows": {
+                "artefact": "APP-DAP",
+                "array": "platforms",
+                "idField": "id",
+                "labelField": "name",
+                "tooltipField": "description"
+            }
+        }
+    },
+    "type": "object",
+    "required": [
+        "relationships"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
+        "relationships": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "column-id",
+                    "row-id"
+                ],
+                "properties": {
+                    "column-id": {
+                        "type": "string",
+                        "description": "DAT-DAC data concept ID"
+                    },
+                    "row-id": {
+                        "type": "string",
+                        "description": "APP-DAP platform ID"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "system-of-record",
+                            "consumer",
+                            "reference"
+                        ],
+                        "description": "How the platform relates to the concept: master (system of record), consumer, or reference copy."
+                    },
+                    "rationale": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "activity": {
+            "type": "array",
+            "description": "Chronological activity / change-history log.",
+            "items": {
+                "$ref": "#/$defs/activity-entry"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "activity-entry": {
+            "type": "object",
+            "required": [
+                "timestamp",
+                "action",
+                "who"
+            ],
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "description": "ISO 8601 datetime."
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "Created",
+                        "Updated",
+                        "Archived",
+                        "Deleted"
+                    ],
+                    "description": "The kind of change."
+                },
+                "who": {
+                    "type": "string",
+                    "description": "Display name of the person or agent."
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
