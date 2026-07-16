@@ -1,18 +1,22 @@
-import { useRef, useState } from 'react'
+import { useState, createContext, useContext } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
 import useDraggable from '../../hooks/useDraggable'
 import Button from './Button'
 
-// Reusable settings-modal shell ([EDIT-1]). A left-hand category rail that
-// jump-scrolls to the matching section, a scrollable body, and a
-// Save Settings / Cancel footer in the same format as the New Decision /
-// New Discovery modals. Consumers pass `categories` and render the matching
-// <SettingsSection sectionKey=...> children.
+// Reusable settings-modal shell ([EDIT-1]). A left-hand category rail acts as
+// tabs — clicking a category shows its section — with a Save Settings / Cancel
+// footer in the same format as the New Decision / New Discovery modals.
+// Consumers pass `categories` and render a matching <SettingsSection sectionKey=…>.
+const ActiveSectionContext = createContext(null)
+
 export function SettingsSection({ sectionKey, title, children }) {
+  const active = useContext(ActiveSectionContext)
+  // In tabbed mode only the active section renders.
+  if (active != null && active !== sectionKey) return null
   return (
-    <section data-settings-section={sectionKey} className="scroll-mt-4">
+    <section data-settings-section={sectionKey}>
       <h3 className="text-sm font-semibold text-gray-900 mb-3">{title}</h3>
       <div className="space-y-4">{children}</div>
     </section>
@@ -34,7 +38,6 @@ export default function SettingsModal({
   children,
 }) {
   const trapRef = useFocusTrap()
-  const bodyRef = useRef(null)
   const { dragHandleProps, style: dragStyle } = useDraggable()
   const [active, setActive] = useState(categories[0]?.key ?? null)
 
@@ -43,12 +46,6 @@ export default function SettingsModal({
     onClose()
   }
   useEscapeKey(requestClose)
-
-  const jumpTo = (key) => {
-    setActive(key)
-    const el = bodyRef.current?.querySelector(`[data-settings-section="${key}"]`)
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
 
   return createPortal(
     <>
@@ -105,7 +102,7 @@ export default function SettingsModal({
                   {categories.map((c) => (
                     <li key={c.key}>
                       <button
-                        onClick={() => jumpTo(c.key)}
+                        onClick={() => setActive(c.key)}
                         className={`w-full text-left text-sm px-3 py-1.5 border-l-2 transition-colors ${
                           active === c.key
                             ? 'bg-brand-50 text-brand-700 border-brand-500 font-medium'
@@ -119,8 +116,8 @@ export default function SettingsModal({
                 </ul>
               </nav>
             )}
-            <div ref={bodyRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-8">
-              {children}
+            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-8">
+              <ActiveSectionContext.Provider value={active}>{children}</ActiveSectionContext.Provider>
               {error && (
                 <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2">
                   {error}
