@@ -16,6 +16,7 @@ import Spinner from './components/ui/Spinner'
 // (see RouteContent) so the chrome stays put while a chunk loads.
 const HomePage = lazy(() => import('./pages/HomePage'))
 const ClientsPage = lazy(() => import('./pages/ClientsPage'))
+const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const VersionsPage = lazy(() => import('./pages/VersionsPage'))
 const DecisionsPage = lazy(() => import('./pages/DecisionsPage'))
 const DecisionEditorPage = lazy(() => import('./pages/DecisionEditorPage'))
@@ -84,6 +85,14 @@ function AppRoutes() {
               element={
                 <RequireAuth>
                   <VersionsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                <RequireAuth>
+                  <ProfilePage />
                 </RequireAuth>
               }
             />
