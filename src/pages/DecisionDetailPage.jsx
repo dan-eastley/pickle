@@ -1135,18 +1135,26 @@ export default function DecisionDetailPage() {
 
   const renderAnalysisSub = (s) => {
     const rows = decision[s.key] ?? []
+    const summary = decision[`${s.key}-summary`]
     return renderSub(
       s.key,
       s.label,
       rows.length > 0 ? (
-        <AnalysisTable
-          rows={rows}
-          sectionKey={s.key}
-          accepted={accepted}
-          onAccept={handleAccept}
-          saving={saving}
-          locked={analysisLocked}
-        />
+        <>
+          {summary && (
+            <div className="mb-3 border-l-2 border-brand-300 bg-brand-50/40 px-4 py-3 text-sm text-gray-700">
+              <Markdown>{summary}</Markdown>
+            </div>
+          )}
+          <AnalysisTable
+            rows={rows}
+            sectionKey={s.key}
+            accepted={accepted}
+            onAccept={handleAccept}
+            saving={saving}
+            locked={analysisLocked}
+          />
+        </>
       ) : (
         <EmptyNote
           title="No findings yet"
