@@ -7,6 +7,7 @@
 // In time these entries are auto-populated by the decision process and
 // workflows; for now they may be seeded directly in the instance JSON.
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { formatDateTime } from '../../lib/format'
 import { DisclosureChevron } from '../ui/icons'
 
@@ -19,7 +20,7 @@ const ACTION_STYLES = {
   Deleted: 'bg-error-50 text-error-700',
 }
 
-export default function ActivityHistory({ activity, title = 'Activity' }) {
+export default function ActivityHistory({ activity, title = 'Activity', decisionBase = null }) {
   const [open, setOpen] = useState(true)
   if (!activity?.length) return null
 
@@ -77,6 +78,22 @@ export default function ActivityHistory({ activity, title = 'Activity' }) {
                   </td>
                   <td className="px-4 py-3 text-gray-700 text-sm break-words">
                     {entry.notes || '—'}
+                    {entry['decision-id'] && (
+                      <div className="mt-1">
+                        {decisionBase ? (
+                          <Link
+                            to={`${decisionBase}/${entry['decision-id']}`}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-brand-700 hover:text-brand-800 hover:underline"
+                          >
+                            via {entry['decision-id']}
+                          </Link>
+                        ) : (
+                          <span className="text-xs font-medium text-gray-500">
+                            via {entry['decision-id']}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

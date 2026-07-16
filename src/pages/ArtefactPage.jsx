@@ -481,7 +481,10 @@ export default function ArtefactPage() {
               />
             )}
           </div>
-          <ActivityHistory activity={data.activity} />
+          <ActivityHistory
+            activity={data.activity}
+            decisionBase={`/architectures/${clientId ?? selectedClientId}/${versionId ?? selectedVersionId}/decisions`}
+          />
         </>
       )}
     </div>
