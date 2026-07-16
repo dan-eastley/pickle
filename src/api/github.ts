@@ -166,17 +166,26 @@ async function createDecision(
 
 async function updateDecision(
   gh: GitHubClient,
-  { clientId, versionId, decisionId, updates }: Doc
+  { clientId, versionId, decisionId, updates }: Doc,
+  actor: string = SYSTEM_ACTOR
 ): Promise<Doc> {
   const newStatus: string | undefined = updates.status
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath = decisionPath(clientId, versionId, decisionId)
   const ids = { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId }
+  // Stamp a status transition into the activity log so it records who advanced it.
+  const stamp = (doc: Doc): Doc => ({
+    ...doc,
+    activity: [
+      ...((doc.activity as Doc[]) ?? []),
+      nowEntry('Updated', actor, newStatus ? `Status → ${newStatus}` : 'Updated'),
+    ],
+  })
 
   if (newStatus === 'rejected') {
     // Read full decision (branch, else main), write to main for history, drop branch.
     const { content: current, sha } = await readDecisionDoc(gh, dPath, branch)
-    const updated = { ...current, ...updates }
+    const updated = stamp({ ...current, ...updates })
     await gh.writeJson(dPath, updated, `Reject ${decisionId}`, { sha, branch: BASE })
     await gh.deleteBranch(branch)
     await syncIndex(gh, clientId, versionId, decisionId, {
@@ -193,7 +202,7 @@ async function updateDecision(
     await syncIndex(gh, clientId, versionId, decisionId, updates)
     try {
       const { content: current, sha } = await gh.readJson<Doc>(dPath, BASE)
-      const updated = { ...current, ...updates }
+      const updated = stamp({ ...current, ...updates })
       await gh.writeJson(dPath, updated, `Commit ${decisionId}`, { sha, branch: BASE })
     } catch {
       /* best-effort post-merge status update */
@@ -203,7 +212,7 @@ async function updateDecision(
 
   // In-flight status (draft/proposed/accepted/staged) — update on the branch.
   const { content: current, sha } = await readDecisionDoc(gh, dPath, branch)
-  const updated = { ...current, ...updates }
+  const updated = stamp({ ...current, ...updates })
   await gh.writeJson(dPath, updated, `Update ${decisionId}: status → ${newStatus ?? 'updated'}`, {
     sha,
     branch,
@@ -309,7 +318,8 @@ function toPrNumber(v: unknown): number | null {
 
 async function commitDecision(
   gh: GitHubClient,
-  { clientId, versionId, decisionId, prNumber }: Doc
+  { clientId, versionId, decisionId, prNumber }: Doc,
+  actor: string = SYSTEM_ACTOR
 ): Promise<Doc> {
   const pr = toPrNumber(prNumber)
   if (pr) {
@@ -318,8 +328,9 @@ async function commitDecision(
       method: 'squash',
     })
   }
-  // PR merge brings decision.json to main — update its status and sync index.
-  await updateDecision(gh, { clientId, versionId, decisionId, updates: { status: 'committed' } })
+  // PR merge brings decision.json to main — update its status and sync index,
+  // recording the committer in the activity log.
+  await updateDecision(gh, { clientId, versionId, decisionId, updates: { status: 'committed' } }, actor)
   // The PR is merged (and closed); remove the now-redundant decision branch.
   if (pr) await gh.deleteBranch(decisionBranch(clientId, versionId, decisionId))
   return { ok: true, decisionId, status: 'committed' }
