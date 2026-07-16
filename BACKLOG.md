@@ -138,6 +138,17 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 | [UCO-1](#uco-1-no-outstanding-failures) — No outstanding failures | ✅ Done | High |
 | [OPS-1](#ops-1-vercel-ignorecommand-skips-multi-commit-pushes-ending-in-a-data-only-commit) — Vercel `ignoreCommand` skips multi-commit pushes ending in a data-only commit | ✅ Done | Medium |
 
+### UI Evolution
+
+| Item | Status | Impact |
+|---|---|---|
+| [UIE-1](#uie-1-analysis-summaries-above-findings) — Analysis summaries above findings | ⬜ Not started | Medium |
+| [UIE-2](#uie-2-adr-reference-in-artefact-activity) — ADR reference in artefact activity | ⬜ Not started | Medium |
+| [UIE-3](#uie-3-full-document-view-for-entities) — Full document view for entities | ⬜ Not started | Medium |
+| [UIE-4](#uie-4-per-architecture-anthropic-agent-credentials) — Per-architecture Anthropic Agent credentials | ⬜ Not started | High |
+| [UIE-5](#uie-5-uml-sequence-diagrams-flow-types) — UML sequence diagrams (flow types) | ⬜ Not started | High |
+| [UIE-6](#uie-6-personal-details--password-management) — Personal details & password management | ⬜ Not started | Medium |
+
 ---
 
 ## Epic: Decisions & Governance
@@ -865,3 +876,70 @@ Failures from running the use-case corpus against the product, captured here so 
 **Resolved (by process):** in normal operation this can't strand code — the app's own automated writes are **single, data-only commits** (one per decision/discovery action), which correctly skip without any code to strand. The incident only arose from manually mixing code and data in one push. **Rule:** never end a code push with a data-only commit; keep them on separate pushes. Quick unblock if it ever recurs: push any commit touching a `src/` path.
 
 **Robust option (if it recurs / for full automation):** disable Vercel Git auto-deploy and trigger a **Vercel Deploy Hook** from a GitHub Action that builds only when `git diff ${{ github.event.before }}..${{ github.event.after }} -- src` is non-empty — this evaluates the whole push, not just the tip. Logged as the future-proof fix; not needed for current cadence.
+
+
+---
+
+## Epic: UI Evolution
+
+Batch raised 2026-07 alongside the shipped ui-evolution UI fixes (doc-type counts, settings tabs, architecture-change grouping, activity collapse, orthogonal wiring, salesier homepage, committer attribution). These are the larger follow-ups deferred for their own passes.
+
+### UIE-1: Analysis summaries above findings
+
+**Status:** ⬜ Not started · **Impact:** Medium
+
+**Context:** The seven analysis sections render as findings tables; scanning them to get the gist takes effort.
+
+**Proposal:** Each analysis prompt (`config/prompts/decisions/*.md`) also writes a short **bulleted summary** for its step; store it in `decision.json` (a parallel `<section>-summary` string/array, added to the decision schema). The UI renders the summary as a bulleted list **above** the findings table for each of the seven sections. Needs: schema field, per-stream prompt update, UI render.
+
+### UIE-2: ADR reference in artefact activity
+
+**Status:** ⬜ Not started · **Impact:** Medium
+
+**Context:** Decision-side committer attribution is done ([DEC]/ui-evolution). The remaining half: an **artefact's** activity should reference the ADR that changed it, clickable through to that decision's specific change.
+
+**Proposal:** the apply-changes workflow writes activity entries onto the edited artefact files carrying the actor + an `adr` / `decision-id` field; add that field to the shared `activity-entry` schema; `ActivityHistory` renders it as a link to the decision (pass a link base in). Cross-cuts the workflow prompts + schema + UI.
+
+### UIE-3: Full document view for entities
+
+**Status:** ⬜ Not started · **Impact:** Medium
+
+**Context:** Entities have a **mini** view (the `EntityPanel` pop-out). We also want a **full** document-style view — a full page with a left-hand contents nav — and a way to jump straight to it from search.
+
+**Proposal:** a full-page entity route rendering the entity's complete detail as a document (reuse the `DocumentView` left-nav pattern). The pop-out stays as the mini view. Wire the command palette so `/` + an entity ID navigates to the full view. (Don't call it a "fact sheet".)
+
+### UIE-4: Per-architecture Anthropic Agent credentials
+
+**Status:** ⬜ Not started · **Impact:** High
+
+**Context:** The decision/discovery agents call Anthropic. Each customer architecture needs its **own** Anthropic API key for billing isolation and per-tenant limits. Requires a key per client.
+
+**Proposed approach (for review — do not build yet):**
+- **Storage:** a new `architecture_secret` Postgres table `{ architectureId, provider ('anthropic'), ciphertext, createdBy, updatedAt }`. Keys are **envelope-encrypted at rest** — a per-secret data key wrapped by a master key held only in the server env (`SECRETS_MASTER_KEY`); plaintext never lands in the DB or logs.
+- **UI:** an **Agent** category in the architecture settings modal (Owner/Admin, gated by `access:grant` or a new `agent:manage`) to set / rotate / clear the key; show only "set ✓ / not set", never the value.
+- **Workflow plumbing:** at agent dispatch, the API decrypts the arch's key and passes it to the run as a **short-lived job input/secret** (not persisted into the repo or the decision JSON); `claude-step.yml` reads it from the job env instead of a single global `ANTHROPIC_API_KEY`.
+- **Alternative considered:** per-architecture GitHub Actions secrets (`ANTHROPIC_KEY_<ARCH>`) — simpler but admin-managed, capped by repo secret limits, and not self-serve. Prefer the DB + envelope-encryption approach.
+- **Build cost:** encryption util + table/migration + settings UI + dispatch plumbing + a fallback to the global key when unset. Sequence deliberately; touches security-sensitive paths.
+
+### UIE-5: UML sequence diagrams (flow types)
+
+**Status:** ⬜ Not started · **Impact:** High
+
+**Context:** The entirety of our sequence diagrams make up the **end-to-end**, and they **form part of documents**. We need first-class UML **sequence-diagram** artefact types whose **level of abstraction follows the host document** (Architecture Intent → Solution Design → LLD) — all types available at all levels — and **every document supports 0 or more of each type**.
+
+**Flow types to define** (each needs: participating domains, abstraction, purpose):
+- **System Flows** — Applications & Integrations. *Purpose:* how systems/platforms interact across integrations, end-to-end.
+- **Information Flows** — Applications & Data. *Purpose:* how data moves between systems — what data, where it originates and lands.
+- **User Flows** — Applications & Components. *Purpose:* the user's journey through application components/screens.
+- **Process Flows** — Processes & Applications. *Purpose:* how a business process executes across its supporting applications.
+
+**Proposal:** define each as a diagram artefact type (registry + schema + a shared **UML-sequence renderer**); solution documents reference 0+ instances of each type; abstraction is inherited from the host document. Large — build the sequence renderer + a common schema first, then each flow definition. Open per-flow question to answer when scoping: exact abstraction rules and lifelines per level.
+
+### UIE-6: Personal details & password management
+
+**Status:** ⬜ Not started · **Impact:** Medium
+
+**Context:** Users can't edit their own profile (name, job role) or change / reset their password.
+
+**Proposal:** a profile/settings page to edit `firstName` / `lastName` / `jobRole` (Better Auth `updateUser`) and **change password** (Better Auth `changePassword`, current password required). **Password reset** (forgotten) and email verification need an **email provider** (Resend) — the backlogged email-flows work ([RAS-2] deferred) — so sequence the reset after that lands. Sign-up + login themselves are already done and live ([RAS-2]).
+
