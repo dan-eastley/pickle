@@ -54,7 +54,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 | [UI-16](#ui-16-capabilityprocess-l2-id-above-the-name) — Capability/Process L2: ID above the name | ✅ Done | Low |
 | [UI-17](#ui-17-analysischange-output-too-verbose) — Analysis/change output too verbose | ✅ Done | Medium |
 | [UI-18](#ui-18-to-top-link-in-left-hand-nav) — "To Top" link in left-hand nav | ✅ Done | Low |
-| [UI-19](#ui-19-catalogues-main-columns-only-name-is-the-link) — Catalogues: main columns only, name is the link | ⬜ Not started | Medium |
+| [UI-19](#ui-19-catalogues-main-columns-only-name-is-the-link) — Catalogues: main columns only, name is the link | ✅ Done | Medium |
 | [UI-20](#ui-20-drop-marketing-illustrations-from-list-pages) — Drop marketing illustrations from list pages | ✅ Done | Low |
 | [UI-21](#ui-21-page-title-uses-a-hyphen-not-an-em-dash) — Page `<title>` uses a hyphen, not an em-dash | ✅ Done | Low |
 
@@ -142,12 +142,14 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 | Item | Status | Impact |
 |---|---|---|
-| [UIE-1](#uie-1-analysis-summaries-above-findings) — Analysis summaries above findings | ⬜ Not started | Medium |
-| [UIE-2](#uie-2-adr-reference-in-artefact-activity) — ADR reference in artefact activity | ⬜ Not started | Medium |
+| [UIE-1](#uie-1-analysis-summaries-above-findings) — Analysis summaries above findings | ✅ Done | Medium |
+| [UIE-2](#uie-2-adr-reference-in-artefact-activity) — ADR reference in artefact activity | ✅ Done | Medium |
 | [UIE-3](#uie-3-full-document-view-for-entities) — Full document view for entities | ⬜ Not started | Medium |
 | [UIE-4](#uie-4-per-architecture-anthropic-agent-credentials) — Per-architecture Anthropic Agent credentials | ⬜ Not started | High |
 | [UIE-5](#uie-5-uml-sequence-diagrams-flow-types) — UML sequence diagrams (flow types) | 🟡 Partial | High |
-| [UIE-6](#uie-6-personal-details--password-management) — Personal details & password management | ⬜ Not started | Medium |
+| [UIE-6](#uie-6-personal-details--password-management) — Personal details & password management | ✅ Done | Medium |
+| [UIE-7](#uie-7-design-refresh-handoff) — Design refresh (HANDOFF) | 🟡 Partial | High |
+| [UIE-8](#uie-8-product-analytics) — Product analytics (Google Analytics) | ✅ Done | Low |
 
 ---
 
@@ -393,7 +395,9 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 
 ### UI-19: Catalogues: main columns only, name is the link
 
-**Status:** ⬜ Not started · **Impact:** Medium
+**Status:** ✅ Done · **Impact:** Medium
+
+**Done:** Catalogue tables reduced to id/label/description with the label as the entity popout link; no horizontal scroll.
 
 **Context:** Catalogue tables show every column and scroll horizontally.
 
@@ -569,7 +573,9 @@ Candidate document artefact types to add alongside the existing Interface Specif
 
 **Production-only fixes en route (Vercel native ESM):** SPA catch-all rewrite scoped to non-`/api`; explicit `/api/auth/(.*)` rewrite for multi-segment routing; all relative server imports given explicit `.js`/`index.js` (the dev shim had masked these). See [[vercel-esm-functions]].
 
-**Deferred (own items):** email verification / password reset need an email provider; authorization (who-can-do-what) is [RAS-3].
+**Email flows (✅ Done, 0.6.0-alpha):** Transactional email now ships on **Resend** (`lib/email.ts`, on-brand templates): welcome email on sign-up, **6-digit email-verification OTP** on sign-up and at sign-in (email/password now requires verification), **password reset** link (`/forgot-password` → `/reset-password`), and an **architecture invite** email on grant-access. Frontend: `/verify-email`, `/forgot-password`, `/reset-password`, plus login/register wiring.
+
+**Deferred (own items):** authorization (who-can-do-what) is [RAS-3].
 
 ### RAS-3: Authorization (RBAC + per-architecture access)
 
@@ -886,7 +892,9 @@ Batch raised 2026-07 alongside the shipped ui-evolution UI fixes (doc-type count
 
 ### UIE-1: Analysis summaries above findings
 
-**Status:** ⬜ Not started · **Impact:** Medium
+**Status:** ✅ Done · **Impact:** Medium
+
+**Done:** Each of the seven analysis steps writes a `<section>-summary` string (added to the decision schema) — driven from the shared `claude-step.yml` scaffold using the real section-key, so it's consistent regardless of prompt/property naming. `DecisionDetailPage` renders the summary in a callout above each findings table.
 
 **Context:** The seven analysis sections render as findings tables; scanning them to get the gist takes effort.
 
@@ -894,7 +902,9 @@ Batch raised 2026-07 alongside the shipped ui-evolution UI fixes (doc-type count
 
 ### UIE-2: ADR reference in artefact activity
 
-**Status:** ⬜ Not started · **Impact:** Medium
+**Status:** ✅ Done · **Impact:** Medium
+
+**Done:** `decision-id` added to the `activity-entry` `$def` across all 48 catalogue schemas; the apply-changes prompt appends an activity entry stamped with the driving `decision-id` to every edited/regenerated artefact; `ActivityHistory` renders it as a link to the ADR (via a `decisionBase` prop from `ArtefactPage`).
 
 **Context:** Decision-side committer attribution is done ([DEC]/ui-evolution). The remaining half: an **artefact's** activity should reference the ADR that changed it, clickable through to that decision's specific change.
 
@@ -939,9 +949,27 @@ Batch raised 2026-07 alongside the shipped ui-evolution UI fixes (doc-type count
 
 **Proposal:** define each as a diagram artefact type (registry + schema + a shared **UML-sequence renderer**); solution documents reference 0+ instances of each type; abstraction is inherited from the host document. Large — build the sequence renderer + a common schema first, then each flow definition. Open per-flow question to answer when scoping: exact abstraction rules and lifelines per level.
 
+### UIE-7: Design refresh (HANDOFF)
+
+**Status:** 🟡 Partial · **Impact:** High
+
+**Context:** Full UI refresh per `design-refresh/handoff/HANDOFF.md` (12 sections; Untitled UI palette, Inter + JetBrains Mono, square corners, domain-accent left borders, new `PageActionBar` / `StatsBar` / `WorkflowStepper` / `CountBadge` components, restyled decisions/discovery/document/picker/modal, sales-forward homepage).
+
+**Done (0.6.0-alpha) — global design language (§1):** zero border-radius across the named Tailwind radius scale (square cards/buttons/inputs/chips/modals; `rounded-full` kept for spinners/dots), `font-mono` → **JetBrains Mono** for IDs/codes, and the header's 2px brand bottom line. This applies app-wide and to the homepage immediately.
+
+**Remaining:** the page-/component-level restyle in §§2–12 — context-switcher chip + search in `TopBar`, `DomainNav` absorbing the breadcrumb, the shared `PageActionBar` + `StatsBar` + `WorkflowStepper`, decisions/discovery/document/picker/modal layouts, and the homepage hero/section rework. Large; sequence as a dedicated pass. Reference mocks: `design-refresh/handoff/*.dc.html`.
+
+### UIE-8: Product analytics (Google Analytics)
+
+**Status:** ✅ Done · **Impact:** Low
+
+**Done:** gtag.js (measurement `G-VG31FCRYGP`) in `index.html` with `send_page_view:false`; a `useAnalytics` hook fires a `page_view` on every route change (initial load + SPA navigations), covering the homepage and the whole app.
+
 ### UIE-6: Personal details & password management
 
-**Status:** ⬜ Not started · **Impact:** Medium
+**Status:** ✅ Done · **Impact:** Medium
+
+**Done:** `/account` page (linked from the user menu) edits `firstName`/`lastName`/`jobRole` (Better Auth `updateUser`) and changes password (Better Auth `changePassword`, current password required). **Password reset** (forgotten) now ships too on the Resend email provider — `/forgot-password` → reset link → `/reset-password` (see [RAS-2]).
 
 **Context:** Users can't edit their own profile (name, job role) or change / reset their password.
 
