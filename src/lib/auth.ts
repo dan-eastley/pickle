@@ -55,11 +55,11 @@ function buildAuth() {
     database: drizzleAdapter(db, { provider: 'pg', schema }),
     emailAndPassword: {
       enabled: true,
-      // Email verification is enforced (via 6-digit OTP — see the emailOTP
-      // plugin) ONLY when a mail provider is configured. Without RESEND_API_KEY
-      // no code can be delivered, so we must not gate sign-in on verification —
-      // otherwise users (incl. existing ones) would be locked out.
-      requireEmailVerification: Boolean(process.env.RESEND_API_KEY),
+      // Email verification is currently DISABLED — outbound email delivery is
+      // not working yet, so gating sign-in on verification would lock users
+      // out. Re-enable (e.g. Boolean(process.env.RESEND_API_KEY)) once sending
+      // is confirmed working.
+      requireEmailVerification: false,
       autoSignIn: true,
       minPasswordLength: 8,
       // Password reset link (Better Auth mints the token + URL).
@@ -73,7 +73,10 @@ function buildAuth() {
       emailOTP({
         otpLength: 6,
         expiresIn: 60 * 10, // 10 minutes
-        sendVerificationOnSignUp: true,
+        // Don't auto-send a verification code on sign-up while email delivery
+        // is down (verification is disabled above). The plugin stays enabled so
+        // password-reset codes still work once sending is fixed.
+        sendVerificationOnSignUp: false,
         overrideDefaultEmailVerification: true,
         sendVerificationOTP: async ({ email, otp, type }) => {
           await sendOtpEmail(email, otp, type)
