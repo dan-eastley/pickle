@@ -127,7 +127,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
       title={
         entity ? (
           <span className="flex flex-col min-w-0">
-            <span className="text-[11px] font-mono font-normal text-gray-400 truncate">
+            <span className="text-[11px] font-mono font-normal text-gray-500 truncate">
               {entity.id}
             </span>
             <span className="text-sm font-semibold text-gray-900 truncate">{entity.name}</span>

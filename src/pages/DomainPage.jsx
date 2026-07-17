@@ -49,7 +49,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
             {abstraction.label}
           </span>
           <span className="text-sm font-semibold">{abstraction.name}</span>
-          <span className="text-xs text-gray-400 truncate">{abstraction.description}</span>
+          <span className="text-xs text-gray-500 truncate">{abstraction.description}</span>
         </div>
         <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0 transition-colors" />
       </Link>

@@ -353,7 +353,7 @@ function StatusActions({ status, onTransition, transitioning, decision, versionI
       <div className="flex items-center justify-between gap-4 bg-gray-800 px-5 py-4 mb-6">
         <div>
           <p className="text-sm font-semibold text-white">Ready to commit?</p>
-          <p className="text-xs text-gray-300 mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5">
             Committing merges the pull request into main and closes the decision branch.
           </p>
         </div>
@@ -611,7 +611,7 @@ function ArchitectureChanges({ changes, accepted, onAccept, saving, canReview })
                 </span>
               )}
               <span className="text-base font-semibold text-gray-800">{name}</span>
-              <span className="font-mono text-xs text-gray-400">{id}</span>
+              <span className="font-mono text-xs text-gray-500">{id}</span>
               {fmt && (
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   {fmt.label}

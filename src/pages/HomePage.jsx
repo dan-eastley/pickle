@@ -202,7 +202,7 @@ function DocumentChain() {
               className={`relative bg-white border border-gray-200 border-t-4 ${LAYER_ACCENT[doc.layer]} p-4 flex flex-col hover:shadow-md transition-shadow`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono text-gray-300">
+                <span className="text-xs font-mono text-gray-500">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[doc.layer]}`}>
@@ -569,7 +569,7 @@ function SevenDimensions() {
               className="border border-gray-200 border-t-2 border-t-brand-600 bg-white p-5 hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-gray-300">{dim.n}</span>
+                <span className="text-xs font-mono text-gray-500">{dim.n}</span>
                 {dim.layer && (
                   <span className={`text-xs font-medium px-1.5 py-0.5 ${LAYER_BADGES[dim.layer]}`}>
                     {dim.layer}

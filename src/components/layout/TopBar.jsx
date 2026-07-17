@@ -43,7 +43,7 @@ function ArchitectureSelector({
   )
 
   const Heading = ({ children }) => (
-    <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
+    <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
       {children}
     </div>
   )
