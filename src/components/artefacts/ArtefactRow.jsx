@@ -11,7 +11,7 @@ function useArtefactCount(clientId, versionId, artefact, rowRef) {
   const [count, setCount] = useState(undefined)
 
   useEffect(() => {
-    if (artefact.format !== 'catalogue') {
+    if (artefact.format !== 'catalogue' && artefact.format !== 'document') {
       setCount(null)
       return
     }
@@ -30,6 +30,12 @@ function useArtefactCount(clientId, versionId, artefact, rowRef) {
           .then(([data, schema]) => {
             if (!data) {
               setCount(null)
+              return
+            }
+            // Document artefacts hold multiple named instances — count those.
+            if (artefact.format === 'document') {
+              const n = Array.isArray(data.documents) ? data.documents.length : 0
+              setCount({ type: 'document', total: n })
               return
             }
             const meta = schema?.meta
@@ -77,6 +83,14 @@ function useArtefactCount(clientId, versionId, artefact, rowRef) {
 function EntryCount({ count }) {
   if (!count) return null
   const { type, level1, total, pCount, cCount, labels } = count
+
+  if (type === 'document') {
+    return (
+      <span className="text-xs text-gray-500 flex-shrink-0">
+        {total} {total === 1 ? 'document' : 'documents'}
+      </span>
+    )
+  }
 
   if (type === 'grouped') {
     const pl =

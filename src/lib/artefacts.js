@@ -687,6 +687,65 @@ const ARTEFACTS_BASE = [
       { artefactId: 'SOL-PRN', relationship: 'derived-from' },
     ],
   },
+  // Solution: Sequence diagrams (UML). One artefact per flow type; each holds
+  // 0+ flows. Abstraction follows the host solution document (logical for now).
+  {
+    id: 'SOL-SYF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'System Flows',
+    description:
+      'UML sequence diagrams showing how systems and platforms interact across their integrations, end-to-end.',
+    diagramType: 'sequence',
+    relatedTo: [
+      { artefactId: 'APP-DAP', relationship: 'informs' },
+      { artefactId: 'INT-IFC', relationship: 'informs' },
+    ],
+  },
+  {
+    id: 'SOL-INF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'Information Flows',
+    description:
+      'UML sequence diagrams showing how data moves between systems — what data, where it originates and where it lands.',
+    diagramType: 'sequence',
+    relatedTo: [
+      { artefactId: 'APP-DAP', relationship: 'informs' },
+      { artefactId: 'DAT-DAC', relationship: 'informs' },
+    ],
+  },
+  {
+    id: 'SOL-USF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'User Flows',
+    description:
+      "UML sequence diagrams showing the user's journey through application components and screens.",
+    diagramType: 'sequence',
+    relatedTo: [{ artefactId: 'APP-CAT', relationship: 'informs' }],
+  },
+  {
+    id: 'SOL-PRF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'Process Flows',
+    description:
+      'UML sequence diagrams showing how a business process executes across its supporting applications.',
+    diagramType: 'sequence',
+    relatedTo: [
+      { artefactId: 'BUS-PRO', relationship: 'informs' },
+      { artefactId: 'APP-DAP', relationship: 'informs' },
+    ],
+  },
   {
     id: 'SOL-GRD',
     domain: 'solution',
@@ -825,7 +884,7 @@ export const DOMAIN_COLORS = {
     text: 'text-violet-700',
     border: 'border-violet-200',
     dot: 'bg-violet-500',
-    accent: 'border-violet-400',
+    accent: 'border-l-violet-400',
     button: 'bg-violet-600 hover:bg-violet-700 text-white',
     nav: {
       border: 'border-violet-500',
@@ -839,7 +898,7 @@ export const DOMAIN_COLORS = {
     text: 'text-blue-700',
     border: 'border-blue-200',
     dot: 'bg-blue-500',
-    accent: 'border-blue-400',
+    accent: 'border-l-blue-400',
     button: 'bg-blue-600 hover:bg-blue-700 text-white',
     nav: {
       border: 'border-blue-500',
@@ -853,7 +912,7 @@ export const DOMAIN_COLORS = {
     text: 'text-emerald-700',
     border: 'border-emerald-200',
     dot: 'bg-emerald-500',
-    accent: 'border-emerald-400',
+    accent: 'border-l-emerald-400',
     button: 'bg-emerald-600 hover:bg-emerald-700 text-white',
     nav: {
       border: 'border-emerald-500',
@@ -867,7 +926,7 @@ export const DOMAIN_COLORS = {
     text: 'text-amber-700',
     border: 'border-amber-200',
     dot: 'bg-amber-500',
-    accent: 'border-amber-400',
+    accent: 'border-l-amber-400',
     button: 'bg-amber-500 hover:bg-amber-600 text-white',
     nav: {
       border: 'border-amber-500',
@@ -881,7 +940,7 @@ export const DOMAIN_COLORS = {
     text: 'text-rose-700',
     border: 'border-rose-200',
     dot: 'bg-rose-500',
-    accent: 'border-rose-400',
+    accent: 'border-l-rose-400',
     button: 'bg-rose-600 hover:bg-rose-700 text-white',
     nav: {
       border: 'border-rose-500',

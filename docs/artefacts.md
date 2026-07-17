@@ -84,6 +84,10 @@ This table is the authoritative registry of every defined artefact type. Every r
 | SOL-STR | Solution | Conceptual | Catalogue | Solution Architecture Strategy | Outcome-oriented strategic statements for the Solution domain |
 | SOL-PRN | Solution | Logical | Catalogue | Solution Architecture Principles | Vendor-neutral guidelines that shape design decisions in the Solution domain |
 | SOL-STR-PRN | Solution | Logical | Matrix | Solution Architecture Strategy ↔ Principles | Many-to-many mapping between SOL-STR strategies and SOL-PRN principles |
+| SOL-SYF | Solution | Logical | Diagram | System Flows | UML sequence diagrams (Applications & Integrations): how systems and platforms interact across their integrations, end-to-end |
+| SOL-INF | Solution | Logical | Diagram | Information Flows | UML sequence diagrams (Applications & Data): how data moves between systems — what data, where it originates and lands |
+| SOL-USF | Solution | Logical | Diagram | User Flows | UML sequence diagrams (Applications & Components): the user's journey through application components and screens |
+| SOL-PRF | Solution | Logical | Diagram | Process Flows | UML sequence diagrams (Processes & Applications): how a business process executes across its supporting applications |
 | SOL-GRD | Solution | Physical | Catalogue | Solution Architecture Guardrails | Non-negotiable constraints and mandatory standards for the Solution domain |
 | SOL-PRN-GRD | Solution | Physical | Matrix | Solution Architecture Principles ↔ Guardrails | Many-to-many mapping between SOL-PRN principles and SOL-GRD guardrails |
 
