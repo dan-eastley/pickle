@@ -56,9 +56,10 @@ function buildAuth() {
     emailAndPassword: {
       enabled: true,
       // Email verification is enforced (via 6-digit OTP — see the emailOTP
-      // plugin). Users verify on sign-up and are prompted again at sign-in if
-      // still unverified.
-      requireEmailVerification: true,
+      // plugin) ONLY when a mail provider is configured. Without RESEND_API_KEY
+      // no code can be delivered, so we must not gate sign-in on verification —
+      // otherwise users (incl. existing ones) would be locked out.
+      requireEmailVerification: Boolean(process.env.RESEND_API_KEY),
       autoSignIn: true,
       minPasswordLength: 8,
       // Password reset link (Better Auth mints the token + URL).
