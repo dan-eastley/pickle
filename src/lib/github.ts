@@ -197,7 +197,12 @@ export class GitHubClient {
       'GET',
       this.repoPath(`/git/trees/${commit.tree.sha}?recursive=1`)
     )
-    return { commitSha, treeSha: commit.tree.sha, tree: treeRes.tree, truncated: !!treeRes.truncated }
+    return {
+      commitSha,
+      treeSha: commit.tree.sha,
+      tree: treeRes.tree,
+      truncated: !!treeRes.truncated,
+    }
   }
 
   private async commitTree(

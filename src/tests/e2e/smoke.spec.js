@@ -9,12 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const CLIENT = 'fedc'
 const VERSION = 'baseline'
 const ROUTE_BASE = `/architectures/${CLIENT}/${VERSION}`
-const DOMAINS_ROOT = resolve(
-  __dirname,
-  '../../../architectures',
-  `${CLIENT}/${VERSION}`,
-  'domains'
-)
+const DOMAINS_ROOT = resolve(__dirname, '../../../architectures', `${CLIENT}/${VERSION}`, 'domains')
 
 const dirs = (p) =>
   existsSync(p)

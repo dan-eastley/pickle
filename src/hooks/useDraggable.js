@@ -45,6 +45,7 @@ export default function useDraggable() {
 
   return {
     dragHandleProps: { onMouseDown },
-    style: offset.x || offset.y ? { transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined,
+    style:
+      offset.x || offset.y ? { transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined,
   }
 }

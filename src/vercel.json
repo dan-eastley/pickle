@@ -5,6 +5,6 @@
     { "source": "/api/schemas/(.*)", "destination": "/api/content?prefix=config/schemas&path=$1" },
     { "source": "/api/docs/(.*)", "destination": "/api/content?prefix=docs&path=$1" },
     { "source": "/api/auth/(.*)", "destination": "/api/auth/[...all]" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
   ]
 }

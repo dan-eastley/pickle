@@ -917,7 +917,9 @@ function ClosingCta() {
   const { user } = useAuth()
   return (
     <section className="px-6 py-16 text-center">
-      <h2 className="text-2xl font-bold text-gray-900">Architecture your whole team can actually use.</h2>
+      <h2 className="text-2xl font-bold text-gray-900">
+        Architecture your whole team can actually use.
+      </h2>
       <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
         Browse a worked architecture and the governed decision workflow behind it — and see what
         consumable, evolving architecture feels like.

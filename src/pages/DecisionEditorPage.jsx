@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useArchitecture } from '../context/ArchitectureContext'
 import { getDecision, githubAction, getNextDecisionId } from '../lib/api'
 import { buildScope } from '../lib/scope'
-import { decisionChangeFields } from '../lib/narrative'
+import { decisionChangeFields, composeNarrative } from '../lib/narrative'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import TextLink from '../components/ui/TextLink'
 import Button from '../components/ui/Button'
@@ -96,14 +96,8 @@ export default function DecisionEditorPage() {
           context,
           problem,
           proposal,
-          narrative: [
-            context && `## Context\n\n${context}`,
-            problem && `## Problem\n\n${problem}`,
-            proposal && `## Proposal\n\n${proposal}`,
-          ]
-            .filter(Boolean)
-            .join('\n\n'),
-          activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
+          narrative: composeNarrative({ context, problem, proposal }),
+          // The server stamps the Created activity entry with the signed-in user.
           ...(requirements.filter((r) => r.description?.trim()).length > 0 && {
             requirements: requirements.filter((r) => r.description?.trim()),
           }),

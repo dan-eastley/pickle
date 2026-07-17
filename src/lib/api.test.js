@@ -19,9 +19,7 @@ beforeEach(() => {
 
 describe('read endpoints build the flattened /api/arch/ paths', () => {
   it('getClients reads the architectures index and unwraps it', async () => {
-    global.fetch.mockResolvedValue(
-      jsonRes({ architectures: [{ 'architecture-id': 'fedc' }] })
-    )
+    global.fetch.mockResolvedValue(jsonRes({ architectures: [{ 'architecture-id': 'fedc' }] }))
     const out = await getClients()
     expect(global.fetch).toHaveBeenCalledWith('/api/arch/architectures.json')
     expect(out).toEqual([{ 'architecture-id': 'fedc' }])

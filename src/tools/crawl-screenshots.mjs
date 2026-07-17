@@ -203,5 +203,6 @@ while (queue.length && captured.length < MAX) {
 
 await browser.close()
 
-if (captured.length >= MAX) console.log(`\n⚠ hit MAX_PAGES=${MAX} cap — some pages may be uncaptured`)
+if (captured.length >= MAX)
+  console.log(`\n⚠ hit MAX_PAGES=${MAX} cap — some pages may be uncaptured`)
 console.log(`\n✓ captured ${captured.length} pages into ${OUT}`)

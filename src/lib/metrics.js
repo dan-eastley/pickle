@@ -1,4 +1,7 @@
 import { ARTEFACTS } from './artefacts'
+import { fetchJsonSoft as fetchJson } from './api'
+import { META_ARRAY_KEYS } from './collections'
+import { humanize } from './format'
 
 // Architecture *content* metrics, computed from the live repository.
 //
@@ -12,16 +15,6 @@ import { ARTEFACTS } from './artefacts'
 // Cost model: one directory listing per domain×layer tells us which artefacts
 // are populated; only populated catalogue/document artefacts are then read.
 
-async function fetchJson(url) {
-  try {
-    const res = await fetch(url)
-    if (!res.ok) return null
-    return await res.json()
-  } catch {
-    return null
-  }
-}
-
 async function listArtefactIds(clientId, versionId, domain, abstraction) {
   const data = await fetchJson(
     `/api/arch/${clientId}/${versionId}/domains/${domain}/${abstraction}`
@@ -30,11 +23,6 @@ async function listArtefactIds(clientId, versionId, domain, abstraction) {
     .filter((e) => !e.isDir && e.name.endsWith('.json'))
     .map((e) => e.name.replace(/\.json$/, ''))
 }
-
-const humanize = (key) =>
-  String(key)
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, (l) => l.toUpperCase())
 
 // Distinct domain×layer slots present in the registry.
 const SLOTS = [...new Set(ARTEFACTS.map((a) => `${a.domain}/${a.abstraction}`))].map((s) => {
@@ -55,8 +43,6 @@ export function maturityTier(ratio) {
 
 // ── Content extraction ──────────────────────────────────────────────────────────
 
-// Array properties that are document metadata, not architecture content.
-const META_ARRAY_KEYS = new Set(['audience', 'author', 'activity'])
 // Catalogue arrays that warrant a per-level breakdown.
 const LEVEL_KEYS = new Set(['capabilities', 'processes'])
 // Domain-qualified labels where the bare key would be ambiguous across domains.

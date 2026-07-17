@@ -10,10 +10,11 @@
 //   { type: 'table', columns: string[], rows: string[][] }
 //   { type: 'keyvalue', rows: [label, value][] }
 
-export const humanize = (key) =>
-  String(key)
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, (l) => l.toUpperCase())
+import { humanize } from '../format'
+
+// Re-exported for the per-format renderers (CSV, Excel, Word, PDF) that build
+// their own labels from the same block model.
+export { humanize }
 
 // Render any leaf value as a single display string (used inside table cells and
 // key/value rows). Arrays and objects are summarised compactly.

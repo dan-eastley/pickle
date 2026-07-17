@@ -23,6 +23,10 @@ export default [
   react.configs.flat['jsx-runtime'],
   jsxA11y.flatConfigs.recommended,
 
+  // The react plugin inspects settings on every file it lints (including
+  // Node scripts), so the version must be declared globally.
+  { settings: { react: { version: 'detect' } } },
+
   // Application source (browser).
   {
     files: ['**/*.{js,jsx}'],
@@ -32,7 +36,6 @@ export default [
       globals: { ...globals.browser },
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
-    settings: { react: { version: 'detect' } },
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -56,7 +59,14 @@ export default [
 
   // Build tooling, Vite config, API handlers and scripts (Node).
   {
-    files: ['*.config.js', 'scripts/**', 'tools/**', 'api/**', 'vitest.setup.js', 'playwright.config.js'],
+    files: [
+      '*.config.js',
+      'scripts/**',
+      'tools/**',
+      'api/**',
+      'vitest.setup.js',
+      'playwright.config.js',
+    ],
     languageOptions: { globals: { ...globals.node } },
   },
 

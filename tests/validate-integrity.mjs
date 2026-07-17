@@ -10,15 +10,11 @@
 //   - artefact instance $schema URN mirrors its file path
 //   - every catalogue/document instance exposes a content array (guards the
 //     metadata-array root-detection regression)
-import { readFileSync, readdirSync, existsSync, statSync } from 'fs'
-import { join, resolve, dirname, basename } from 'path'
-import { fileURLToPath } from 'url'
+import { existsSync } from 'fs'
+import { join, resolve } from 'path'
+import { REPO, read, rel, subdirs, walk } from './lib.mjs'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const REPO = resolve(__dirname, '..')
 const A = resolve(REPO, 'architectures')
-const read = (f) => JSON.parse(readFileSync(f, 'utf8'))
-const subdirs = (d) => existsSync(d) ? readdirSync(d, { withFileTypes: true }).filter(e => e.isDirectory()).map(e => e.name) : []
 const META = new Set(['audience', 'author', 'activity'])
 
 let errors = 0
@@ -32,14 +28,6 @@ if (!same(clientIds, clientFolders)) err(`architectures.json [${clientIds}] ≠ 
 
 // ── Roles registry ──────────────────────────────────────────────────────────
 const roleNames = new Set(read(resolve(REPO, 'config/roles.json')).roles.map(r => r.name))
-
-function walk(dir) {
-  if (!existsSync(dir)) return []
-  return readdirSync(dir, { withFileTypes: true }).flatMap(e => {
-    const p = join(dir, e.name)
-    return e.isDirectory() ? walk(p) : (p.endsWith('.json') ? [p] : [])
-  })
-}
 
 for (const client of clientFolders) {
   // ── Versions index ↔ folders ──
@@ -75,21 +63,21 @@ for (const client of clientFolders) {
       // $schema URN mirrors the path
       if (typeof data.$schema === 'string' && relParts.length === 3) {
         const expected = `urn:pickle:schemas:artefacts:domains:${relParts[0]}:${relParts[1]}:${relParts[2]}`
-        if (data.$schema !== expected) err(`${f.replace(REPO + '/', '')}: $schema ${data.$schema} ≠ expected ${expected}`)
+        if (data.$schema !== expected) err(`${rel(f)}: $schema ${data.$schema} ≠ expected ${expected}`)
       }
       // If an instance has real (non-metadata) content, it must surface a
       // content array — otherwise the catalogue/document view renders empty.
       // Pure stubs (only $schema + metadata) are allowed (unpopulated artefact).
       const nonMeta = Object.keys(data).filter(k => k !== '$schema' && !META.has(k))
       if (nonMeta.length > 0 && !nonMeta.some(k => Array.isArray(data[k]))) {
-        err(`${f.replace(REPO + '/', '')}: has content but no content array — would render empty`)
+        err(`${rel(f)}: has content but no content array — would render empty`)
       }
       // audience / author roles valid — at the artefact level, and on each
       // document instance (documents carry their own audience/author roles).
       const checkRoles = (obj, where) => {
         for (const field of ['audience', 'author']) {
           for (const role of obj[field] ?? []) {
-            if (!roleNames.has(role)) err(`${f.replace(REPO + '/', '')}${where}: ${field} role "${role}" not in config/roles.json`)
+            if (!roleNames.has(role)) err(`${rel(f)}${where}: ${field} role "${role}" not in config/roles.json`)
           }
         }
       }

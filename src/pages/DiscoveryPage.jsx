@@ -11,11 +11,9 @@ import EmptyState from '../components/ui/EmptyState'
 import ExpandCollapseAll from '../components/ui/ExpandCollapseAll'
 import { ChevronRight, ChevronDown, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
+import { DISCOVERY_STATUS, DISCOVERY_STATUS_ORDER } from '../lib/theme'
 
-const POTS = [
-  { status: 'active', label: 'Active', badge: 'bg-emerald-50 text-emerald-700' },
-  { status: 'archived', label: 'Archived', badge: 'bg-gray-100 text-gray-500' },
-]
+const POTS = DISCOVERY_STATUS_ORDER.map((status) => ({ status, ...DISCOVERY_STATUS[status] }))
 
 function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onToggle }) {
   const open = !collapsed

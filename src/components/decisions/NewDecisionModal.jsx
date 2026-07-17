@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { githubAction, getNextDecisionId } from '../../lib/api'
 import { buildScope } from '../../lib/scope'
+import { composeNarrative } from '../../lib/narrative'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
@@ -10,7 +11,7 @@ import useDraggable from '../../hooks/useDraggable'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
-import { DecisionIcon } from '../ui/icons'
+import { CloseIcon, DecisionIcon } from '../ui/icons'
 
 export default function NewDecisionModal({
   artefact,
@@ -72,15 +73,9 @@ export default function NewDecisionModal({
         context,
         problem,
         proposal,
-        narrative: [
-          context && `## Context\n\n${context}`,
-          problem && `## Problem\n\n${problem}`,
-          proposal && `## Proposal\n\n${proposal}`,
-        ]
-          .filter(Boolean)
-          .join('\n\n'),
+        narrative: composeNarrative({ context, problem, proposal }),
         ...(scope && { scope }),
-        activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
+        // The server stamps the Created activity entry with the signed-in user.
       }
       await githubAction({ action: 'create-decision', clientId, versionId, decision })
       setResult({ ok: true, decisionId: nextId })
@@ -140,14 +135,7 @@ export default function NewDecisionModal({
               className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
-              <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M5 5l10 10M15 5L5 15"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="square"
-                />
-              </svg>
+              <CloseIcon className="w-4 h-4" />
             </button>
           </div>
 
