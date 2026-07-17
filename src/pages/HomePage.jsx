@@ -15,7 +15,7 @@ import catalogueShot from '../assets/screenshots/catalogue.png'
 import processFlowShot from '../assets/screenshots/process-flow.png'
 import wiringShot from '../assets/screenshots/wiring-diagram.png'
 import solutionDesignShot from '../assets/screenshots/solution-design.png'
-import matrixShot from '../assets/screenshots/all-pages/matrix.png'
+import matrixShot from '../assets/screenshots/matrix.png'
 
 const FEATURE_CARDS = [
   {
