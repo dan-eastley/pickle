@@ -1,18 +1,19 @@
 import { Component } from 'react'
-import { isChunkLoadError } from '../../lib/chunkError'
+import { isStaleDeployError } from '../../lib/chunkError'
 
-// Catches render/load errors in the routed content — most importantly a failed
-// dynamic import (a stale chunk after a deploy, or a network blip). Resets
-// when the route changes, via a `resetKey` passed from the layout.
+// Catches render/load errors in the routed content. Resets when the route
+// changes, via a `resetKey` passed from the layout.
 //
-// Stale-chunk recovery: a session that predates the current deployment holds a
-// module graph whose hashed chunk URLs no longer exist, so every lazy route
-// fails until the page is reloaded. On the first chunk error we reload
-// automatically (picking up the current build); a sessionStorage guard makes
-// sure a genuinely-broken load degrades to the manual prompt instead of a
-// reload loop.
+// Stale-deploy recovery: a session that predates the current deployment runs a
+// module graph mixing old and new chunks — either a lazy route's chunk URL no
+// longer exists (a load failure) or a cached chunk evaluates a binding from a
+// differently-ordered chunk before it's initialised (a "before initialization"
+// TDZ error, seen minified as e.g. "Cannot access 'v' before initialization").
+// Both self-heal by reloading onto the current build, so on the first such
+// error we reload automatically; a sessionStorage guard makes sure a
+// genuinely-broken build degrades to the manual prompt instead of a reload loop.
 
-const RELOAD_GUARD_KEY = 'chunk-error-reloaded'
+const RELOAD_GUARD_KEY = 'stale-deploy-reloaded'
 
 export default class RouteErrorBoundary extends Component {
   state = { error: null }
@@ -22,7 +23,7 @@ export default class RouteErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    if (!isChunkLoadError(error)) return
+    if (!isStaleDeployError(error)) return
     let alreadyReloaded = false
     try {
       alreadyReloaded = sessionStorage.getItem(RELOAD_GUARD_KEY) === '1'
@@ -36,8 +37,8 @@ export default class RouteErrorBoundary extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.resetKey !== this.props.resetKey && this.state.error) {
-      // A successful route change means chunks are loading again — clear the
-      // guard so a future deploy can auto-recover too.
+      // A successful route change means the current build is loading again —
+      // clear the guard so a future deploy can auto-recover too.
       try {
         sessionStorage.removeItem(RELOAD_GUARD_KEY)
       } catch {
@@ -49,14 +50,14 @@ export default class RouteErrorBoundary extends Component {
 
   render() {
     if (this.state.error) {
-      const isChunkError = isChunkLoadError(this.state.error)
+      const isStaleDeploy = isStaleDeployError(this.state.error)
       return (
         <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
           <p className="text-sm font-semibold text-error-700">
-            {isChunkError ? 'This page failed to load.' : 'Something went wrong.'}
+            {isStaleDeploy ? 'This page failed to load.' : 'Something went wrong.'}
           </p>
           <p className="mt-1 text-sm text-gray-500 max-w-sm">
-            {isChunkError
+            {isStaleDeploy
               ? 'The app may have been updated. Reloading should fix it.'
               : this.state.error.message}
           </p>

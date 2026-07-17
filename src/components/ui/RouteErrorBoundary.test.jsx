@@ -1,30 +1,42 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import RouteErrorBoundary from './RouteErrorBoundary'
-import { isChunkLoadError } from '../../lib/chunkError'
+import { isStaleDeployError } from '../../lib/chunkError'
 
 function Boom({ message }) {
   throw new Error(message)
 }
 
 const CHUNK_MESSAGE = 'Failed to fetch dynamically imported module: /assets/Page-abc.js'
+// The init-order TDZ a stale deploy throws, as seen minified in production.
+const TDZ_MESSAGE = "Cannot access 'v' before initialization"
 
-describe('isChunkLoadError', () => {
+describe('isStaleDeployError', () => {
   it('matches the browser variants of a failed dynamic import', () => {
-    expect(isChunkLoadError(new Error(CHUNK_MESSAGE))).toBe(true)
-    expect(isChunkLoadError(new Error('error loading dynamically imported module'))).toBe(true)
-    expect(isChunkLoadError(new Error('Importing a module script failed.'))).toBe(true)
-    expect(isChunkLoadError(new Error('Failed to load module script: MIME type "text/html"'))).toBe(
-      true
-    )
+    expect(isStaleDeployError(new Error(CHUNK_MESSAGE))).toBe(true)
+    expect(isStaleDeployError(new Error('error loading dynamically imported module'))).toBe(true)
+    expect(isStaleDeployError(new Error('Importing a module script failed.'))).toBe(true)
+    expect(
+      isStaleDeployError(new Error('Failed to load module script: MIME type "text/html"'))
+    ).toBe(true)
   })
+
+  it('matches the module init-order (TDZ) variants a stale deploy throws', () => {
+    expect(isStaleDeployError(new Error(TDZ_MESSAGE))).toBe(true)
+    expect(
+      isStaleDeployError(new Error("can't access lexical declaration 'x' before initialization"))
+    ).toBe(true)
+    expect(isStaleDeployError(new Error('Cannot access uninitialized variable.'))).toBe(true)
+  })
+
   it('does not match ordinary errors', () => {
-    expect(isChunkLoadError(new Error('Cannot read properties of undefined'))).toBe(false)
-    expect(isChunkLoadError(undefined)).toBe(false)
+    expect(isStaleDeployError(new Error('Cannot read properties of undefined'))).toBe(false)
+    expect(isStaleDeployError(new Error('x is not a function'))).toBe(false)
+    expect(isStaleDeployError(undefined)).toBe(false)
   })
 })
 
-describe('RouteErrorBoundary stale-chunk recovery', () => {
+describe('RouteErrorBoundary stale-deploy recovery', () => {
   let reload
 
   beforeEach(() => {
@@ -38,7 +50,7 @@ describe('RouteErrorBoundary stale-chunk recovery', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  it('auto-reloads once on the first chunk error', () => {
+  it('auto-reloads once on the first chunk-load error', () => {
     render(
       <RouteErrorBoundary resetKey="/a">
         <Boom message={CHUNK_MESSAGE} />
@@ -47,11 +59,20 @@ describe('RouteErrorBoundary stale-chunk recovery', () => {
     expect(reload).toHaveBeenCalledTimes(1)
   })
 
-  it('falls back to the manual prompt when a reload already happened', () => {
-    sessionStorage.setItem('chunk-error-reloaded', '1')
+  it('auto-reloads once on the init-order TDZ error (the reported crash)', () => {
     render(
       <RouteErrorBoundary resetKey="/a">
-        <Boom message={CHUNK_MESSAGE} />
+        <Boom message={TDZ_MESSAGE} />
+      </RouteErrorBoundary>
+    )
+    expect(reload).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to the manual prompt when a reload already happened', () => {
+    sessionStorage.setItem('stale-deploy-reloaded', '1')
+    render(
+      <RouteErrorBoundary resetKey="/a">
+        <Boom message={TDZ_MESSAGE} />
       </RouteErrorBoundary>
     )
     expect(reload).not.toHaveBeenCalled()
@@ -59,7 +80,7 @@ describe('RouteErrorBoundary stale-chunk recovery', () => {
     expect(screen.getByRole('button', { name: 'Reload' })).toBeInTheDocument()
   })
 
-  it('does not reload for non-chunk errors', () => {
+  it('does not reload for ordinary render errors', () => {
     render(
       <RouteErrorBoundary resetKey="/a">
         <Boom message="some render bug" />
