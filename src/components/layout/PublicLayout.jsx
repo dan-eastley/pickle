@@ -12,10 +12,14 @@ export default function PublicLayout() {
       <header className="h-16 bg-white border-b-2 border-brand-600 flex items-center px-6 gap-6 sticky top-0 z-40">
         <Logo align="left" size="sm" to="/" />
         <div className="flex-1" />
+        {/* Signed-out: "Get Started" is the single, dominant register CTA
+            (brand button). Signed-in: a subtler link back to the app. */}
         <NavLink
           to={user ? '/architectures' : '/register'}
           className={({ isActive }) =>
-            `text-sm font-medium px-3 py-1.5 transition-colors ${isActive ? 'text-brand-700 bg-brand-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'}`
+            user
+              ? `text-sm font-medium px-3 py-1.5 transition-colors ${isActive ? 'text-brand-700 bg-brand-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'}`
+              : 'text-sm font-medium px-3 py-1.5 text-white bg-brand-600 hover:bg-brand-700 transition-colors'
           }
         >
           {user ? 'View Architectures' : 'Get Started'}

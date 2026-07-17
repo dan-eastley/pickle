@@ -7,8 +7,10 @@ import AccountSettingsModal from './AccountSettingsModal'
 
 const ROLE_NAME = Object.fromEntries((rolesConfig.roles ?? []).map((r) => [r.id, r.name]))
 
-// Header auth control: signed-out shows Sign in / Register; signed-in shows an
-// initials avatar with a dropdown (name, email, role, sign out).
+// Header auth control: signed-out shows a single "Sign in" link (the register
+// CTA is the header's "Get Started" button, so Register here would be a
+// duplicate route); signed-in shows an initials avatar with a dropdown (name,
+// email, role, sign out).
 export default function UserMenu() {
   const { user, isLoading, signOut } = useAuth()
   const [open, setOpen] = useState(false)
@@ -22,20 +24,12 @@ export default function UserMenu() {
 
   if (!user) {
     return (
-      <div className="flex items-center gap-1.5 flex-shrink-0">
-        <Link
-          to="/login"
-          className="text-sm font-medium px-3 py-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-        >
-          Sign in
-        </Link>
-        <Link
-          to="/register"
-          className="text-sm font-medium px-3 py-1.5 text-white bg-brand-600 hover:bg-brand-700 transition-colors"
-        >
-          Register
-        </Link>
-      </div>
+      <Link
+        to="/login"
+        className="flex-shrink-0 text-sm font-medium px-3 py-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+      >
+        Sign in
+      </Link>
     )
   }
 
