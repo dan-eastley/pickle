@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { getArtefact, resolveRefArtefactId } from '../../lib/artefacts'
 import { getArtefactData } from '../../lib/api'
 import { loadEntityRelationships } from '../../lib/relationships'
-import { nameWithId } from '../../lib/format'
+import { nameWithId, humanize } from '../../lib/format'
 import SlidePanel from '../ui/SlidePanel'
 import Spinner from '../ui/Spinner'
 
@@ -19,8 +19,6 @@ function findEntity(data, entityId) {
   }
   return null
 }
-
-const humanize = (key) => key.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
 
 // A short scalar goes in the attributes table; long strings, arrays and objects
 // get their own headed section (so the table stays tidily aligned).

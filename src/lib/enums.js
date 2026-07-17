@@ -5,6 +5,8 @@
 // matching SVG fills — plus a legend, so a new enum "just works" when added to
 // diagram data without bespoke styling.
 
+import { humanize } from './format'
+
 // A small, fixed palette. Each colour carries every token variant a badge or an
 // SVG label needs, so callers never hand-pick Tailwind classes.
 const PALETTE = {
@@ -97,9 +99,7 @@ export function enumLabel(enumKey) {
 
 // Title-case a value for display (e.g. "system-of-engagement" → "System Of Engagement").
 export function enumValueLabel(value) {
-  return String(value)
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  return humanize(value)
 }
 
 // The full style token set for an (enum, value): { dot, badge, fill, textFill }.
