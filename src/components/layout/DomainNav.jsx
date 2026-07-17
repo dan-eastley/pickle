@@ -11,9 +11,36 @@ import {
 } from '../../lib/artefacts'
 import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
+import CountBadge from '../ui/CountBadge'
 import { ChevronDown, ChevronRight, KeyStar, DecisionIcon, RobotIcon } from '../ui/icons'
 import useClickOutside from '../../hooks/useClickOutside'
 import { getArtefactData } from '../../lib/api'
+
+// Lazily fetch the decision + discovery counts for the nav tab badges.
+function useGovernanceCounts(clientId, versionId) {
+  const [counts, setCounts] = useState({ decisions: 0, discovery: 0 })
+  useEffect(() => {
+    if (!clientId || !versionId) return
+    let live = true
+    const get = (p) =>
+      fetch(`/api/arch/${clientId}/${versionId}/${p}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null)
+    Promise.all([get('decisions/decisions.json'), get('discovery/discovery.json')]).then(
+      ([dec, disc]) => {
+        if (!live) return
+        setCounts({
+          decisions: dec?.decisions?.length ?? 0,
+          discovery: disc?.discoveries?.length ?? 0,
+        })
+      }
+    )
+    return () => {
+      live = false
+    }
+  }, [clientId, versionId])
+  return counts
+}
 
 function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose }) {
   const fmt = getFormat(format)
@@ -157,6 +184,7 @@ export default function DomainNav() {
   const onDecisionsPage = !!decisionsMatch
   const discoveryMatch = useMatch('/architectures/:clientId/:versionId/discovery/*')
   const onDiscoveryPage = !!discoveryMatch
+  const govCounts = useGovernanceCounts(clientId, versionId)
 
   useClickOutside(navRef, () => setActiveDropdown(null))
 
@@ -227,6 +255,7 @@ export default function DomainNav() {
           >
             <DecisionIcon className="w-3.5 h-3.5" />
             Decisions
+            <CountBadge count={govCounts.decisions} tone="blue" />
           </Link>
           <Link
             to={`${base}/discovery`}
@@ -239,6 +268,7 @@ export default function DomainNav() {
           >
             <RobotIcon className="w-3.5 h-3.5" />
             Discovery
+            <CountBadge count={govCounts.discovery} tone="emerald" />
           </Link>
         </div>
       </div>
