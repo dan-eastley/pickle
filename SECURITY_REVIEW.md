@@ -76,7 +76,7 @@ security tests.
 ## Items requiring human action
 
 1. **Post-deploy smoke suite must authenticate.** `tests/e2e/smoke.spec.js` navigates architecture routes anonymously against the live deployment; with reads now gated it needs a seeded test user + a Playwright `storageState` injected via a workflow secret (`post-deploy.yml` currently carries no credentials). I did **not** fabricate a test auth-bypass — that is an infra/CI decision. Until this lands, the architecture-route smoke checks against a gated deployment will fail (the homepage/clients-nav checks still pass). **Owner action.**
-2. **Rotate any previously exposed data.** Because `/api/content` was world-readable, treat the architecture content in this repo as having been publicly accessible; assess whether any of it is sensitive. No credentials were exposed (data is architecture models), so this is an information-disclosure assessment, not a secret rotation. **Owner action.**
+2. ~~**Assess previously exposed data.**~~ **N/A — confirmed by the maintainer:** this is not yet a production app with live data, so the prior world-readability of `/api/content` exposed no real tenant content. No exposure assessment or rotation needed. (No credentials were ever exposed regardless — the data is architecture models.)
 3. **Confirm prod env is complete.** The fail-closed change means a deployment missing `BETTER_AUTH_SECRET`/`DATABASE_URL` will now 503 architecture data (previously it silently served everything as admin). Verify prod has the full auth env set. **Owner action.**
 4. **Tighten CSP later (optional).** Move the gtag bootstrap out of `index.html` into a module so `script-src 'unsafe-inline'` can be dropped; consider a nonce/hash for the remaining inline needs.
 
