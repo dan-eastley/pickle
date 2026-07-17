@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react'
 import release from '../../version.json'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Footer() {
+  const { user } = useAuth()
   const [config, setConfig] = useState(null)
 
+  // The repo/owner/env config is session-gated (and only meaningful when signed
+  // in), so only fetch it for an authenticated user — otherwise an anonymous
+  // visitor on a public page gets a 401 logged to the console.
   useEffect(() => {
+    if (!user) {
+      setConfig(null)
+      return
+    }
     fetch('/api/github?action=config')
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data) setConfig(data)
       })
       .catch(() => {})
-  }, [])
+  }, [user])
 
   return (
     <footer className="border-t border-gray-200 mt-auto px-6 py-3 flex items-center gap-4 flex-wrap">
