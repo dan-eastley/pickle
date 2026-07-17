@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, Navigate, Link, useSearchParams } from 'react-router-dom'
-import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
+import { getArtefact, getFormat, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
@@ -18,7 +18,8 @@ import MetricBars from '../components/common/MetricBars'
 import ShareLink from '../components/ui/ShareLink'
 import { extractContentItems } from '../lib/metrics'
 import ActivityHistory from '../components/common/ActivityHistory'
-import ActionBar from '../components/ui/ActionBar'
+import PageActionBar from '../components/ui/PageActionBar'
+import Button from '../components/ui/Button'
 import DownloadMenu from '../components/ui/DownloadMenu'
 import { KeyStar, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
@@ -92,47 +93,41 @@ function ArtefactDownload({ artefact, schema, data, selectedDocument, diagramRef
   return null
 }
 
-function AdrActionBar({ artefact, documents, selectedDocument, clientId, versionId }) {
+function AdrActionBar({ artefact, schema, documents, selectedDocument, clientId, versionId }) {
   const [decisionOpen, setDecisionOpen] = useState(false)
   const [discoveryOpen, setDiscoveryOpen] = useState(false)
-  const colors = DOMAIN_COLORS[artefact.domain]
-  const bgClass = colors?.bg ?? 'bg-gray-50'
-  const btnClass = colors?.button ?? 'bg-brand-600 hover:bg-brand-700 text-white'
   const viewDecisionsUrl = `/architectures/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
+  const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s)
+  const typeLabel = `${cap(artefact.abstraction)} · ${getFormat(artefact.format)?.label ?? cap(artefact.format)}`
 
   return (
     <>
-      <ActionBar
-        className="mb-5"
-        tint={bgClass}
-        strapline="Changes to this artefact must go through a Decision Record."
-        secondary={
-          <Link
-            to={viewDecisionsUrl}
-            className="px-4 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 text-sm font-medium transition-colors"
-          >
+      <PageActionBar
+        domain={artefact.domain}
+        showIcon
+        title={artefact.name}
+        id={artefact.id}
+        typeLabel={typeLabel}
+        description={schema?.meta?.description ?? artefact.description}
+        tertiary={
+          <Button to={viewDecisionsUrl} variant="tertiary" size="h8">
             View Decisions
-          </Link>
+          </Button>
+        }
+        secondary={
+          <Button variant="secondary" size="h8" onClick={() => setDiscoveryOpen(true)}>
+            <RobotIcon className="w-3.5 h-3.5" />
+            New Discovery
+          </Button>
         }
         primary={
-          <>
-            <button
-              className={`flex items-center gap-2 px-4 py-1.5 text-sm font-medium transition-colors ${btnClass}`}
-              onClick={() => setDecisionOpen(true)}
-            >
-              <DecisionIcon className="w-3.5 h-3.5" />
-              New Decision
-            </button>
-            <button
-              className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors"
-              onClick={() => setDiscoveryOpen(true)}
-            >
-              <RobotIcon className="w-3.5 h-3.5" />
-              New Discovery
-            </button>
-          </>
+          <Button variant="primary" domain={artefact.domain} size="h8" onClick={() => setDecisionOpen(true)}>
+            <DecisionIcon className="w-3.5 h-3.5" />
+            New Decision
+          </Button>
         }
       />
+      <div className="mb-5" />
 
       {decisionOpen && (
         <NewDecisionModal
@@ -160,31 +155,26 @@ const PURPOSE_STORAGE_KEY = 'artefact-purpose-collapsed'
 const RELATED_STORAGE_KEY = 'artefact-related-collapsed'
 
 function ArtefactHeader({ artefact, schema, clientId, versionId }) {
-  const colors = DOMAIN_COLORS[artefact.domain]
-  const metaDescription = schema?.meta?.description
   const metaPurpose = schema?.meta?.purpose
   const relatedArtefacts = artefact.relatedTo ?? []
   const [purposeCollapsed, togglePurpose] = useCollapsed(PURPOSE_STORAGE_KEY)
   const [relatedCollapsed, toggleRelated] = useCollapsed(RELATED_STORAGE_KEY)
 
+  // Nothing to show if there's no purpose/related content — the identity now
+  // lives in the PageActionBar above.
+  if (!artefact.key && !(metaPurpose?.length > 0) && relatedArtefacts.length === 0) {
+    return <div className="mt-5" />
+  }
+
   return (
-    <div className="mb-6">
+    <div className="mt-5 mb-6">
       {artefact.key && (
         <div className="flex items-center gap-1 mb-3 text-xs text-amber-600 font-medium">
           <KeyStar className="w-3.5 h-3.5" /> Key artefact
         </div>
       )}
       <div className="flex items-start gap-4">
-        <div
-          className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors?.bg ?? 'bg-gray-100'}`}
-        >
-          <span className={colors?.text ?? 'text-gray-500'}>
-            <DomainIcon domain={artefact.domain} className="w-5 h-5" />
-          </span>
-        </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl font-semibold text-gray-900">{artefact.name}</h1>
-          <p className="mt-1 text-sm text-gray-500">{metaDescription ?? artefact.description}</p>
           {metaPurpose?.length > 0 && (
             <div className="mt-4">
               <button
@@ -354,6 +344,14 @@ export default function ArtefactPage() {
 
   return (
     <div>
+      <AdrActionBar
+        artefact={artefact}
+        schema={schema}
+        documents={documents}
+        selectedDocument={selectedDocument}
+        clientId={clientId ?? selectedClientId}
+        versionId={versionId ?? selectedVersionId}
+      />
       <ArtefactHeader
         artefact={artefact}
         schema={schema}
@@ -368,13 +366,6 @@ export default function ArtefactPage() {
           onSelect={selectDoc}
         />
       )}
-      <AdrActionBar
-        artefact={artefact}
-        documents={documents}
-        selectedDocument={selectedDocument}
-        clientId={clientId ?? selectedClientId}
-        versionId={versionId ?? selectedVersionId}
-      />
 
       {loading && (
         <>
