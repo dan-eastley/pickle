@@ -105,7 +105,7 @@ export default function NewDecisionModal({
     <>
       {/* Backdrop: click dismisses; keyboard users dismiss with Escape (useEscapeKey). */}
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
-      <div className="fixed inset-0 bg-black/30 z-[150]" onClick={requestClose} />
+      <div className="fixed inset-0 bg-gray-900/55 z-[150]" onClick={requestClose} />
 
       {/* Modal */}
       <div className="fixed inset-0 z-[160] flex items-center justify-center p-4">
