@@ -1,0 +1,211 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SYF",
+    "title": "System Flow Diagrams",
+    "description": "System Flows are UML sequence diagrams showing how systems and platforms interact across their integrations, end-to-end. Participating domains: Application & Integration. Each instance holds zero or more flows; a flow is an ordered set of messages between participants (lifelines). The abstraction layer follows the host solution document.",
+    "meta": {
+        "domain": "solution",
+        "abstraction": "logical",
+        "format": "diagram",
+        "diagramType": "sequence",
+        "participatingDomains": [
+            "application",
+            "integration"
+        ],
+        "description": "UML sequence diagrams: how systems and platforms interact across their integrations, end-to-end.",
+        "purpose": [
+            "Show how platforms collaborate to deliver an end-to-end system interaction.",
+            "Make the sequence of cross-system calls and integrations explicit.",
+            "Reveal coupling and orchestration between platforms for a given scenario.",
+            "Communicate system behaviour to architects and delivery teams."
+        ],
+        "countLabels": {
+            "groups": "flows",
+            "items": "steps"
+        }
+    },
+    "type": "object",
+    "required": [
+        "flows"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "URN of the schema this instance conforms to (this file's $id)."
+        },
+        "audience": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles this artefact is written for (its readers)."
+        },
+        "author": {
+            "$ref": "urn:pickle:schemas:roles#/$defs/role-list",
+            "description": "Roles responsible for authoring and maintaining this artefact."
+        },
+        "flows": {
+            "type": "array",
+            "description": "The sequence diagrams held by this artefact — zero or more flows.",
+            "items": {
+                "$ref": "#/$defs/flow"
+            }
+        },
+        "activity": {
+            "type": "array",
+            "description": "Chronological activity / change-history log.",
+            "items": {
+                "$ref": "#/$defs/activity-entry"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "flow": {
+            "type": "object",
+            "required": [
+                "id",
+                "name",
+                "participants",
+                "messages"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Unique id for this flow within the artefact."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Short title for the scenario this flow describes."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "What this flow shows (one or two sentences)."
+                },
+                "participants": {
+                    "type": "array",
+                    "description": "The lifelines taking part, left to right.",
+                    "items": {
+                        "$ref": "#/$defs/participant"
+                    }
+                },
+                "messages": {
+                    "type": "array",
+                    "description": "The ordered messages exchanged between participants.",
+                    "items": {
+                        "$ref": "#/$defs/message"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "participant": {
+            "type": "object",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Lifeline id, referenced by messages' from/to."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Display name for the lifeline."
+                },
+                "ref": {
+                    "type": "string",
+                    "description": "Optional entity id (e.g. PLAT-CRM, INT-IFC-001, CAP-006) linking this lifeline to a catalogue entity, so it can be opened."
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "actor",
+                        "system",
+                        "component",
+                        "integration",
+                        "data",
+                        "process"
+                    ],
+                    "description": "What this lifeline represents."
+                }
+            },
+            "additionalProperties": false
+        },
+        "message": {
+            "type": "object",
+            "required": [
+                "from",
+                "to",
+                "label"
+            ],
+            "properties": {
+                "order": {
+                    "type": "integer",
+                    "description": "Explicit ordering (1-based). If omitted, array order is used."
+                },
+                "from": {
+                    "type": "string",
+                    "description": "Sending participant id."
+                },
+                "to": {
+                    "type": "string",
+                    "description": "Receiving participant id."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "What the message does."
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "sync",
+                        "async",
+                        "return"
+                    ],
+                    "default": "sync",
+                    "description": "Message style: synchronous call, asynchronous send, or a return."
+                },
+                "data": {
+                    "type": "string",
+                    "description": "Optional data / payload carried by the message."
+                }
+            },
+            "additionalProperties": false
+        },
+        "activity-entry": {
+            "type": "object",
+            "required": [
+                "timestamp",
+                "action",
+                "who"
+            ],
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "description": "ISO 8601 datetime."
+                },
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "Created",
+                        "Updated",
+                        "Archived",
+                        "Deleted"
+                    ],
+                    "description": "The kind of change."
+                },
+                "who": {
+                    "type": "string",
+                    "description": "Display name of the person or agent."
+                },
+                "decision-id": {
+                    "type": "string",
+                    "description": "ID of the ADR whose committed changes produced this activity entry (e.g. ADR-014), when the change was applied via a decision."
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

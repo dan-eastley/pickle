@@ -9,6 +9,7 @@ import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
 import Spinner from './components/ui/Spinner'
+import useAnalytics from './hooks/useAnalytics'
 
 // Pages are route-split — each loads its own chunk on first navigation, so the
 // heavy ones (ArtefactPage's view renderers, DocsPage's markdown stack) stay
@@ -16,6 +17,7 @@ import Spinner from './components/ui/Spinner'
 // (see RouteContent) so the chrome stays put while a chunk loads.
 const HomePage = lazy(() => import('./pages/HomePage'))
 const ClientsPage = lazy(() => import('./pages/ClientsPage'))
+const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const VersionsPage = lazy(() => import('./pages/VersionsPage'))
 const DecisionsPage = lazy(() => import('./pages/DecisionsPage'))
 const DecisionEditorPage = lazy(() => import('./pages/DecisionEditorPage'))
@@ -30,9 +32,13 @@ const ArtefactPage = lazy(() => import('./pages/ArtefactPage'))
 const DocsPage = lazy(() => import('./pages/DocsPage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
+  useAnalytics()
 
   if (loading) {
     return (
@@ -67,6 +73,9 @@ function AppRoutes() {
           {/* Authentication (full-screen, no app chrome) */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* Public / marketing pages */}
           <Route element={<PublicLayout />}>
@@ -84,6 +93,14 @@ function AppRoutes() {
               element={
                 <RequireAuth>
                   <VersionsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                <RequireAuth>
+                  <ProfilePage />
                 </RequireAuth>
               }
             />

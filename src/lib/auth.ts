@@ -13,9 +13,11 @@
  */
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { emailOTP } from 'better-auth/plugins'
 import { toNodeHandler } from 'better-auth/node'
 import { db } from '../db/index.js'
 import { schema } from '../db/schema.js'
+import { sendWelcomeEmail, sendOtpEmail, sendResetPasswordEmail } from './email.js'
 
 // The full role taxonomy lives in config/roles.json (outside this serverless
 // root). The registration form constrains jobRole to that list; here we only
@@ -53,11 +55,31 @@ function buildAuth() {
     database: drizzleAdapter(db, { provider: 'pg', schema }),
     emailAndPassword: {
       enabled: true,
-      // No email provider wired up yet — don't block sign-in on verification.
-      requireEmailVerification: false,
+      // Email verification is enforced (via 6-digit OTP — see the emailOTP
+      // plugin) ONLY when a mail provider is configured. Without RESEND_API_KEY
+      // no code can be delivered, so we must not gate sign-in on verification —
+      // otherwise users (incl. existing ones) would be locked out.
+      requireEmailVerification: Boolean(process.env.RESEND_API_KEY),
       autoSignIn: true,
       minPasswordLength: 8,
+      // Password reset link (Better Auth mints the token + URL).
+      sendResetPassword: async ({ user, url }) => {
+        await sendResetPasswordEmail(user.email, url)
+      },
     },
+    plugins: [
+      // 6-digit email verification / sign-in / password-reset codes. Sends an
+      // OTP automatically on sign-up and drives email verification.
+      emailOTP({
+        otpLength: 6,
+        expiresIn: 60 * 10, // 10 minutes
+        sendVerificationOnSignUp: true,
+        overrideDefaultEmailVerification: true,
+        sendVerificationOTP: async ({ email, otp, type }) => {
+          await sendOtpEmail(email, otp, type)
+        },
+      }),
+    ],
     user: {
       additionalFields: {
         firstName: { type: 'string', required: true, input: true },
@@ -81,6 +103,11 @@ function buildAuth() {
             const data = userData as typeof userData & { jobRole?: string | null }
             data.jobRole = sanitiseJobRole(data.jobRole)
             return { data }
+          },
+          // Welcome email — fire-and-forget so a mail hiccup never fails sign-up.
+          after: async (createdUser) => {
+            const u = createdUser as { email: string; firstName?: string }
+            sendWelcomeEmail(u.email, u.firstName).catch(() => {})
           },
         },
       },

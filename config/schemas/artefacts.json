@@ -127,6 +127,18 @@
         "SOL-STR-PRN": {
             "$ref": "./artefacts/domains/solution/logical/SOL-STR-PRN.json"
         },
+        "SOL-SYF": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-SYF.json"
+        },
+        "SOL-INF": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-INF.json"
+        },
+        "SOL-USF": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-USF.json"
+        },
+        "SOL-PRF": {
+            "$ref": "./artefacts/domains/solution/logical/SOL-PRF.json"
+        },
         "SOL-GRD": {
             "$ref": "./artefacts/domains/solution/physical/SOL-GRD.json"
         },

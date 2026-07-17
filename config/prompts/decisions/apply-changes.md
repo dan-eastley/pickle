@@ -35,6 +35,20 @@ After applying a change to a source artefact, look it up in `config/artefact-rel
 
 If a listed derivative file does not exist for this version, skip it and note it.
 
+## Record the change in each artefact's activity log
+
+Every artefact file has an `activity` array (a chronological change-history log). For **each artefact file you edit** — the source artefacts *and* any regenerated derivatives — append one entry to its `activity` array recording this change:
+
+| Field | Value |
+|---|---|
+| `timestamp` | The current time as an ISO 8601 datetime. |
+| `action` | `Created`, `Updated`, `Deleted`, or `Archived` — matching the change you applied. Use `Updated` for a regenerated derivative. |
+| `who` | The decision author's display name if the decision JSON records one, otherwise `Pickle`. |
+| `decision-id` | The decision's ID (e.g. `ADR-014`) — read it from the decision JSON's `decision-id`, or from the `<decision-id>` segment of the branch name. **Always set this**, so the artefact's history links back to the ADR that drove the change. |
+| `notes` | A short description of what changed in this artefact. |
+
+If the `activity` array does not yet exist on the file, create it. Append — never rewrite existing entries.
+
 Do not edit the decision JSON itself. Do not commit or push — the workflow handles that.
 
 ## Output
