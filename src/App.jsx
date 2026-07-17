@@ -1,10 +1,11 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
 import { AuthProvider } from './context/AuthContext'
 import { PermissionsProvider } from './context/PermissionsContext'
 import RequireAuth from './components/auth/RequireAuth'
 import NavigationProgress from './components/ui/NavigationProgress'
+import RouteErrorBoundary from './components/ui/RouteErrorBoundary'
 import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
@@ -38,6 +39,7 @@ const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
+  const { pathname } = useLocation()
   useAnalytics()
 
   if (loading) {
@@ -62,81 +64,86 @@ function AppRoutes() {
   return (
     <>
       <NavigationProgress />
-      <Suspense
-        fallback={
-          <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <Spinner size="lg" />
-          </div>
-        }
-      >
-        <Routes>
-          {/* Authentication (full-screen, no app chrome) */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+      {/* Top-level boundary: covers routes rendered outside the layouts (the
+          auth pages), whose chunk failures would otherwise blank the app.
+          Layout routes have their own boundary in RouteContent. */}
+      <RouteErrorBoundary resetKey={pathname}>
+        <Suspense
+          fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <Spinner size="lg" />
+            </div>
+          }
+        >
+          <Routes>
+            {/* Authentication (full-screen, no app chrome) */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-          {/* Public / marketing pages */}
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<HomePage />} />
+            {/* Public / marketing pages */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/architectures"
+                element={
+                  <RequireAuth>
+                    <ClientsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/architectures/:clientId/transitions"
+                element={
+                  <RequireAuth>
+                    <VersionsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/account"
+                element={
+                  <RequireAuth>
+                    <ProfilePage />
+                  </RequireAuth>
+                }
+              />
+            </Route>
+
+            {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
             <Route
-              path="/architectures"
+              path="/architectures/:clientId/:versionId"
               element={
                 <RequireAuth>
-                  <ClientsPage />
+                  <Layout />
                 </RequireAuth>
               }
-            />
-            <Route
-              path="/architectures/:clientId/transitions"
-              element={
-                <RequireAuth>
-                  <VersionsPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/account"
-              element={
-                <RequireAuth>
-                  <ProfilePage />
-                </RequireAuth>
-              }
-            />
-          </Route>
+            >
+              <Route index element={<Navigate to="domains" replace />} />
+              <Route path="domains" element={<DomainsPage />} />
+              <Route path="domains/:domain" element={<DomainPage />} />
+              <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
+              <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
+              <Route path="decisions" element={<DecisionsPage />} />
+              <Route path="decisions/new" element={<DecisionEditorPage />} />
+              <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
+              <Route path="discovery" element={<DiscoveryPage />} />
+              <Route path="discovery/new" element={<DiscoveryEditorPage />} />
+              <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
+            </Route>
 
-          {/* Architecture browser — includes decisions (so TopBar + DomainNav stay visible) */}
-          <Route
-            path="/architectures/:clientId/:versionId"
-            element={
-              <RequireAuth>
-                <Layout />
-              </RequireAuth>
-            }
-          >
-            <Route index element={<Navigate to="domains" replace />} />
-            <Route path="domains" element={<DomainsPage />} />
-            <Route path="domains/:domain" element={<DomainPage />} />
-            <Route path="domains/:domain/:abstraction" element={<AbstractionPage />} />
-            <Route path="domains/:domain/:abstraction/:artefactId" element={<ArtefactPage />} />
-            <Route path="decisions" element={<DecisionsPage />} />
-            <Route path="decisions/new" element={<DecisionEditorPage />} />
-            <Route path="decisions/:decisionId" element={<DecisionDetailPage />} />
-            <Route path="discovery" element={<DiscoveryPage />} />
-            <Route path="discovery/new" element={<DiscoveryEditorPage />} />
-            <Route path="discovery/:discoveryId" element={<DiscoveryDetailPage />} />
-          </Route>
+            {/* Docs */}
+            <Route path="/docs" element={<DocsLayout />}>
+              <Route index element={<Navigate to="/docs/index" replace />} />
+              <Route path="*" element={<DocsPage />} />
+            </Route>
 
-          {/* Docs */}
-          <Route path="/docs" element={<DocsLayout />}>
-            <Route index element={<Navigate to="/docs/index" replace />} />
-            <Route path="*" element={<DocsPage />} />
-          </Route>
-
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </RouteErrorBoundary>
     </>
   )
 }
