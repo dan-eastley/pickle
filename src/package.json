@@ -1,6 +1,6 @@
 {
   "name": "pickle",
-  "version": "0.5.4-alpha",
+  "version": "0.6.0-alpha",
   "private": true,
   "type": "module",
   "scripts": {
@@ -36,6 +36,7 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.23.1",
     "remark-gfm": "^4.0.1",
+    "resend": "^6.17.2",
     "vite-plugin-static-copy": "^1.0.6"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
-import { signIn } from '../lib/authClient'
+import { signIn, emailOtp } from '../lib/authClient'
 import { useAuth } from '../context/AuthContext'
 import AuthCard, { Field } from '../components/auth/AuthCard'
 import Button from '../components/ui/Button'
@@ -30,6 +30,14 @@ export default function LoginPage() {
     const { error: err } = await signIn.email({ email, password })
     setSubmitting(false)
     if (err) {
+      // Unverified email → send a fresh code and take them to the verify step.
+      const unverified =
+        err.status === 403 || /verif/i.test(err.message ?? '') || err.code === 'EMAIL_NOT_VERIFIED'
+      if (unverified) {
+        emailOtp.sendVerificationOtp({ email, type: 'email-verification' }).catch(() => {})
+        navigate('/verify-email', { state: { email } })
+        return
+      }
       setError(err.message ?? 'Sign in failed')
       return
     }
@@ -58,14 +66,27 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Field
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <Field
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="mt-1 text-right">
+            <Link to="/forgot-password" className="text-xs text-brand-700 hover:text-brand-900">
+              Forgot password?
+            </Link>
+          </div>
+        </div>
+
+        {location.state?.reset && !error && (
+          <p className="text-sm text-success-700 bg-success-50 border border-success-200 px-3 py-2">
+            Your password has been reset. Sign in with your new password.
+          </p>
+        )}
 
         {error && (
           <p className="text-sm text-error-700 bg-error-50 border border-error-200 px-3 py-2">

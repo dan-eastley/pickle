@@ -31,6 +31,22 @@ function getSchemaColumns(schema) {
   return getColumnsFromProps(itemProps)
 }
 
+// The label column an entry is identified by (name / title / statement / rule).
+const LABEL_KEYS = ['name', 'title', 'statement', 'rule']
+const labelKeyOf = (columns) =>
+  (columns.find((c) => LABEL_KEYS.includes(c.key)) ?? columns.find((c) => c.key !== 'id'))?.key
+
+// Reduce to the main columns — id, the label, and description — so catalogues
+// read cleanly without horizontal scroll ([UI-19]). The label is the link that
+// opens the entity pop-out.
+function primaryColumns(columns) {
+  const id = columns.find((c) => c.key === 'id')
+  const label = columns.find((c) => LABEL_KEYS.includes(c.key))
+  const desc = columns.find((c) => c.key === 'description')
+  const picked = [id, label, desc].filter(Boolean)
+  return picked.length ? picked : columns.slice(0, 3)
+}
+
 function isHierarchical(schema) {
   const arrayEntry = Object.entries(schema?.properties ?? {}).find(
     ([k, v]) => v.type === 'array' && !META_ARRAY_KEYS.has(k)
@@ -171,28 +187,45 @@ function CellValue({ value, colDef }) {
 
 // ── Table rows (flat or hierarchical tree) ────────────────────────────────────
 
-function FlatRow({ item, columns }) {
+// The label cell: a link that opens the entity pop-out ([UI-19]).
+function LabelLink({ id, value, onOpen }) {
+  if (!onOpen) return <span className="font-medium text-gray-800">{value}</span>
+  return (
+    <button
+      onClick={() => onOpen(id)}
+      className="text-left font-medium text-brand-700 hover:text-brand-800 hover:underline transition-colors"
+    >
+      {value ?? id}
+    </button>
+  )
+}
+
+function FlatRow({ item, columns, linkKey, onOpen }) {
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {columns.map((col) => (
         <td key={col.key} className="px-4 py-3 text-sm align-top">
-          <CellValue value={item[col.key]} colDef={col} />
+          {col.key === linkKey ? (
+            <LabelLink id={item.id} value={item[col.key]} onOpen={onOpen} />
+          ) : (
+            <CellValue value={item[col.key]} colDef={col} />
+          )}
         </td>
       ))}
     </tr>
   )
 }
 
-function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
+function TreeRow({ node, columns, depth = 0, expanded, onToggle, linkKey, onOpen }) {
   const hasChildren = node._children.length > 0
   const isExpanded = expanded.has(node.id)
 
   return (
     <>
       <tr className="hover:bg-gray-50 transition-colors">
-        {columns.map((col, ci) => (
+        {columns.map((col) => (
           <td key={col.key} className="px-4 py-3 text-sm align-top">
-            {ci === 1 ? (
+            {col.key === linkKey ? (
               <div className="flex items-start gap-2" style={{ paddingLeft: depth * 20 }}>
                 {hasChildren ? (
                   <button
@@ -216,7 +249,7 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
                 ) : (
                   <span className="w-4 flex-shrink-0" />
                 )}
-                <CellValue value={node[col.key]} colDef={col} />
+                <LabelLink id={node.id} value={node[col.key]} onOpen={onOpen} />
               </div>
             ) : (
               <CellValue value={node[col.key]} colDef={col} />
@@ -234,6 +267,8 @@ function TreeRow({ node, columns, depth = 0, expanded, onToggle }) {
             depth={depth + 1}
             expanded={expanded}
             onToggle={onToggle}
+            linkKey={linkKey}
+            onOpen={onOpen}
           />
         ))}
     </>
@@ -258,7 +293,7 @@ function ColHeaders({ columns }) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export default function CatalogueView({ data, schema }) {
+export default function CatalogueView({ data, schema, onOpenEntity }) {
   const [expanded, setExpanded] = useState(new Set())
   const [fullscreen, setFullscreen] = useState(false)
 
@@ -278,7 +313,8 @@ export default function CatalogueView({ data, schema }) {
     const filteredProps = Object.fromEntries(
       Object.entries(childItemProps).filter(([k]) => k !== foreignKey)
     )
-    const childColumns = getColumnsFromProps(filteredProps)
+    const childColumns = primaryColumns(getColumnsFromProps(filteredProps))
+    const childLinkKey = labelKeyOf(childColumns)
     const groupedData = buildGroupedTree(data, meta.grouping)
 
     function toggleGrouped(id) {
@@ -316,7 +352,7 @@ export default function CatalogueView({ data, schema }) {
     )
 
     const groupedTable = (
-      <table className="w-full min-w-max">
+      <table className="w-full">
         <thead>
           <ColHeaders columns={childColumns} />
         </thead>
@@ -329,6 +365,8 @@ export default function CatalogueView({ data, schema }) {
               depth={0}
               expanded={expanded}
               onToggle={toggleGrouped}
+              linkKey={childLinkKey}
+              onOpen={onOpenEntity}
             />
           ))}
         </tbody>
@@ -376,7 +414,8 @@ export default function CatalogueView({ data, schema }) {
     )
   }
 
-  const columns = getSchemaColumns(schema)
+  const columns = primaryColumns(getSchemaColumns(schema))
+  const linkKey = labelKeyOf(columns)
   const treeData = hierarchical ? buildTree(items) : null
   const summary = countSummary(items, schema, data)
 
@@ -410,7 +449,7 @@ export default function CatalogueView({ data, schema }) {
 
   const table = (
     <div className="overflow-auto flex-1">
-      <table className="w-full min-w-max">
+      <table className="w-full">
         <thead>
           <ColHeaders columns={columns} />
         </thead>
@@ -424,9 +463,19 @@ export default function CatalogueView({ data, schema }) {
                   depth={0}
                   expanded={expanded}
                   onToggle={toggleExpanded}
+                  linkKey={linkKey}
+                  onOpen={onOpenEntity}
                 />
               ))
-            : items.map((item) => <FlatRow key={item.id} item={item} columns={columns} />)}
+            : items.map((item) => (
+                <FlatRow
+                  key={item.id}
+                  item={item}
+                  columns={columns}
+                  linkKey={linkKey}
+                  onOpen={onOpenEntity}
+                />
+              ))}
         </tbody>
       </table>
     </div>
@@ -449,7 +498,7 @@ export default function CatalogueView({ data, schema }) {
     <div className="bg-white overflow-hidden flex flex-col shadow-xl">
       {toolbar}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-max">
+        <table className="w-full">
           <thead>
             <ColHeaders columns={columns} />
           </thead>
@@ -465,7 +514,15 @@ export default function CatalogueView({ data, schema }) {
                     onToggle={toggleExpanded}
                   />
                 ))
-              : items.map((item) => <FlatRow key={item.id} item={item} columns={columns} />)}
+              : items.map((item) => (
+                <FlatRow
+                  key={item.id}
+                  item={item}
+                  columns={columns}
+                  linkKey={linkKey}
+                  onOpen={onOpenEntity}
+                />
+              ))}
           </tbody>
         </table>
       </div>

@@ -193,12 +193,20 @@
             },
             "description": "Output of the Impact Assessment workflow — fires on PROPOSED."
         },
+        "impact-assessment-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Impact Assessment findings, shown above the table. Written by the same workflow."
+        },
         "referential-integrity": {
             "type": "array",
             "items": {
                 "$ref": "#/$defs/section"
             },
             "description": "Output of the Referential Integrity workflow — fires on PROPOSED."
+        },
+        "referential-integrity-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Referential Integrity findings, shown above the table. Written by the same workflow."
         },
         "strategy-alignment": {
             "type": "array",
@@ -207,12 +215,20 @@
             },
             "description": "Output of the Strategy Alignment workflow — fires on PROPOSED."
         },
+        "strategy-alignment-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Strategy Alignment findings, shown above the table. Written by the same workflow."
+        },
         "principles-alignment": {
             "type": "array",
             "items": {
                 "$ref": "#/$defs/section"
             },
             "description": "Output of the Principles Alignment workflow — fires on PROPOSED."
+        },
+        "principles-alignment-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Principles Alignment findings, shown above the table. Written by the same workflow."
         },
         "guardrails-alignment": {
             "type": "array",
@@ -221,6 +237,10 @@
             },
             "description": "Output of the Guardrails Alignment workflow — fires on PROPOSED."
         },
+        "guardrails-alignment-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Guardrails Alignment findings, shown above the table. Written by the same workflow."
+        },
         "proponent-analysis": {
             "type": "array",
             "items": {
@@ -228,12 +248,20 @@
             },
             "description": "Output of the Proponent Analysis workflow — fires on PROPOSED."
         },
+        "proponent-analysis-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Proponent Analysis findings, shown above the table. Written by the same workflow."
+        },
         "challenger-analysis": {
             "type": "array",
             "items": {
                 "$ref": "#/$defs/section"
             },
             "description": "Output of the Challenger Analysis workflow — fires on PROPOSED."
+        },
+        "challenger-analysis-summary": {
+            "type": "string",
+            "description": "Short bulleted markdown summary of the Challenger Analysis findings, shown above the table. Written by the same workflow."
         }
     },
     "additionalProperties": false,

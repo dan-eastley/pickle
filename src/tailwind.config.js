@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
         brand: {
@@ -50,6 +51,20 @@ export default {
           500: '#F04438',
           700: '#B42318',
         },
+      },
+      // Design refresh: square corners everywhere (cards, buttons, inputs,
+      // chips, modals). `full` is kept round for genuinely circular elements
+      // (spinners, agent dots).
+      borderRadius: {
+        none: '0',
+        sm: '0',
+        DEFAULT: '0',
+        md: '0',
+        lg: '0',
+        xl: '0',
+        '2xl': '0',
+        '3xl': '0',
+        full: '9999px',
       },
       boxShadow: {
         xs: '0px 1px 2px rgba(16, 24, 40, 0.05)',
