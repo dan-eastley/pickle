@@ -955,9 +955,11 @@ Batch raised 2026-07 alongside the shipped ui-evolution UI fixes (doc-type count
 
 **Context:** Full UI refresh per `design-refresh/handoff/HANDOFF.md` (12 sections; Untitled UI palette, Inter + JetBrains Mono, square corners, domain-accent left borders, new `PageActionBar` / `StatsBar` / `WorkflowStepper` / `CountBadge` components, restyled decisions/discovery/document/picker/modal, sales-forward homepage).
 
-**Done (0.6.0-alpha) — global design language (§1):** zero border-radius across the named Tailwind radius scale (square cards/buttons/inputs/chips/modals; `rounded-full` kept for spinners/dots), `font-mono` → **JetBrains Mono** for IDs/codes, and the header's 2px brand bottom line. This applies app-wide and to the homepage immediately.
+**Done (0.6.0-alpha) — global design language (§1):** zero border-radius across the named Tailwind radius scale (square cards/buttons/inputs/chips/modals; `rounded-full` kept for spinners/dots), `font-mono` → **JetBrains Mono** for IDs/codes, and the header's 2px brand bottom line.
 
-**Remaining:** the page-/component-level restyle in §§2–12 — context-switcher chip + search in `TopBar`, `DomainNav` absorbing the breadcrumb, the shared `PageActionBar` + `StatsBar` + `WorkflowStepper`, decisions/discovery/document/picker/modal layouts, and the homepage hero/section rework. Large; sequence as a dedicated pass. Reference mocks: `design-refresh/handoff/*.dc.html`.
+**Done (0.6.1-alpha):** shared primitives — `Button` domain-colour primary + h-8 size, `CountBadge`, `PageActionBar` (§4), `StatsBar` (§5), `WorkflowStepper` (§7). Chrome (§2/§3): `TopBar` context chip shows the transition in mono; `DomainNav` Decisions/Discovery tabs carry live count badges (breadcrumb already renders in the content column). §4: the artefact page leads with `PageActionBar` (domain-accent card, icon tile, mono ID + type chips, ordered actions). §11: New Decision modal scrim. §12: homepage hero upsized with gradient last-word. Decision detail already had a lifecycle stepper (`StatusProgress`).
+
+**Remaining:** deeper per-page passes — roll `StatsBar` onto the artefact/decision/discovery/picker pages (§5), the §6 abstraction dark band, discovery detail (§8), document view (§9), architectures-picker domain stat chips (§10), and the modal footer lock-note. Reference mocks: `design-refresh/handoff/*.dc.html`.
 
 ### UIE-8: Product analytics (Google Analytics)
 

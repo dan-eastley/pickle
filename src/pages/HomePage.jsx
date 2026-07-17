@@ -233,8 +233,12 @@ function Hero() {
       <div className="relative z-10 max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
           <Logo align="left" size="lg" />
-          <h1 className="mt-6 text-2xl sm:text-3xl font-bold text-gray-900 max-w-xl mx-auto lg:mx-0 leading-tight">
-            Making architecture consumable.
+          <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-gray-900 max-w-xl mx-auto lg:mx-0 leading-[1.05] tracking-tight">
+            Making architecture{' '}
+            <span className="bg-gradient-to-r from-brand-700 to-rose-600 bg-clip-text text-transparent">
+              consumable
+            </span>
+            .
           </h1>
           <p className="mt-4 text-sm text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Pickle brings the user experience of a great product to enterprise architecture. Your
