@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import useClickOutside from '../../hooks/useClickOutside'
 import rolesConfig from '../../../config/roles.json'
+import AccountSettingsModal from './AccountSettingsModal'
 
 const ROLE_NAME = Object.fromEntries((rolesConfig.roles ?? []).map((r) => [r.id, r.name]))
 
@@ -11,6 +12,7 @@ const ROLE_NAME = Object.fromEntries((rolesConfig.roles ?? []).map((r) => [r.id,
 export default function UserMenu() {
   const { user, isLoading, signOut } = useAuth()
   const [open, setOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
   const ref = useRef(null)
   const navigate = useNavigate()
 
@@ -73,14 +75,16 @@ export default function UserMenu() {
               </p>
             )}
           </div>
-          <Link
+          <button
             role="menuitem"
-            to="/account"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            onClick={() => {
+              setOpen(false)
+              setAccountOpen(true)
+            }}
+            className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Account settings
-          </Link>
+          </button>
           <button
             role="menuitem"
             onClick={onSignOut}
@@ -90,6 +94,7 @@ export default function UserMenu() {
           </button>
         </div>
       )}
+      {accountOpen && <AccountSettingsModal onClose={() => setAccountOpen(false)} />}
     </div>
   )
 }
