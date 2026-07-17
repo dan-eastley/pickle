@@ -13,16 +13,29 @@ Prompts live in the repo (not in workflow YAML) for three reasons:
 ```
 config/prompts/
 ├── README.md           # This file
-└── decisions/          # One prompt per workflow in the decision analysis chain
-    ├── narrative-validation.md
-    ├── architecture-review.md
-    ├── referential-integrity.md
-    ├── strategy-alignment.md
-    ├── principles-alignment.md
-    ├── guardrails-alignment.md
-    ├── proponent-analysis.md
-    └── challenger-analysis.md
+├── decisions/          # One prompt per workflow in the decision analysis + apply chain
+│   ├── narrative-validation.md
+│   ├── architecture-review.md
+│   ├── referential-integrity.md
+│   ├── strategy-alignment.md
+│   ├── principles-alignment.md
+│   ├── guardrails-alignment.md
+│   ├── proponent-analysis.md
+│   ├── challenger-analysis.md
+│   ├── architecture-changes.md   # Accepted → ordered change list
+│   └── apply-changes.md          # Applies the change list to artefact files (PR)
+└── discovery/
+    └── architecture-discovery.md # Virtual Architect Agent — answers a discovery question
 ```
+
+## Conventions
+
+Every prompt shares a house style so its diffs stay reviewable and its output stays consistent:
+
+- **Persona** — each opens with a one-line named persona (*The Challenger*, *The Auditor*, …) so the model adopts a consistent voice and stance.
+- **Structure** — `Role` → `Audience` → `Inputs available` → `Task` → `Output` → `Constraints`.
+- **Brevity** — the succinctness rule is stated once per prompt, not repeated per field. Analysis fields are **≤300 characters**.
+- **Language (i18n)** — every prompt instructs output in the architecture's configured language (default British English, per `config/i18n/`), matching the terminology the architecture's own artefacts use.
 
 ## How a workflow consumes its prompt
 
@@ -52,4 +65,4 @@ Fields should use plain markdown for readability in PR descriptions. The `Valida
 
 ## Current status
 
-All prompts are **ready for use**. Each has a defined role, inputs, task, output shape, and constraints tailored to the target audience for that architecture domain.
+All prompts are **ready for use**. Each has a named persona, a defined role, inputs, task, output shape, and constraints tailored to the target audience for that architecture domain, and instructs output in the architecture's configured language.
