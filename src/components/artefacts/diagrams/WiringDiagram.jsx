@@ -34,9 +34,6 @@ const EMERALD_DK = '#059669' // emerald-600 — active / arrowheads
 
 const app = getDiagramColors('application')
 
-// Short platform label, dropping the PLAT- prefix used everywhere else.
-const shortId = (id) => id.replace(/^PLAT-/, '')
-
 function PlatformBlock({ x, y, platform, id, focused, onClick }) {
   const name = platform?.name ?? id
   const lines = wrapText(name, 22, 2)
@@ -55,7 +52,7 @@ function PlatformBlock({ x, y, platform, id, focused, onClick }) {
         className={`${rectFill} ${rectHover} transition-colors`}
       />
       <text x={x + 8} y={y + 13} className={`${idFill} text-[8px] font-mono uppercase tracking-wide`}>
-        {shortId(id)}
+        {id}
       </text>
       {lines.map((ln, i) => (
         <text key={i} x={x + 8} y={y + 26 + i * 12} className={`${nameFill} text-[11px] font-medium`}>
@@ -346,9 +343,9 @@ export default function WiringDiagram({ clientId, versionId }) {
             </button>
             <span className="text-gray-300">|</span>
             <span className="font-semibold text-gray-900">
-              <span className="font-mono text-gray-500">{shortId(focusId)}</span> {focus?.name}
+              <span className="font-mono text-gray-500">{focusId}</span> {focus?.name}
               <span className="mx-1.5 text-gray-400">↔</span>
-              <span className="font-mono text-gray-500">{shortId(pairTargetId)}</span>{' '}
+              <span className="font-mono text-gray-500">{pairTargetId}</span>{' '}
               {platformsById[pairTargetId]?.name}
             </span>
             <span className="ml-auto text-gray-500">
@@ -371,7 +368,7 @@ export default function WiringDiagram({ clientId, versionId }) {
             >
               {connectedIds.map((id) => (
                 <option key={id} value={id}>
-                  {platformsById[id]?.name ?? id} ({shortId(id)})
+                  {platformsById[id]?.name ?? id} ({id})
                 </option>
               ))}
             </select>
