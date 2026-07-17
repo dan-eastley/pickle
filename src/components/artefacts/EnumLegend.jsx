@@ -12,7 +12,7 @@ export default function EnumLegend({ groups, className = '' }) {
     <div className={`flex flex-wrap items-center gap-x-6 gap-y-2 ${className}`}>
       {enums.map((e) => (
         <div key={e.key} className="flex items-center gap-2">
-          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+          <span className="text-2xs font-semibold text-gray-500 uppercase tracking-wide">
             {e.label}
           </span>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

@@ -30,7 +30,7 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
       <div className="flex items-center gap-4 px-5 pt-5 pb-3">
         <ClientLogo clientId={clientId} name={name} className="w-10 h-10 flex-shrink-0" />
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+          <p className="text-2xs font-semibold uppercase tracking-wide text-gray-500">
             Architecture
           </p>
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">

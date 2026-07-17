@@ -105,7 +105,7 @@ function Flow({ flow, domain, onItemClick, selectedId }) {
                   x={cx}
                   y={HEAD_TOP + PART_H / 2 + (nameLines.length === 1 ? 4 : -2)}
                   textAnchor="middle"
-                  className={`text-[11px] font-medium ${isSel ? 'fill-white' : pal.itemText}`}
+                  className={`text-2xs font-medium ${isSel ? 'fill-white' : pal.itemText}`}
                 >
                   {nameLines.map((ln, li) => (
                     <tspan key={li} x={cx} dy={li === 0 ? 0 : 12}>

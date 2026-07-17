@@ -866,8 +866,8 @@ function FrameworkWordmark({ name, sub, className }) {
       className={`inline-flex items-baseline gap-1 px-2.5 py-1 text-sm font-bold tracking-tight ${className}`}
     >
       {name}
-      {sub && <span className="text-[10px] font-semibold opacity-70 tracking-wider">{sub}</span>}
-      <span className="text-[10px] font-normal opacity-70 align-super">®</span>
+      {sub && <span className="text-3xs font-semibold opacity-70 tracking-wider">{sub}</span>}
+      <span className="text-3xs font-normal opacity-70 align-super">®</span>
     </span>
   )
 }

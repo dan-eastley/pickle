@@ -170,7 +170,7 @@ function GroupGrid({ groups, colors, variant, onItemClick, selectedId }) {
                     maxChars={itemMaxChars}
                     maxLines={2}
                     lineHeight={13}
-                    className={`text-[11px] font-medium ${itemSelected ? 'fill-white' : colors.itemText}`}
+                    className={`text-2xs font-medium ${itemSelected ? 'fill-white' : colors.itemText}`}
                   />
                   <MetaBadges meta={item.meta} right={ix + itemWidth - ITEM_PADDING} top={iy + 4} />
                 </g>

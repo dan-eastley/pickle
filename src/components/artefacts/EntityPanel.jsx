@@ -127,7 +127,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
       title={
         entity ? (
           <span className="flex flex-col min-w-0">
-            <span className="text-[11px] font-mono font-normal text-gray-500 truncate">
+            <span className="text-2xs font-mono font-normal text-gray-500 truncate">
               {entity.id}
             </span>
             <span className="text-sm font-semibold text-gray-900 truncate">{entity.name}</span>
@@ -253,7 +253,7 @@ export default function EntityPanel({ entityId, clientId, versionId, onClose }) 
                           title={`via ${e.via.join(', ')}`}
                           className="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 transition-colors"
                         >
-                          <span className="font-mono text-[11px] px-1.5 py-0.5 bg-gray-100 text-gray-500 flex-shrink-0">
+                          <span className="font-mono text-2xs px-1.5 py-0.5 bg-gray-100 text-gray-500 flex-shrink-0">
                             {e.id}
                           </span>
                           <span className="text-sm text-gray-700 min-w-0 truncate">{e.name}</span>

@@ -13,7 +13,7 @@ export default function CountBadge({ count, tone = 'gray', showZero = false, cla
   if (!n && !showZero) return null
   return (
     <span
-      className={`inline-flex items-center justify-center min-w-[18px] px-1.5 h-[18px] text-[11px] font-semibold tabular-nums ${TONES[tone] ?? TONES.gray} ${className}`}
+      className={`inline-flex items-center justify-center min-w-[18px] px-1.5 h-[18px] text-2xs font-semibold tabular-nums ${TONES[tone] ?? TONES.gray} ${className}`}
     >
       {n}
     </span>

@@ -85,7 +85,7 @@ function DomainCard({ domain, base, dm, loading }) {
             <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
               {domain.name} Architecture
             </h3>
-            <span className="font-mono text-[11px] text-gray-500 uppercase">{domain.acronym}</span>
+            <span className="font-mono text-2xs text-gray-500 uppercase">{domain.acronym}</span>
           </div>
           <p className="mt-0.5 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
         </div>

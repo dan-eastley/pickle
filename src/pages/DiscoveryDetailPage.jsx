@@ -56,7 +56,7 @@ function ContentsNav({ sections, activeKey, onJump, onExpandAll, onCollapseAll }
                 <span className="font-mono text-xs text-gray-500">{i + 1}</span>
                 <span className="min-w-0 flex-1 truncate">{s.label}</span>
                 {typeof s.count === 'number' && s.count > 0 && (
-                  <span className="text-[11px] font-mono text-gray-500 tabular-nums">
+                  <span className="text-2xs font-mono text-gray-500 tabular-nums">
                     {s.count}
                   </span>
                 )}

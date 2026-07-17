@@ -48,13 +48,13 @@ export default function PageActionBar({
           <div className="flex items-center gap-2 flex-wrap">
             {title && <h1 className="text-[17px] font-semibold text-gray-900 truncate">{title}</h1>}
             {id && (
-              <span className="font-mono text-[11px] bg-gray-100 text-gray-500 px-1.5 py-0.5">
+              <span className="font-mono text-2xs bg-gray-100 text-gray-500 px-1.5 py-0.5">
                 {id}
               </span>
             )}
             {typeLabel && (
               <span
-                className={`text-[11px] font-medium px-1.5 py-0.5 ${colors ? `${colors.bg} ${colors.text}` : 'text-gray-500 bg-gray-50 border border-gray-200'}`}
+                className={`text-2xs font-medium px-1.5 py-0.5 ${colors ? `${colors.bg} ${colors.text}` : 'text-gray-500 bg-gray-50 border border-gray-200'}`}
               >
                 {typeLabel}
               </span>

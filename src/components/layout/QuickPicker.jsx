@@ -198,7 +198,7 @@ export default function QuickPicker() {
           className="w-full pl-9 pr-8 py-1.5 bg-gray-100 hover:bg-gray-200 focus:bg-white text-sm font-medium text-gray-700 placeholder:text-gray-500 placeholder:font-normal border border-transparent focus:border-gray-300 focus:outline-none transition-colors"
         />
         {!query && (
-          <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:block text-[11px] font-mono text-gray-500 border border-gray-300 px-1 leading-tight">
+          <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:block text-2xs font-mono text-gray-500 border border-gray-300 px-1 leading-tight">
             /
           </kbd>
         )}
