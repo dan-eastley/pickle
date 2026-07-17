@@ -21,6 +21,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { eq, and } from 'drizzle-orm'
 import { GitHubClient, HttpError, getGitHubConfig, missingGitHubEnv } from '../lib/github.js'
 import { getSessionUser, missingAuthEnv } from '../lib/auth.js'
+import { sendInviteEmail } from '../lib/email.js'
 import { db } from '../db/index.js'
 import { architectureMembership, user } from '../db/schema.js'
 import { can, ACTIONS, buildContext, ARCHITECTURE_ROLES } from '../lib/permissions.js'
@@ -639,7 +640,11 @@ async function listMembers(architectureId: string) {
 }
 
 // Grant (or change) a user's role on an architecture, looked up by email.
-async function grantAccess(_gh: GitHubClient, params: Doc): Promise<Doc> {
+async function grantAccess(
+  gh: GitHubClient,
+  params: Doc,
+  actor: string = SYSTEM_ACTOR
+): Promise<Doc> {
   const { architectureId, email, role } = params
   type Role = (typeof ARCHITECTURE_ROLES)[number]
   if (typeof role !== 'string' || !ARCHITECTURE_ROLES.includes(role as Role)) {
@@ -657,6 +662,25 @@ async function grantAccess(_gh: GitHubClient, params: Doc): Promise<Doc> {
       target: [architectureMembership.userId, architectureMembership.architectureId],
       set: { role: validRole, updatedAt: new Date() },
     })
+
+  // Invite email (fire-and-forget). Resolve the architecture's display name;
+  // fall back to its id if the metadata can't be read.
+  let architectureName = String(architectureId)
+  try {
+    const meta = await gh.readJson<{ name?: string }>(
+      `architectures/${architectureId}/architecture.json`
+    )
+    if (meta?.content?.name) architectureName = String(meta.content.name)
+  } catch {
+    /* fall back to id */
+  }
+  sendInviteEmail(u.email, {
+    architectureName,
+    architectureId: String(architectureId),
+    role: validRole,
+    inviterName: actor && actor !== SYSTEM_ACTOR ? actor : undefined,
+  }).catch(() => {})
+
   return { ok: true, member: { userId: u.id, email: u.email, name: u.name, role: validRole } }
 }
 

@@ -22,12 +22,12 @@ export default function AuthCard({ title, subtitle, children, footer }) {
 }
 
 // Shared labelled input used by both auth forms.
-export function Field({ label, ...props }) {
+export function Field({ label, className = '', ...props }) {
   return (
     <label className="block">
       <span className="block text-xs font-medium text-gray-500 mb-1">{label}</span>
       <input
-        className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:bg-gray-50"
+        className={`w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white disabled:bg-gray-50 ${className}`}
         {...props}
       />
     </label>

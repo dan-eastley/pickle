@@ -31,6 +31,9 @@ const ArtefactPage = lazy(() => import('./pages/ArtefactPage'))
 const DocsPage = lazy(() => import('./pages/DocsPage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
@@ -68,6 +71,9 @@ function AppRoutes() {
           {/* Authentication (full-screen, no app chrome) */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* Public / marketing pages */}
           <Route element={<PublicLayout />}>

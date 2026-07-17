@@ -37,8 +37,8 @@ export default function RegisterPage() {
       setError(err.message ?? 'Registration failed')
       return
     }
-    // autoSignIn is on, so land in the app.
-    navigate('/architectures', { replace: true })
+    // Email verification is required — a 6-digit code was emailed on sign-up.
+    navigate('/verify-email', { replace: true, state: { email: form.email } })
   }
 
   return (
