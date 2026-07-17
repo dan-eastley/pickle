@@ -56,7 +56,7 @@ export default [
 
   // Build tooling, Vite config, API handlers and scripts (Node).
   {
-    files: ['*.config.js', 'scripts/**', 'api/**', 'vitest.setup.js', 'playwright.config.js'],
+    files: ['*.config.js', 'scripts/**', 'tools/**', 'api/**', 'vitest.setup.js', 'playwright.config.js'],
     languageOptions: { globals: { ...globals.node } },
   },
 

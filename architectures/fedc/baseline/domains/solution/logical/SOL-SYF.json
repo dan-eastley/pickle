@@ -1,0 +1,50 @@
+{
+    "$schema": "urn:pickle:schemas:artefacts:domains:solution:logical:SOL-SYF",
+    "flows": [
+        {
+            "id": "SYF-001",
+            "name": "Customer self-service billing enquiry",
+            "description": "A customer checks their latest bill in the mobile app, which is served through the digital experience platform from the CRM system of record.",
+            "participants": [
+                { "id": "CUST", "name": "Customer", "kind": "actor" },
+                { "id": "MOB", "name": "Customer Mobile App", "kind": "system", "ref": "PLAT-MOBILE-APP" },
+                { "id": "DXP", "name": "Digital Experience Platform", "kind": "system", "ref": "PLAT-DXP" },
+                { "id": "CRM", "name": "CRM", "kind": "system", "ref": "PLAT-CRM" }
+            ],
+            "messages": [
+                { "order": 1, "from": "CUST", "to": "MOB", "label": "Open billing screen", "kind": "sync" },
+                { "order": 2, "from": "MOB", "to": "DXP", "label": "Request account summary", "kind": "sync", "data": "Account ref" },
+                { "order": 3, "from": "DXP", "to": "CRM", "label": "Fetch customer & billing", "kind": "sync", "data": "Customer & Account" },
+                { "order": 4, "from": "CRM", "to": "DXP", "label": "Account + latest bill", "kind": "return", "data": "Billing summary" },
+                { "order": 5, "from": "DXP", "to": "MOB", "label": "Rendered summary", "kind": "return" },
+                { "order": 6, "from": "MOB", "to": "CUST", "label": "Show bill", "kind": "return" }
+            ]
+        },
+        {
+            "id": "SYF-002",
+            "name": "Field service work order dispatch",
+            "description": "An IoT fault alert raises an asset event that becomes a work order, dispatched to field service and notified to the customer.",
+            "participants": [
+                { "id": "IOT", "name": "Industrial IoT Platform", "kind": "system", "ref": "PLAT-IOT" },
+                { "id": "EAM", "name": "Enterprise Asset Management", "kind": "system", "ref": "PLAT-EAM" },
+                { "id": "FSM", "name": "Field Service Management", "kind": "system", "ref": "PLAT-FSM" },
+                { "id": "CRM", "name": "CRM", "kind": "system", "ref": "PLAT-CRM" }
+            ],
+            "messages": [
+                { "order": 1, "from": "IOT", "to": "EAM", "label": "Asset fault alert", "kind": "async", "data": "Fault event" },
+                { "order": 2, "from": "EAM", "to": "FSM", "label": "Create work order", "kind": "sync", "data": "Work order" },
+                { "order": 3, "from": "FSM", "to": "FSM", "label": "Schedule technician", "kind": "sync" },
+                { "order": 4, "from": "FSM", "to": "CRM", "label": "Notify customer", "kind": "async" },
+                { "order": 5, "from": "FSM", "to": "EAM", "label": "Work complete", "kind": "return", "data": "Completion" }
+            ]
+        }
+    ],
+    "activity": [
+        {
+            "timestamp": "2026-07-17T09:00:00Z",
+            "action": "Created",
+            "who": "Pickle",
+            "notes": "Seeded two illustrative system flows across the customer and field-service platforms."
+        }
+    ]
+}

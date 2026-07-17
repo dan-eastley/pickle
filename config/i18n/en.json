@@ -247,6 +247,22 @@
       "name": "Solution Architecture Strategy ↔ Principles",
       "description": "Maps Solution Architecture Strategy statements to the Architecture Principles that operationalise them."
     },
+    "SOL-SYF": {
+      "name": "System Flows",
+      "description": "UML sequence diagrams showing how systems and platforms interact across their integrations, end-to-end."
+    },
+    "SOL-INF": {
+      "name": "Information Flows",
+      "description": "UML sequence diagrams showing how data moves between systems — what data, where it originates and where it lands."
+    },
+    "SOL-USF": {
+      "name": "User Flows",
+      "description": "UML sequence diagrams showing the user's journey through application components and screens."
+    },
+    "SOL-PRF": {
+      "name": "Process Flows",
+      "description": "UML sequence diagrams showing how a business process executes across its supporting applications."
+    },
     "SOL-GRD": {
       "name": "Solution Architecture Guardrails",
       "description": "Rules and minimum standards that must be followed in Solution Architecture."

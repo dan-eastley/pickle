@@ -1,16 +1,30 @@
 import { DOMAINS, DOMAIN_COLORS } from '../../lib/artefacts'
 
 // Shared metric display: architecture content grouped by domain, colour-coded by
-// domain. Rendered as a compact table — each domain is a column with a coloured
-// header and label/count rows; counts sit right, in the domain colour. Used on
-// the architectures list, the transitions page, the domains page (single), and
-// atop artefacts, so the numbers read the same everywhere.
+// domain. Each domain is a column with a bold coloured title; each row shows a
+// label, a count (right, in the domain colour), and a proportional bar beneath.
+// Bars are scaled per-column (sqrt, so smaller values stay visible) so the
+// tallest count in a domain fills the track. Used on the architectures list, the
+// transitions page, the domains page (single), and atop artefacts.
 
-function MetricRow({ label, count, countColor }) {
+// sqrt scaling keeps small counts legible while the column max fills the track.
+function barPct(count, max) {
+  if (!max || count <= 0) return 0
+  return Math.max(6, Math.round(Math.sqrt(count / max) * 100))
+}
+
+function MetricRow({ label, count, max, barColor, countColor }) {
   return (
-    <div className="flex items-center justify-between gap-3 px-2.5 py-1 text-xs">
-      <span className="min-w-0 truncate text-gray-600">{label}</span>
-      <span className={`flex-shrink-0 tabular-nums font-semibold ${countColor}`}>{count}</span>
+    <div className="py-1">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="min-w-0 truncate text-sm text-gray-700">{label}</span>
+        <span className={`flex-shrink-0 tabular-nums text-sm font-semibold ${countColor}`}>
+          {count}
+        </span>
+      </div>
+      <div className="mt-1 h-1.5 w-full bg-gray-100">
+        <div className={`h-full ${barColor}`} style={{ width: `${barPct(count, max)}%` }} />
+      </div>
     </div>
   )
 }
@@ -27,9 +41,20 @@ function domainGroups(perDomain) {
     if (dm?.documents) items.push({ label: 'Documents', count: dm.documents })
     if (items.length === 0) continue
     const c = DOMAIN_COLORS[d.id]
-    groups.push({ key: d.id, title: d.name, headerColor: c.text, countColor: c.text, items })
+    groups.push({
+      key: d.id,
+      title: d.name,
+      headerColor: c.text,
+      countColor: c.text,
+      barColor: c.dot,
+      items,
+    })
   }
   return groups
+}
+
+function withMax(g) {
+  return { ...g, max: Math.max(...g.items.map((i) => i.count), 1) }
 }
 
 export default function MetricBars({ perDomain, governance, single = false, empty = null }) {
@@ -46,6 +71,7 @@ export default function MetricBars({ perDomain, governance, single = false, empt
         title: 'Governance',
         headerColor: 'text-gray-500',
         countColor: 'text-gray-700',
+        barColor: 'bg-gray-400',
         items,
       })
     }
@@ -53,33 +79,46 @@ export default function MetricBars({ perDomain, governance, single = false, empt
 
   if (groups.length === 0) return empty
 
-  // Single mode (one domain card, or an artefact): a compact bordered table with
-  // no domain header — the surrounding card already names the domain/artefact.
+  // Single mode (one domain card, or an artefact): just the rows — the
+  // surrounding card already names the domain/artefact.
   if (single) {
-    const g = groups[0]
+    const g = withMax(groups[0])
     return (
-      <div className="inline-block min-w-[220px] border border-gray-200 divide-y divide-gray-100">
+      <div className="min-w-[220px] space-y-1">
         {g.items.map((i) => (
-          <MetricRow key={i.label} label={i.label} count={i.count} countColor={g.countColor} />
+          <MetricRow
+            key={i.label}
+            label={i.label}
+            count={i.count}
+            max={g.max}
+            barColor={g.barColor}
+            countColor={g.countColor}
+          />
         ))}
       </div>
     )
   }
 
-  // Full mode: a grid of domain columns. The 1px grid gap over a gray background
-  // draws the clean dividing lines between columns/rows.
+  // Full mode: a row of domain columns, each headed by its bold coloured name,
+  // separated by thin vertical rules.
   return (
-    <div className="grid gap-px border border-gray-200 bg-gray-200 [grid-template-columns:repeat(auto-fit,minmax(155px,1fr))]">
-      {groups.map((g) => (
-        <div key={g.key} className="flex flex-col bg-white">
-          <div
-            className={`px-2.5 py-1.5 text-xs font-bold border-b border-gray-200 ${g.headerColor}`}
-          >
-            {g.title}
-          </div>
-          <div className="divide-y divide-gray-100">
+    <div className="grid gap-x-8 gap-y-6 [grid-template-columns:repeat(auto-fit,minmax(190px,1fr))]">
+      {groups.map(withMax).map((g, gi) => (
+        <div
+          key={g.key}
+          className={gi === 0 ? 'min-w-0' : 'min-w-0 border-l border-gray-200 pl-6'}
+        >
+          <h4 className={`mb-2 text-sm font-bold ${g.headerColor}`}>{g.title}</h4>
+          <div className="space-y-1">
             {g.items.map((i) => (
-              <MetricRow key={i.label} label={i.label} count={i.count} countColor={g.countColor} />
+              <MetricRow
+                key={i.label}
+                label={i.label}
+                count={i.count}
+                max={g.max}
+                barColor={g.barColor}
+                countColor={g.countColor}
+              />
             ))}
           </div>
         </div>
