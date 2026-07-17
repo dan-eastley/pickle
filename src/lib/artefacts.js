@@ -687,6 +687,65 @@ const ARTEFACTS_BASE = [
       { artefactId: 'SOL-PRN', relationship: 'derived-from' },
     ],
   },
+  // Solution: Sequence diagrams (UML). One artefact per flow type; each holds
+  // 0+ flows. Abstraction follows the host solution document (logical for now).
+  {
+    id: 'SOL-SYF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'System Flows',
+    description:
+      'UML sequence diagrams showing how systems and platforms interact across their integrations, end-to-end.',
+    diagramType: 'sequence',
+    relatedTo: [
+      { artefactId: 'APP-DAP', relationship: 'informs' },
+      { artefactId: 'INT-IFC', relationship: 'informs' },
+    ],
+  },
+  {
+    id: 'SOL-INF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'Information Flows',
+    description:
+      'UML sequence diagrams showing how data moves between systems — what data, where it originates and where it lands.',
+    diagramType: 'sequence',
+    relatedTo: [
+      { artefactId: 'APP-DAP', relationship: 'informs' },
+      { artefactId: 'DAT-DAC', relationship: 'informs' },
+    ],
+  },
+  {
+    id: 'SOL-USF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'User Flows',
+    description:
+      "UML sequence diagrams showing the user's journey through application components and screens.",
+    diagramType: 'sequence',
+    relatedTo: [{ artefactId: 'APP-CAT', relationship: 'informs' }],
+  },
+  {
+    id: 'SOL-PRF',
+    domain: 'solution',
+    abstraction: 'logical',
+    format: 'diagram',
+    key: false,
+    name: 'Process Flows',
+    description:
+      'UML sequence diagrams showing how a business process executes across its supporting applications.',
+    diagramType: 'sequence',
+    relatedTo: [
+      { artefactId: 'BUS-PRO', relationship: 'informs' },
+      { artefactId: 'APP-DAP', relationship: 'informs' },
+    ],
+  },
   {
     id: 'SOL-GRD',
     domain: 'solution',

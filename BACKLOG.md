@@ -146,7 +146,7 @@ The product backlog for Pickle, structured loosely as **Epic → Feature**. Each
 | [UIE-2](#uie-2-adr-reference-in-artefact-activity) — ADR reference in artefact activity | ⬜ Not started | Medium |
 | [UIE-3](#uie-3-full-document-view-for-entities) — Full document view for entities | ⬜ Not started | Medium |
 | [UIE-4](#uie-4-per-architecture-anthropic-agent-credentials) — Per-architecture Anthropic Agent credentials | ⬜ Not started | High |
-| [UIE-5](#uie-5-uml-sequence-diagrams-flow-types) — UML sequence diagrams (flow types) | ⬜ Not started | High |
+| [UIE-5](#uie-5-uml-sequence-diagrams-flow-types) — UML sequence diagrams (flow types) | 🟡 Partial | High |
 | [UIE-6](#uie-6-personal-details--password-management) — Personal details & password management | ⬜ Not started | Medium |
 
 ---
@@ -923,7 +923,11 @@ Batch raised 2026-07 alongside the shipped ui-evolution UI fixes (doc-type count
 
 ### UIE-5: UML sequence diagrams (flow types)
 
-**Status:** ⬜ Not started · **Impact:** High
+**Status:** 🟡 Partial · **Impact:** High
+
+**Done:** Shared UML **sequence renderer** ([`SequenceDiagram`](src/components/artefacts/diagrams/SequenceDiagram.jsx)) wired into [`DiagramView`](src/components/artefacts/DiagramView.jsx) under `diagramType: 'sequence'` (participants/lifelines + ordered sync/async/return messages, self-messages, data payloads, clickable `ref` participants → entity panel). Four flow-type diagram artefacts defined at **solution/logical** — `SOL-SYF` (System), `SOL-INF` (Information), `SOL-USF` (User), `SOL-PRF` (Process) — each with a self-contained schema, schema-index + in-app registry + i18n entries, a docs registry row and schema doc page. Seeded a two-flow `SOL-SYF` instance on `fedc/baseline`.
+
+**Remaining:** register the four at conceptual/physical too (so abstraction can follow the host document at every level), and embed sequence instances inside solution documents (SOL-AIN/SDE/ISP) rather than only as standalone artefacts.
 
 **Context:** The entirety of our sequence diagrams make up the **end-to-end**, and they **form part of documents**. We need first-class UML **sequence-diagram** artefact types whose **level of abstraction follows the host document** (Architecture Intent → Solution Design → LLD) — all types available at all levels — and **every document supports 0 or more of each type**.
 
