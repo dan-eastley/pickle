@@ -73,9 +73,32 @@ security tests.
 - **Command injection:** no `exec`/`spawn`/`eval`/`new Function` on any request-derived input.
 - **Cookies:** sessions are Better Auth-managed (HttpOnly + SameSite + Secure in prod) — not hand-rolled.
 
+## Auth is always enforced (no on/off flag)
+
+Per maintainer direction, the auth on/off switches were **removed** — there is
+no `auth=off` mode in any environment:
+
+- **Client:** `VITE_REQUIRE_AUTH` deleted; `RequireAuth` always gates (redirects
+  to `/login`). Removed from `.env` / `.env.example`. (`fix(security): …`)
+- **Server:** the dev-permissive `LOCAL_ADMIN` fallback in `/api/github` and the
+  off-Vercel passthrough in `/api/content` are gone. Both now fail **closed** in
+  every environment: missing auth env or no session → denied. Local dev must
+  configure auth and sign in as a seeded user like any environment.
+- **Tests explicitly capture this:** the full POST action list is asserted to
+  401 unauthenticated (parametrized), GET actions are gated, both endpoints are
+  asserted to fail closed off-Vercel, and `RequireAuth` has a component test for
+  the render/redirect/loading paths. Suite: **161 tests** (was 116).
+- **E2E:** `auth.setup.js` signs in as a seeded user (via `TEST_USER_EMAIL` /
+  `TEST_USER_PASSWORD`) and saves a Playwright `storageState` that the smoke
+  specs reuse; without creds the gated specs skip and the public checks run.
+
 ## Items requiring human action
 
-1. **Post-deploy smoke suite must authenticate.** `tests/e2e/smoke.spec.js` navigates architecture routes anonymously against the live deployment; with reads now gated it needs a seeded test user + a Playwright `storageState` injected via a workflow secret (`post-deploy.yml` currently carries no credentials). I did **not** fabricate a test auth-bypass — that is an infra/CI decision. Until this lands, the architecture-route smoke checks against a gated deployment will fail (the homepage/clients-nav checks still pass). **Owner action.**
+1. **Add the CI secrets `TEST_USER_EMAIL` / `TEST_USER_PASSWORD`** (a seeded test
+   user) to the repo → the post-deploy smoke suite authenticates and exercises
+   the auth-gated architecture routes. Already wired in `post-deploy.yml` and
+   `playwright.config.js`; until the secrets exist, those specs skip (public
+   checks still run). **Owner action.**
 2. ~~**Assess previously exposed data.**~~ **N/A — confirmed by the maintainer:** this is not yet a production app with live data, so the prior world-readability of `/api/content` exposed no real tenant content. No exposure assessment or rotation needed. (No credentials were ever exposed regardless — the data is architecture models.)
 3. **Confirm prod env is complete.** The fail-closed change means a deployment missing `BETTER_AUTH_SECRET`/`DATABASE_URL` will now 503 architecture data (previously it silently served everything as admin). Verify prod has the full auth env set. **Owner action.**
 4. **Tighten CSP later (optional).** Move the gtag bootstrap out of `index.html` into a module so `script-src 'unsafe-inline'` can be dropped; consider a nonce/hash for the remaining inline needs.

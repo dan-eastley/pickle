@@ -2,6 +2,13 @@ import { test, expect } from '@playwright/test'
 import { fileURLToPath } from 'url'
 import { dirname, resolve, join } from 'path'
 import { readdirSync, existsSync } from 'fs'
+import { hasTestCreds } from './auth.shared.js'
+
+// Architecture content is auth-gated. Specs that browse it run only when a
+// seeded test session is available (see auth.setup.js); the public homepage
+// spec always runs. `requiresAuth` is called at the top of a gated test.
+const requiresAuth = () =>
+  test.skip(!hasTestCreds, 'requires TEST_USER_ credentials for the auth-gated routes')
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -56,6 +63,7 @@ test('homepage renders its key sections', async ({ page }) => {
 })
 
 test('navigates from the homepage to the clients list', async ({ page }) => {
+  requiresAuth() // /architectures is behind the auth gate
   await page.goto('/')
   await page.getByRole('link', { name: 'View Clients' }).first().click()
   await expect(page).toHaveURL(/\/architectures$/)
@@ -71,6 +79,7 @@ test(`enumerated ${routes.length} architecture routes`, () => {
 
 for (const route of routes) {
   test(`route renders: ${route.replace(ROUTE_BASE, '')}`, async ({ page }) => {
+    requiresAuth()
     await page.goto(route, { waitUntil: 'networkidle' })
     await expect(page.getByText('This page failed to load.')).toHaveCount(0)
     // A level-1 heading is present once the page has resolved.
