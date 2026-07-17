@@ -112,6 +112,10 @@
                     "type": "string",
                     "description": "Display name of the person or agent."
                 },
+                "decision-id": {
+                    "type": "string",
+                    "description": "ID of the ADR whose committed changes produced this activity entry (e.g. ADR-014), when the change was applied via a decision."
+                },
                 "notes": {
                     "type": "string"
                 }

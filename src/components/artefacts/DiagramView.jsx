@@ -4,6 +4,7 @@ import EntityPanel from './EntityPanel'
 import EnumLegend from './EnumLegend'
 import NestedGroupDiagram from './diagrams/NestedGroupDiagram'
 import ProcessFlowDiagram from './diagrams/ProcessFlowDiagram'
+import SequenceDiagram from './diagrams/SequenceDiagram'
 import WiringDiagram from './diagrams/WiringDiagram'
 
 const NESTED_GROUP_TYPES = new Set(['card-based', 'entity-based'])
@@ -42,6 +43,48 @@ export default function DiagramView({ data, artefact, schema, clientId, versionI
 
   if (diagramType === 'wiring') {
     return <WiringDiagram clientId={clientId} versionId={versionId} />
+  }
+
+  if (diagramType === 'sequence') {
+    const flows = data?.flows
+    if (!Array.isArray(flows) || flows.length === 0) {
+      return (
+        <div className="bg-white overflow-hidden shadow-xl">
+          <EmptyState
+            illustration="diagram"
+            title={`${artefact?.name ?? 'Sequence diagrams'} — none yet`}
+            description="No flows have been authored for this artefact yet."
+          />
+        </div>
+      )
+    }
+    const flowCount = flows.length
+    const stepCount = flows.reduce((sum, f) => sum + (f.messages?.length ?? 0), 0)
+    return (
+      <>
+        <div className="bg-white overflow-hidden shadow-xl">
+          <SequenceDiagram
+            flows={flows}
+            domain={artefact?.domain}
+            onItemClick={(id) => setSelectedId(id === selectedId ? null : id)}
+            selectedId={selectedId}
+          />
+          <div className="bg-gray-50 border-t border-gray-200 px-4 py-2 flex items-center justify-end">
+            <span className="text-xs text-gray-500">
+              {flowCount} {flowCount === 1 ? 'flow' : 'flows'} · {stepCount}{' '}
+              {stepCount === 1 ? 'step' : 'steps'}
+            </span>
+          </div>
+        </div>
+        <EntityPanel
+          entityId={selectedId}
+          clientId={clientId}
+          versionId={versionId}
+          onOpenEntity={setSelectedId}
+          onClose={() => setSelectedId(null)}
+        />
+      </>
+    )
   }
 
   if (PROCESS_FLOW_TYPES.has(diagramType) && Array.isArray(groups)) {

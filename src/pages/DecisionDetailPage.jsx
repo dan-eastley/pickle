@@ -5,6 +5,8 @@ import { decisionChangeFields } from '../lib/narrative'
 import { buildScope } from '../lib/scope'
 import { inferRunningWorkflow } from '../lib/decisionWorkflow'
 import { HISTORY_EVENT_STYLES, CHANGE_TYPE_STYLES } from '../lib/theme'
+import { getArtefact, getFormat } from '../lib/artefacts'
+import FormatIcon from '../components/ui/FormatIcon'
 import ScopeChip from '../components/decisions/ScopeChip'
 import ScopeSelector from '../components/decisions/ScopeSelector'
 import RequirementsList from '../components/decisions/RequirementsList'
@@ -494,16 +496,6 @@ const ANALYSIS_SECTIONS = [
   { key: 'challenger-analysis', label: 'Challenger Analysis' },
 ]
 
-// Architecture-change artefact IDs are prefixed by domain (BUS-, DAT-, …).
-const CHANGE_DOMAINS = [
-  { prefix: 'BUS', label: 'Business Architecture Changes' },
-  { prefix: 'DAT', label: 'Data Architecture Changes' },
-  { prefix: 'INT', label: 'Integration Architecture Changes' },
-  { prefix: 'APP', label: 'Application Architecture Changes' },
-  { prefix: 'SOL', label: 'Solution Architecture Changes' },
-]
-const changeDomainPrefix = (c) => (c['artefact-id'] ?? '').split('-')[0]
-
 function ArchitectureChangeTable({ changes, indices, accepted, onAccept, saving, canReview }) {
   return (
     <div className="border border-gray-200 overflow-x-auto">
@@ -586,37 +578,60 @@ function ArchitectureChangeTable({ changes, indices, accepted, onAccept, saving,
 
 function ArchitectureChanges({ changes, accepted, onAccept, saving, canReview }) {
   if (!changes?.length) return null
-  // Keep original indices so review writes target the right array element.
+  // Group by the artefact each change touches (keeping original indices so review
+  // writes target the right array element), headed with its format type + icon.
   const withIndex = changes.map((c, i) => ({ c, i }))
-  const groups = CHANGE_DOMAINS.map((d) => ({
-    ...d,
-    items: withIndex.filter(({ c }) => changeDomainPrefix(c) === d.prefix),
-  })).filter((d) => d.items.length)
-  // Anything that doesn't match a known prefix falls into an "Other" group.
-  const known = new Set(CHANGE_DOMAINS.map((d) => d.prefix))
-  const other = withIndex.filter(({ c }) => !known.has(changeDomainPrefix(c)))
-  if (other.length) groups.push({ prefix: 'OTHER', label: 'Other Changes', items: other })
+  const order = []
+  const byArtefact = {}
+  for (const x of withIndex) {
+    const id = x.c['artefact-id'] ?? 'unknown'
+    if (!byArtefact[id]) {
+      byArtefact[id] = []
+      order.push(id)
+    }
+    byArtefact[id].push(x)
+  }
 
   return (
     <div className="space-y-6">
-      {groups.map((g) => (
-        <div key={g.prefix}>
-          <h3 className="text-base font-semibold text-gray-800 flex items-center gap-2 mb-3">
-            {g.label}
-            <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">
-              {g.items.length}
-            </span>
-          </h3>
-          <ArchitectureChangeTable
-            changes={g.items.map((x) => x.c)}
-            indices={g.items.map((x) => x.i)}
-            accepted={accepted}
-            onAccept={onAccept}
-            saving={saving}
-            canReview={canReview}
-          />
-        </div>
-      ))}
+      {order.map((id) => {
+        const items = byArtefact[id]
+        const artefact = getArtefact(id)
+        const fmt = artefact ? getFormat(artefact.format) : null
+        const name = items[0].c['artefact-name'] ?? artefact?.name ?? id
+        return (
+          <div key={id}>
+            <h3 className="flex items-center gap-2 mb-3">
+              {artefact && (
+                <span
+                  className="w-6 h-6 bg-gray-100 flex items-center justify-center flex-shrink-0"
+                  title={fmt?.label}
+                >
+                  <FormatIcon format={artefact.format} className="w-3.5 h-3.5 text-gray-500" />
+                </span>
+              )}
+              <span className="text-base font-semibold text-gray-800">{name}</span>
+              <span className="font-mono text-xs text-gray-400">{id}</span>
+              {fmt && (
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  {fmt.label}
+                </span>
+              )}
+              <span className="text-xs px-1.5 py-0.5 font-medium tabular-nums bg-gray-100 text-gray-600">
+                {items.length}
+              </span>
+            </h3>
+            <ArchitectureChangeTable
+              changes={items.map((x) => x.c)}
+              indices={items.map((x) => x.i)}
+              accepted={accepted}
+              onAccept={onAccept}
+              saving={saving}
+              canReview={canReview}
+            />
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -1120,18 +1135,26 @@ export default function DecisionDetailPage() {
 
   const renderAnalysisSub = (s) => {
     const rows = decision[s.key] ?? []
+    const summary = decision[`${s.key}-summary`]
     return renderSub(
       s.key,
       s.label,
       rows.length > 0 ? (
-        <AnalysisTable
-          rows={rows}
-          sectionKey={s.key}
-          accepted={accepted}
-          onAccept={handleAccept}
-          saving={saving}
-          locked={analysisLocked}
-        />
+        <>
+          {summary && (
+            <div className="mb-3 border-l-2 border-brand-300 bg-brand-50/40 px-4 py-3 text-sm text-gray-700">
+              <Markdown>{summary}</Markdown>
+            </div>
+          )}
+          <AnalysisTable
+            rows={rows}
+            sectionKey={s.key}
+            accepted={accepted}
+            onAccept={handleAccept}
+            saving={saving}
+            locked={analysisLocked}
+          />
+        </>
       ) : (
         <EmptyNote
           title="No findings yet"

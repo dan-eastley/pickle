@@ -16,12 +16,14 @@ import { getDiagramColors, wrapText } from '../../../lib/diagramTheme'
 //
 // Clicking a platform block or an interface line opens the usual entity popout.
 
-const BLOCK_W = 240
-const BLOCK_H = 52
+// Sized to match the nested-card diagram items (concise), not the old oversized
+// blocks. Connectors in the system view are routed orthogonally (L-shaped).
+const BLOCK_W = 180
+const BLOCK_H = 48
 const PAD = 24
-const ROW_GAP = 18
-const FLOW_ROW_H = 50
-const SVG_W = 900
+const ROW_GAP = 14
+const FLOW_ROW_H = 46
+const SVG_W = 880
 const NEIGHBOUR_X = SVG_W - PAD - BLOCK_W
 
 const EMERALD = '#34d399' // emerald-400 — connection lines
@@ -34,7 +36,7 @@ const shortId = (id) => id.replace(/^PLAT-/, '')
 
 function PlatformBlock({ x, y, platform, id, focused, onClick }) {
   const name = platform?.name ?? id
-  const lines = wrapText(name, 28, 2)
+  const lines = wrapText(name, 22, 2)
   const rectFill = focused ? app.selectedFill : app.itemFill
   const rectHover = focused ? '' : app.itemHover
   const idFill = focused ? app.selectedId : app.label
@@ -49,16 +51,11 @@ function PlatformBlock({ x, y, platform, id, focused, onClick }) {
         height={BLOCK_H}
         className={`${rectFill} ${rectHover} transition-colors`}
       />
-      <text x={x + 12} y={y + 16} className={`${idFill} text-[10px] font-mono`}>
+      <text x={x + 8} y={y + 13} className={`${idFill} text-[8px] font-mono uppercase tracking-wide`}>
         {shortId(id)}
       </text>
       {lines.map((ln, i) => (
-        <text
-          key={i}
-          x={x + 12}
-          y={y + 30 + i * 12}
-          className={`${nameFill} text-[12px] font-semibold`}
-        >
+        <text key={i} x={x + 8} y={y + 26 + i * 12} className={`${nameFill} text-[11px] font-medium`}>
           {ln}
         </text>
       ))}
@@ -86,40 +83,44 @@ function SystemView({ focusId, neighbours, platformsById, onOpenPair, onOpenEnti
   return (
     <div className="overflow-x-auto">
       <svg viewBox={`0 0 ${SVG_W} ${svgH}`} className="w-full min-w-[640px]" style={{ maxHeight: 680 }}>
-        {/* Connections (drawn under the blocks) */}
+        {/* Connections — orthogonal (L-shaped) via a shared vertical trunk, so
+            every segment is horizontal or vertical, never diagonal. */}
         {neighbours.map((n, i) => {
           const ny = PAD + i * (BLOCK_H + ROW_GAP)
           const ncy = ny + BLOCK_H / 2
-          const midX = (focusCx + NEIGHBOUR_X) / 2
+          const trunkX = Math.round((focusCx + NEIGHBOUR_X) / 2)
+          const d = `M ${focusCx} ${focusCy} H ${trunkX} V ${ncy} H ${NEIGHBOUR_X}`
+          const labelX = (trunkX + NEIGHBOUR_X) / 2
           return (
-            <g
-              key={n.id}
-              className="group cursor-pointer"
-              onClick={() => onOpenPair(n.id)}
-            >
+            <g key={n.id} className="group cursor-pointer" onClick={() => onOpenPair(n.id)}>
               <title>
                 {n.count} interface{n.count !== 1 ? 's' : ''} — click to view
               </title>
               {/* hit area */}
-              <line x1={focusCx} y1={focusCy} x2={NEIGHBOUR_X} y2={ncy} stroke="transparent" strokeWidth="18" />
-              <line
-                x1={focusCx}
-                y1={focusCy}
-                x2={NEIGHBOUR_X}
-                y2={ncy}
+              <path d={d} fill="none" stroke="transparent" strokeWidth="16" />
+              <path
+                d={d}
+                fill="none"
                 stroke={EMERALD}
                 strokeWidth="1.5"
                 className="group-hover:stroke-emerald-600 transition-colors"
               />
-              {/* count label */}
+              {/* count label on the branch into the neighbour */}
               <g>
-                <rect x={midX - 52} y={ncy - 11} width="104" height="22" rx="2" className="fill-emerald-50" />
+                <rect
+                  x={labelX - 48}
+                  y={ncy - 10}
+                  width="96"
+                  height="20"
+                  rx="2"
+                  className="fill-emerald-50"
+                />
                 <text
-                  x={midX}
+                  x={labelX}
                   y={ncy + 1}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  className="fill-emerald-700 text-[11px] font-semibold"
+                  className="fill-emerald-700 text-[10px] font-semibold"
                 >
                   {n.count} × Interface{n.count !== 1 ? 's' : ''}
                 </text>

@@ -118,35 +118,35 @@ const LAYER_BADGES = {
 const DOCUMENT_CHAIN = [
   {
     id: 'SOL-AVI',
-    name: 'Architecture Vision',
+    name: 'Architecture Visions',
     layer: 'Conceptual',
     audience: 'Executive & Enterprise Architect',
     adds: 'Strategic direction and the high-level target architecture.',
   },
   {
     id: 'SOL-AIN',
-    name: 'Architecture Intent',
+    name: 'Architecture Intents',
     layer: 'Conceptual',
     audience: 'Architecture Review Board',
     adds: 'The decided direction: options weighed and rationale recorded.',
   },
   {
     id: 'SOL-SVI',
-    name: 'Solution Intent',
+    name: 'Solution Intents',
     layer: 'Logical',
     audience: 'Solution Architect',
     adds: 'Per-initiative problem, approach, capabilities and platforms: fixed and variable intent.',
   },
   {
     id: 'SOL-SDE',
-    name: 'Solution Design',
+    name: 'Solution Designs',
     layer: 'Logical',
     audience: 'Technical Architect & Engineering Lead',
     adds: 'Logical design across the four domains, NFRs and flows.',
   },
   {
     id: 'SOL-ISP',
-    name: 'Interface Spec & LLD',
+    name: 'Interface Specs & LLDs',
     layer: 'Physical',
     audience: 'Technical Architect & Engineering Lead',
     adds: 'Concrete protocols, endpoints and contracts to build against.',
@@ -233,27 +233,34 @@ function Hero() {
       <div className="relative z-10 max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
           <Logo align="left" size="lg" />
-          <p className="mt-6 text-sm text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-            Your enterprise architecture as structured, version-controlled data, with AI agents that
-            analyse every proposed change and a decision-record workflow that keeps your architects
-            in charge.
+          <h1 className="mt-6 text-2xl sm:text-3xl font-bold text-gray-900 max-w-xl mx-auto lg:mx-0 leading-tight">
+            Making architecture consumable.
+          </h1>
+          <p className="mt-4 text-sm text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Pickle brings the user experience of a great product to enterprise architecture. Your
+            model tells its own story — clear, navigable and understandable — so it takes an
+            architect to <span className="font-semibold text-gray-900">build</span> it, not to read
+            it. And it evolves at pace, within the right constraints.
           </p>
           {/* The strongest selling points, lifted to the top */}
           <ul className="mt-6 space-y-2 max-w-xl mx-auto lg:mx-0 text-left">
             {[
               [
+                'Consumable by design',
+                'Architecture that tells its own story — no architect required to read it.',
+              ],
+              [
+                'A real user experience',
+                'Built on commonality and common sense: continuity, consistency and understandability across every artefact.',
+              ],
+              [
+                'Evolve at pace, in the guardrails',
+                'Every change is a Decision Record, stress-tested by seven AI agents before a human decides. No undocumented drift.',
+              ],
+              [
                 'Architecture as code',
-                'Every artefact is schema-validated JSON in Git: versioned, auditable, queryable.',
+                'Schema-validated JSON in Git — versioned, auditable, queryable, and aligned to TOGAF, SAFe, Zachman and UAF.',
               ],
-              [
-                'AI-analysed change',
-                'Seven analysis agents stress-test each decision before it reaches a human.',
-              ],
-              [
-                'Governed by Decision Records',
-                'No undocumented drift: intent, rationale and analysis are captured for every change.',
-              ],
-              ['Framework-aligned', 'Maps onto TOGAF, SAFe, Zachman and UAF out of the box.'],
             ].map(([h, t]) => (
               <li key={h} className="flex items-start gap-2.5 text-sm">
                 <CheckIcon className="w-4 h-4 mt-0.5 text-brand-600 flex-shrink-0" />
@@ -906,9 +913,10 @@ function ClosingCta() {
   const { user } = useAuth()
   return (
     <section className="px-6 py-16 text-center">
-      <h2 className="text-xl font-bold text-gray-900">See it in action</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Architecture your whole team can actually use.</h2>
       <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
-        Browse a worked architecture and the governed decision workflow behind it.
+        Browse a worked architecture and the governed decision workflow behind it — and see what
+        consumable, evolving architecture feels like.
       </p>
       <div className="mt-6 flex items-center justify-center gap-3">
         <Button to={user ? '/architectures' : '/register'} size="lg">
