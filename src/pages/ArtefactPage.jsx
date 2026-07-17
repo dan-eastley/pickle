@@ -162,7 +162,7 @@ function AdrActionBar({
             stats={cells}
             meta={updatedMeta}
             right={
-              <span className="font-mono text-[11px] bg-gray-800 text-gray-200 px-2 py-1">
+              <span className="font-mono text-2xs bg-gray-800 text-gray-200 px-2 py-1">
                 {artefact.id}.json
               </span>
             }

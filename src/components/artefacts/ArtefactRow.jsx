@@ -162,7 +162,7 @@ export default function ArtefactRow({ artefact, to, clientId, versionId, divider
       </div>
 
       <div className="flex items-center gap-3 flex-shrink-0">
-        <span className="text-xs font-mono text-gray-300" title={artefact.name}>
+        <span className="text-xs font-mono text-gray-500" title={artefact.name}>
           {artefact.id}
         </span>
         <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />

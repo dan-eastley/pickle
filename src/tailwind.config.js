@@ -7,6 +7,13 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
+      // Two steps below text-xs (12px) for dense chips, badges, and meta labels.
+      // Size-only (no line-height) so they behave like the text-[11px]/[10px]
+      // arbitrary values they replace.
+      fontSize: {
+        '2xs': '0.6875rem', // 11px
+        '3xs': '0.625rem', // 10px
+      },
       colors: {
         brand: {
           25: '#F5F8FF',

@@ -70,7 +70,7 @@ export default function CreateEntityModal({
             placeholder="e.g. acme"
             className="w-full px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-brand-500 bg-white font-mono"
           />
-          {idHint && <span className="mt-1 block text-xs text-gray-400">{idHint}</span>}
+          {idHint && <span className="mt-1 block text-xs text-gray-500">{idHint}</span>}
         </label>
 
         <label className="block">

@@ -43,7 +43,7 @@ function ArchitectureSelector({
   )
 
   const Heading = ({ children }) => (
-    <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
+    <div className="px-3 pt-2 pb-1 text-2xs font-semibold text-gray-500 uppercase tracking-wide">
       {children}
     </div>
   )
@@ -64,7 +64,7 @@ function ArchitectureSelector({
         {selectedVersionId && (
           <>
             <span className="text-gray-300 font-normal flex-shrink-0">/</span>
-            <span className="font-mono text-[12px] text-gray-500 font-normal flex-shrink-0">
+            <span className="font-mono text-xs text-gray-500 font-normal flex-shrink-0">
               {selectedVersionId}
             </span>
           </>

@@ -45,11 +45,11 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
         className="group flex items-center justify-between px-5 py-2.5 bg-gray-800 text-white hover:bg-gray-900 transition-colors"
       >
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-[11px] font-semibold px-2 py-0.5 bg-white/15">
+          <span className="text-2xs font-semibold px-2 py-0.5 bg-white/15">
             {abstraction.label}
           </span>
           <span className="text-sm font-semibold">{abstraction.name}</span>
-          <span className="text-xs text-gray-400 truncate">{abstraction.description}</span>
+          <span className="text-xs text-gray-500 truncate">{abstraction.description}</span>
         </div>
         <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0 transition-colors" />
       </Link>
@@ -61,7 +61,7 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
             className="flex items-center gap-1.5 px-5 py-1.5 bg-gray-50 border-b border-gray-100"
           >
             <FormatIcon format={row.format} className="w-3 h-3 text-gray-500" />
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+            <span className="text-2xs font-semibold text-gray-500 uppercase tracking-wider">
               {row.format === 'document' ? 'Document Types' : (row.fmt?.label ?? row.format)} (
               {row.count})
             </span>

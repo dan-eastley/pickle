@@ -18,7 +18,7 @@ export default function StatsBar({ stats = [], meta, right, className = '' }) {
             <div className="text-[19px] font-semibold text-gray-900 tabular-nums leading-tight">
               {s.value}
             </div>
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <div className="text-2xs font-semibold uppercase tracking-wide text-gray-500">
               {s.label}
             </div>
           </div>
@@ -26,7 +26,7 @@ export default function StatsBar({ stats = [], meta, right, className = '' }) {
       </div>
       {(meta || right) && (
         <div className="flex items-center gap-3 px-4 py-2 ml-auto">
-          {meta && <span className="text-[12px] text-gray-500">{meta}</span>}
+          {meta && <span className="text-xs text-gray-500">{meta}</span>}
           {meta && right && <span className="h-4 w-px bg-gray-200" />}
           {right}
         </div>

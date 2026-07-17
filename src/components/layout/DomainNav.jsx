@@ -93,7 +93,7 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
             {artefact.key && <KeyStar className="w-2.5 h-2.5" />}
             <span className="truncate flex-1">{artefact.name}</span>
             {isDoc && docCounts[artefact.id] != null && (
-              <span className="text-xs text-gray-400 flex-shrink-0 tabular-nums">
+              <span className="text-xs text-gray-500 flex-shrink-0 tabular-nums">
                 {docCounts[artefact.id]}
               </span>
             )}
