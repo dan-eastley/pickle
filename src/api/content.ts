@@ -48,24 +48,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Invalid path' })
   }
 
-  // Architecture data is tenant content — session-gated. Fail-closed on
-  // deployments when auth isn't configured; permissive only in local dev
-  // (mirrors /api/github). Docs and schemas remain public.
+  // Architecture data is tenant content — always session-gated, in every
+  // environment (auth is never off). Docs and schemas remain public.
   const isTenantData = prefix === 'architectures'
   if (isTenantData) {
     if (missingAuthEnv().length > 0) {
-      if (process.env.VERCEL) {
-        console.warn('[/api/content] denied: auth not configured on deployment')
-        return res.status(503).json({ error: 'Authentication is not configured' })
-      }
-    } else {
-      const user = await getSessionUser(
-        req.headers as Record<string, string | string[] | undefined>
-      )
-      if (!user) {
-        console.warn(`[/api/content] denied path=${prefix}/${filePath} authenticated=false`)
-        return res.status(401).json({ error: 'Authentication required' })
-      }
+      console.warn('[/api/content] denied: auth not configured')
+      return res.status(503).json({ error: 'Authentication is not configured' })
+    }
+    const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
+    if (!user) {
+      console.warn(`[/api/content] denied path=${prefix}/${filePath} authenticated=false`)
+      return res.status(401).json({ error: 'Authentication required' })
     }
   }
 

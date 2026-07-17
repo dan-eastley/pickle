@@ -735,9 +735,8 @@ function inAdminAllowlist(email?: string): boolean {
   return !!email && list.includes(email.toLowerCase())
 }
 
-// No session / no auth configured. ANONYMOUS denies; LOCAL_ADMIN is the
-// local-dev convenience (no database provisioned) and must never be returned
-// on a deployment.
+// No session / no auth configured → denied. Auth is always enforced; there is
+// no auth-off mode, in any environment.
 const ANONYMOUS: PermissionState = {
   authenticated: false,
   isAdmin: false,
@@ -745,27 +744,16 @@ const ANONYMOUS: PermissionState = {
   actor: SYSTEM_ACTOR,
   userId: null,
 }
-const LOCAL_ADMIN: PermissionState = {
-  authenticated: true,
-  isAdmin: true,
-  memberships: {},
-  actor: SYSTEM_ACTOR,
-  userId: null,
-}
 
 // Resolve the caller's authorization state: authenticated?, global admin?, and
-// their per-architecture memberships. Fail-closed on deployments: missing auth
-// env on Vercel denies rather than granting admin (a config slip must not turn
-// this into an open write endpoint). Off-Vercel (local dev) stays permissive.
+// their per-architecture memberships. Fail-closed everywhere: if the auth env
+// isn't configured or there's no valid session, deny — never fall open. (Local
+// dev must configure auth and sign in as a seeded user like any environment.)
 // Fail-soft on the membership query so an un-migrated DB can't 500 a write.
 async function resolvePermissions(req: VercelRequest): Promise<PermissionState> {
-  if (missingAuthEnv().length > 0) {
-    return process.env.VERCEL ? ANONYMOUS : LOCAL_ADMIN
-  }
+  if (missingAuthEnv().length > 0) return ANONYMOUS
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
-  if (!user) {
-    return process.env.VERCEL ? ANONYMOUS : LOCAL_ADMIN
-  }
+  if (!user) return ANONYMOUS
   const isAdmin = user.accessTier === 'admin' || inAdminAllowlist(user.email)
   let memberships: Record<string, string> = {}
   try {
