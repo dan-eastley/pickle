@@ -38,6 +38,11 @@ async function handleApiRequest(req, res, next, server) {
   // /api/arch/** → always fetch live from GitHub
   if (url.pathname.startsWith('/api/arch/')) {
     const relPath = decodeURIComponent(url.pathname.slice('/api/arch/'.length))
+    // Same traversal guard as the deployed /api/content function.
+    if (relPath.startsWith('/') || /(^|\/)\.\.(\/|$)/.test(relPath)) {
+      res.statusCode = 400
+      return res.end(JSON.stringify({ error: 'Invalid path' }))
+    }
     const ref = url.searchParams.get('ref') || 'main'
     const nocache = url.searchParams.has('nocache')
 

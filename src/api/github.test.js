@@ -6,6 +6,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const h = vi.hoisted(() => ({
   getSessionUser: vi.fn(),
+  missingAuthEnv: vi.fn(() => []),
   selectRows: { value: [] },
   gh: {
     readJson: vi.fn(),
@@ -42,7 +43,7 @@ vi.mock('../lib/github', () => {
 })
 
 vi.mock('../lib/auth', () => ({
-  missingAuthEnv: () => [],
+  missingAuthEnv: (...args) => h.missingAuthEnv(...args),
   getSessionUser: (...args) => h.getSessionUser(...args),
 }))
 
@@ -84,14 +85,110 @@ const admin = { id: 'a1', email: 'a@x.io', firstName: 'A', accessTier: 'admin' }
 beforeEach(() => {
   vi.clearAllMocks()
   h.getSessionUser.mockResolvedValue(null)
+  h.missingAuthEnv.mockReturnValue([])
   h.selectRows.value = []
   process.env.VERCEL = '1'
 })
+
+async function get(query) {
+  const res = mockRes()
+  await handler({ method: 'GET', headers: {}, query }, res)
+  return res
+}
 
 describe('/api/github auth + RBAC gating', () => {
   it('401s an unauthenticated write on Vercel', async () => {
     const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'X' })
     expect(res.statusCode).toBe(401)
+  })
+
+  it('fails closed when auth env is missing — on Vercel (no open-admin fallback)', async () => {
+    h.missingAuthEnv.mockReturnValue(['BETTER_AUTH_SECRET'])
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'X' })
+    expect(res.statusCode).toBe(401)
+    expect(h.gh.writeJson).not.toHaveBeenCalled()
+  })
+
+  it('fails closed when auth env is missing — off Vercel too (auth is never off)', async () => {
+    delete process.env.VERCEL
+    h.missingAuthEnv.mockReturnValue(['BETTER_AUTH_SECRET', 'DATABASE_URL'])
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'New' })
+    expect(res.statusCode).toBe(401)
+    expect(h.gh.writeJson).not.toHaveBeenCalled()
+  })
+
+  it('fails closed with no session — off Vercel too (auth is never off)', async () => {
+    delete process.env.VERCEL
+    h.getSessionUser.mockResolvedValue(null)
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'New' })
+    expect(res.statusCode).toBe(401)
+    expect(h.gh.writeJson).not.toHaveBeenCalled()
+  })
+
+  it('401s the read-only GET actions when unauthenticated', async () => {
+    const cfg = await get({ action: 'config' })
+    expect(cfg.statusCode).toBe(401)
+    const nid = await get({ action: 'next-id', clientId: 'fedc', versionId: 'baseline' })
+    expect(nid.statusCode).toBe(401)
+    expect(h.gh.readJson).not.toHaveBeenCalled()
+  })
+
+  it('serves config to an authenticated session', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    const res = await get({ action: 'config' })
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toMatchObject({ owner: 'o', repo: 'r' })
+  })
+
+  // Every mutating action must be unreachable without a session. This locks the
+  // whole POST surface shut, so a newly-added action can't ship unauthenticated.
+  const POST_ACTIONS = [
+    'create-decision',
+    'edit-decision',
+    'update-decision',
+    'update-finding',
+    'commit-decision',
+    'create-discovery',
+    'update-discovery',
+    'refresh-discovery',
+    'update-architecture',
+    'update-transition',
+    'create-architecture',
+    'create-transition',
+    'grant-access',
+    'revoke-access',
+  ]
+  it.each(POST_ACTIONS)('401s the "%s" action when unauthenticated', async (action) => {
+    const res = await post({ action, architectureId: 'fedc', clientId: 'fedc' })
+    expect(res.statusCode).toBe(401)
+    expect(h.gh.writeJson).not.toHaveBeenCalled()
+    expect(h.gh.createBranch).not.toHaveBeenCalled()
+    expect(h.gh.commitFiles).not.toHaveBeenCalled()
+    expect(h.insertValues).not.toHaveBeenCalled()
+  })
+
+  // Every GET action is session-gated too (config/next-id expose tenant data).
+  it.each(['config', 'next-id', 'permissions', 'members'])(
+    'does not serve the "%s" GET action to an anonymous caller',
+    async (action) => {
+      const res = await get({ action, architectureId: 'fedc', clientId: 'fedc', versionId: 'b' })
+      // permissions returns 200 with authenticated:false; the rest deny.
+      if (action === 'permissions') {
+        expect(res.body).toMatchObject({ authenticated: false })
+      } else {
+        expect(res.statusCode).toBeGreaterThanOrEqual(401)
+      }
+      expect(h.gh.readJson).not.toHaveBeenCalled()
+    }
+  )
+
+  it('returns a generic message for unexpected errors', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    h.selectRows.value = [{ architectureId: 'fedc', role: 'owner' }]
+    h.gh.readJson.mockRejectedValue(new Error('pg: connection string leaked-secret'))
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'X' })
+    expect(res.statusCode).toBe(500)
+    expect(res.body.error).toBe('Internal server error')
   })
 
   it('403s a member with no membership editing an architecture', async () => {

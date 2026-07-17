@@ -43,9 +43,13 @@ export function missingAuthEnv(): string[] {
 // clean error. (Types are inferred from the builders so the configured shape —
 // including the additional user fields — is preserved.)
 function buildAuth() {
-  const trustedOrigins = [process.env.BETTER_AUTH_URL, 'http://localhost:3000'].filter(
-    Boolean
-  ) as string[]
+  // localhost is only a trusted origin off-Vercel — including it in deployed
+  // environments would let pages served from a victim's own localhost pass the
+  // CSRF origin check.
+  const trustedOrigins = [
+    process.env.BETTER_AUTH_URL,
+    !process.env.VERCEL && 'http://localhost:3000',
+  ].filter(Boolean) as string[]
 
   return betterAuth({
     appName: 'Pickle',

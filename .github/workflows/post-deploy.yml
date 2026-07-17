@@ -32,6 +32,12 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: L6 — route smoke
+        # Architecture routes are auth-gated; the suite signs in as a seeded
+        # test user (auth.setup.js) when these are set, else the gated specs
+        # skip and only the public checks run.
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
         run: npm run test:e2e
 
       - name: L7 — use cases (XS + Must Have)

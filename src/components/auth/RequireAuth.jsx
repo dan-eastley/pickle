@@ -2,16 +2,12 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import Spinner from '../ui/Spinner'
 
-// Gate for authenticated areas. Enforcement is behind VITE_REQUIRE_AUTH so the
-// app stays usable before Postgres is provisioned — set VITE_REQUIRE_AUTH=true
-// (and configure DATABASE_URL / BETTER_AUTH_* ) to turn gating on.
-const REQUIRE_AUTH = import.meta.env.VITE_REQUIRE_AUTH === 'true'
-
+// Gate for authenticated areas. Auth is always enforced — there is no
+// auth-off mode. Unauthenticated visitors are redirected to /login with the
+// intended location preserved so they land back on it after signing in.
 export default function RequireAuth({ children }) {
   const { user, isLoading } = useAuth()
   const location = useLocation()
-
-  if (!REQUIRE_AUTH) return children
 
   if (isLoading) {
     return (
