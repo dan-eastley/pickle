@@ -6,6 +6,7 @@ import useClickOutside from '../../hooks/useClickOutside'
 import QuickPicker from './QuickPicker'
 import UserMenu from '../auth/UserMenu'
 import Logo from '../ui/Logo'
+import ClientLogo from '../ui/ClientLogo'
 
 // Combined architecture + transition selector. Both live in one dropdown (an
 // "Architectures" section over a "Transitions" section) so the header carries a
@@ -47,25 +48,31 @@ function ArchitectureSelector({
   )
 
   return (
-    <div ref={ref} className="relative">
+    <div
+      ref={ref}
+      className={`relative transition-all duration-200 ${
+        open ? 'w-64 sm:w-[28rem] lg:w-[34rem]' : 'w-48 sm:w-80 lg:w-96'
+      }`}
+    >
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 border border-transparent transition-colors"
+        className="w-full flex items-center gap-2 pl-1.5 pr-2 h-8 bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700 border border-transparent transition-colors"
       >
-        <span className="max-w-[220px] truncate">{archName}</span>
+        <ClientLogo clientId={selectedClientId} name={archName} className="w-7 h-7 flex-shrink-0" />
+        <span className="truncate min-w-0 flex-1 text-left">{archName}</span>
         {selectedVersionId && (
           <>
-            <span className="text-gray-300 font-normal">/</span>
-            <span className="font-mono text-[12px] text-gray-500 font-normal">
+            <span className="text-gray-300 font-normal flex-shrink-0">/</span>
+            <span className="font-mono text-[12px] text-gray-500 font-normal flex-shrink-0">
               {selectedVersionId}
             </span>
           </>
         )}
-        <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
+        <ChevronDown className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full mt-1 w-72 bg-white border border-gray-300 z-50 py-1 overflow-y-auto max-h-[70vh] shadow-md">
+        <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 z-50 py-1 overflow-y-auto max-h-[70vh] shadow-md">
           {showArchitectures && (
             <>
               <Heading>Architectures</Heading>
