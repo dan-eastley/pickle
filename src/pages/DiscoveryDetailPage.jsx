@@ -333,7 +333,7 @@ export default function DiscoveryDetailPage() {
           <article className="bg-white shadow-xl px-4 sm:px-8 py-6 sm:py-7">
             <div className="mb-6 pb-5 border-b border-gray-200">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-700 to-rose-600 flex items-center justify-center flex-shrink-0">
                   <RobotIcon className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">

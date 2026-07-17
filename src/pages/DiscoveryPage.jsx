@@ -47,7 +47,7 @@ function DiscoveryGroup({ pot, discoveries, clientId, versionId, collapsed, onTo
               to={`/architectures/${clientId}/${versionId}/discovery/${d['discovery-id']}`}
               className="group flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 bg-gradient-to-br from-brand-700 to-rose-600 flex items-center justify-center flex-shrink-0">
                 <RobotIcon className="w-4 h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">

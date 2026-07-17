@@ -9,7 +9,10 @@
  *   /api/schemas/**  → /api/content?prefix=config/schemas&path=...
  *   /api/docs/**     → /api/content?prefix=docs&path=...
  *
- * Read-only; no auth (public content). Required env: GITHUB_TOKEN/OWNER/REPO.
+ * Read-only. Docs and schemas are public content; architecture data
+ * (prefix=architectures) is tenant data and requires a session — and is never
+ * shared-cached, so an authenticated response can't be served from the CDN to
+ * an anonymous caller. Required env: GITHUB_TOKEN/OWNER/REPO.
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import {
@@ -19,6 +22,7 @@ import {
   getGitHubConfig,
   type GhContentFile,
 } from '../lib/github.js'
+import { getSessionUser, missingAuthEnv } from '../lib/auth.js'
 
 // `prefix` is set by the vercel.json rewrites, but the function is also directly
 // reachable, so it (and `path`) must be validated: only the three known content
@@ -44,6 +48,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Invalid path' })
   }
 
+  // Architecture data is tenant content — always session-gated, in every
+  // environment (auth is never off). Docs and schemas remain public.
+  const isTenantData = prefix === 'architectures'
+  if (isTenantData) {
+    if (missingAuthEnv().length > 0) {
+      console.warn('[/api/content] denied: auth not configured')
+      return res.status(503).json({ error: 'Authentication is not configured' })
+    }
+    const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
+    if (!user) {
+      console.warn(`[/api/content] denied path=${prefix}/${filePath} authenticated=false`)
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+  }
+
   const cfg = getGitHubConfig()
   if (!cfg) return res.status(503).json({ error: 'GitHub not configured' })
   const client = new GitHubClient(cfg)
@@ -62,8 +81,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const content = b64decode(file.content ?? '')
     const isMarkdown = filePath.endsWith('.md')
     res.setHeader('Content-Type', isMarkdown ? 'text/markdown; charset=utf-8' : 'application/json')
-    // nocache=1 means the client just wrote this resource — skip CDN caching.
-    res.setHeader('Cache-Control', nocache ? 'no-store' : 's-maxage=30, stale-while-revalidate=60')
+    // Session-gated tenant data must never enter the shared (CDN) cache — a
+    // cached authenticated response would be served to anonymous callers.
+    // Public docs/schemas keep the short CDN cache; nocache=1 means the client
+    // just wrote this resource — skip caching entirely.
+    const cache = nocache
+      ? 'no-store'
+      : isTenantData
+        ? 'private, max-age=0, must-revalidate'
+        : 's-maxage=30, stale-while-revalidate=60'
+    res.setHeader('Cache-Control', cache)
     return res.send(content)
   } catch (err) {
     if (err instanceof HttpError) {
