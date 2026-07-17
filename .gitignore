@@ -36,5 +36,3 @@ coverage/
 
 # Stray output file dropped by the claude-code-base-action in CI
 output.txt
-cx-review/screenshots/
-cx-review/screenshots/
