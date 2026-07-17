@@ -9,6 +9,7 @@ import Layout from './components/layout/Layout'
 import PublicLayout from './components/layout/PublicLayout'
 import DocsLayout from './components/layout/DocsLayout'
 import Spinner from './components/ui/Spinner'
+import useAnalytics from './hooks/useAnalytics'
 
 // Pages are route-split — each loads its own chunk on first navigation, so the
 // heavy ones (ArtefactPage's view renderers, DocsPage's markdown stack) stay
@@ -37,6 +38,7 @@ const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 
 function AppRoutes() {
   const { loading, error } = useArchitecture()
+  useAnalytics()
 
   if (loading) {
     return (
