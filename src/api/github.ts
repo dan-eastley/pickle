@@ -25,6 +25,7 @@ import { sendInviteEmail } from '../lib/email.js'
 import { db } from '../db/index.js'
 import { architectureMembership, user } from '../db/schema.js'
 import { can, ACTIONS, buildContext, ARCHITECTURE_ROLES } from '../lib/permissions.js'
+import { composeNarrative } from '../lib/narrative.js'
 
 const BASE = 'main'
 
@@ -129,17 +130,6 @@ async function syncIndex(
   })
 }
 
-// Compose a single narrative string from the Context / Problem / Proposal fields.
-// Retained for downstream workflows/prompts that still read the legacy field.
-function composeNarrative({ context, problem, proposal, narrative }: Doc): string {
-  const parts = [
-    context && `## Context\n\n${context}`,
-    problem && `## Problem\n\n${problem}`,
-    proposal && `## Proposal\n\n${proposal}`,
-  ].filter(Boolean)
-  return parts.length ? parts.join('\n\n') : (narrative ?? '')
-}
-
 // ── Decision actions ────────────────────────────────────────────────────────────
 
 async function getNextId(gh: GitHubClient, { clientId, versionId }: Doc): Promise<Doc> {
@@ -150,22 +140,27 @@ async function getNextId(gh: GitHubClient, { clientId, versionId }: Doc): Promis
 
 async function createDecision(
   gh: GitHubClient,
-  { clientId, versionId, decision }: Doc
+  { clientId, versionId, decision }: Doc,
+  actor: string = SYSTEM_ACTOR
 ): Promise<Doc> {
   const decisionId = decision['decision-id']
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath = decisionPath(clientId, versionId, decisionId)
 
+  // The server is authoritative for attribution: stamp the Created activity
+  // entry with the authenticated actor (clients must not self-attribute).
+  const record: Doc = { ...decision, activity: [nowEntry('Created', actor)] }
+
   // 1. Branch from main, 2. commit decision.json to it.
   const baseSha = await gh.getHeadSha(BASE)
   await gh.createBranch(branch, baseSha)
-  await gh.writeJson(dPath, decision, `Add ${decisionId}: ${decision.title}`, { branch })
+  await gh.writeJson(dPath, record, `Add ${decisionId}: ${record.title}`, { branch })
 
   // 3. Sync summary to decisions.json on main.
   await syncIndex(gh, clientId, versionId, decisionId, {
-    title: decision.title,
-    status: decision.status ?? 'draft',
-    scope: decision.scope,
+    title: record.title,
+    status: record.status ?? 'draft',
+    scope: record.scope,
   })
 
   // 4. Dispatch narrative review.

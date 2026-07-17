@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { DOMAIN_COLORS } from '../../lib/artefacts'
 import { githubAction, getNextDecisionId } from '../../lib/api'
 import { buildScope } from '../../lib/scope'
+import { composeNarrative } from '../../lib/narrative'
 import { nameWithId } from '../../lib/format'
 import useEscapeKey from '../../hooks/useEscapeKey'
 import useFocusTrap from '../../hooks/useFocusTrap'
@@ -72,15 +73,9 @@ export default function NewDecisionModal({
         context,
         problem,
         proposal,
-        narrative: [
-          context && `## Context\n\n${context}`,
-          problem && `## Problem\n\n${problem}`,
-          proposal && `## Proposal\n\n${proposal}`,
-        ]
-          .filter(Boolean)
-          .join('\n\n'),
+        narrative: composeNarrative({ context, problem, proposal }),
         ...(scope && { scope }),
-        activity: [{ timestamp: new Date().toISOString(), action: 'Created', who: 'Joe B' }],
+        // The server stamps the Created activity entry with the signed-in user.
       }
       await githubAction({ action: 'create-decision', clientId, versionId, decision })
       setResult({ ok: true, decisionId: nextId })
