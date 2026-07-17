@@ -54,7 +54,12 @@ function ArchitectureSelector({
       >
         <span className="max-w-[220px] truncate">{archName}</span>
         {selectedVersionId && (
-          <span className="text-gray-400 font-normal">· {selectedVersionId}</span>
+          <>
+            <span className="text-gray-300 font-normal">/</span>
+            <span className="font-mono text-[12px] text-gray-500 font-normal">
+              {selectedVersionId}
+            </span>
+          </>
         )}
         <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
       </button>
