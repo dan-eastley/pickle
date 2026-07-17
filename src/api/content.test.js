@@ -82,18 +82,27 @@ describe('/api/content session gate on architecture data', () => {
     expect(res.headers['Cache-Control']).toBe('private, max-age=0, must-revalidate')
   })
 
-  it('fails closed (503) on a deployment without auth configured', async () => {
+  it('fails closed (503) when auth env is missing — on Vercel', async () => {
     h.missingAuthEnv.mockReturnValue(['BETTER_AUTH_SECRET'])
     const res = await get({ prefix: 'architectures', path: 'fedc/architecture.json' })
     expect(res.statusCode).toBe(503)
     expect(h.getContents).not.toHaveBeenCalled()
   })
 
-  it('stays open off-Vercel without auth configured (local dev)', async () => {
+  it('fails closed (503) when auth env is missing — off Vercel too (auth is never off)', async () => {
     delete process.env.VERCEL
     h.missingAuthEnv.mockReturnValue(['BETTER_AUTH_SECRET'])
     const res = await get({ prefix: 'architectures', path: 'fedc/architecture.json' })
-    expect(res.statusCode).toBe(200)
+    expect(res.statusCode).toBe(503)
+    expect(h.getContents).not.toHaveBeenCalled()
+  })
+
+  it('denies anonymous architecture reads off Vercel too', async () => {
+    delete process.env.VERCEL
+    h.getSessionUser.mockResolvedValue(null)
+    const res = await get({ prefix: 'architectures', path: 'fedc/architecture.json' })
+    expect(res.statusCode).toBe(401)
+    expect(h.getContents).not.toHaveBeenCalled()
   })
 
   it('keeps docs and schemas public with the CDN cache', async () => {
