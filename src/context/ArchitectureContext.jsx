@@ -29,6 +29,16 @@ export function ArchitectureProvider({ children }) {
   // outcome, not an error.
   useEffect(() => {
     if (authLoading) return
+    // Architecture content is auth-gated, so an anonymous visitor would only
+    // ever get a 401 (logged as a console error on public routes). Skip the
+    // fetch entirely until there's a session; the list loads on sign-in.
+    if (!user) {
+      setClients([])
+      setClientsMetadata({})
+      setError(null)
+      setLoading(false)
+      return
+    }
     let live = true
     getClients()
       .then((list) => {
