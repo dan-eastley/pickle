@@ -23,7 +23,10 @@ const BLOCK_H = 48
 const PAD = 24
 const ROW_GAP = 14
 const FLOW_ROW_H = 46
-const SVG_W = 880
+// Match NestedGroupDiagram's viewBox width (1200) so, when both stretch to the
+// content column, the platform blocks render at the same scale (BLOCK_H here ==
+// nested ITEM_HEIGHT) rather than the wiring diagram scaling up ~1.4x larger.
+const SVG_W = 1200
 const NEIGHBOUR_X = SVG_W - PAD - BLOCK_W
 
 const EMERALD = '#34d399' // emerald-400 — connection lines

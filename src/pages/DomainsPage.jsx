@@ -4,7 +4,6 @@ import { DOMAINS, DOMAIN_COLORS } from '../lib/artefacts'
 import { loadVersionMetrics } from '../lib/metrics'
 import { DECISION_STATUS_ORDER, decisionStatusBadge, decisionStatusLabel } from '../lib/theme'
 import DomainIcon from '../components/ui/DomainIcon'
-import MetricBars from '../components/common/MetricBars'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import { ChevronRight, DecisionIcon, RobotIcon } from '../components/ui/icons'
@@ -40,6 +39,27 @@ function StatusBreakdown({ counts, order, badgeOf, labelOf, to }) {
   )
 }
 
+// Bordered count chips (right of each domain row): the number in the domain
+// colour + a muted label. Documents fold into the owning domain.
+function StatChips({ dm, colorText }) {
+  const items = (dm?.items ?? []).filter((i) => i.count > 0).map((i) => ({ ...i }))
+  if (dm?.documents) items.push({ label: 'Documents', count: dm.documents })
+  if (!items.length) return null
+  return (
+    <div className="flex items-center gap-2 flex-wrap justify-end">
+      {items.map((i) => (
+        <span
+          key={i.label}
+          className="inline-flex items-center gap-1.5 border border-gray-200 px-2.5 py-1 text-xs"
+        >
+          <span className={`font-semibold tabular-nums ${colorText}`}>{i.count}</span>
+          <span className="text-gray-500">{i.label}</span>
+        </span>
+      ))}
+    </div>
+  )
+}
+
 // The whole-domain link wraps the card; the per-entity stat links inside it must
 // not trigger navigation, so this Link is the card chrome only and the metrics
 // sit beside it.
@@ -48,32 +68,37 @@ function DomainCard({ domain, base, dm, loading }) {
   const accent = colors.accent
 
   return (
-    <div className={`bg-white border border-gray-200 border-l-4 ${accent}`}>
+    <div className={`bg-white border border-gray-200 border-l-[3px] ${accent} shadow-xs`}>
       <Link
         to={`${base}/domains/${domain.id}`}
-        className="group flex items-start gap-4 p-5 hover:bg-gray-50 transition-colors"
+        className="group flex items-center gap-4 p-5 hover:bg-gray-50 transition-colors"
       >
-        <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors.bg}`}>
+        <div
+          className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors.bg}`}
+        >
           <span className={colors.text}>
             <DomainIcon domain={domain.id} className="w-5 h-5" />
           </span>
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
-            {domain.name} Architecture
-          </h3>
-          <p className="mt-1 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
+          <div className="flex items-baseline gap-2">
+            <h3 className="text-base font-semibold text-gray-900 group-hover:text-brand-700 transition-colors">
+              {domain.name} Architecture
+            </h3>
+            <span className="font-mono text-[11px] text-gray-400 uppercase">{domain.acronym}</span>
+          </div>
+          <p className="mt-0.5 text-sm text-gray-500 leading-relaxed">{domain.description}</p>
         </div>
-        <div className="flex-shrink-0 hidden sm:block">
+        <div className="flex-shrink-0 hidden md:block max-w-[46%]">
           {loading ? (
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <Spinner size="sm" /> Loading…
             </div>
           ) : (
-            <MetricBars perDomain={{ [domain.id]: dm }} single empty={null} />
+            <StatChips dm={dm} colorText={colors.text} />
           )}
         </div>
-        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-0.5 transition-colors" />
+        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
       </Link>
     </div>
   )

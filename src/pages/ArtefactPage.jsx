@@ -14,11 +14,11 @@ import EmptyState from '../components/ui/EmptyState'
 import Skeleton from '../components/ui/Skeleton'
 import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
-import MetricBars from '../components/common/MetricBars'
 import ShareLink from '../components/ui/ShareLink'
 import { extractContentItems } from '../lib/metrics'
 import ActivityHistory from '../components/common/ActivityHistory'
 import PageActionBar from '../components/ui/PageActionBar'
+import StatsBar from '../components/ui/StatsBar'
 import Button from '../components/ui/Button'
 import DownloadMenu from '../components/ui/DownloadMenu'
 import { KeyStar, DecisionIcon, RobotIcon } from '../components/ui/icons'
@@ -93,12 +93,28 @@ function ArtefactDownload({ artefact, schema, data, selectedDocument, diagramRef
   return null
 }
 
-function AdrActionBar({ artefact, schema, documents, selectedDocument, clientId, versionId }) {
+function AdrActionBar({ artefact, schema, data, documents, selectedDocument, clientId, versionId }) {
   const [decisionOpen, setDecisionOpen] = useState(false)
   const [discoveryOpen, setDiscoveryOpen] = useState(false)
   const viewDecisionsUrl = `/architectures/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
   const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s)
   const typeLabel = `${cap(artefact.abstraction)} · ${getFormat(artefact.format)?.label ?? cap(artefact.format)}`
+
+  // Stat cells for the attached StatsBar: the artefact's content counts plus a
+  // related-artefacts cell. Updated-by comes from the latest activity entry.
+  const cells = []
+  if (data) {
+    for (const i of extractContentItems(data, artefact.domain)) {
+      if (i.count > 0) cells.push({ value: i.count, label: i.label })
+    }
+  }
+  if (artefact.relatedTo?.length) {
+    cells.push({ value: artefact.relatedTo.length, label: 'Related artefacts' })
+  }
+  const lastActivity = data?.activity?.[data.activity.length - 1]
+  const updatedMeta = lastActivity
+    ? `Updated ${new Date(lastActivity.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}${lastActivity.who ? ` by ${lastActivity.who}` : ''}`
+    : null
 
   return (
     <>
@@ -126,7 +142,19 @@ function AdrActionBar({ artefact, schema, documents, selectedDocument, clientId,
             New Decision
           </Button>
         }
-      />
+      >
+        {cells.length > 0 && (
+          <StatsBar
+            stats={cells}
+            meta={updatedMeta}
+            right={
+              <span className="font-mono text-[11px] bg-gray-800 text-gray-200 px-2 py-1">
+                {artefact.id}.json
+              </span>
+            }
+          />
+        )}
+      </PageActionBar>
       <div className="mb-5" />
 
       {decisionOpen && (
@@ -347,6 +375,7 @@ export default function ArtefactPage() {
       <AdrActionBar
         artefact={artefact}
         schema={schema}
+        data={data}
         documents={documents}
         selectedDocument={selectedDocument}
         clientId={clientId ?? selectedClientId}
@@ -408,29 +437,19 @@ export default function ArtefactPage() {
 
       {!loading && !error && data !== null && data !== undefined && (
         <>
-          {/* Count strip (left) + downloads (right) — consistent metric formatting. */}
-          <div className="mb-3 flex items-start justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <MetricBars
-                perDomain={{
-                  [artefact.domain]: { items: extractContentItems(data, artefact.domain) },
-                }}
-                single
-                empty={null}
+          {/* Content counts now live in the StatsBar attached to the action bar;
+              here we keep just the share / download utilities, right-aligned. */}
+          <div className="mb-3 flex items-center justify-end gap-2">
+            <ShareLink />
+            {artefact.format !== 'matrix' && (
+              <ArtefactDownload
+                artefact={artefact}
+                schema={schema}
+                data={data}
+                selectedDocument={selectedDocument}
+                diagramRef={diagramRef}
               />
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <ShareLink />
-              {artefact.format !== 'matrix' && (
-                <ArtefactDownload
-                  artefact={artefact}
-                  schema={schema}
-                  data={data}
-                  selectedDocument={selectedDocument}
-                  diagramRef={diagramRef}
-                />
-              )}
-            </div>
+            )}
           </div>
           <div ref={diagramRef}>
             {artefact.format === 'catalogue' && (
