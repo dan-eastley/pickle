@@ -6,7 +6,7 @@ import useDraggable from '../../hooks/useDraggable'
 import ScopeSelector from './ScopeSelector'
 import TextLink from '../ui/TextLink'
 import AutoGrowTextarea from '../ui/AutoGrowTextarea'
-import { RobotIcon } from '../ui/icons'
+import { CloseIcon, RobotIcon } from '../ui/icons'
 import { githubAction } from '../../lib/api'
 import { buildScope } from '../../lib/scope'
 
@@ -105,14 +105,7 @@ export default function NewDiscoveryModal({ artefact, clientId, versionId, onClo
               className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-white/50 transition-colors flex-shrink-0"
               title="Close (Esc)"
             >
-              <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M5 5l10 10M15 5L5 15"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="square"
-                />
-              </svg>
+              <CloseIcon className="w-4 h-4" />
             </button>
           </div>
 
