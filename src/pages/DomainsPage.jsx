@@ -2,17 +2,19 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { DOMAINS, DOMAIN_COLORS } from '../lib/artefacts'
 import { loadVersionMetrics } from '../lib/metrics'
-import { DECISION_STATUS_ORDER, decisionStatusBadge, decisionStatusLabel } from '../lib/theme'
+import {
+  DECISION_STATUS_ORDER,
+  decisionStatusBadge,
+  decisionStatusLabel,
+  DISCOVERY_STATUS_ORDER,
+  discoveryStatusBadge,
+  discoveryStatusLabel,
+} from '../lib/theme'
 import DomainIcon from '../components/ui/DomainIcon'
 import Button from '../components/ui/Button'
 import Spinner from '../components/ui/Spinner'
 import { ChevronRight, DecisionIcon, RobotIcon } from '../components/ui/icons'
 import usePageTitle from '../hooks/usePageTitle'
-
-const DISCOVERY_STATUS_ORDER = ['active', 'archived']
-const discoveryStatusBadge = (s) =>
-  s === 'archived' ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-700'
-const discoveryStatusLabel = (s) => (s === 'archived' ? 'Archived' : 'Active')
 
 // Clickable per-status breakdown for the decisions / discovery cards. Each chip
 // links to the relevant index page with that status group expanded

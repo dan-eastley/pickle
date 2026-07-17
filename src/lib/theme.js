@@ -42,6 +42,19 @@ export const HISTORY_EVENT_STYLES = {
   ...Object.fromEntries(Object.entries(DECISION_STATUS).map(([k, v]) => [k, v.badge])),
 }
 
+// Discovery lifecycle — shared by the discovery index, detail, and domain views.
+export const DISCOVERY_STATUS = {
+  active: { label: 'Active', badge: 'bg-emerald-50 text-emerald-700' },
+  archived: { label: 'Archived', badge: 'bg-gray-100 text-gray-500' },
+}
+
+export const DISCOVERY_STATUS_ORDER = ['active', 'archived']
+
+export const discoveryStatusBadge = (status) =>
+  DISCOVERY_STATUS[status]?.badge ?? DISCOVERY_STATUS.active.badge
+
+export const discoveryStatusLabel = (status) => DISCOVERY_STATUS[status]?.label ?? status
+
 // Transition lifecycle (architectures/<architecture>/<transition>/transition.json).
 export const VERSION_STATUS = {
   draft: { label: 'Draft', badge: 'bg-warning-50 text-warning-700' },

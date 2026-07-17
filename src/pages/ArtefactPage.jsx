@@ -16,6 +16,7 @@ import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import ShareLink from '../components/ui/ShareLink'
 import { extractContentItems } from '../lib/metrics'
+import { formatDate } from '../lib/format'
 import ActivityHistory from '../components/common/ActivityHistory'
 import PageActionBar from '../components/ui/PageActionBar'
 import StatsBar from '../components/ui/StatsBar'
@@ -121,7 +122,7 @@ function AdrActionBar({
   }
   const lastActivity = data?.activity?.[data.activity.length - 1]
   const updatedMeta = lastActivity
-    ? `Updated ${new Date(lastActivity.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}${lastActivity.who ? ` by ${lastActivity.who}` : ''}`
+    ? `Updated ${formatDate(lastActivity.timestamp)}${lastActivity.who ? ` by ${lastActivity.who}` : ''}`
     : null
 
   return (

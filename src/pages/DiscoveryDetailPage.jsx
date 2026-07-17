@@ -12,6 +12,7 @@ import AutoGrowTextarea from '../components/ui/AutoGrowTextarea'
 import { RobotIcon, EditIcon, DisclosureChevron } from '../components/ui/icons'
 import { githubAction } from '../lib/api'
 import { formatDate } from '../lib/format'
+import { discoveryStatusBadge } from '../lib/theme'
 import usePageTitle from '../hooks/usePageTitle'
 import useActiveSection from '../hooks/useActiveSection'
 import usePersistedSet from '../hooks/usePersistedSet'
@@ -87,11 +88,6 @@ function Section({ id, title, collapsed, onToggle, refCb, children }) {
       {!collapsed && children}
     </section>
   )
-}
-
-const STATUS_BADGE = {
-  active: 'bg-emerald-50 text-emerald-700',
-  archived: 'bg-gray-100 text-gray-500',
 }
 
 // When the point-in-time view was last produced — the most recent activity
@@ -363,7 +359,7 @@ export default function DiscoveryDetailPage() {
                 <div className="flex flex-col items-end gap-2 flex-shrink-0 self-start">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs font-medium px-2 py-1 capitalize ${STATUS_BADGE[discovery.status] ?? 'bg-gray-100 text-gray-600'}`}
+                      className={`text-xs font-medium px-2 py-1 capitalize ${discoveryStatusBadge(discovery.status)}`}
                     >
                       {discovery.status}
                     </span>
