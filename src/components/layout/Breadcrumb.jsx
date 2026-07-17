@@ -26,8 +26,8 @@ function Crumbs({ crumbs }) {
   )
 }
 
-// Reads a single field (e.g. title) from a decision/discovery record for the
-// breadcrumb leaf label.
+// Reads a display label (title, or name for a transition) from a JSON record
+// for the breadcrumb.
 function useRecordTitle(url, id) {
   const [title, setTitle] = useState(null)
   useEffect(() => {
@@ -35,7 +35,8 @@ function useRecordTitle(url, id) {
     fetch(url)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d?.title) setTitle(d.title)
+        const label = d?.title ?? d?.name
+        if (label) setTitle(label)
       })
       .catch(() => {})
   }, [url, id])
@@ -55,7 +56,7 @@ export default function Breadcrumb() {
   const lead = [
     { label: 'Architectures', to: '/architectures' },
     { label: archName, to: `/architectures/${clientId}/transitions` },
-    { label: versionId, to: `${base}/domains` },
+    { label: transitionName ?? versionId, to: `${base}/domains` },
   ]
 
   const decisionTitle = useRecordTitle(
@@ -65,6 +66,10 @@ export default function Breadcrumb() {
   const discoveryTitle = useRecordTitle(
     `/api/arch/${clientId}/${versionId}/discovery/${discoveryId}/discovery.json`,
     discoveryId
+  )
+  const transitionName = useRecordTitle(
+    `/api/arch/${clientId}/${versionId}/transition.json`,
+    versionId
   )
 
   // ── Discovery routes ──────────────────────────────────────────────────────
