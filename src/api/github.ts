@@ -64,6 +64,23 @@ function nowEntry(action: string, actor: string, notes?: string): Doc {
   return { timestamp: new Date().toISOString(), action, who: actor, ...(notes ? { notes } : {}) }
 }
 
+// The next "<PREFIX>-NNN" id after the highest numeric suffix present.
+function nextSequentialId(ids: unknown[], prefix: string): string {
+  const max = ids.reduce<number>((m, id) => {
+    const n = parseInt(String(id).replace(`${prefix}-`, ''), 10)
+    return Number.isNaN(n) ? m : Math.max(m, n)
+  }, 0)
+  return `${prefix}-${String(max + 1).padStart(3, '0')}`
+}
+
+// Kebab-cased inputs for the decision/discovery workflow dispatches.
+function decisionInputs(clientId: string, versionId: string, decisionId: string) {
+  return { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId }
+}
+function discoveryInputs(clientId: string, versionId: string, discoveryId: string) {
+  return { 'client-id': clientId, 'version-id': versionId, 'discovery-id': discoveryId }
+}
+
 // Read a decision doc from its branch, falling back to main if the branch is
 // gone. Returns the content, blob sha, and which ref it came from.
 async function readDecisionDoc(
@@ -128,11 +145,7 @@ function composeNarrative({ context, problem, proposal, narrative }: Doc): strin
 async function getNextId(gh: GitHubClient, { clientId, versionId }: Doc): Promise<Doc> {
   const { content } = await gh.readJson<Doc>(indexPath(clientId, versionId), BASE)
   const ids: string[] = (content.decisions ?? []).map((d: Doc) => d['decision-id'])
-  const max = ids.reduce((m, id) => {
-    const n = parseInt(String(id).replace('ADR-', ''), 10)
-    return isNaN(n) ? m : Math.max(m, n)
-  }, 0)
-  return { nextId: `ADR-${String(max + 1).padStart(3, '0')}` }
+  return { nextId: nextSequentialId(ids, 'ADR') }
 }
 
 async function createDecision(
@@ -156,11 +169,7 @@ async function createDecision(
   })
 
   // 4. Dispatch narrative review.
-  await gh.dispatch('decisions-to-draft.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'decision-id': decisionId,
-  })
+  await gh.dispatch('decisions-to-draft.yml', decisionInputs(clientId, versionId, decisionId))
 
   return { ok: true, decisionId, branch }
 }
@@ -173,7 +182,7 @@ async function updateDecision(
   const newStatus: string | undefined = updates.status
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath = decisionPath(clientId, versionId, decisionId)
-  const ids = { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId }
+  const ids = decisionInputs(clientId, versionId, decisionId)
   // Stamp a status transition into the activity log so it records who advanced it.
   const stamp = (doc: Doc): Doc => ({
     ...doc,
@@ -301,11 +310,7 @@ async function editDecision(
     status: updated.status,
     scope: updated.scope,
   })
-  await gh.dispatch('decisions-to-draft.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'decision-id': decisionId,
-  })
+  await gh.dispatch('decisions-to-draft.yml', decisionInputs(clientId, versionId, decisionId))
 
   return { ok: true, decisionId }
 }
@@ -388,11 +393,8 @@ async function nextDiscoveryId(
   versionId: string
 ): Promise<string> {
   const { content } = await readDiscoveriesIndex(gh, clientId, versionId)
-  const max = (content.discoveries ?? []).reduce((m: number, d: Doc) => {
-    const n = parseInt(String(d['discovery-id']).replace('DSC-', ''), 10)
-    return isNaN(n) ? m : Math.max(m, n)
-  }, 0)
-  return `DSC-${String(max + 1).padStart(3, '0')}`
+  const ids = (content.discoveries ?? []).map((d: Doc) => d['discovery-id'])
+  return nextSequentialId(ids, 'DSC')
 }
 
 async function createDiscovery(
@@ -418,11 +420,7 @@ async function createDiscovery(
     { branch: BASE }
   )
   await syncDiscoveryIndex(gh, clientId, versionId, discoveryId, record)
-  await gh.dispatch('discovery-to-active.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'discovery-id': discoveryId,
-  })
+  await gh.dispatch('discovery-to-active.yml', discoveryInputs(clientId, versionId, discoveryId))
   return { ok: true, discoveryId }
 }
 
@@ -453,11 +451,7 @@ async function updateDiscovery(
   // view: re-dispatch the Virtual Architect Agent against the revised request.
   const contentEdited = ['title', 'context', 'request'].some((k) => k in updates)
   if (contentEdited && updated.status === 'active') {
-    await gh.dispatch('discovery-to-active.yml', {
-      'client-id': clientId,
-      'version-id': versionId,
-      'discovery-id': discoveryId,
-    })
+    await gh.dispatch('discovery-to-active.yml', discoveryInputs(clientId, versionId, discoveryId))
   }
   return { ok: true, discoveryId, status: updated.status, regenerating: contentEdited }
 }
@@ -485,11 +479,7 @@ async function refreshDiscovery(
     status: updated.status,
     scope: updated.scope,
   })
-  await gh.dispatch('discovery-to-active.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'discovery-id': discoveryId,
-  })
+  await gh.dispatch('discovery-to-active.yml', discoveryInputs(clientId, versionId, discoveryId))
   return { ok: true, discoveryId }
 }
 
