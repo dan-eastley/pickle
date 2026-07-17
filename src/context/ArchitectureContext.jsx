@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { getClients, getClient, getVersions } from '../lib/api'
+import { getClients, getClient, getVersions, isAuthError } from '../lib/api'
+import { useAuth } from './AuthContext'
 
 const ArchitectureContext = createContext(null)
 
@@ -8,6 +9,7 @@ const CLIENT_ID_KEY = 'arch_clientId'
 const VERSION_ID_KEY = 'arch_versionId'
 
 export function ArchitectureProvider({ children }) {
+  const { user, isLoading: authLoading } = useAuth()
   const [clients, setClients] = useState([])
   const [clientsMetadata, setClientsMetadata] = useState({})
   const [selectedClientId, setSelectedClientId] = useState(
@@ -21,34 +23,54 @@ export function ArchitectureProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Architecture content is session-gated server-side, so the list loads (and
+  // reloads) once the auth state is known, and again when it changes — sign-in
+  // picks the data up, sign-out drops it. A 401/403 is the expected anonymous
+  // outcome, not an error.
   useEffect(() => {
+    if (authLoading) return
+    let live = true
     getClients()
       .then((list) => {
+        if (!live) return
         setClients(list)
-        if (!selectedClientId && list.length > 0) {
-          setSelectedClientId(list[0]['architecture-id'])
+        setError(null)
+        if (list.length > 0) {
+          setSelectedClientId((current) => current ?? list[0]['architecture-id'])
         }
         Promise.all(
           list.map((c) =>
             getClient(c['architecture-id']).then((meta) => [c['architecture-id'], meta])
           )
         ).then((entries) => {
-          setClientsMetadata(Object.fromEntries(entries.filter(([, m]) => m)))
+          if (live) setClientsMetadata(Object.fromEntries(entries.filter(([, m]) => m)))
         })
       })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      .catch((err) => {
+        if (!live) return
+        if (isAuthError(err)) {
+          setClients([])
+          setClientsMetadata({})
+        } else {
+          setError(err.message)
+        }
+      })
+      .finally(() => live && setLoading(false))
+    return () => {
+      live = false
+    }
+  }, [authLoading, user?.id])
 
   useEffect(() => {
-    if (!selectedClientId) return
+    if (!selectedClientId || authLoading) return
+    let live = true
     localStorage.setItem(CLIENT_ID_KEY, selectedClientId)
     setClientMeta(null)
     setVersions([])
 
     Promise.all([getClient(selectedClientId), getVersions(selectedClientId)])
       .then(([meta, vers]) => {
+        if (!live) return
         setClientMeta(meta)
         setVersions(vers)
         const currentVersionValid = vers.some((v) => v['transition-id'] === selectedVersionId)
@@ -57,9 +79,16 @@ export function ArchitectureProvider({ children }) {
           setSelectedVersionId(vers[vers.length - 1]['transition-id'])
         }
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        // Anonymous visitors can hold a persisted selection they can no longer
+        // read — that's expected, not an app-level failure.
+        if (live && !isAuthError(err)) setError(err.message)
+      })
+    return () => {
+      live = false
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedClientId])
+  }, [selectedClientId, authLoading, user?.id])
 
   useEffect(() => {
     if (selectedVersionId) {

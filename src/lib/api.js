@@ -1,9 +1,18 @@
 async function fetchJson(url) {
   const res = await fetch(url)
   if (res.status === 404) return null
-  if (!res.ok) throw new Error(`API error ${res.status} for ${url}`)
+  if (!res.ok) {
+    const err = new Error(`API error ${res.status} for ${url}`)
+    err.status = res.status // callers branch on auth failures (401/403)
+    throw err
+  }
   return res.json()
 }
+
+// True when an error from fetchJson is an authentication/authorization
+// failure — expected for anonymous visitors now that architecture content is
+// session-gated, so callers degrade to an empty state instead of an error.
+export const isAuthError = (err) => err?.status === 401 || err?.status === 403
 
 // Soft variant: null on any failure (missing file, server error, network
 // error). For aggregate views (metrics, roll-ups) where partial data is fine.
