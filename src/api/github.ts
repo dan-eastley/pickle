@@ -10,11 +10,12 @@
  *
  * Required env: GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO.
  *
- * SECURITY: this endpoint performs repository writes with the server token, so
- * every POST (write) is gated on a valid Better Auth session when auth is
- * configured, and activity is attributed to the signed-in user. Read-only GET
- * actions (next-id, config) are open. When auth is not configured (e.g. local
- * dev without a database), writes are allowed and attributed to 'System'.
+ * SECURITY: this endpoint performs repository writes with the server token.
+ * Every request — POST writes and the read-only GET actions (next-id, config,
+ * members) — is gated on a valid Better Auth session; writes are additionally
+ * RBAC-checked and attributed to the signed-in user. Fail-closed on
+ * deployments: missing auth env on Vercel denies. Only local dev without a
+ * database (off-Vercel) is permissive, attributed to 'System'.
  */
 import { randomUUID } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
@@ -734,38 +735,36 @@ function inAdminAllowlist(email?: string): boolean {
   return !!email && list.includes(email.toLowerCase())
 }
 
+// No session / no auth configured. ANONYMOUS denies; LOCAL_ADMIN is the
+// local-dev convenience (no database provisioned) and must never be returned
+// on a deployment.
+const ANONYMOUS: PermissionState = {
+  authenticated: false,
+  isAdmin: false,
+  memberships: {},
+  actor: SYSTEM_ACTOR,
+  userId: null,
+}
+const LOCAL_ADMIN: PermissionState = {
+  authenticated: true,
+  isAdmin: true,
+  memberships: {},
+  actor: SYSTEM_ACTOR,
+  userId: null,
+}
+
 // Resolve the caller's authorization state: authenticated?, global admin?, and
-// their per-architecture memberships. Mirrors resolveActor's local-permissive
-// behaviour (auth unconfigured or local dev → treated as admin), and is
-// fail-soft on the membership query so an un-migrated DB can't 500 a write.
+// their per-architecture memberships. Fail-closed on deployments: missing auth
+// env on Vercel denies rather than granting admin (a config slip must not turn
+// this into an open write endpoint). Off-Vercel (local dev) stays permissive.
+// Fail-soft on the membership query so an un-migrated DB can't 500 a write.
 async function resolvePermissions(req: VercelRequest): Promise<PermissionState> {
   if (missingAuthEnv().length > 0) {
-    return {
-      authenticated: true,
-      isAdmin: true,
-      memberships: {},
-      actor: SYSTEM_ACTOR,
-      userId: null,
-    }
+    return process.env.VERCEL ? ANONYMOUS : LOCAL_ADMIN
   }
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
   if (!user) {
-    if (process.env.VERCEL) {
-      return {
-        authenticated: false,
-        isAdmin: false,
-        memberships: {},
-        actor: SYSTEM_ACTOR,
-        userId: null,
-      }
-    }
-    return {
-      authenticated: true,
-      isAdmin: true,
-      memberships: {},
-      actor: SYSTEM_ACTOR,
-      userId: null,
-    }
+    return process.env.VERCEL ? ANONYMOUS : LOCAL_ADMIN
   }
   const isAdmin = user.accessTier === 'admin' || inAdminAllowlist(user.email)
   let memberships: Record<string, string> = {}
@@ -805,6 +804,15 @@ const ACTION_PERMS: Record<string, { perm: string; archKey: string }> = {
   'refresh-discovery': { perm: ACTIONS.GOVERNANCE_WRITE, archKey: 'clientId' },
 }
 
+// Security-event log line for a denied request (auth failure / missing right).
+// Logs the action and the caller's identity state — never tokens or cookies.
+function denied(action: string, perm: PermissionState, status: number): void {
+  console.warn(
+    `[/api/github] denied action=${action} status=${status} ` +
+      `authenticated=${perm.authenticated} userId=${perm.userId ?? 'anonymous'}`
+  )
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS: this endpoint performs repository writes with the server token, so it
   // must not be callable cross-origin by arbitrary sites. Same-origin requests
@@ -837,14 +845,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method === 'GET') {
       const { action, ...params } = req.query as Doc
       assertSafeIds(params)
-      if (action === 'config') {
-        return res.json({
-          owner: gh.owner,
-          repo: gh.repo,
-          env: process.env.VERCEL_ENV ?? null,
-          branchUrl: process.env.VERCEL_BRANCH_URL ?? null,
-        })
-      }
       // Current caller's authorization state, for the client to gate controls.
       if (action === 'permissions') {
         const { authenticated, isAdmin, memberships } = await resolvePermissions(req)
@@ -855,11 +855,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const perm = await resolvePermissions(req)
         const architectureId = params.architectureId as string | undefined
         if (!can(buildContext(perm), ACTIONS.ACCESS_GRANT, { architectureId })) {
+          denied('members', perm, 403)
           return res.status(403).json({ error: 'You do not have permission to do that' })
         }
         return res.json({ members: await listMembers(String(architectureId)) })
       }
-      // GET actions (next-id, config) are read-only — no session required.
+      // Remaining GET actions (config, next-id) are read-only but still
+      // session-gated: they expose repo identity / decision numbering, which
+      // is tenant information, not public content.
+      const perm = await resolvePermissions(req)
+      if (!perm.authenticated) {
+        denied(String(action), perm, 401)
+        return res.status(401).json({ error: 'Authentication required' })
+      }
+      if (action === 'config') {
+        return res.json({
+          owner: gh.owner,
+          repo: gh.repo,
+          env: process.env.VERCEL_ENV ?? null,
+          branchUrl: process.env.VERCEL_BRANCH_URL ?? null,
+        })
+      }
       const fn = GET_ACTIONS[action as string]
       if (!fn) return res.status(400).json({ error: `Unknown GET action: ${action}` })
       return res.json(await fn(gh, params, SYSTEM_ACTOR))
@@ -873,6 +889,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Writes require a valid session (when auth is configured).
       const perm = await resolvePermissions(req)
       if (!perm.authenticated) {
+        denied(String(action), perm, 401)
         return res.status(401).json({ error: 'Authentication required' })
       }
       // Actions that declare a permission rule are additionally RBAC-gated ([RAS-3]).
@@ -880,6 +897,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (rule) {
         const architectureId = params[rule.archKey] as string | undefined
         if (!can(buildContext(perm), rule.perm, { architectureId })) {
+          denied(String(action), perm, 403)
           return res.status(403).json({ error: 'You do not have permission to do that' })
         }
       }
@@ -904,8 +922,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(405).json({ error: 'Method not allowed' })
   } catch (err) {
-    const e = err as HttpError
-    console.error('[/api/github]', e.message)
-    return res.status(e.statusCode ?? 500).json({ error: e.message })
+    // HttpErrors are deliberate, client-safe messages (validation, GitHub API
+    // status mapping). Anything else is unexpected: log the details server-side
+    // and return a generic message so internals never leak to the client.
+    if (err instanceof HttpError) {
+      console.error('[/api/github]', err.statusCode, err.message)
+      return res.status(err.statusCode).json({ error: err.message })
+    }
+    const e = err as Error
+    console.error('[/api/github] unexpected:', e?.stack || e?.message || e)
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }

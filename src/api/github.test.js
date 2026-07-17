@@ -6,6 +6,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const h = vi.hoisted(() => ({
   getSessionUser: vi.fn(),
+  missingAuthEnv: vi.fn(() => []),
   selectRows: { value: [] },
   gh: {
     readJson: vi.fn(),
@@ -42,7 +43,7 @@ vi.mock('../lib/github', () => {
 })
 
 vi.mock('../lib/auth', () => ({
-  missingAuthEnv: () => [],
+  missingAuthEnv: (...args) => h.missingAuthEnv(...args),
   getSessionUser: (...args) => h.getSessionUser(...args),
 }))
 
@@ -84,14 +85,61 @@ const admin = { id: 'a1', email: 'a@x.io', firstName: 'A', accessTier: 'admin' }
 beforeEach(() => {
   vi.clearAllMocks()
   h.getSessionUser.mockResolvedValue(null)
+  h.missingAuthEnv.mockReturnValue([])
   h.selectRows.value = []
   process.env.VERCEL = '1'
 })
+
+async function get(query) {
+  const res = mockRes()
+  await handler({ method: 'GET', headers: {}, query }, res)
+  return res
+}
 
 describe('/api/github auth + RBAC gating', () => {
   it('401s an unauthenticated write on Vercel', async () => {
     const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'X' })
     expect(res.statusCode).toBe(401)
+  })
+
+  it('fails closed on Vercel when auth env is missing (no open-admin fallback)', async () => {
+    h.missingAuthEnv.mockReturnValue(['BETTER_AUTH_SECRET'])
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'X' })
+    expect(res.statusCode).toBe(401)
+    expect(h.gh.writeJson).not.toHaveBeenCalled()
+  })
+
+  it('stays permissive off-Vercel when auth env is missing (local dev)', async () => {
+    delete process.env.VERCEL
+    h.missingAuthEnv.mockReturnValue(['BETTER_AUTH_SECRET', 'DATABASE_URL'])
+    h.gh.readJson.mockResolvedValue({ content: { name: 'old' }, sha: 's' })
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'New' })
+    expect(res.statusCode).toBe(200)
+    expect(h.gh.writeJson).toHaveBeenCalledOnce()
+  })
+
+  it('401s the read-only GET actions when unauthenticated', async () => {
+    const cfg = await get({ action: 'config' })
+    expect(cfg.statusCode).toBe(401)
+    const nid = await get({ action: 'next-id', clientId: 'fedc', versionId: 'baseline' })
+    expect(nid.statusCode).toBe(401)
+    expect(h.gh.readJson).not.toHaveBeenCalled()
+  })
+
+  it('serves config to an authenticated session', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    const res = await get({ action: 'config' })
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toMatchObject({ owner: 'o', repo: 'r' })
+  })
+
+  it('returns a generic message for unexpected errors', async () => {
+    h.getSessionUser.mockResolvedValue(member)
+    h.selectRows.value = [{ architectureId: 'fedc', role: 'owner' }]
+    h.gh.readJson.mockRejectedValue(new Error('pg: connection string leaked-secret'))
+    const res = await post({ action: 'update-architecture', architectureId: 'fedc', name: 'X' })
+    expect(res.statusCode).toBe(500)
+    expect(res.body.error).toBe('Internal server error')
   })
 
   it('403s a member with no membership editing an architecture', async () => {
