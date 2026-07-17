@@ -6,9 +6,15 @@ This file gives Claude Code context about this repository. Update it as the proj
 
 ## Project Overview
 
-This is a **proof of concept for Architecture as Code** — a structured approach to capturing, versioning, and querying enterprise architecture using GitHub as the source of truth. GitHub Copilot and Claude are used to propose and apply changes through a governed ADR-driven workflow.
+**Pickle** is an **Architecture as Code** platform — a structured approach to capturing, versioning, and querying enterprise architecture using GitHub as the source of truth. Claude Code (via GitHub Actions) proposes and applies changes through a governed, ADR-driven workflow.
 
-**Goal:** Store architecture models as structured data (JSON), use AI to propose changes, generate views/diagrams, and query the architecture state.
+It has two halves:
+- **The architecture model** — architecture state stored as structured JSON under `architectures/`, validated by JSON Schema under `config/schemas/`.
+- **The Pickle web app** (`src/`) — a React/Vite SPA + Vercel serverless API that renders the model (catalogues, diagrams, matrices, documents), drives the decision/discovery governance workflows, and manages auth and per-architecture access.
+
+**Goal:** store architecture models as structured data, use AI to propose and apply changes through governed decisions, render views/diagrams, and let teams query the architecture state.
+
+> Pickle is moving from proof-of-concept toward production — hold production-quality standards (auth, validation, error handling, tests) for changes under `src/`.
 
 ---
 
@@ -33,8 +39,9 @@ For full context on the architecture model — architecture domains, abstraction
 │   └── workflows/                  # GitHub Actions — see /docs/workflows/
 │
 ├── config/
-│   ├── prompts/                    # Prompts loaded by Claude-driven workflows
-│   │   └── decisions/              # One markdown prompt per decision-analysis workflow
+│   ├── prompts/                    # Prompts loaded by Claude-driven workflows (personas + i18n; see prompts/README.md)
+│   │   ├── decisions/              # One markdown prompt per decision-analysis + apply workflow
+│   │   └── discovery/              # Prompt for the Virtual Architect (discovery) workflow
 │   ├── i18n/                       # Localised UI strings (en.json), overlaid on the artefact registry
 │   ├── roles.json                  # Role taxonomy (artefact audience/author, sign-up job roles)
 │   ├── artefact-relationships.json # Generated artefact relationship map
@@ -107,10 +114,10 @@ For full context on the architecture model — architecture domains, abstraction
 │   ├── lib/                        # Shared logic (artefact registry, permissions, GitHub client, …)
 │   ├── components/ pages/ hooks/   # React UI
 │   ├── context/                    # React providers (auth, permissions, architecture selection)
-│   └── db/                         # Drizzle ORM schema + migrations (Postgres, auth/memberships)
+│   ├── db/                         # Drizzle ORM schema + migrations (Postgres, auth/memberships)
+│   └── tests/e2e/                  # Playwright browser tests (smoke + auth setup)
 │
-├── tests/                          # Repo-level validation: validate-schemas.mjs, validate-integrity.mjs
-├── assets/                         # Repo assets (screenshots)
+├── tests/                          # Repo-level DATA validation (node): validate-schemas.mjs, validate-integrity.mjs, use-case runner
 ├── BACKLOG.md                      # Product backlog (Epic → Feature, stable IDs)
 └── CLAUDE.md                       # This file
 ```
@@ -129,6 +136,25 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 
 ---
 
+## Web Application (`src/`)
+
+The app is a Vite SPA plus Vercel serverless functions. Work from `src/` (its own `package.json`).
+
+- **Commands** (run in `src/`): `npm run dev` (dev server + local `/api` shim), `npm run build`, `npm test` (Vitest), `npm run test:e2e` (Playwright), `npm run lint`, `npm run typecheck`, `npm run format`.
+- **Serverless API** — `src/api/*` run as **native ESM** on Vercel: use explicit `.js` import specifiers (even from `.ts`), and keep the `src/vercel.json` SPA rewrite excluding `/api` and `/assets`. Redeploy after env changes.
+- **Auth is always enforced** — there is no auth-off mode. `RequireAuth` gates the client; the API (`/api/github`, `/api/content` for `architectures/`) requires a Better Auth session and **fails closed** (deny) when auth env is missing or no session — in every environment. Only local dev without a database is permissive. Writes are RBAC-checked (owner/contributor/consumer + global admin) in `lib/permissions.ts`.
+- **Public vs gated content** — `/api/content` serves docs and schemas publicly but session-gates `architectures/` data (and never shared-caches it). Docs/schemas stay public.
+- **Security headers** (CSP, HSTS, nosniff, frame-options, referrer/permissions policy) are set in `src/vercel.json`.
+- **Email** (Resend) is gated on `RESEND_API_KEY`: with it set, sign-up sends a verification code and sign-in requires a verified address; without it, verification is skipped so local dev isn't locked out.
+- **Error boundary** — `RouteErrorBoundary` auto-recovers a stale-deploy session (missing chunks or init-order/TDZ errors) with a one-shot reload.
+
+### Testing layers
+
+Two intentionally separate suites (kept split by design):
+
+- **App tests — `src/`** — colocated unit tests (`src/**/*.test.{js,jsx}`, Vitest) and Playwright e2e (`src/tests/e2e/`). Run from `src/` via `npm test` / `npm run test:e2e`.
+- **Repo-data validators — `tests/`** (repo root) — Node scripts that validate the architecture data + schemas at repo root (`node tests/validate-schemas.mjs`, `validate-integrity.mjs`) plus the browser use-case runner. Run from the repo root by CI. These live at root because they validate root data — do not move them into `src/`.
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -140,6 +166,7 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 | Web app (`src/`) | React 18 + Vite SPA, Tailwind CSS |
 | API (`src/api/`) | Vercel serverless functions (TypeScript, native ESM) |
 | Auth & memberships | Better Auth + Postgres (Drizzle ORM) |
+| Transactional email | Resend (verification, password reset, invites) |
 | App testing | Vitest + Testing Library; Playwright (e2e) |
 
 ---
@@ -149,7 +176,7 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 ### File Naming
 - Catalogue schemas: named with the artefact-type ID and `.json` suffix (e.g. `BUS-CAP.json`)
 - Catalogue instance files: named with the artefact-type ID and `.json` suffix, at `domains/<domain>/<abstraction>/<ARTEFACT-ID>.json` — mirrors the schema path (e.g. `BUS-CAP.json`)
-- ADR files: `decision.json` inside a folder named after the decision ID (e.g. `adr-001/decision.json`)
+- ADR files: `decision.json` inside a folder named after the decision ID (e.g. `ADR-001/decision.json`)
 
 ### Branch Naming
 The only branch names accepted by the remote are:
@@ -208,8 +235,8 @@ Enforced by [`.github/workflows/validate-branch.yml`](.github/workflows/validate
 ## Open Questions / Work in Progress
 
 - [ ] Every architecture domain × abstraction layer slot now has a baseline `<DOM>-STR` / `<DOM>-PRN` / `<DOM>-GRD` catalogue. Domain-specific catalogues exist for `BUS-CAP`, `BUS-PRO`, `DAT-DAC`, and `APP-DAP` — others (e.g. integration patterns, solution blueprints) are not yet defined.
-- [ ] Matrix and diagram formats not yet defined (only catalogues are schema-backed)
-- [ ] Branch naming is enforced by CI (`validate-branch.yml`); no other CI/CD workflows yet — JSON validation and ADR folder/file consistency are not yet enforced automatically
-- [ ] No diagram/view generation implemented yet
+- [x] The web app renders catalogues, diagrams (BCM, process-flow, wiring, sequence), matrices, and documents. Not every artefact type is schema-backed yet (catalogues are; diagrams/matrices are rendered from catalogue data).
+- [x] CI validates the data: `validate-branch.yml` (branch names), `validate-schema.yml` / `ci.yml` (JSON Schema + referential integrity via `tests/`), plus the decision/discovery analysis workflows.
+- [x] The AI-driven decision pipeline is implemented: decisions run analysis (7 streams), then `architecture-changes` → `apply-changes` translate an accepted decision into artefact edits opened as a PR.
 - [ ] Ingestion path into EA tooling (e.g. via CALM or similar) not decided
-- [ ] AI-driven architecture change application (using ADRs to update architecture state) not yet implemented
+- [ ] Matrix/diagram artefact **schemas** (as opposed to rendering) are not yet defined
