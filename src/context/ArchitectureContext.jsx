@@ -3,14 +3,18 @@ import { getClients, getClient, getVersions } from '../lib/api'
 
 const ArchitectureContext = createContext(null)
 
+// localStorage keys for the persisted client/version selection.
+const CLIENT_ID_KEY = 'arch_clientId'
+const VERSION_ID_KEY = 'arch_versionId'
+
 export function ArchitectureProvider({ children }) {
   const [clients, setClients] = useState([])
   const [clientsMetadata, setClientsMetadata] = useState({})
   const [selectedClientId, setSelectedClientId] = useState(
-    () => localStorage.getItem('arch_clientId') || null
+    () => localStorage.getItem(CLIENT_ID_KEY) || null
   )
   const [selectedVersionId, setSelectedVersionId] = useState(
-    () => localStorage.getItem('arch_versionId') || null
+    () => localStorage.getItem(VERSION_ID_KEY) || null
   )
   const [clientMeta, setClientMeta] = useState(null)
   const [versions, setVersions] = useState([])
@@ -39,7 +43,7 @@ export function ArchitectureProvider({ children }) {
 
   useEffect(() => {
     if (!selectedClientId) return
-    localStorage.setItem('arch_clientId', selectedClientId)
+    localStorage.setItem(CLIENT_ID_KEY, selectedClientId)
     setClientMeta(null)
     setVersions([])
 
@@ -59,7 +63,7 @@ export function ArchitectureProvider({ children }) {
 
   useEffect(() => {
     if (selectedVersionId) {
-      localStorage.setItem('arch_versionId', selectedVersionId)
+      localStorage.setItem(VERSION_ID_KEY, selectedVersionId)
     }
   }, [selectedVersionId])
 
