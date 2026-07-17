@@ -22,7 +22,10 @@ describe('inferRunningWorkflow ([DEC-8])', () => {
   it('accepted is running until architecture-changes lands', () => {
     expect(inferRunningWorkflow({ status: 'accepted' })).toBeTruthy()
     expect(
-      inferRunningWorkflow({ status: 'accepted', 'architecture-changes': [{ 'change-type': 'create' }] })
+      inferRunningWorkflow({
+        status: 'accepted',
+        'architecture-changes': [{ 'change-type': 'create' }],
+      })
     ).toBeNull()
   })
 

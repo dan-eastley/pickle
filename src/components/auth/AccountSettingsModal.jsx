@@ -213,7 +213,11 @@ export default function AccountSettingsModal({ onClose }) {
               </div>
               <Status msg={pwMsg} />
               <div className="flex justify-end">
-                <Button type="submit" size="sm" disabled={savingPw || !currentPassword || !newPassword}>
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={savingPw || !currentPassword || !newPassword}
+                >
                   {savingPw ? 'Changing…' : 'Change password'}
                 </Button>
               </div>

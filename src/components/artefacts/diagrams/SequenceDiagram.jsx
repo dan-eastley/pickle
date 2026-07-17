@@ -199,12 +199,7 @@ export default function SequenceDiagram({ flows, domain, onItemClick, selectedId
           <h3 className="text-sm font-semibold text-gray-900">{flow.name}</h3>
           {flow.description && <p className="mt-0.5 text-xs text-gray-500">{flow.description}</p>}
           <div className="mt-3">
-            <Flow
-              flow={flow}
-              domain={domain}
-              onItemClick={onItemClick}
-              selectedId={selectedId}
-            />
+            <Flow flow={flow} domain={domain} onItemClick={onItemClick} selectedId={selectedId} />
           </div>
         </div>
       ))}

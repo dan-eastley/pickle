@@ -117,7 +117,11 @@ export default function ClientsPage() {
 
   const nameFor = (id) => overrides[id]?.name ?? clientsMetadata[id]?.name ?? id
   const editing = editingId
-    ? { id: editingId, name: nameFor(editingId), status: overrides[editingId]?.status ?? clientsMetadata[editingId]?.status ?? 'active' }
+    ? {
+        id: editingId,
+        name: nameFor(editingId),
+        status: overrides[editingId]?.status ?? clientsMetadata[editingId]?.status ?? 'active',
+      }
     : null
 
   const loaded = Object.values(metrics).filter(Boolean)
@@ -182,7 +186,9 @@ export default function ClientsPage() {
           initialStatus={editing.status}
           statusOptions={ARCH_STATUS_OPTIONS}
           accessArchitectureId={editing.id}
-          onSubmit={(fields) => githubAction({ action: 'update-architecture', architectureId: editing.id, ...fields })}
+          onSubmit={(fields) =>
+            githubAction({ action: 'update-architecture', architectureId: editing.id, ...fields })
+          }
           onSaved={(fields) =>
             setOverrides((prev) => ({ ...prev, [editing.id]: { ...prev[editing.id], ...fields } }))
           }
@@ -197,7 +203,11 @@ export default function ClientsPage() {
           idLabel="Architecture ID"
           idHint="Lowercase letters, numbers and dashes — becomes the folder name and URL."
           onSubmit={(fields) =>
-            githubAction({ action: 'create-architecture', architectureId: fields.id, name: fields.name })
+            githubAction({
+              action: 'create-architecture',
+              architectureId: fields.id,
+              name: fields.name,
+            })
           }
           onCreated={(fields) => navigate(`/architectures/${fields.id}/transitions`)}
           onClose={() => setCreating(false)}

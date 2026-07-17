@@ -36,7 +36,9 @@ export async function getClients() {
 // Members (access grants) of an architecture — for the Access settings ([RAS-3]).
 // Gated server-side; throws on 403 for callers without the access-grant right.
 export async function getMembers(architectureId) {
-  const res = await fetch(`/api/github?action=members&architectureId=${encodeURIComponent(architectureId)}`)
+  const res = await fetch(
+    `/api/github?action=members&architectureId=${encodeURIComponent(architectureId)}`
+  )
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(data.error ?? `Request failed (${res.status})`)
   return data.members ?? []

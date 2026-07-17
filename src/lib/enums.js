@@ -8,13 +8,48 @@
 // A small, fixed palette. Each colour carries every token variant a badge or an
 // SVG label needs, so callers never hand-pick Tailwind classes.
 const PALETTE = {
-  violet: { dot: 'bg-violet-500', badge: 'bg-violet-100 text-violet-800', fill: 'fill-violet-200', textFill: 'fill-violet-800' },
-  blue: { dot: 'bg-blue-500', badge: 'bg-blue-100 text-blue-800', fill: 'fill-blue-200', textFill: 'fill-blue-800' },
-  emerald: { dot: 'bg-emerald-500', badge: 'bg-emerald-100 text-emerald-800', fill: 'fill-emerald-200', textFill: 'fill-emerald-800' },
-  amber: { dot: 'bg-amber-500', badge: 'bg-amber-100 text-amber-800', fill: 'fill-amber-200', textFill: 'fill-amber-800' },
-  rose: { dot: 'bg-rose-500', badge: 'bg-rose-100 text-rose-800', fill: 'fill-rose-200', textFill: 'fill-rose-800' },
-  cyan: { dot: 'bg-cyan-500', badge: 'bg-cyan-100 text-cyan-800', fill: 'fill-cyan-200', textFill: 'fill-cyan-800' },
-  gray: { dot: 'bg-gray-400', badge: 'bg-gray-100 text-gray-700', fill: 'fill-gray-200', textFill: 'fill-gray-700' },
+  violet: {
+    dot: 'bg-violet-500',
+    badge: 'bg-violet-100 text-violet-800',
+    fill: 'fill-violet-200',
+    textFill: 'fill-violet-800',
+  },
+  blue: {
+    dot: 'bg-blue-500',
+    badge: 'bg-blue-100 text-blue-800',
+    fill: 'fill-blue-200',
+    textFill: 'fill-blue-800',
+  },
+  emerald: {
+    dot: 'bg-emerald-500',
+    badge: 'bg-emerald-100 text-emerald-800',
+    fill: 'fill-emerald-200',
+    textFill: 'fill-emerald-800',
+  },
+  amber: {
+    dot: 'bg-amber-500',
+    badge: 'bg-amber-100 text-amber-800',
+    fill: 'fill-amber-200',
+    textFill: 'fill-amber-800',
+  },
+  rose: {
+    dot: 'bg-rose-500',
+    badge: 'bg-rose-100 text-rose-800',
+    fill: 'fill-rose-200',
+    textFill: 'fill-rose-800',
+  },
+  cyan: {
+    dot: 'bg-cyan-500',
+    badge: 'bg-cyan-100 text-cyan-800',
+    fill: 'fill-cyan-200',
+    textFill: 'fill-cyan-800',
+  },
+  gray: {
+    dot: 'bg-gray-400',
+    badge: 'bg-gray-100 text-gray-700',
+    fill: 'fill-gray-200',
+    textFill: 'fill-gray-700',
+  },
 }
 const FALLBACK_ORDER = ['violet', 'blue', 'emerald', 'amber', 'rose', 'cyan', 'gray']
 
@@ -40,7 +75,13 @@ const ENUM_VALUE_COLORS = {
     eliminate: 'rose',
     retire: 'rose',
   },
-  status: { active: 'emerald', current: 'emerald', planned: 'blue', deprecated: 'amber', retired: 'rose' },
+  status: {
+    active: 'emerald',
+    current: 'emerald',
+    planned: 'blue',
+    deprecated: 'amber',
+    retired: 'rose',
+  },
 }
 
 // Stable hash so an unmapped value always gets the same colour.

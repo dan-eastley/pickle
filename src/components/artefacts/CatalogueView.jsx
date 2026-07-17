@@ -515,14 +515,14 @@ export default function CatalogueView({ data, schema, onOpenEntity }) {
                   />
                 ))
               : items.map((item) => (
-                <FlatRow
-                  key={item.id}
-                  item={item}
-                  columns={columns}
-                  linkKey={linkKey}
-                  onOpen={onOpenEntity}
-                />
-              ))}
+                  <FlatRow
+                    key={item.id}
+                    item={item}
+                    columns={columns}
+                    linkKey={linkKey}
+                    onOpen={onOpenEntity}
+                  />
+                ))}
           </tbody>
         </table>
       </div>

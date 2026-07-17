@@ -117,7 +117,9 @@ export default function SettingsModal({
               </nav>
             )}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-8">
-              <ActiveSectionContext.Provider value={active}>{children}</ActiveSectionContext.Provider>
+              <ActiveSectionContext.Provider value={active}>
+                {children}
+              </ActiveSectionContext.Provider>
               {error && (
                 <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2">
                   {error}

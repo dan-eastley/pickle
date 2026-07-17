@@ -331,7 +331,11 @@ async function commitDecision(
   }
   // PR merge brings decision.json to main — update its status and sync index,
   // recording the committer in the activity log.
-  await updateDecision(gh, { clientId, versionId, decisionId, updates: { status: 'committed' } }, actor)
+  await updateDecision(
+    gh,
+    { clientId, versionId, decisionId, updates: { status: 'committed' } },
+    actor
+  )
   // The PR is merged (and closed); remove the now-redundant decision branch.
   if (pr) await gh.deleteBranch(decisionBranch(clientId, versionId, decisionId))
   return { ok: true, decisionId, status: 'committed' }
@@ -496,7 +500,14 @@ async function refreshDiscovery(
 // the architectures tree. (Dots are allowed in ids.)
 const SAFE_ID = /^[A-Za-z0-9._-]+$/
 function assertSafeIds(params: Record<string, unknown>): void {
-  for (const k of ['clientId', 'versionId', 'decisionId', 'discoveryId', 'architectureId', 'transitionId']) {
+  for (const k of [
+    'clientId',
+    'versionId',
+    'decisionId',
+    'discoveryId',
+    'architectureId',
+    'transitionId',
+  ]) {
     const v = params[k]
     if (v == null) continue
     const s = String(v)
@@ -542,7 +553,10 @@ async function updateArchitecture(gh: GitHubClient, params: Doc, actor: string):
   for (const k of ['name', 'description', 'status', 'industry']) {
     if (updates[k] !== undefined) next[k] = updates[k]
   }
-  await gh.writeJson(path, next, `Update architecture ${architectureId} (${actor})`, { sha, branch: BASE })
+  await gh.writeJson(path, next, `Update architecture ${architectureId} (${actor})`, {
+    sha,
+    branch: BASE,
+  })
   return { ok: true, architectureId }
 }
 
@@ -582,12 +596,24 @@ async function createArchitecture(gh: GitHubClient, params: Doc, actor: string):
   }
   const base = `architectures/${architectureId}`
   await gh.commitFiles(BASE, `Create architecture ${architectureId} (${actor})`, [
-    { path: `${base}/architecture.json`, content: j({ 'architecture-id': architectureId, name, status: 'active' }) },
-    { path: `${base}/transitions.json`, content: j({ transitions: [{ 'transition-id': 'baseline' }] }) },
-    { path: `${base}/baseline/transition.json`, content: j({ 'transition-id': 'baseline', name: 'Baseline', status: 'draft' }) },
+    {
+      path: `${base}/architecture.json`,
+      content: j({ 'architecture-id': architectureId, name, status: 'active' }),
+    },
+    {
+      path: `${base}/transitions.json`,
+      content: j({ transitions: [{ 'transition-id': 'baseline' }] }),
+    },
+    {
+      path: `${base}/baseline/transition.json`,
+      content: j({ 'transition-id': 'baseline', name: 'Baseline', status: 'draft' }),
+    },
     { path: `${base}/baseline/decisions/decisions.json`, content: j({ decisions: [] }) },
     { path: `${base}/baseline/discovery/discovery.json`, content: j({ discoveries: [] }) },
-    { path: idxPath, content: j({ architectures: [...list, { 'architecture-id': architectureId }] }) },
+    {
+      path: idxPath,
+      content: j({ architectures: [...list, { 'architecture-id': architectureId }] }),
+    },
   ])
   return { ok: true, architectureId }
 }
@@ -651,13 +677,20 @@ async function grantAccess(
     throw new HttpError('Invalid role', 400)
   }
   const validRole = role as Role
-  const em = String(email ?? '').trim().toLowerCase()
+  const em = String(email ?? '')
+    .trim()
+    .toLowerCase()
   if (!em) throw new HttpError('Email is required', 400)
   const [u] = await db.select().from(user).where(eq(user.email, em)).limit(1)
   if (!u) throw new HttpError(`No user found with email ${em}`, 404)
   await db
     .insert(architectureMembership)
-    .values({ id: randomUUID(), userId: u.id, architectureId: String(architectureId), role: validRole })
+    .values({
+      id: randomUUID(),
+      userId: u.id,
+      architectureId: String(architectureId),
+      role: validRole,
+    })
     .onConflictDoUpdate({
       target: [architectureMembership.userId, architectureMembership.architectureId],
       set: { role: validRole, updatedAt: new Date() },
@@ -722,14 +755,32 @@ function inAdminAllowlist(email?: string): boolean {
 // fail-soft on the membership query so an un-migrated DB can't 500 a write.
 async function resolvePermissions(req: VercelRequest): Promise<PermissionState> {
   if (missingAuthEnv().length > 0) {
-    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
+    return {
+      authenticated: true,
+      isAdmin: true,
+      memberships: {},
+      actor: SYSTEM_ACTOR,
+      userId: null,
+    }
   }
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
   if (!user) {
     if (process.env.VERCEL) {
-      return { authenticated: false, isAdmin: false, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
+      return {
+        authenticated: false,
+        isAdmin: false,
+        memberships: {},
+        actor: SYSTEM_ACTOR,
+        userId: null,
+      }
     }
-    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
+    return {
+      authenticated: true,
+      isAdmin: true,
+      memberships: {},
+      actor: SYSTEM_ACTOR,
+      userId: null,
+    }
   }
   const isAdmin = user.accessTier === 'admin' || inAdminAllowlist(user.email)
   let memberships: Record<string, string> = {}

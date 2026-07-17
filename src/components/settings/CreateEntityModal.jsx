@@ -84,7 +84,9 @@ export default function CreateEntityModal({
 
         {cloneOptions && (
           <label className="block">
-            <span className="block text-xs font-medium text-gray-500 mb-1">{cloneOptions.label}</span>
+            <span className="block text-xs font-medium text-gray-500 mb-1">
+              {cloneOptions.label}
+            </span>
             <select
               value={from}
               onChange={(e) => setFrom(e.target.value)}

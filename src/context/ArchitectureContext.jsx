@@ -25,7 +25,9 @@ export function ArchitectureProvider({ children }) {
           setSelectedClientId(list[0]['architecture-id'])
         }
         Promise.all(
-          list.map((c) => getClient(c['architecture-id']).then((meta) => [c['architecture-id'], meta]))
+          list.map((c) =>
+            getClient(c['architecture-id']).then((meta) => [c['architecture-id'], meta])
+          )
         ).then((entries) => {
           setClientsMetadata(Object.fromEntries(entries.filter(([, m]) => m)))
         })

@@ -22,11 +22,11 @@ src/
 
 Copy `.env.example` to `.env` (gitignored) and set:
 
-| Variable | Purpose |
-|---|---|
-| `DATABASE_URL` | Postgres connection string (use the **pooled** Neon URL on Vercel) |
-| `BETTER_AUTH_SECRET` | Session signing secret — `openssl rand -base64 32` |
-| `BETTER_AUTH_URL` | App base URL (`http://localhost:3000` in dev) |
+| Variable             | Purpose                                                            |
+| -------------------- | ------------------------------------------------------------------ |
+| `DATABASE_URL`       | Postgres connection string (use the **pooled** Neon URL on Vercel) |
+| `BETTER_AUTH_SECRET` | Session signing secret — `openssl rand -base64 32`                 |
+| `BETTER_AUTH_URL`    | App base URL (`http://localhost:3000` in dev)                      |
 
 On Vercel, set the same variables in **Project → Settings → Environment
 Variables**. Add the Postgres database via **Storage → Create → Postgres

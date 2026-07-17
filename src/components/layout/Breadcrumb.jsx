@@ -77,7 +77,10 @@ export default function Breadcrumb() {
     const discoveryBase = `${base}/discovery`
     const isNew = pathname.endsWith('/new')
 
-    const crumbs = [...lead, { label: 'Discovery', to: discoveryId || isNew ? discoveryBase : null }]
+    const crumbs = [
+      ...lead,
+      { label: 'Discovery', to: discoveryId || isNew ? discoveryBase : null },
+    ]
     if (isNew) crumbs.push({ label: 'New Discovery', to: null })
     if (discoveryId) crumbs.push({ label: discoveryTitle ?? discoveryId, to: null })
 

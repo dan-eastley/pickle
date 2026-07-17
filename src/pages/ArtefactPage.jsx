@@ -93,7 +93,15 @@ function ArtefactDownload({ artefact, schema, data, selectedDocument, diagramRef
   return null
 }
 
-function AdrActionBar({ artefact, schema, data, documents, selectedDocument, clientId, versionId }) {
+function AdrActionBar({
+  artefact,
+  schema,
+  data,
+  documents,
+  selectedDocument,
+  clientId,
+  versionId,
+}) {
   const [decisionOpen, setDecisionOpen] = useState(false)
   const [discoveryOpen, setDiscoveryOpen] = useState(false)
   const viewDecisionsUrl = `/architectures/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
@@ -137,7 +145,12 @@ function AdrActionBar({ artefact, schema, data, documents, selectedDocument, cli
           </Button>
         }
         primary={
-          <Button variant="primary" domain={artefact.domain} size="h8" onClick={() => setDecisionOpen(true)}>
+          <Button
+            variant="primary"
+            domain={artefact.domain}
+            size="h8"
+            onClick={() => setDecisionOpen(true)}
+          >
             <DecisionIcon className="w-3.5 h-3.5" />
             New Decision
           </Button>
@@ -353,7 +366,10 @@ export default function ArtefactPage() {
 
   if (!artefact) {
     return (
-      <Navigate to={`/architectures/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
+      <Navigate
+        to={`/architectures/${clientId}/${versionId}/domains/${domain}/${abstraction}`}
+        replace
+      />
     )
   }
 

@@ -73,9 +73,7 @@ function DomainCard({ domain, base, dm, loading }) {
         to={`${base}/domains/${domain.id}`}
         className="group flex items-center gap-4 p-5 hover:bg-gray-50 transition-colors"
       >
-        <div
-          className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors.bg}`}
-        >
+        <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${colors.bg}`}>
           <span className={colors.text}>
             <DomainIcon domain={domain.id} className="w-5 h-5" />
           </span>

@@ -45,7 +45,9 @@ export default function VersionsPage() {
       if (!live) return
       setVersions(list)
       const metas = await Promise.all(
-        list.map((v) => getVersion(clientId, v['transition-id']).then((m) => [v['transition-id'], m]))
+        list.map((v) =>
+          getVersion(clientId, v['transition-id']).then((m) => [v['transition-id'], m])
+        )
       )
       if (!live) return
       setVersionMeta(Object.fromEntries(metas.filter(([, m]) => m)))
@@ -74,7 +76,10 @@ export default function VersionsPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
       <div className="mb-4">
-        <Link to="/architectures" className="text-sm text-gray-500 hover:text-gray-600 transition-colors">
+        <Link
+          to="/architectures"
+          className="text-sm text-gray-500 hover:text-gray-600 transition-colors"
+        >
           ← All architectures
         </Link>
       </div>

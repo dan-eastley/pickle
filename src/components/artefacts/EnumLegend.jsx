@@ -17,7 +17,10 @@ export default function EnumLegend({ groups, className = '' }) {
           </span>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             {e.values.map((v) => (
-              <span key={v.value} className="inline-flex items-center gap-1.5 text-xs text-gray-600">
+              <span
+                key={v.value}
+                className="inline-flex items-center gap-1.5 text-xs text-gray-600"
+              >
                 <span className={`w-2 h-2 ${v.style.dot}`} />
                 {v.label}
               </span>
