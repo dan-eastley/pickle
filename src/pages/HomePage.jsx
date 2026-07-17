@@ -461,7 +461,7 @@ function ArchitectureModel() {
 
           {/* Architecture Discovery CTA, the Virtual Architect Agent */}
           <div className="mt-4 border border-gray-200 border-l-4 border-l-blue-600 bg-gradient-to-r from-blue-50/60 to-rose-50/40 p-5 flex items-center gap-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-brand-700 to-rose-600 flex items-center justify-center flex-shrink-0">
               <RobotIcon className="w-5 h-5 text-white" />
             </div>
             <div className="min-w-0 flex-1">
@@ -967,7 +967,7 @@ function VirtualArchitectAgent() {
               ))}
             </ul>
           </div>
-          <div className="hidden xl:flex w-40 h-40 flex-shrink-0 self-center bg-gradient-to-br from-blue-600 to-red-600 items-center justify-center">
+          <div className="hidden xl:flex w-40 h-40 flex-shrink-0 self-center bg-gradient-to-br from-brand-700 to-rose-600 items-center justify-center">
             <RobotIcon className="w-20 h-20 text-white" />
           </div>
         </div>
