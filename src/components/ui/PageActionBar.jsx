@@ -53,7 +53,9 @@ export default function PageActionBar({
               </span>
             )}
             {typeLabel && (
-              <span className="text-[11px] font-medium text-gray-500 bg-gray-50 border border-gray-200 px-1.5 py-0.5">
+              <span
+                className={`text-[11px] font-medium px-1.5 py-0.5 ${colors ? `${colors.bg} ${colors.text}` : 'text-gray-500 bg-gray-50 border border-gray-200'}`}
+              >
                 {typeLabel}
               </span>
             )}
