@@ -66,7 +66,8 @@ function AbstractionSection({ abstraction, artefacts, base, domain, clientId, ve
           >
             <FormatIcon format={row.format} className="w-3 h-3 text-gray-500" />
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              {row.fmt?.label ?? row.format} ({row.count})
+              {row.format === 'document' ? 'Document Types' : (row.fmt?.label ?? row.format)} (
+              {row.count})
             </span>
           </div>
         ) : (

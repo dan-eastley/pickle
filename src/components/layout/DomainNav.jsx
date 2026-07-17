@@ -13,19 +13,42 @@ import DomainIcon from '../ui/DomainIcon'
 import FormatIcon from '../ui/FormatIcon'
 import { ChevronDown, ChevronRight, KeyStar, DecisionIcon, RobotIcon } from '../ui/icons'
 import useClickOutside from '../../hooks/useClickOutside'
+import { getArtefactData } from '../../lib/api'
 
 function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose }) {
   const fmt = getFormat(format)
-  if (!fmt || !artefacts.length) return null
+  const isDoc = format === 'document'
+  const [, , clientId, versionId] = base.split('/') // base = /architectures/<c>/<v>
+  const [docCounts, setDocCounts] = useState({})
 
   const sorted = [...artefacts.filter((a) => a.key), ...artefacts.filter((a) => !a.key)]
+
+  // Document types carry multiple instances; show the count per type (like the
+  // domain page). Fetched lazily on open, document format only.
+  useEffect(() => {
+    if (!isDoc || !artefacts.length) return
+    let live = true
+    Promise.all(
+      sorted.map((a) =>
+        getArtefactData(clientId, versionId, a.domain, a.abstraction, a.id)
+          .then((d) => [a.id, Array.isArray(d?.documents) ? d.documents.length : 0])
+          .catch(() => [a.id, null])
+      )
+    ).then((entries) => live && setDocCounts(Object.fromEntries(entries)))
+    return () => {
+      live = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDoc, clientId, versionId])
+
+  if (!fmt || !artefacts.length) return null
 
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex items-center gap-1.5 px-2 py-1 mb-1 bg-gray-50">
         <FormatIcon format={format} className="w-3 h-3 text-gray-500" />
         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-          {fmt.label}
+          {isDoc ? 'Document Types' : fmt.label}
         </span>
       </div>
       <div className="space-y-px">
@@ -42,6 +65,11 @@ function FormatGroup({ format, artefacts, base, domainId, abstractionId, onClose
           >
             {artefact.key && <KeyStar className="w-2.5 h-2.5" />}
             <span className="truncate flex-1">{artefact.name}</span>
+            {isDoc && docCounts[artefact.id] != null && (
+              <span className="text-xs text-gray-400 flex-shrink-0 tabular-nums">
+                {docCounts[artefact.id]}
+              </span>
+            )}
           </Link>
         ))}
       </div>

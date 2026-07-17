@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FFFFFF; color:#101828; font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:#155EEF; text-decoration:none; }
+  a:hover { color:#004EEB; }
+</style>
+</helmet>
+<div style="font-size:15px;">
+
+  <!-- ══ Header ══ -->
+  <header data-screen-label="Header" style="height:60px; background:#FFFFFF; border-bottom:2px solid #155EEF; display:flex; align-items:center; gap:20px; padding:0 32px; position:sticky; top:0; z-index:40;">
+    <span style="display:inline-flex; flex-direction:column; line-height:1;">
+      <span style="font-size:18px; font-weight:700; letter-spacing:0.18em; background:linear-gradient(90deg,#004EEB,#E11D48); -webkit-background-clip:text; background-clip:text; color:transparent;">PICKLE</span>
+      <span style="font-size:10px; font-weight:500; letter-spacing:0.02em; color:#667085; margin-top:2px;">Agentic Architecture as a Service</span>
+    </span>
+    <div style="flex:1;"></div>
+    <a href="#" style="font-size:13px; font-weight:500; color:#475467; padding:6px 10px;">How it works</a>
+    <a href="#" style="font-size:13px; font-weight:500; color:#475467; padding:6px 10px;">Frameworks</a>
+    <a href="#" style="display:inline-flex; align-items:center; gap:8px; height:34px; padding:0 16px; background:#155EEF; color:#FFFFFF; font-size:13px; font-weight:600;" style-hover="background:#004EEB; color:#FFFFFF;">View Architectures
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path></svg>
+    </a>
+  </header>
+
+  <!-- ══ Hero ══ -->
+  <section data-screen-label="Hero" style="position:relative; overflow:hidden; background:linear-gradient(180deg,#F5F8FF 0%,#FFFFFF 100%); border-bottom:1px solid #EAECF0;">
+    <div style="position:absolute; right:-180px; top:-180px; width:560px; height:560px; background:radial-gradient(circle,rgba(225,29,72,0.07),transparent 65%); pointer-events:none;"></div>
+    <div style="position:absolute; left:-180px; bottom:-220px; width:560px; height:560px; background:radial-gradient(circle,rgba(0,78,235,0.08),transparent 65%); pointer-events:none;"></div>
+    <div style="position:relative; max-width:1200px; margin:0 auto; padding:72px 32px 64px; display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center;">
+      <div>
+        <span style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:#004EEB; background:#EFF4FF; border:1px solid #D1E0FF; padding:4px 12px;">
+          <span style="width:6px; height:6px; background:#17B26A;"></span>
+          Agentic Architecture as a Service
+        </span>
+        <h1 style="margin:20px 0 0; font-size:46px; line-height:1.08; font-weight:800; letter-spacing:-0.02em; color:#101828; text-wrap:balance;">Enterprise architecture that <span style="background:linear-gradient(90deg,#004EEB,#E11D48); -webkit-background-clip:text; background-clip:text; color:transparent;">governs itself</span></h1>
+        <p style="margin:18px 0 0; font-size:17px; line-height:1.55; color:#475467; max-width:52ch; text-wrap:pretty;">Your enterprise architecture as structured, version-controlled data — with AI agents that analyse every proposed change and a decision-record workflow that keeps your architects in charge.</p>
+        <div style="margin-top:28px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:baseline; gap:10px; font-size:14px; color:#344054;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span><strong style="font-weight:600;">Architecture as code:</strong> every artefact is schema-validated JSON in Git — versioned, auditable, queryable.</span></div>
+          <div style="display:flex; align-items:baseline; gap:10px; font-size:14px; color:#344054;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span><strong style="font-weight:600;">AI-analysed change:</strong> seven analysis agents stress-test each decision before it reaches a human.</span></div>
+          <div style="display:flex; align-items:baseline; gap:10px; font-size:14px; color:#344054;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span><strong style="font-weight:600;">Governed by Decision Records:</strong> no undocumented drift — intent, rationale and analysis captured for every change.</span></div>
+          <div style="display:flex; align-items:baseline; gap:10px; font-size:14px; color:#344054;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span><strong style="font-weight:600;">Framework-aligned:</strong> maps onto TOGAF, SAFe, Zachman and UAF out of the box.</span></div>
+        </div>
+        <div style="margin-top:32px; display:flex; align-items:center; gap:12px;">
+          <a href="#" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 22px; background:#155EEF; color:#FFFFFF; font-size:14px; font-weight:600;" style-hover="background:#004EEB; color:#FFFFFF;">View Architectures
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path></svg>
+          </a>
+          <a href="#" style="display:inline-flex; align-items:center; height:42px; padding:0 22px; background:#FFFFFF; border:1px solid #D0D5DD; color:#344054; font-size:14px; font-weight:500;" style-hover="background:#F9FAFB; color:#344054;">See how it works</a>
+        </div>
+      </div>
+
+      <!-- Hero product mock: the refreshed artefact page, simplified -->
+      <div style="position:relative;">
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; box-shadow:0 20px 24px -4px rgba(16,24,40,0.08), 0 8px 8px -4px rgba(16,24,40,0.03); font-size:11px;">
+          <div style="height:34px; border-bottom:2px solid #155EEF; display:flex; align-items:center; gap:10px; padding:0 14px;">
+            <span style="font-size:11px; font-weight:700; letter-spacing:0.16em; background:linear-gradient(90deg,#004EEB,#E11D48); -webkit-background-clip:text; background-clip:text; color:transparent;">PICKLE</span>
+            <span style="height:14px; width:1px; background:#EAECF0;"></span>
+            <span style="display:inline-flex; align-items:center; gap:5px; background:#F2F4F7; color:#344054; font-size:10px; font-weight:500; padding:3px 8px;">Fictitious Energy Distribution Co. <span style="color:#98A2B3;">/</span> <span style="font-family:'JetBrains Mono',monospace; color:#667085;">baseline</span></span>
+            <div style="flex:1;"></div>
+            <span style="width:150px; height:20px; background:#F2F4F7; display:inline-flex; align-items:center; padding:0 8px; color:#98A2B3; font-size:10px;">Jump to…</span>
+            <span style="width:20px; height:20px; background:#155EEF; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:9px; font-weight:600;">OT</span>
+          </div>
+          <div style="height:26px; border-bottom:1px solid #EAECF0; display:flex; align-items:stretch; padding:0 14px; font-size:10px; font-weight:500; color:#667085;">
+            <span style="display:flex; align-items:center; padding:0 9px;">Overview</span>
+            <span style="display:flex; align-items:center; gap:4px; padding:0 9px; color:#6D28D9; background:#F5F3FF; box-shadow:inset 0 -2px 0 0 #6D28D9;">Business</span>
+            <span style="display:flex; align-items:center; padding:0 9px;">Data</span>
+            <span style="display:flex; align-items:center; padding:0 9px;">Application</span>
+            <span style="display:flex; align-items:center; padding:0 9px;">Integration</span>
+            <span style="display:flex; align-items:center; padding:0 9px;">Solution</span>
+            <div style="flex:1;"></div>
+            <span style="display:flex; align-items:center; padding:0 9px;">Decisions</span>
+            <span style="display:flex; align-items:center; padding:0 9px;">Discovery</span>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="display:flex; align-items:center; gap:10px; border:1px solid #EAECF0; border-left:3px solid #8B5CF6; padding:9px 12px;">
+              <span style="width:24px; height:24px; background:#F5F3FF; display:inline-flex; align-items:center; justify-content:center; color:#6D28D9; font-weight:700; font-size:11px;">B</span>
+              <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px;"><span style="font-size:12px; font-weight:600; color:#101828;">Business Capabilities</span><span style="font-family:'JetBrains Mono',monospace; font-size:8px; background:#F2F4F7; color:#667085; padding:1px 4px;">BUS-CAP</span></div>
+                <span style="font-size:9px; color:#667085;">A hierarchical catalogue of what the organisation does.</span>
+              </div>
+              <span style="font-size:10px; color:#155EEF; text-decoration:underline; text-underline-offset:2px;">View Decisions</span>
+              <span style="height:20px; padding:0 7px; display:inline-flex; align-items:center; border:1px solid #D0D5DD; font-size:9px; font-weight:500; color:#344054;">New Discovery</span>
+              <span style="height:20px; padding:0 8px; display:inline-flex; align-items:center; background:#7C3AED; color:#fff; font-size:9px; font-weight:600;">New Decision</span>
+            </div>
+            <div style="display:flex; border:1px solid #EAECF0; border-top:none;">
+              <span style="padding:6px 12px; border-right:1px solid #F2F4F7;"><span style="display:block; font-size:13px; font-weight:600;">70</span><span style="font-size:8px; font-weight:600; color:#667085; text-transform:uppercase;">Capabilities</span></span>
+              <span style="padding:6px 12px; border-right:1px solid #F2F4F7;"><span style="display:block; font-size:13px; font-weight:600;">9</span><span style="font-size:8px; font-weight:600; color:#667085; text-transform:uppercase;">Level 1</span></span>
+              <span style="padding:6px 12px; border-right:1px solid #F2F4F7;"><span style="display:block; font-size:13px; font-weight:600;">61</span><span style="font-size:8px; font-weight:600; color:#667085; text-transform:uppercase;">Level 2</span></span>
+              <span style="padding:6px 12px;"><span style="display:block; font-size:13px; font-weight:600;">2</span><span style="font-size:8px; font-weight:600; color:#667085; text-transform:uppercase;">Open decisions</span></span>
+              <div style="flex:1;"></div>
+              <span style="align-self:center; margin-right:10px; font-family:'JetBrains Mono',monospace; font-size:8px; background:#1D2939; color:#EAECF0; padding:3px 7px;">BUS-CAP.json</span>
+            </div>
+            <div style="margin-top:8px; border:1px solid #EAECF0;">
+              <div style="display:grid; grid-template-columns:52px 1fr 1.5fr 64px; gap:0 8px; padding:5px 12px; background:#F9FAFB; border-bottom:1px solid #EAECF0; font-size:8px; font-weight:600; color:#667085; text-transform:uppercase; letter-spacing:0.05em;"><span>ID</span><span>Name</span><span>Description</span><span>Importance</span></div>
+              <div style="display:grid; grid-template-columns:52px 1fr 1.5fr 64px; gap:0 8px; padding:5px 12px; border-bottom:1px solid #F2F4F7; font-size:9px;"><span style="font-family:'JetBrains Mono',monospace; color:#667085;">CAP-001</span><span style="font-weight:600;">Customer Management</span><span style="color:#667085; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">Acquiring, serving, and retaining energy customers.</span><span style="font-size:8px; background:#EFF6FF; color:#1D4ED8; padding:1px 5px; justify-self:start;">differentiating</span></div>
+              <div style="display:grid; grid-template-columns:52px 1fr 1.5fr 64px; gap:0 8px; padding:5px 12px; border-bottom:1px solid #F2F4F7; font-size:9px;"><span style="font-family:'JetBrains Mono',monospace; color:#667085;">CAP-002</span><span style="font-weight:600;">Energy Generation</span><span style="color:#667085; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">Producing energy from conventional and renewable sources.</span><span style="font-size:8px; background:#F5F3FF; color:#6D28D9; padding:1px 5px; justify-self:start;">strategic</span></div>
+              <div style="display:grid; grid-template-columns:52px 1fr 1.5fr 64px; gap:0 8px; padding:5px 12px; border-bottom:1px solid #F2F4F7; font-size:9px;"><span style="font-family:'JetBrains Mono',monospace; color:#667085;">CAP-003</span><span style="font-weight:600;">Energy Trading &amp; Risk</span><span style="color:#667085; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">Buying, selling, and hedging energy products.</span><span style="font-size:8px; background:#F5F3FF; color:#6D28D9; padding:1px 5px; justify-self:start;">strategic</span></div>
+              <div style="display:grid; grid-template-columns:52px 1fr 1.5fr 64px; gap:0 8px; padding:5px 12px; font-size:9px;"><span style="font-family:'JetBrains Mono',monospace; color:#667085;">CAP-004</span><span style="font-weight:600;">Network Operations</span><span style="color:#667085; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">Operating transmission and distribution networks.</span><span style="font-size:8px; background:#EFF6FF; color:#1D4ED8; padding:1px 5px; justify-self:start;">differentiating</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; left:-22px; bottom:-18px; background:#FFFFFF; border:1px solid #EAECF0; box-shadow:0 12px 16px -4px rgba(16,24,40,0.08); padding:10px 14px; display:flex; align-items:center; gap:10px;">
+          <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2zM2 5h10M5 5v7" stroke="#004EEB" stroke-width="1.25"></path></svg>
+          <div><p style="margin:0; font-size:11px; font-weight:600; color:#101828;">ADR-014 · Accepted</p><p style="margin:1px 0 0; font-size:10px; color:#667085;">7 dimensions analysed · human approved</p></div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid #EAECF0; background:#FFFFFF;">
+      <div style="max-width:1200px; margin:0 auto; padding:14px 32px; display:flex; align-items:center; justify-content:center; gap:28px; font-size:12px; font-weight:500; color:#667085; flex-wrap:wrap;">
+        <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#98A2B3;">Five architecture domains</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; background:#8B5CF6;"></span>Business</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; background:#3B82F6;"></span>Data</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; background:#F59E0B;"></span>Application</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; background:#10B981;"></span>Integration</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:8px; height:8px; background:#F43F5E;"></span>Solution</span>
+        <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#98A2B3;">· Three abstraction layers · Four output formats</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Three pillars ══ -->
+  <section data-screen-label="Pillars" style="background:#F9FAFB; border-bottom:1px solid #EAECF0;">
+    <div style="max-width:1200px; margin:0 auto; padding:72px 32px;">
+      <p style="margin:0; font-size:12px; font-weight:600; color:#004EEB; text-transform:uppercase; letter-spacing:0.08em;">Why Pickle</p>
+      <h2 style="margin:10px 0 0; font-size:32px; font-weight:700; letter-spacing:-0.01em; color:#101828; max-width:24ch; text-wrap:balance;">A working architecture repository, not slideware</h2>
+      <p style="margin:12px 0 0; font-size:15px; color:#475467; max-width:62ch;">Every artefact is live, structured, and rendered directly from the Git repository. Nothing goes stale in a deck.</p>
+      <div style="margin-top:40px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #155EEF; padding:26px; display:flex; flex-direction:column; gap:12px;">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><path d="M6 5l-4 5 4 5M14 5l4 5-4 5M11.5 3l-3 14" stroke="#155EEF" stroke-width="1.5" stroke-linecap="square"></path></svg>
+          <h3 style="margin:0; font-size:17px; font-weight:600; color:#101828;">Architecture as Code</h3>
+          <p style="margin:0; font-size:13.5px; line-height:1.6; color:#475467; flex:1;">Enterprise architecture stored as structured, version-controlled data — not documents or spreadsheets. Every artefact is machine-readable JSON, validated against a schema. Changes require a formal Decision Record: no undocumented drift. Query, diff, and compare architecture state like source code.</p>
+          <p style="margin:0; padding:12px 14px; background:#EFF4FF; font-size:12.5px; line-height:1.5; color:#00359E;">Pickle gives you a structured, schema-validated architecture repository from day one.</p>
+        </div>
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #7C3AED; padding:26px; display:flex; flex-direction:column; gap:12px;">
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="none"><rect x="3" y="5" width="10" height="8" stroke="#7C3AED" stroke-width="1.25"></rect><path d="M8 2v3M5.5 9h.01M10.5 9h.01M1.5 8v2M14.5 8v2" stroke="#7C3AED" stroke-width="1.25" stroke-linecap="round"></path><circle cx="8" cy="2" r="0.9" fill="#7C3AED"></circle></svg>
+          <h3 style="margin:0; font-size:17px; font-weight:600; color:#101828;">Agentic AI Architecture</h3>
+          <p style="margin:0; font-size:13.5px; line-height:1.6; color:#475467; flex:1;">AI agents actively participate in the process, analysing and validating changes alongside your architects. Every decision is analysed across seven dimensions before it reaches a human. Analysis is structured and traceable — not free-form commentary. The human stays in the loop: AI informs, architects decide.</p>
+          <p style="margin:0; padding:12px 14px; background:#F5F3FF; font-size:12.5px; line-height:1.5; color:#5B21B6;">Every decision gets automated analysis before it reaches your architects.</p>
+        </div>
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #E11D48; padding:26px; display:flex; flex-direction:column; gap:12px;">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5l7-3z" stroke="#E11D48" stroke-width="1.5" stroke-linejoin="miter"></path><path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="#E11D48" stroke-width="1.5" stroke-linecap="square"></path></svg>
+          <h3 style="margin:0; font-size:17px; font-weight:600; color:#101828;">Architectural Governance</h3>
+          <p style="margin:0; font-size:13.5px; line-height:1.6; color:#475467; flex:1;">A governed, traceable process for changing your architecture, driven by Decision Records and enforced through code review. Every change is justified in an Architecture Decision Record; Git history provides an immutable audit trail. Strategy, principles and guardrails are codified — not just documented.</p>
+          <p style="margin:0; padding:12px 14px; background:#FFF1F2; font-size:12.5px; line-height:1.5; color:#9F1239;">The rigour of decision records with the practicality of pull requests.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ The model ══ -->
+  <section data-screen-label="The architecture model" style="background:#FFFFFF; border-bottom:1px solid #EAECF0;">
+    <div style="max-width:1200px; margin:0 auto; padding:72px 32px;">
+      <p style="margin:0; font-size:12px; font-weight:600; color:#004EEB; text-transform:uppercase; letter-spacing:0.08em;">The architecture model</p>
+      <h2 style="margin:10px 0 0; font-size:32px; font-weight:700; letter-spacing:-0.01em; color:#101828; max-width:30ch; text-wrap:balance;">Five domains · Three abstraction layers · Four output formats</h2>
+      <p style="margin:12px 0 0; font-size:15px; color:#475467; max-width:70ch;">Every piece of architecture content sits at the intersection of three axes. Domain answers "which part of the organisation", abstraction layer answers "how much detail", and format answers "what kind of content".</p>
+
+      <div style="margin-top:40px; display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
+        <div style="border:1px solid #EAECF0; border-top:3px solid #8B5CF6; padding:18px; display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#98A2B3;">BUS</span>
+          <h3 style="margin:0; font-size:15px; font-weight:600; color:#6D28D9;">Business</h3>
+          <p style="margin:0; font-size:12px; line-height:1.55; color:#667085;">The organisation's capabilities, processes, and operating model: what the business does and why.</p>
+        </div>
+        <div style="border:1px solid #EAECF0; border-top:3px solid #3B82F6; padding:18px; display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#98A2B3;">DAT</span>
+          <h3 style="margin:0; font-size:15px; font-weight:600; color:#1D4ED8;">Data</h3>
+          <p style="margin:0; font-size:12px; line-height:1.55; color:#667085;">The data assets, structures, and governance that support business operations.</p>
+        </div>
+        <div style="border:1px solid #EAECF0; border-top:3px solid #F59E0B; padding:18px; display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#98A2B3;">APP</span>
+          <h3 style="margin:0; font-size:15px; font-weight:600; color:#B45309;">Application</h3>
+          <p style="margin:0; font-size:12px; line-height:1.55; color:#667085;">The software applications and platforms that deliver business capabilities.</p>
+        </div>
+        <div style="border:1px solid #EAECF0; border-top:3px solid #10B981; padding:18px; display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#98A2B3;">INT</span>
+          <h3 style="margin:0; font-size:15px; font-weight:600; color:#047857;">Integration</h3>
+          <p style="margin:0; font-size:12px; line-height:1.55; color:#667085;">How systems and services connect and communicate: APIs, events, messaging.</p>
+        </div>
+        <div style="border:1px solid #EAECF0; border-top:3px solid #F43F5E; padding:18px; display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#98A2B3;">SOL</span>
+          <h3 style="margin:0; font-size:15px; font-weight:600; color:#BE123C;">Solution</h3>
+          <p style="margin:0; font-size:12px; line-height:1.55; color:#667085;">Joined-up designs that span multiple domains to address a specific need.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+        <div style="background:#F9FAFB; border:1px solid #EAECF0; padding:18px;">
+          <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; font-weight:600; padding:2px 7px; background:#1D2939; color:#FFFFFF;">What &amp; Why</span><h3 style="margin:0; font-size:14px; font-weight:600;">Conceptual</h3></div>
+          <p style="margin:8px 0 0; font-size:12.5px; line-height:1.55; color:#667085;">Sets direction and intent: what the architecture needs to achieve and why, without any technology choices.</p>
+        </div>
+        <div style="background:#F9FAFB; border:1px solid #EAECF0; padding:18px;">
+          <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; font-weight:600; padding:2px 7px; background:#1D2939; color:#FFFFFF;">How</span><h3 style="margin:0; font-size:14px; font-weight:600;">Logical</h3></div>
+          <p style="margin:8px 0 0; font-size:12.5px; line-height:1.55; color:#667085;">The rules and principles that guide design decisions, without committing to any specific tool or product.</p>
+        </div>
+        <div style="background:#F9FAFB; border:1px solid #EAECF0; padding:18px;">
+          <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:10px; font-weight:600; padding:2px 7px; background:#1D2939; color:#FFFFFF;">Where &amp; With What</span><h3 style="margin:0; font-size:14px; font-weight:600;">Physical</h3></div>
+          <p style="margin:8px 0 0; font-size:12.5px; line-height:1.55; color:#667085;">The concrete standards and technology decisions that govern how the architecture is built and operated.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+        <div style="border:1px solid #EAECF0; padding:16px 18px; display:flex; gap:12px; align-items:flex-start;">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="flex-shrink:0; margin-top:2px;"><path d="M3 5h14M3 10h14M3 15h8" stroke="#475467" stroke-width="1.5" stroke-linecap="round"></path></svg>
+          <div><h3 style="margin:0; font-size:13.5px; font-weight:600;">Catalogues</h3><p style="margin:4px 0 0; font-size:12px; line-height:1.5; color:#667085;">Structured lists of architecture entities, validated by JSON Schema.</p></div>
+        </div>
+        <div style="border:1px solid #EAECF0; padding:16px 18px; display:flex; gap:12px; align-items:flex-start;">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="flex-shrink:0; margin-top:2px;"><path d="M3 15L7 9l3 4 3-6 4 6" stroke="#475467" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <div><h3 style="margin:0; font-size:13.5px; font-weight:600;">Diagrams</h3><p style="margin:4px 0 0; font-size:12px; line-height:1.5; color:#667085;">Visual representations of entities and relationships, rendered live from the repository.</p></div>
+        </div>
+        <div style="border:1px solid #EAECF0; padding:16px 18px; display:flex; gap:12px; align-items:flex-start;">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="flex-shrink:0; margin-top:2px;"><path d="M5 2h7l4 4v12H5V2z" stroke="#475467" stroke-width="1.5" stroke-linejoin="round"></path><path d="M7 9h6M7 12h6M7 15h4" stroke="#475467" stroke-width="1.5" stroke-linecap="round"></path></svg>
+          <div><h3 style="margin:0; font-size:13.5px; font-weight:600;">Documents</h3><p style="margin:4px 0 0; font-size:12px; line-height:1.5; color:#667085;">Structured narrative content with multiple named instances: visions, intents, designs, specs.</p></div>
+        </div>
+        <div style="border:1px solid #EAECF0; padding:16px 18px; display:flex; gap:12px; align-items:flex-start;">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="flex-shrink:0; margin-top:2px;"><rect x="3" y="3" width="6" height="6" stroke="#475467" stroke-width="1.5"></rect><rect x="11" y="3" width="6" height="6" stroke="#475467" stroke-width="1.5"></rect><rect x="3" y="11" width="6" height="6" stroke="#475467" stroke-width="1.5"></rect><rect x="11" y="11" width="6" height="6" stroke="#475467" stroke-width="1.5"></rect></svg>
+          <div><h3 style="margin:0; font-size:13.5px; font-weight:600;">Matrices</h3><p style="margin:4px 0 0; font-size:12px; line-height:1.5; color:#667085;">Grids mapping relationships between entity sets, spanning layers and domains.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Foundation band (dark) ══ -->
+  <section data-screen-label="Strategy Principles Guardrails" style="background:linear-gradient(120deg,#00359E 0%,#3538CD 55%,#9F1239 130%); color:#FFFFFF;">
+    <div style="max-width:1200px; margin:0 auto; padding:64px 32px;">
+      <p style="margin:0; font-size:12px; font-weight:600; color:#B2CCFF; text-transform:uppercase; letter-spacing:0.08em;">The foundation, defined by your architects</p>
+      <h2 style="margin:10px 0 0; font-size:32px; font-weight:700; letter-spacing:-0.01em; max-width:26ch; text-wrap:balance;">Strategy, Principles &amp; Guardrails</h2>
+      <p style="margin:12px 0 0; font-size:15px; color:rgba(255,255,255,0.75); max-width:68ch;">Three artefacts are the spine of the whole model: one per abstraction layer, in every domain. Your architects author them; the agents only check that changes respect them. This is where human judgement sets the rules.</p>
+      <div style="margin-top:36px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16); padding:22px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,0.6);">&lt;DOM&gt;-STR</span><span style="font-size:10px; font-weight:600; padding:2px 8px; background:rgba(255,255,255,0.18);">Conceptual</span></div>
+          <h3 style="margin:12px 0 0; font-size:17px; font-weight:600;">Strategy</h3>
+          <p style="margin:4px 0 0; font-size:12px; font-weight:600; color:#B2CCFF;">What &amp; why</p>
+          <p style="margin:10px 0 0; font-size:13px; line-height:1.55; color:rgba(255,255,255,0.75);">The outcomes the architecture must achieve, per domain. Sets direction for everything below.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16); padding:22px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,0.6);">&lt;DOM&gt;-PRN</span><span style="font-size:10px; font-weight:600; padding:2px 8px; background:rgba(255,255,255,0.18);">Logical</span></div>
+          <h3 style="margin:12px 0 0; font-size:17px; font-weight:600;">Principles</h3>
+          <p style="margin:4px 0 0; font-size:12px; font-weight:600; color:#B2CCFF;">How we decide</p>
+          <p style="margin:10px 0 0; font-size:13px; line-height:1.55; color:rgba(255,255,255,0.75);">The vendor-neutral rules that shape design choices — the architects' guidance, codified.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16); padding:22px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,0.6);">&lt;DOM&gt;-GRD</span><span style="font-size:10px; font-weight:600; padding:2px 8px; background:rgba(255,255,255,0.18);">Physical</span></div>
+          <h3 style="margin:12px 0 0; font-size:17px; font-weight:600;">Guardrails</h3>
+          <p style="margin:4px 0 0; font-size:12px; font-weight:600; color:#B2CCFF;">What we never cross</p>
+          <p style="margin:10px 0 0; font-size:13px; line-height:1.55; color:rgba(255,255,255,0.75);">The non-negotiable constraints and minimum standards. A breach blocks the change.</p>
+        </div>
+      </div>
+      <p style="margin:26px 0 0; font-size:13px; color:rgba(255,255,255,0.6);">Five domains × three layers = <strong style="color:#FFFFFF;">15 foundation artefacts</strong> that define the guardrails the rest of the architecture lives within.</p>
+    </div>
+  </section>
+
+  <!-- ══ Analysis pipeline ══ -->
+  <section data-screen-label="Analysis pipeline" style="background:#FFFFFF; border-bottom:1px solid #EAECF0;">
+    <div style="max-width:1200px; margin:0 auto; padding:72px 32px;">
+      <p style="margin:0; font-size:12px; font-weight:600; color:#004EEB; text-transform:uppercase; letter-spacing:0.08em;">The analysis pipeline</p>
+      <h2 style="margin:10px 0 0; font-size:32px; font-weight:700; letter-spacing:-0.01em; max-width:28ch; text-wrap:balance;">Every decision, analysed across seven dimensions</h2>
+      <p style="margin:12px 0 0; font-size:15px; color:#475467; max-width:70ch;">When a decision is proposed, seven AI analysis steps run in sequence against the current architecture state. Each writes structured findings into the Decision Record — for architects to accept or decline. Nothing merges until a human says so.</p>
+      <div style="margin-top:40px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+        <sc-for list="{{ dimensions }}" as="d" hint-placeholder-count="8">
+          <div style="border:1px solid #EAECF0; padding:18px; display:flex; flex-direction:column; gap:8px; background:{{ d.bg }};">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:#98A2B3;">{{ d.num }}</span>
+              <span style="font-size:10px; font-weight:600; padding:2px 8px; background:{{ d.tagBg }}; color:{{ d.tagColor }};">{{ d.tag }}</span>
+            </div>
+            <h3 style="margin:0; font-size:14px; font-weight:600; color:#101828;">{{ d.name }}</h3>
+            <p style="margin:0; font-size:12px; font-weight:500; color:#004EEB;">{{ d.q }}</p>
+            <p style="margin:0; font-size:12px; line-height:1.5; color:#667085;">{{ d.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Frameworks ══ -->
+  <section data-screen-label="Frameworks" style="background:#F9FAFB; border-bottom:1px solid #EAECF0;">
+    <div style="max-width:1200px; margin:0 auto; padding:72px 32px;">
+      <p style="margin:0; font-size:12px; font-weight:600; color:#004EEB; text-transform:uppercase; letter-spacing:0.08em;">Works with your framework</p>
+      <h2 style="margin:10px 0 0; font-size:32px; font-weight:700; letter-spacing:-0.01em;">Aligned to TOGAF, SAFe, Zachman &amp; UAF</h2>
+      <p style="margin:12px 0 0; font-size:15px; color:#475467; max-width:66ch;">Pickle isn't a rival method. It's the repository the methods you already use are crying out for: its domains, layers, and formats map straight onto the frameworks your architects work in.</p>
+      <div style="margin-top:36px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #155EEF; padding:20px;">
+          <p style="margin:0; font-size:15px; font-weight:700; color:#101828;">TOGAF <span style="font-size:11px; font-weight:500; color:#98A2B3;">10 / ADM</span></p>
+          <p style="margin:8px 0 12px; font-size:12.5px; color:#475467;">A TOGAF Architecture Repository, as versioned data.</p>
+          <div style="display:flex; flex-direction:column; gap:5px; font-size:12px; color:#667085;">
+            <span>· Architecture Repository as versioned data</span>
+            <span>· Business / Data / Application domains</span>
+            <span>· ADR-driven change management &amp; governance</span>
+            <span>· Building blocks across abstraction layers</span>
+          </div>
+        </div>
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #7C3AED; padding:20px;">
+          <p style="margin:0; font-size:15px; font-weight:700; color:#101828;">SAFe <span style="font-size:11px; font-weight:500; color:#98A2B3;">6.0</span></p>
+          <p style="margin:8px 0 12px; font-size:12.5px; color:#475467;">A SAFe Solution Intent store.</p>
+          <div style="display:flex; flex-direction:column; gap:5px; font-size:12px; color:#667085;">
+            <span>· Solution Intent, the document chain</span>
+            <span>· Architectural enablers as Decision Records</span>
+            <span>· Capabilities &amp; features</span>
+            <span>· PI / release baselines as transitions</span>
+          </div>
+        </div>
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #047857; padding:20px;">
+          <p style="margin:0; font-size:15px; font-weight:700; color:#101828;">Zachman <span style="font-size:11px; font-weight:500; color:#98A2B3;">v3</span></p>
+          <p style="margin:8px 0 12px; font-size:12.5px; color:#475467;">The interrogatives, as a model.</p>
+          <div style="display:flex; flex-direction:column; gap:5px; font-size:12px; color:#667085;">
+            <span>· What → Data domains &amp; concepts</span>
+            <span>· How → Business processes</span>
+            <span>· Why → Strategy &amp; principles</span>
+            <span>· Perspectives → Conceptual / Logical / Physical</span>
+          </div>
+        </div>
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; border-top:3px solid #E11D48; padding:20px;">
+          <p style="margin:0; font-size:15px; font-weight:700; color:#101828;">UAF <span style="font-size:11px; font-weight:500; color:#98A2B3;">1.2</span></p>
+          <p style="margin:8px 0 12px; font-size:12.5px; color:#475467;">The model kinds, as formats.</p>
+          <div style="display:flex; flex-direction:column; gap:5px; font-size:12px; color:#667085;">
+            <span>· Taxonomy → Catalogues</span>
+            <span>· Connectivity &amp; traceability → Matrices</span>
+            <span>· Structure &amp; processes → Diagrams</span>
+            <span>· Operational domains → the five domains</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Discovery band ══ -->
+  <section data-screen-label="Discovery" style="background:#FFFFFF; border-bottom:1px solid #EAECF0;">
+    <div style="max-width:1200px; margin:0 auto; padding:72px 32px; display:grid; grid-template-columns:1.2fr 0.8fr; gap:48px; align-items:center;">
+      <div>
+        <p style="margin:0; font-size:12px; font-weight:600; color:#004EEB; text-transform:uppercase; letter-spacing:0.08em;">Virtual Architect Agent</p>
+        <h2 style="margin:10px 0 0; font-size:32px; font-weight:700; letter-spacing:-0.01em; max-width:24ch; text-wrap:balance;">Architecture Discovery: interrogate your architecture</h2>
+        <p style="margin:12px 0 0; font-size:15px; color:#475467; max-width:62ch;">Discovery turns the repository into something you can question. Raise a discovery, and the Virtual Architect Agent reads the model to answer it — producing a view you can keep.</p>
+        <div style="margin-top:22px; display:flex; flex-direction:column; gap:10px; font-size:14px; color:#344054;">
+          <div style="display:flex; align-items:baseline; gap:10px;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span>Ask questions in plain language — the agent reads the architecture as structured data, not screenshots.</span></div>
+          <div style="display:flex; align-items:baseline; gap:10px;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span>Produces point-in-time views: dependency traces, impact maps, gap analyses — scoped to a domain or artefact.</span></div>
+          <div style="display:flex; align-items:baseline; gap:10px;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0; transform:translateY(2px);"><path d="M2 7l3.5 3.5L12 3" stroke="#17B26A" stroke-width="2" stroke-linecap="square"></path></svg><span>Every discovery is captured as a record: title, context, and request — the question and its answer are versioned.</span></div>
+        </div>
+      </div>
+      <div style="background:#F9FAFB; border:1px solid #EAECF0; padding:22px; display:flex; flex-direction:column; gap:14px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="width:32px; height:32px; background:linear-gradient(120deg,#004EEB,#7C3AED); display:inline-flex; align-items:center; justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="5" width="10" height="8" stroke="#FFFFFF" stroke-width="1.25"></rect><path d="M8 2v3M5.5 9h.01M10.5 9h.01M1.5 8v2M14.5 8v2" stroke="#FFFFFF" stroke-width="1.25" stroke-linecap="round"></path><circle cx="8" cy="2" r="0.9" fill="#FFFFFF"></circle></svg>
+          </span>
+          <div><p style="margin:0; font-size:13px; font-weight:600;">Virtual Architect Agent</p><p style="margin:0; font-size:11px; color:#667085;">Discovery · read-only</p></div>
+        </div>
+        <div style="background:#FFFFFF; border:1px solid #EAECF0; padding:12px 14px; font-size:13px; color:#344054;">Which platforms would be affected if we split the Retail &amp; Billing capability?</div>
+        <div style="background:#EFF4FF; border:1px solid #D1E0FF; padding:12px 14px; font-size:12.5px; line-height:1.55; color:#00359E;">3 platforms support CAP-006 today: <strong>PLAT-BIL</strong>, <strong>PLAT-CRM</strong>, <strong>PLAT-MDM</strong> — via 7 interfaces in INT-IFC. A split would also touch 2 committed decisions…</div>
+        <span style="font-size:11px; color:#98A2B3;">Saved as DSC-004 · point-in-time view · nothing changed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Final CTA ══ -->
+  <section data-screen-label="Final CTA" style="background:#F9FAFB;">
+    <div style="max-width:1200px; margin:0 auto; padding:72px 32px; text-align:center;">
+      <h2 style="margin:0; font-size:30px; font-weight:700; letter-spacing:-0.01em;">See it in action</h2>
+      <p style="margin:10px 0 0; font-size:15px; color:#475467;">Browse a worked architecture and the governed decision workflow.</p>
+      <div style="margin-top:24px; display:flex; justify-content:center; gap:12px;">
+        <a href="#" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 22px; background:#155EEF; color:#FFFFFF; font-size:14px; font-weight:600;" style-hover="background:#004EEB; color:#FFFFFF;">View Architectures
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path></svg>
+        </a>
+      </div>
+    </div>
+    <footer style="border-top:1px solid #EAECF0; padding:12px 32px; display:flex; align-items:center; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#667085;">
+      <span style="font-weight:600;">v0.6.0-alpha</span><span style="color:#D0D5DD;">·</span><span>dan-eastley / pickle</span><span>production</span>
+    </footer>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1440, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  renderVals() {
+    const dim = (num, name, tag, q, desc) => {
+      const tags = {
+        Conceptual: { bg: '#EFF4FF', c: '#004EEB' },
+        Logical: { bg: '#FFFAEB', c: '#B54708' },
+        Physical: { bg: '#FFF1F2', c: '#BE123C' },
+        Human: { bg: '#1D2939', c: '#FFFFFF' },
+      }
+      const t = tags[tag]
+      return { num, name, tag, q, desc, tagBg: t.bg, tagColor: t.c, bg: tag === 'Human' ? '#F9FAFB' : '#FFFFFF' }
+    }
+    return {
+      dimensions: [
+        dim('01', 'Impact Assessment', 'Conceptual', 'What does this change actually touch?', 'Identifies the artefacts, domains and abstraction layers affected — the full blast radius of the decision.'),
+        dim('02', 'Referential Integrity', 'Conceptual', 'Does the model stay consistent?', 'Checks every reference, ID and index the change relies on, so the architecture model never dangles or breaks.'),
+        dim('03', 'Strategy Alignment', 'Conceptual', 'Does it serve the strategy?', 'Tests the decision against each affected domain\u2019s documented strategic goals, the what and why.'),
+        dim('04', 'Principles Alignment', 'Logical', 'Does it follow the principles?', 'Assesses the decision against the architecture principles that guide how design choices are made.'),
+        dim('05', 'Guardrails Alignment', 'Physical', 'Does it stay inside the lines?', 'Verifies compliance with each domain\u2019s non-negotiable rules and minimum standards. A breach is a blocking issue.'),
+        dim('06', 'Proponent Analysis', 'Logical', 'What is the strongest case for?', 'An agent argues for the change at its best: benefits, opportunities, and the cost of not acting.'),
+        dim('07', 'Challenger Analysis', 'Logical', 'What could the case against be?', 'A second agent stress-tests the change: risks, gaps and unstated assumptions before a human ever reads it.'),
+        dim('✓', 'Human review', 'Human', 'Architects accept or decline.', 'Analysis informs, it never decides. Findings are structured and traceable; the decision stays with your architects.'),
+      ],
+    }
+  }
+}
+</script>
+</body>
+</html>

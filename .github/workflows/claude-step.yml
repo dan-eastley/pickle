@@ -107,8 +107,14 @@ jobs:
                  lives under architectures/${{ env.CLIENT_ID }}/${{ env.VERSION_ID }}/domains/,
                  schemas under config/schemas/.
               4. Follow the prompt's task exactly, including the output format it specifies.
-              5. Write your result into the decision JSON's `${{ env.SECTION_KEY }}` property
-                 using the Edit or Write tool.
+              5. Write your result (the findings array) into the decision JSON's
+                 `${{ env.SECTION_KEY }}` property using the Edit or Write tool.
+              6. Also write a concise plain-language overview into the
+                 `${{ env.SECTION_KEY }}-summary` property (a single string). Use 3–6
+                 short markdown bullets (`- ` per line) that a reader can scan before
+                 the detailed findings table — lead with the overall verdict, then the
+                 material points. Do not repeat every finding verbatim; synthesise.
+                 Keep it under ~600 characters. No AI/Claude attribution.
 
             Do not commit or push — the workflow handles that.
 

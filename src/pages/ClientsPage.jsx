@@ -33,6 +33,11 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">
             {name}
           </h3>
+          {m && (
+            <p className="text-xs text-gray-500">
+              {m.versions} {m.versions === 1 ? 'transition' : 'transitions'}
+            </p>
+          )}
         </div>
         {canEdit && (
           <button

@@ -25,7 +25,7 @@ export default function RegisterPage() {
     e.preventDefault()
     setError(null)
     setSubmitting(true)
-    const { error: err } = await signUp.email({
+    const { data, error: err } = await signUp.email({
       email: form.email,
       password: form.password,
       name: `${form.firstName} ${form.lastName}`.trim(),
@@ -37,8 +37,10 @@ export default function RegisterPage() {
       setError(err.message ?? 'Registration failed')
       return
     }
-    // autoSignIn is on, so land in the app.
-    navigate('/architectures', { replace: true })
+    // If a session came back, verification isn't enforced (no mail provider) —
+    // go straight in. Otherwise a 6-digit code was emailed: go verify.
+    if (data?.token) navigate('/architectures', { replace: true })
+    else navigate('/verify-email', { replace: true, state: { email: form.email } })
   }
 
   return (

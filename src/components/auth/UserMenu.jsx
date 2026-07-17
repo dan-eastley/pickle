@@ -73,10 +73,18 @@ export default function UserMenu() {
               </p>
             )}
           </div>
+          <Link
+            role="menuitem"
+            to="/account"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Account settings
+          </Link>
           <button
             role="menuitem"
             onClick={onSignOut}
-            className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 border-t border-gray-100 transition-colors"
           >
             Sign out
           </button>

@@ -4,6 +4,7 @@ import { getArtefact, DOMAIN_COLORS } from '../lib/artefacts'
 import { getArtefactData, getSchema } from '../lib/api'
 import { useArchitecture } from '../context/ArchitectureContext'
 import CatalogueView from '../components/artefacts/CatalogueView'
+import EntityPanel from '../components/artefacts/EntityPanel'
 import MatrixView from '../components/artefacts/MatrixView'
 import DiagramView from '../components/artefacts/DiagramView'
 import DocumentView, { DocumentSelector } from '../components/artefacts/DocumentView'
@@ -277,6 +278,7 @@ export default function ArtefactPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [docIdx, setDocIdx] = useState(0)
+  const [catEntityId, setCatEntityId] = useState(null) // catalogue name → entity pop-out ([UI-19])
 
   const artefact = getArtefact(artefactId)
   usePageTitle(artefact?.name ?? null)
@@ -440,7 +442,17 @@ export default function ArtefactPage() {
             </div>
           </div>
           <div ref={diagramRef}>
-            {artefact.format === 'catalogue' && <CatalogueView data={data} schema={schema} />}
+            {artefact.format === 'catalogue' && (
+              <>
+                <CatalogueView data={data} schema={schema} onOpenEntity={setCatEntityId} />
+                <EntityPanel
+                  entityId={catEntityId}
+                  clientId={clientId ?? selectedClientId}
+                  versionId={versionId ?? selectedVersionId}
+                  onClose={() => setCatEntityId(null)}
+                />
+              </>
+            )}
             {artefact.format === 'matrix' && (
               <MatrixView
                 data={data}
@@ -469,7 +481,10 @@ export default function ArtefactPage() {
               />
             )}
           </div>
-          <ActivityHistory activity={data.activity} />
+          <ActivityHistory
+            activity={data.activity}
+            decisionBase={`/architectures/${clientId ?? selectedClientId}/${versionId ?? selectedVersionId}/decisions`}
+          />
         </>
       )}
     </div>
