@@ -61,7 +61,10 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
 // ── Shared branded layout ────────────────────────────────────────────────────
 
 const esc = (s: string) =>
-  String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!)
+  String(s).replace(
+    /[&<>"]/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!
+  )
 
 function layout(opts: { heading: string; body: string; preview?: string }): string {
   const { heading, body, preview = '' } = opts
@@ -139,7 +142,11 @@ export function sendWelcomeEmail(to: string, firstName?: string): Promise<SendRe
     </ul>
     ${button(`${appUrl()}/architectures`, 'Open Pickle')}
     <p style="margin:0;">Glad to have you on board.</p>`
-  return sendEmail(to, 'Welcome to Pickle', layout({ heading: 'Welcome to Pickle', body, preview: 'Your Pickle account is ready.' }))
+  return sendEmail(
+    to,
+    'Welcome to Pickle',
+    layout({ heading: 'Welcome to Pickle', body, preview: 'Your Pickle account is ready.' })
+  )
 }
 
 export type OtpType = 'sign-in' | 'email-verification' | 'forget-password' | 'change-email'
@@ -160,14 +167,22 @@ export function sendOtpEmail(to: string, otp: string, type: OtpType): Promise<Se
   const body = `<p style="margin:0 0 4px;">${intro[type]}</p>
     ${codeBlock(otp)}
     <p style="margin:0;color:#98A2B3;font-size:13px;">This code expires in 10 minutes. If you didn't request it, you can safely ignore this email.</p>`
-  return sendEmail(to, `${headings[type]} — ${otp}`, layout({ heading: headings[type], body, preview: `Your Pickle code is ${otp}` }))
+  return sendEmail(
+    to,
+    `${headings[type]} — ${otp}`,
+    layout({ heading: headings[type], body, preview: `Your Pickle code is ${otp}` })
+  )
 }
 
 export function sendResetPasswordEmail(to: string, url: string): Promise<SendResult> {
   const body = `<p style="margin:0 0 12px;">We received a request to reset your Pickle password. Click below to choose a new one:</p>
     ${button(url, 'Reset password')}
     <p style="margin:0;color:#98A2B3;font-size:13px;">This link expires in 1 hour. If you didn't request a reset, you can ignore this email — your password won't change.</p>`
-  return sendEmail(to, 'Reset your Pickle password', layout({ heading: 'Reset your password', body, preview: 'Reset your Pickle password.' }))
+  return sendEmail(
+    to,
+    'Reset your Pickle password',
+    layout({ heading: 'Reset your password', body, preview: 'Reset your Pickle password.' })
+  )
 }
 
 export function sendInviteEmail(
@@ -183,6 +198,10 @@ export function sendInviteEmail(
   return sendEmail(
     to,
     `You've been invited to the ${opts.architectureName} architecture on Pickle`,
-    layout({ heading: `You're invited to ${esc(opts.architectureName)}`, body, preview: `${opts.role} access on Pickle.` })
+    layout({
+      heading: `You're invited to ${esc(opts.architectureName)}`,
+      body,
+      preview: `${opts.role} access on Pickle.`,
+    })
   )
 }

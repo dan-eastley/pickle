@@ -4,7 +4,11 @@ import Button from '../ui/Button'
 import Spinner from '../ui/Spinner'
 
 const ROLES = [
-  { value: 'owner', label: 'Owner', hint: 'Edit content + settings, manage transitions and access' },
+  {
+    value: 'owner',
+    label: 'Owner',
+    hint: 'Edit content + settings, manage transitions and access',
+  },
   { value: 'contributor', label: 'Contributor', hint: 'Create decisions, discoveries and scouts' },
   { value: 'consumer', label: 'Consumer', hint: 'View only' },
 ]

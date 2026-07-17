@@ -106,11 +106,19 @@ export default function ProfilePage() {
         <div className="grid sm:grid-cols-2 gap-4">
           <label className="block">
             <span className={labelCls}>First name</span>
-            <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputCls} />
+            <input
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className={inputCls}
+            />
           </label>
           <label className="block">
             <span className={labelCls}>Last name</span>
-            <input value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputCls} />
+            <input
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className={inputCls}
+            />
           </label>
         </div>
         <label className="block">
@@ -173,11 +181,7 @@ export default function ProfilePage() {
         </div>
         <Status msg={pwMsg} />
         <div className="flex justify-end">
-          <Button
-            type="submit"
-            size="sm"
-            disabled={savingPw || !currentPassword || !newPassword}
-          >
+          <Button type="submit" size="sm" disabled={savingPw || !currentPassword || !newPassword}>
             {savingPw ? 'Changing…' : 'Change password'}
           </Button>
         </div>

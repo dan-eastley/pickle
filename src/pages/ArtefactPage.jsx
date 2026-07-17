@@ -16,6 +16,7 @@ import DomainIcon from '../components/ui/DomainIcon'
 import JsonPreview from '../components/ui/JsonPreview'
 import ShareLink from '../components/ui/ShareLink'
 import { extractContentItems } from '../lib/metrics'
+import { formatDate } from '../lib/format'
 import ActivityHistory from '../components/common/ActivityHistory'
 import PageActionBar from '../components/ui/PageActionBar'
 import StatsBar from '../components/ui/StatsBar'
@@ -93,7 +94,15 @@ function ArtefactDownload({ artefact, schema, data, selectedDocument, diagramRef
   return null
 }
 
-function AdrActionBar({ artefact, schema, data, documents, selectedDocument, clientId, versionId }) {
+function AdrActionBar({
+  artefact,
+  schema,
+  data,
+  documents,
+  selectedDocument,
+  clientId,
+  versionId,
+}) {
   const [decisionOpen, setDecisionOpen] = useState(false)
   const [discoveryOpen, setDiscoveryOpen] = useState(false)
   const viewDecisionsUrl = `/architectures/${clientId}/${versionId}/decisions?domain=${artefact.domain}&abstraction=${artefact.abstraction}&artefact=${artefact.id}`
@@ -113,7 +122,7 @@ function AdrActionBar({ artefact, schema, data, documents, selectedDocument, cli
   }
   const lastActivity = data?.activity?.[data.activity.length - 1]
   const updatedMeta = lastActivity
-    ? `Updated ${new Date(lastActivity.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}${lastActivity.who ? ` by ${lastActivity.who}` : ''}`
+    ? `Updated ${formatDate(lastActivity.timestamp)}${lastActivity.who ? ` by ${lastActivity.who}` : ''}`
     : null
 
   return (
@@ -137,7 +146,12 @@ function AdrActionBar({ artefact, schema, data, documents, selectedDocument, cli
           </Button>
         }
         primary={
-          <Button variant="primary" domain={artefact.domain} size="h8" onClick={() => setDecisionOpen(true)}>
+          <Button
+            variant="primary"
+            domain={artefact.domain}
+            size="h8"
+            onClick={() => setDecisionOpen(true)}
+          >
             <DecisionIcon className="w-3.5 h-3.5" />
             New Decision
           </Button>
@@ -353,7 +367,10 @@ export default function ArtefactPage() {
 
   if (!artefact) {
     return (
-      <Navigate to={`/architectures/${clientId}/${versionId}/domains/${domain}/${abstraction}`} replace />
+      <Navigate
+        to={`/architectures/${clientId}/${versionId}/domains/${domain}/${abstraction}`}
+        replace
+      />
     )
   }
 

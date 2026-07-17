@@ -35,6 +35,9 @@ For full context on the architecture model — architecture domains, abstraction
 ├── config/
 │   ├── prompts/                    # Prompts loaded by Claude-driven workflows
 │   │   └── decisions/              # One markdown prompt per decision-analysis workflow
+│   ├── i18n/                       # Localised UI strings (en.json), overlaid on the artefact registry
+│   ├── roles.json                  # Role taxonomy (artefact audience/author, sign-up job roles)
+│   ├── artefact-relationships.json # Generated artefact relationship map
 │   └── schemas/                    # JSON Schema definitions — mirrors architectures/ layout
 │       ├── architectures.json, architecture.json
 │       ├── transitions.json, transition.json
@@ -90,11 +93,25 @@ For full context on the architecture model — architecture domains, abstraction
 │           │   ├── application/{conceptual,logical,physical}/
 │           │   │   └── <ARTEFACT-ID>.json
 │           │   └── solution/{conceptual,logical,physical}/
-│           └── decisions/
-│               ├── decisions.json          # Index of decision IDs for this transition
-│               └── <decision-id>/          # One folder per ADR (id form: adr-NNN)
-│                   └── decision.json       # The ADR content
+│           ├── decisions/
+│           │   ├── decisions.json          # Index of decision IDs for this transition
+│           │   └── <decision-id>/          # One folder per ADR (id form: ADR-NNN)
+│           │       └── decision.json       # The ADR content
+│           └── discovery/
+│               ├── discovery.json          # Index of discovery IDs for this transition
+│               └── <discovery-id>/         # One folder per discovery (id form: DSC-NNN)
+│                   └── discovery.json      # The discovery record
 │
+├── src/                            # The Pickle web app (React + Vite SPA, Vercel serverless API)
+│   ├── api/                        # Vercel functions: /api/content, /api/github, /api/auth/*
+│   ├── lib/                        # Shared logic (artefact registry, permissions, GitHub client, …)
+│   ├── components/ pages/ hooks/   # React UI
+│   ├── context/                    # React providers (auth, permissions, architecture selection)
+│   └── db/                         # Drizzle ORM schema + migrations (Postgres, auth/memberships)
+│
+├── tests/                          # Repo-level validation: validate-schemas.mjs, validate-integrity.mjs
+├── assets/                         # Repo assets (screenshots)
+├── BACKLOG.md                      # Product backlog (Epic → Feature, stable IDs)
 └── CLAUDE.md                       # This file
 ```
 
@@ -120,6 +137,10 @@ All architecture changes are driven by **Architecture Decision Records (ADRs)**.
 | Schema validation | JSON Schema (`$ref`-based) |
 | Documentation | Markdown (GitHub-rendered) |
 | AI tooling | Claude Code |
+| Web app (`src/`) | React 18 + Vite SPA, Tailwind CSS |
+| API (`src/api/`) | Vercel serverless functions (TypeScript, native ESM) |
+| Auth & memberships | Better Auth + Postgres (Drizzle ORM) |
+| App testing | Vitest + Testing Library; Playwright (e2e) |
 
 ---
 

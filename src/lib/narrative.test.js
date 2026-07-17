@@ -1,5 +1,29 @@
 import { describe, it, expect } from 'vitest'
-import { parseNarrative, decisionChangeFields } from './narrative'
+import { composeNarrative, parseNarrative, decisionChangeFields } from './narrative'
+
+describe('composeNarrative', () => {
+  it('joins the three fields under their headings', () => {
+    expect(composeNarrative({ context: 'A', problem: 'B', proposal: 'C' })).toBe(
+      '## Context\n\nA\n\n## Problem\n\nB\n\n## Proposal\n\nC'
+    )
+  })
+
+  it('omits empty fields', () => {
+    expect(composeNarrative({ context: 'A', proposal: 'C' })).toBe(
+      '## Context\n\nA\n\n## Proposal\n\nC'
+    )
+  })
+
+  it('falls back to an existing narrative when no split fields are present', () => {
+    expect(composeNarrative({ narrative: 'legacy text' })).toBe('legacy text')
+    expect(composeNarrative({})).toBe('')
+  })
+
+  it('round-trips through parseNarrative', () => {
+    const fields = { context: 'Today we X.', problem: 'This is bad.', proposal: 'Do Y.' }
+    expect(parseNarrative(composeNarrative(fields))).toEqual(fields)
+  })
+})
 
 describe('parseNarrative', () => {
   it('splits a composed narrative back into the three fields', () => {

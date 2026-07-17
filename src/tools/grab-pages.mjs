@@ -9,7 +9,10 @@ const BASE = (process.env.BASE_URL || 'https://pickle-psi-neon.vercel.app').repl
 const OUT = resolve(process.cwd(), '../assets/screenshots/all-pages')
 const EMAIL = process.env.CRAWL_EMAIL || 'dan+owner@eastley.net'
 const PASS = process.env.CRAWL_PASSWORD || 'Pickle-Owner-2026!'
-const PAGES = (process.env.PAGES || '/account').split(',').map((s) => s.trim()).filter(Boolean)
+const PAGES = (process.env.PAGES || '/account')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
 
 const norm = (p) => {
   const x = p.split('#')[0].split('?')[0].replace(/\/+$/, '')
@@ -49,7 +52,10 @@ for (let a = 1; a <= 4 && !signedIn; a++) {
   }
   await page.fill('input[type=email]', EMAIL)
   await page.fill('input[type=password]', PASS)
-  await Promise.all([page.waitForLoadState('networkidle').catch(() => {}), page.click('button[type=submit]')])
+  await Promise.all([
+    page.waitForLoadState('networkidle').catch(() => {}),
+    page.click('button[type=submit]'),
+  ])
   await page.waitForTimeout(2500)
   signedIn = !norm(new URL(page.url()).pathname).startsWith('/login')
 }

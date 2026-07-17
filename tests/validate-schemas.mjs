@@ -6,26 +6,13 @@
 //   node tests/validate-schemas.mjs
 //
 // Exits non-zero on any invalid schema or instance. No Claude, no secrets.
-import { readFileSync, readdirSync, existsSync } from 'fs'
-import { join, resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { resolve } from 'path'
 import { createRequire } from 'module'
+import { REPO, read, rel, walk } from './lib.mjs'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const REPO = resolve(__dirname, '..')
 const require = createRequire(resolve(REPO, 'src/package.json'))
 const Ajv2020 = require('ajv/dist/2020').default
 const addFormats = require('ajv-formats')
-
-function walk(dir) {
-  if (!existsSync(dir)) return []
-  return readdirSync(dir, { withFileTypes: true }).flatMap(e => {
-    const p = join(dir, e.name)
-    return e.isDirectory() ? walk(p) : (p.endsWith('.json') ? [p] : [])
-  })
-}
-const read = (f) => JSON.parse(readFileSync(f, 'utf8'))
-const rel = (f) => f.replace(REPO + '/', '')
 
 const ajv = new Ajv2020({ allErrors: true, strict: false })
 addFormats(ajv)

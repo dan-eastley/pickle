@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import useEscapeKey from '../../hooks/useEscapeKey'
+import { CloseIcon } from './icons'
 
 export default function JsonPreview({ data, label = 'JSON', docUrl, prUrl }) {
   const [open, setOpen] = useState(false)
@@ -96,14 +97,7 @@ export default function JsonPreview({ data, label = 'JSON', docUrl, prUrl }) {
                 className="text-gray-500 hover:text-white transition-colors"
                 title="Close (Esc)"
               >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M5 5l10 10M15 5L5 15"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="square"
-                  />
-                </svg>
+                <CloseIcon className="w-4 h-4" />
               </button>
             </div>
             <div className="flex-1 overflow-auto p-5">

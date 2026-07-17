@@ -17,7 +17,12 @@ describe('remapSubtree', () => {
   it('re-points blobs under the prefix, keeping sha + mode', () => {
     const out = remapSubtree(tree, 'architectures/fedc/baseline', 'architectures/fedc/2026-q2')
     expect(out).toEqual([
-      { path: 'architectures/fedc/2026-q2/transition.json', mode: '100644', type: 'blob', sha: 'a' },
+      {
+        path: 'architectures/fedc/2026-q2/transition.json',
+        mode: '100644',
+        type: 'blob',
+        sha: 'a',
+      },
       {
         path: 'architectures/fedc/2026-q2/domains/business/conceptual/BUS-CAP.json',
         mode: '100644',

@@ -51,11 +51,20 @@ function PlatformBlock({ x, y, platform, id, focused, onClick }) {
         height={BLOCK_H}
         className={`${rectFill} ${rectHover} transition-colors`}
       />
-      <text x={x + 8} y={y + 13} className={`${idFill} text-[8px] font-mono uppercase tracking-wide`}>
+      <text
+        x={x + 8}
+        y={y + 13}
+        className={`${idFill} text-[8px] font-mono uppercase tracking-wide`}
+      >
         {id}
       </text>
       {lines.map((ln, i) => (
-        <text key={i} x={x + 8} y={y + 26 + i * 12} className={`${nameFill} text-[11px] font-medium`}>
+        <text
+          key={i}
+          x={x + 8}
+          y={y + 26 + i * 12}
+          className={`${nameFill} text-[11px] font-medium`}
+        >
           {ln}
         </text>
       ))}
@@ -82,7 +91,11 @@ function SystemView({ focusId, neighbours, platformsById, onOpenPair, onOpenEnti
 
   return (
     <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${SVG_W} ${svgH}`} className="w-full min-w-[640px]" style={{ maxHeight: 680 }}>
+      <svg
+        viewBox={`0 0 ${SVG_W} ${svgH}`}
+        className="w-full min-w-[640px]"
+        style={{ maxHeight: 680 }}
+      >
         {/* Connections — orthogonal (L-shaped) via a shared vertical trunk, so
             every segment is horizontal or vertical, never diagonal. */}
         {neighbours.map((n, i) => {
@@ -168,12 +181,30 @@ function PairView({ leftId, rightId, interfaces, platformsById, onOpenEntity }) 
 
   return (
     <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${SVG_W} ${svgH}`} className="w-full min-w-[640px]" style={{ maxHeight: 680 }}>
+      <svg
+        viewBox={`0 0 ${SVG_W} ${svgH}`}
+        className="w-full min-w-[640px]"
+        style={{ maxHeight: 680 }}
+      >
         <defs>
-          <marker id="wd-arrow-r" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <marker
+            id="wd-arrow-r"
+            markerWidth="9"
+            markerHeight="9"
+            refX="7"
+            refY="4.5"
+            orient="auto"
+          >
             <path d="M0,0 L9,4.5 L0,9 Z" fill={EMERALD_DK} />
           </marker>
-          <marker id="wd-arrow-l" markerWidth="9" markerHeight="9" refX="2" refY="4.5" orient="auto">
+          <marker
+            id="wd-arrow-l"
+            markerWidth="9"
+            markerHeight="9"
+            refX="2"
+            refY="4.5"
+            orient="auto"
+          >
             <path d="M9,0 L0,4.5 L9,9 Z" fill={EMERALD_DK} />
           </marker>
         </defs>
@@ -185,9 +216,20 @@ function PairView({ leftId, rightId, interfaces, platformsById, onOpenEntity }) 
           const fromId = iface.direction === 'target-to-source' ? iface.target : iface.source
           const pointsRight = fromId === leftId
           return (
-            <g key={iface.id} className="group cursor-pointer" onClick={() => onOpenEntity(iface.id)}>
+            <g
+              key={iface.id}
+              className="group cursor-pointer"
+              onClick={() => onOpenEntity(iface.id)}
+            >
               <title>{`${iface.id} · ${iface.name}`}</title>
-              <line x1={leftEdge} y1={cy} x2={rightEdge} y2={cy} stroke="transparent" strokeWidth="20" />
+              <line
+                x1={leftEdge}
+                y1={cy}
+                x2={rightEdge}
+                y2={cy}
+                stroke="transparent"
+                strokeWidth="20"
+              />
               <line
                 x1={leftEdge + 4}
                 y1={cy}
@@ -324,9 +366,7 @@ export default function WiringDiagram({ clientId, versionId }) {
   const neighbours = focusId ? neighboursOf(focusId) : []
   const focus = platformsById[focusId]
 
-  const pair = pairTargetId
-    ? neighbours.find((n) => n.id === pairTargetId)
-    : null
+  const pair = pairTargetId ? neighbours.find((n) => n.id === pairTargetId) : null
   const inPairView = !!pair
 
   return (

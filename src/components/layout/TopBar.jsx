@@ -24,7 +24,8 @@ function ArchitectureSelector({
   const ref = useRef(null)
   useClickOutside(ref, () => setOpen(false))
 
-  const archName = clientsMetadata[selectedClientId]?.name ?? selectedClientId ?? 'Select architecture'
+  const archName =
+    clientsMetadata[selectedClientId]?.name ?? selectedClientId ?? 'Select architecture'
   const showArchitectures = clients.length > 1
 
   const Row = ({ selected, onClick, children }) => (
@@ -96,7 +97,11 @@ function ArchitectureSelector({
           {versions.map((v) => {
             const id = v['transition-id']
             return (
-              <Row key={id} selected={id === selectedVersionId} onClick={() => onSelectTransition(id)}>
+              <Row
+                key={id}
+                selected={id === selectedVersionId}
+                onClick={() => onSelectTransition(id)}
+              >
                 {id}
               </Row>
             )

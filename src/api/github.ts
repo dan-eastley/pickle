@@ -25,6 +25,7 @@ import { sendInviteEmail } from '../lib/email.js'
 import { db } from '../db/index.js'
 import { architectureMembership, user } from '../db/schema.js'
 import { can, ACTIONS, buildContext, ARCHITECTURE_ROLES } from '../lib/permissions.js'
+import { composeNarrative } from '../lib/narrative.js'
 
 const BASE = 'main'
 
@@ -62,6 +63,23 @@ function discoveriesIndexPath(clientId: string, versionId: string): string {
 
 function nowEntry(action: string, actor: string, notes?: string): Doc {
   return { timestamp: new Date().toISOString(), action, who: actor, ...(notes ? { notes } : {}) }
+}
+
+// The next "<PREFIX>-NNN" id after the highest numeric suffix present.
+function nextSequentialId(ids: unknown[], prefix: string): string {
+  const max = ids.reduce<number>((m, id) => {
+    const n = parseInt(String(id).replace(`${prefix}-`, ''), 10)
+    return Number.isNaN(n) ? m : Math.max(m, n)
+  }, 0)
+  return `${prefix}-${String(max + 1).padStart(3, '0')}`
+}
+
+// Kebab-cased inputs for the decision/discovery workflow dispatches.
+function decisionInputs(clientId: string, versionId: string, decisionId: string) {
+  return { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId }
+}
+function discoveryInputs(clientId: string, versionId: string, discoveryId: string) {
+  return { 'client-id': clientId, 'version-id': versionId, 'discovery-id': discoveryId }
 }
 
 // Read a decision doc from its branch, falling back to main if the branch is
@@ -112,55 +130,41 @@ async function syncIndex(
   })
 }
 
-// Compose a single narrative string from the Context / Problem / Proposal fields.
-// Retained for downstream workflows/prompts that still read the legacy field.
-function composeNarrative({ context, problem, proposal, narrative }: Doc): string {
-  const parts = [
-    context && `## Context\n\n${context}`,
-    problem && `## Problem\n\n${problem}`,
-    proposal && `## Proposal\n\n${proposal}`,
-  ].filter(Boolean)
-  return parts.length ? parts.join('\n\n') : (narrative ?? '')
-}
-
 // ── Decision actions ────────────────────────────────────────────────────────────
 
 async function getNextId(gh: GitHubClient, { clientId, versionId }: Doc): Promise<Doc> {
   const { content } = await gh.readJson<Doc>(indexPath(clientId, versionId), BASE)
   const ids: string[] = (content.decisions ?? []).map((d: Doc) => d['decision-id'])
-  const max = ids.reduce((m, id) => {
-    const n = parseInt(String(id).replace('ADR-', ''), 10)
-    return isNaN(n) ? m : Math.max(m, n)
-  }, 0)
-  return { nextId: `ADR-${String(max + 1).padStart(3, '0')}` }
+  return { nextId: nextSequentialId(ids, 'ADR') }
 }
 
 async function createDecision(
   gh: GitHubClient,
-  { clientId, versionId, decision }: Doc
+  { clientId, versionId, decision }: Doc,
+  actor: string = SYSTEM_ACTOR
 ): Promise<Doc> {
   const decisionId = decision['decision-id']
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath = decisionPath(clientId, versionId, decisionId)
 
+  // The server is authoritative for attribution: stamp the Created activity
+  // entry with the authenticated actor (clients must not self-attribute).
+  const record: Doc = { ...decision, activity: [nowEntry('Created', actor)] }
+
   // 1. Branch from main, 2. commit decision.json to it.
   const baseSha = await gh.getHeadSha(BASE)
   await gh.createBranch(branch, baseSha)
-  await gh.writeJson(dPath, decision, `Add ${decisionId}: ${decision.title}`, { branch })
+  await gh.writeJson(dPath, record, `Add ${decisionId}: ${record.title}`, { branch })
 
   // 3. Sync summary to decisions.json on main.
   await syncIndex(gh, clientId, versionId, decisionId, {
-    title: decision.title,
-    status: decision.status ?? 'draft',
-    scope: decision.scope,
+    title: record.title,
+    status: record.status ?? 'draft',
+    scope: record.scope,
   })
 
   // 4. Dispatch narrative review.
-  await gh.dispatch('decisions-to-draft.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'decision-id': decisionId,
-  })
+  await gh.dispatch('decisions-to-draft.yml', decisionInputs(clientId, versionId, decisionId))
 
   return { ok: true, decisionId, branch }
 }
@@ -173,7 +177,7 @@ async function updateDecision(
   const newStatus: string | undefined = updates.status
   const branch = decisionBranch(clientId, versionId, decisionId)
   const dPath = decisionPath(clientId, versionId, decisionId)
-  const ids = { 'client-id': clientId, 'version-id': versionId, 'decision-id': decisionId }
+  const ids = decisionInputs(clientId, versionId, decisionId)
   // Stamp a status transition into the activity log so it records who advanced it.
   const stamp = (doc: Doc): Doc => ({
     ...doc,
@@ -301,11 +305,7 @@ async function editDecision(
     status: updated.status,
     scope: updated.scope,
   })
-  await gh.dispatch('decisions-to-draft.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'decision-id': decisionId,
-  })
+  await gh.dispatch('decisions-to-draft.yml', decisionInputs(clientId, versionId, decisionId))
 
   return { ok: true, decisionId }
 }
@@ -331,7 +331,11 @@ async function commitDecision(
   }
   // PR merge brings decision.json to main — update its status and sync index,
   // recording the committer in the activity log.
-  await updateDecision(gh, { clientId, versionId, decisionId, updates: { status: 'committed' } }, actor)
+  await updateDecision(
+    gh,
+    { clientId, versionId, decisionId, updates: { status: 'committed' } },
+    actor
+  )
   // The PR is merged (and closed); remove the now-redundant decision branch.
   if (pr) await gh.deleteBranch(decisionBranch(clientId, versionId, decisionId))
   return { ok: true, decisionId, status: 'committed' }
@@ -384,11 +388,8 @@ async function nextDiscoveryId(
   versionId: string
 ): Promise<string> {
   const { content } = await readDiscoveriesIndex(gh, clientId, versionId)
-  const max = (content.discoveries ?? []).reduce((m: number, d: Doc) => {
-    const n = parseInt(String(d['discovery-id']).replace('DSC-', ''), 10)
-    return isNaN(n) ? m : Math.max(m, n)
-  }, 0)
-  return `DSC-${String(max + 1).padStart(3, '0')}`
+  const ids = (content.discoveries ?? []).map((d: Doc) => d['discovery-id'])
+  return nextSequentialId(ids, 'DSC')
 }
 
 async function createDiscovery(
@@ -414,11 +415,7 @@ async function createDiscovery(
     { branch: BASE }
   )
   await syncDiscoveryIndex(gh, clientId, versionId, discoveryId, record)
-  await gh.dispatch('discovery-to-active.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'discovery-id': discoveryId,
-  })
+  await gh.dispatch('discovery-to-active.yml', discoveryInputs(clientId, versionId, discoveryId))
   return { ok: true, discoveryId }
 }
 
@@ -449,11 +446,7 @@ async function updateDiscovery(
   // view: re-dispatch the Virtual Architect Agent against the revised request.
   const contentEdited = ['title', 'context', 'request'].some((k) => k in updates)
   if (contentEdited && updated.status === 'active') {
-    await gh.dispatch('discovery-to-active.yml', {
-      'client-id': clientId,
-      'version-id': versionId,
-      'discovery-id': discoveryId,
-    })
+    await gh.dispatch('discovery-to-active.yml', discoveryInputs(clientId, versionId, discoveryId))
   }
   return { ok: true, discoveryId, status: updated.status, regenerating: contentEdited }
 }
@@ -481,11 +474,7 @@ async function refreshDiscovery(
     status: updated.status,
     scope: updated.scope,
   })
-  await gh.dispatch('discovery-to-active.yml', {
-    'client-id': clientId,
-    'version-id': versionId,
-    'discovery-id': discoveryId,
-  })
+  await gh.dispatch('discovery-to-active.yml', discoveryInputs(clientId, versionId, discoveryId))
   return { ok: true, discoveryId }
 }
 
@@ -496,7 +485,14 @@ async function refreshDiscovery(
 // the architectures tree. (Dots are allowed in ids.)
 const SAFE_ID = /^[A-Za-z0-9._-]+$/
 function assertSafeIds(params: Record<string, unknown>): void {
-  for (const k of ['clientId', 'versionId', 'decisionId', 'discoveryId', 'architectureId', 'transitionId']) {
+  for (const k of [
+    'clientId',
+    'versionId',
+    'decisionId',
+    'discoveryId',
+    'architectureId',
+    'transitionId',
+  ]) {
     const v = params[k]
     if (v == null) continue
     const s = String(v)
@@ -542,7 +538,10 @@ async function updateArchitecture(gh: GitHubClient, params: Doc, actor: string):
   for (const k of ['name', 'description', 'status', 'industry']) {
     if (updates[k] !== undefined) next[k] = updates[k]
   }
-  await gh.writeJson(path, next, `Update architecture ${architectureId} (${actor})`, { sha, branch: BASE })
+  await gh.writeJson(path, next, `Update architecture ${architectureId} (${actor})`, {
+    sha,
+    branch: BASE,
+  })
   return { ok: true, architectureId }
 }
 
@@ -582,12 +581,24 @@ async function createArchitecture(gh: GitHubClient, params: Doc, actor: string):
   }
   const base = `architectures/${architectureId}`
   await gh.commitFiles(BASE, `Create architecture ${architectureId} (${actor})`, [
-    { path: `${base}/architecture.json`, content: j({ 'architecture-id': architectureId, name, status: 'active' }) },
-    { path: `${base}/transitions.json`, content: j({ transitions: [{ 'transition-id': 'baseline' }] }) },
-    { path: `${base}/baseline/transition.json`, content: j({ 'transition-id': 'baseline', name: 'Baseline', status: 'draft' }) },
+    {
+      path: `${base}/architecture.json`,
+      content: j({ 'architecture-id': architectureId, name, status: 'active' }),
+    },
+    {
+      path: `${base}/transitions.json`,
+      content: j({ transitions: [{ 'transition-id': 'baseline' }] }),
+    },
+    {
+      path: `${base}/baseline/transition.json`,
+      content: j({ 'transition-id': 'baseline', name: 'Baseline', status: 'draft' }),
+    },
     { path: `${base}/baseline/decisions/decisions.json`, content: j({ decisions: [] }) },
     { path: `${base}/baseline/discovery/discovery.json`, content: j({ discoveries: [] }) },
-    { path: idxPath, content: j({ architectures: [...list, { 'architecture-id': architectureId }] }) },
+    {
+      path: idxPath,
+      content: j({ architectures: [...list, { 'architecture-id': architectureId }] }),
+    },
   ])
   return { ok: true, architectureId }
 }
@@ -651,13 +662,20 @@ async function grantAccess(
     throw new HttpError('Invalid role', 400)
   }
   const validRole = role as Role
-  const em = String(email ?? '').trim().toLowerCase()
+  const em = String(email ?? '')
+    .trim()
+    .toLowerCase()
   if (!em) throw new HttpError('Email is required', 400)
   const [u] = await db.select().from(user).where(eq(user.email, em)).limit(1)
   if (!u) throw new HttpError(`No user found with email ${em}`, 404)
   await db
     .insert(architectureMembership)
-    .values({ id: randomUUID(), userId: u.id, architectureId: String(architectureId), role: validRole })
+    .values({
+      id: randomUUID(),
+      userId: u.id,
+      architectureId: String(architectureId),
+      role: validRole,
+    })
     .onConflictDoUpdate({
       target: [architectureMembership.userId, architectureMembership.architectureId],
       set: { role: validRole, updatedAt: new Date() },
@@ -722,14 +740,32 @@ function inAdminAllowlist(email?: string): boolean {
 // fail-soft on the membership query so an un-migrated DB can't 500 a write.
 async function resolvePermissions(req: VercelRequest): Promise<PermissionState> {
   if (missingAuthEnv().length > 0) {
-    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
+    return {
+      authenticated: true,
+      isAdmin: true,
+      memberships: {},
+      actor: SYSTEM_ACTOR,
+      userId: null,
+    }
   }
   const user = await getSessionUser(req.headers as Record<string, string | string[] | undefined>)
   if (!user) {
     if (process.env.VERCEL) {
-      return { authenticated: false, isAdmin: false, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
+      return {
+        authenticated: false,
+        isAdmin: false,
+        memberships: {},
+        actor: SYSTEM_ACTOR,
+        userId: null,
+      }
     }
-    return { authenticated: true, isAdmin: true, memberships: {}, actor: SYSTEM_ACTOR, userId: null }
+    return {
+      authenticated: true,
+      isAdmin: true,
+      memberships: {},
+      actor: SYSTEM_ACTOR,
+      userId: null,
+    }
   }
   const isAdmin = user.accessTier === 'admin' || inAdminAllowlist(user.email)
   let memberships: Record<string, string> = {}

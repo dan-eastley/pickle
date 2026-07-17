@@ -16,11 +16,7 @@ const withTrailingSlash = (p: string) => p.replace(/\/+$/, '') + '/'
 // Re-point every blob under `fromPrefix` to sit under `toPrefix`, keeping each
 // blob's mode and sha (so no content is re-uploaded — the copy references the
 // existing blobs). Non-blobs and paths outside the prefix are dropped.
-export function remapSubtree(
-  tree: TreeEntry[],
-  fromPrefix: string,
-  toPrefix: string
-): TreeEntry[] {
+export function remapSubtree(tree: TreeEntry[], fromPrefix: string, toPrefix: string): TreeEntry[] {
   const from = withTrailingSlash(fromPrefix)
   const to = withTrailingSlash(toPrefix)
   return tree

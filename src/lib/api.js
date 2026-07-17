@@ -5,6 +5,18 @@ async function fetchJson(url) {
   return res.json()
 }
 
+// Soft variant: null on any failure (missing file, server error, network
+// error). For aggregate views (metrics, roll-ups) where partial data is fine.
+export async function fetchJsonSoft(url) {
+  try {
+    const res = await fetch(url)
+    if (!res.ok) return null
+    return await res.json()
+  } catch {
+    return null
+  }
+}
+
 // POST a mutating action to /api/github. Throws on a non-2xx with the API's
 // error message so callers can surface it and roll back optimistic UI. Shared
 // by every page that mutates architecture state (decisions, discoveries).
@@ -36,7 +48,9 @@ export async function getClients() {
 // Members (access grants) of an architecture — for the Access settings ([RAS-3]).
 // Gated server-side; throws on 403 for callers without the access-grant right.
 export async function getMembers(architectureId) {
-  const res = await fetch(`/api/github?action=members&architectureId=${encodeURIComponent(architectureId)}`)
+  const res = await fetch(
+    `/api/github?action=members&architectureId=${encodeURIComponent(architectureId)}`
+  )
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(data.error ?? `Request failed (${res.status})`)
   return data.members ?? []
