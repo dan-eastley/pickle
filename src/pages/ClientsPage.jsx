@@ -6,6 +6,7 @@ import { ACTIONS } from '../lib/permissions'
 import { loadClientRollup } from '../lib/metrics'
 import { githubAction } from '../lib/api'
 import MetricBars from '../components/common/MetricBars'
+import StatsBar from '../components/ui/StatsBar'
 import Spinner from '../components/ui/Spinner'
 import Button from '../components/ui/Button'
 import ClientLogo from '../components/ui/ClientLogo'
@@ -26,18 +27,15 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
       className="group block bg-white border border-gray-200 hover:border-gray-400 transition-colors"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 px-5 py-4 bg-gray-50 border-b border-gray-200">
-        <ClientLogo clientId={clientId} name={name} className="w-11 h-11 flex-shrink-0" />
+      <div className="flex items-center gap-4 px-5 pt-5 pb-3">
+        <ClientLogo clientId={clientId} name={name} className="w-10 h-10 flex-shrink-0" />
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-gray-500">Architecture</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            Architecture
+          </p>
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">
             {name}
           </h3>
-          {m && (
-            <p className="text-xs text-gray-500">
-              {m.versions} {m.versions === 1 ? 'transition' : 'transitions'}
-            </p>
-          )}
         </div>
         {canEdit && (
           <button
@@ -53,18 +51,24 @@ function ClientCard({ clientId, name, metrics: m, canEdit, onEdit }) {
             <EditIcon className="w-4 h-4" />
           </button>
         )}
+        {m && (
+          <span className="text-sm text-gray-500 flex-shrink-0">
+            <span className="font-semibold text-gray-700 tabular-nums">{m.versions}</span>{' '}
+            {m.versions === 1 ? 'transition' : 'transitions'}
+          </span>
+        )}
         <span className="text-sm font-mono text-gray-400 flex-shrink-0">{clientId}</span>
         <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0 transition-colors" />
       </div>
 
-      {/* Metrics */}
-      <div className="p-4">
+      {/* Metrics chips */}
+      <div className="px-5 pb-5">
         {m === undefined ? (
-          <div className="flex items-center gap-2 py-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 py-1 text-xs text-gray-500">
             <Spinner size="sm" /> Loading metrics…
           </div>
         ) : m === null ? (
-          <p className="py-2 text-xs text-gray-500">No architecture content yet.</p>
+          <p className="py-1 text-xs text-gray-500">No architecture content yet.</p>
         ) : (
           <MetricBars
             perDomain={m.perDomain}
@@ -116,21 +120,31 @@ export default function ClientsPage() {
     ? { id: editingId, name: nameFor(editingId), status: overrides[editingId]?.status ?? clientsMetadata[editingId]?.status ?? 'active' }
     : null
 
+  const loaded = Object.values(metrics).filter(Boolean)
+  const totals = [
+    { label: 'Architectures', value: clients.length },
+    { label: 'Transitions', value: loaded.reduce((s, m) => s + (m.versions ?? 0), 0) },
+    { label: 'Decisions', value: loaded.reduce((s, m) => s + (m.decisions ?? 0), 0) },
+    { label: 'Discoveries', value: loaded.reduce((s, m) => s + (m.discoveries ?? 0), 0) },
+  ]
+
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-8 pb-12">
-      <div className="mb-8 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">Architectures</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Select an architecture to view its transition states. The bars compare how populated
-            each architecture is.
-          </p>
+      <div className="mb-6 bg-white border border-gray-200 shadow-xs">
+        <div className="flex items-start justify-between gap-4 px-5 py-3.5">
+          <div>
+            <h1 className="text-[17px] font-semibold text-gray-900">Architectures</h1>
+            <p className="mt-0.5 text-[13px] text-gray-500">
+              Select an architecture to view its transition states.
+            </p>
+          </div>
+          {canCreate && (
+            <Button onClick={() => setCreating(true)} size="h8" className="flex-shrink-0">
+              New Architecture
+            </Button>
+          )}
         </div>
-        {canCreate && (
-          <Button onClick={() => setCreating(true)} size="sm" className="flex-shrink-0">
-            New Architecture
-          </Button>
-        )}
+        {clients.length > 0 && <StatsBar stats={totals} />}
       </div>
 
       {clients.length === 0 ? (

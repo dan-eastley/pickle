@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { getDomain, getAbstraction, getArtefact } from '../../lib/artefacts'
+import { useArchitecture } from '../../context/ArchitectureContext'
 import { ChevronRight } from '../ui/icons'
 
 function Crumbs({ crumbs }) {
@@ -45,7 +46,17 @@ export default function Breadcrumb() {
   const { clientId, versionId, domain, abstraction, artefactId, decisionId, discoveryId } =
     useParams()
   const { pathname } = useLocation()
+  const { clientsMetadata } = useArchitecture()
   const base = `/architectures/${clientId}/${versionId}`
+  const archName = clientsMetadata?.[clientId]?.name ?? clientId
+
+  // Every trail roots back through Architectures → this architecture's
+  // transitions → the current transition.
+  const lead = [
+    { label: 'Architectures', to: '/architectures' },
+    { label: archName, to: `/architectures/${clientId}/transitions` },
+    { label: versionId, to: `${base}/domains` },
+  ]
 
   const decisionTitle = useRecordTitle(
     `/api/arch/${clientId}/${versionId}/decisions/${decisionId}/decision.json`,
@@ -61,7 +72,7 @@ export default function Breadcrumb() {
     const discoveryBase = `${base}/discovery`
     const isNew = pathname.endsWith('/new')
 
-    const crumbs = [{ label: 'Discovery', to: discoveryId || isNew ? discoveryBase : null }]
+    const crumbs = [...lead, { label: 'Discovery', to: discoveryId || isNew ? discoveryBase : null }]
     if (isNew) crumbs.push({ label: 'New Discovery', to: null })
     if (discoveryId) crumbs.push({ label: discoveryTitle ?? discoveryId, to: null })
 
@@ -73,7 +84,7 @@ export default function Breadcrumb() {
     const decisionsBase = `${base}/decisions`
     const isNew = pathname.endsWith('/new')
 
-    const crumbs = [{ label: 'Decisions', to: decisionId || isNew ? decisionsBase : null }]
+    const crumbs = [...lead, { label: 'Decisions', to: decisionId || isNew ? decisionsBase : null }]
     if (isNew) crumbs.push({ label: 'New Decision', to: null })
     if (decisionId) crumbs.push({ label: decisionTitle ?? decisionId, to: null })
 
@@ -81,7 +92,7 @@ export default function Breadcrumb() {
   }
 
   // ── Architecture domain routes ────────────────────────────────────────────
-  const crumbs = [{ label: 'Domains', to: `${base}/domains` }]
+  const crumbs = [...lead, { label: 'Domains', to: `${base}/domains` }]
 
   if (domain) {
     const d = getDomain(domain)
