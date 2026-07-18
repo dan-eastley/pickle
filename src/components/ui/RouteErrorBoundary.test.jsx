@@ -34,6 +34,20 @@ describe('isStaleDeployError', () => {
     expect(isStaleDeployError(new Error('x is not a function'))).toBe(false)
     expect(isStaleDeployError(undefined)).toBe(false)
   })
+
+  it('does NOT treat a bare fetch failure as a stale deploy (would mask real errors)', () => {
+    // A plain TypeError from a failed API/data fetch must surface as the real
+    // error, not the "reloading should fix it" message.
+    expect(isStaleDeployError(new TypeError('Failed to fetch'))).toBe(false)
+    expect(isStaleDeployError(new Error('NetworkError when attempting to fetch resource.'))).toBe(
+      false
+    )
+    // …but a chunk-load failure that mentions fetch is still caught (it carries
+    // the dynamic-import context).
+    expect(
+      isStaleDeployError(new Error('Failed to fetch dynamically imported module: /assets/x.js'))
+    ).toBe(true)
+  })
 })
 
 describe('RouteErrorBoundary stale-deploy recovery', () => {
