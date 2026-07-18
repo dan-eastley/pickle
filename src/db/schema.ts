@@ -37,7 +37,21 @@ export const user = pgTable('user', {
   lastName: text('last_name').notNull(),
   jobRole: text('job_role'), // id from config/roles.json, validated in lib/auth
   accessTier: accessTier('access_tier').notNull().default('member'),
+  // Better Auth two-factor plugin: whether the user has 2FA (email OTP) enabled.
+  twoFactorEnabled: boolean('two_factor_enabled').notNull().default(false),
   ...timestamps,
+})
+
+// Better Auth two-factor plugin table. Holds the per-user 2FA secret and backup
+// codes; a row exists once a user is enrolled. `verified` gates whether the
+// factor is active.
+export const twoFactor = pgTable('two_factor', {
+  id: text('id').primaryKey(),
+  secret: text('secret').notNull(),
+  backupCodes: text('backup_codes').notNull(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
 })
 
 export const session = pgTable('session', {
@@ -100,4 +114,11 @@ export const architectureMembership = pgTable(
   (t) => ({ uniqUserArchitecture: unique().on(t.userId, t.architectureId) })
 )
 
-export const schema = { user, session, account, verification, architectureMembership }
+export const schema = {
+  user,
+  session,
+  account,
+  verification,
+  architectureMembership,
+  twoFactor,
+}
