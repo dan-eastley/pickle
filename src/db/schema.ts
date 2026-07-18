@@ -9,7 +9,7 @@
  * Migrations are generated with `npm run db:generate` and applied with
  * `npm run db:migrate`. Do not hand-edit applied migrations.
  */
-import { pgEnum, pgTable, text, boolean, timestamp, unique } from 'drizzle-orm/pg-core'
+import { pgEnum, pgTable, text, boolean, integer, timestamp, unique } from 'drizzle-orm/pg-core'
 
 // Coarse access-control tier. `admin` is the platform super-user (sees and edits
 // everything). `member` gains rights per-architecture via architecture_membership
@@ -52,6 +52,11 @@ export const twoFactor = pgTable('two_factor', {
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
+  // Required by the Better Auth two-factor plugin: whether the factor is
+  // verified, and rate-limit/lockout bookkeeping for failed code attempts.
+  verified: boolean('verified').notNull().default(true),
+  failedVerificationCount: integer('failed_verification_count').notNull().default(0),
+  lockedUntil: timestamp('locked_until', { mode: 'date', withTimezone: true }),
 })
 
 export const session = pgTable('session', {
