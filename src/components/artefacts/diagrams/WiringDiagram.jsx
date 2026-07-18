@@ -59,12 +59,7 @@ function PlatformBlock({ x, y, platform, id, focused, onClick }) {
         {id}
       </text>
       {lines.map((ln, i) => (
-        <text
-          key={i}
-          x={x + 8}
-          y={y + 26 + i * 12}
-          className={`${nameFill} text-2xs font-medium`}
-        >
+        <text key={i} x={x + 8} y={y + 26 + i * 12} className={`${nameFill} text-2xs font-medium`}>
           {ln}
         </text>
       ))}
