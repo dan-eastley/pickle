@@ -17,7 +17,7 @@ export default function WorkflowStepper({ status, className = '' }) {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
         <span className="w-2 h-2 bg-error-500" />
-        <span className="text-[12px] font-medium text-error-700">Rejected</span>
+        <span className="text-xs font-medium text-error-700">Rejected</span>
       </div>
     )
   }
@@ -35,7 +35,7 @@ export default function WorkflowStepper({ status, className = '' }) {
                 className={`w-2 h-2 ${active ? 'bg-brand-600 ring-2 ring-brand-200' : done ? 'bg-brand-600' : 'bg-gray-300'}`}
               />
               <span
-                className={`text-[11px] ${active ? 'font-semibold text-gray-900' : done ? 'text-gray-600' : 'text-gray-400'}`}
+                className={`text-2xs ${active ? 'font-semibold text-gray-900' : done ? 'text-gray-600' : 'text-gray-400'}`}
               >
                 {step.label}
               </span>

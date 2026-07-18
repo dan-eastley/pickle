@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom'
 // Two alignments (left / center) and a few sizes. Used in the header bar,
 // the auth pages, and the homepage hero so the brand stays consistent.
 const SIZES = {
-  sm: { word: 'text-lg', tag: 'text-[10px]', gap: 'mt-0' },
-  md: { word: 'text-2xl', tag: 'text-[11px]', gap: 'mt-0' },
+  sm: { word: 'text-lg', tag: 'text-3xs', gap: 'mt-0' },
+  md: { word: 'text-2xl', tag: 'text-2xs', gap: 'mt-0' },
   lg: { word: 'text-4xl sm:text-5xl', tag: 'text-xs', gap: 'mt-0.5' },
   xl: { word: 'text-6xl sm:text-7xl', tag: 'text-base', gap: 'mt-1' },
 }

@@ -63,7 +63,7 @@ function PlatformBlock({ x, y, platform, id, focused, onClick }) {
           key={i}
           x={x + 8}
           y={y + 26 + i * 12}
-          className={`${nameFill} text-[11px] font-medium`}
+          className={`${nameFill} text-2xs font-medium`}
         >
           {ln}
         </text>
@@ -133,7 +133,7 @@ function SystemView({ focusId, neighbours, platformsById, onOpenPair, onOpenEnti
                   y={ncy + 1}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  className="fill-emerald-700 text-[10px] font-semibold"
+                  className="fill-emerald-700 text-3xs font-semibold"
                 >
                   {n.count} × Interface{n.count !== 1 ? 's' : ''}
                 </text>
@@ -245,7 +245,7 @@ function PairView({ leftId, rightId, interfaces, platformsById, onOpenEntity }) 
                 x={(leftEdge + rightEdge) / 2}
                 y={cy - 8}
                 textAnchor="middle"
-                className="fill-gray-900 text-[12px] font-semibold"
+                className="fill-gray-900 text-xs font-semibold"
               >
                 {iface.name}
               </text>
@@ -253,7 +253,7 @@ function PairView({ leftId, rightId, interfaces, platformsById, onOpenEntity }) 
                 x={(leftEdge + rightEdge) / 2}
                 y={cy + 15}
                 textAnchor="middle"
-                className="fill-gray-400 text-[10px] font-mono"
+                className="fill-gray-400 text-3xs font-mono"
               >
                 {iface.id}
               </text>

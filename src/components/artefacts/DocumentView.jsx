@@ -1291,7 +1291,7 @@ function LegacyDocument({ doc, sections, artefact, clientId, versionId }) {
                 {doc.scope}
               </span>
             )}
-            <span className="text-xs font-mono text-gray-300 ml-auto">{doc.id}</span>
+            <span className="text-xs font-mono text-gray-500 ml-auto">{doc.id}</span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{doc.title}</h2>
           {doc.description && <p className="text-gray-600 leading-relaxed">{doc.description}</p>}

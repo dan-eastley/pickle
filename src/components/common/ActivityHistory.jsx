@@ -36,7 +36,7 @@ export default function ActivityHistory({ activity, title = 'Activity', decision
       >
         <DisclosureChevron open={open} className="w-3.5 h-3.5 text-gray-400" />
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          {title} <span className="text-gray-400">({rows.length})</span>
+          {title} <span className="text-gray-500">({rows.length})</span>
         </h2>
       </button>
       {open && (

@@ -102,7 +102,7 @@ export default function AccessManager({ architectureId }) {
           Add
         </Button>
       </div>
-      <p className="text-xs text-gray-400">{ROLES.find((o) => o.value === role)?.hint}</p>
+      <p className="text-xs text-gray-500">{ROLES.find((o) => o.value === role)?.hint}</p>
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2">{error}</p>
@@ -123,7 +123,7 @@ export default function AccessManager({ architectureId }) {
             <li key={m.userId} className="flex items-center justify-between gap-3 px-3 py-2">
               <div className="min-w-0">
                 <span className="text-sm text-gray-900 truncate">{m.email}</span>
-                {m.name && <span className="ml-2 text-xs text-gray-400">{m.name}</span>}
+                {m.name && <span className="ml-2 text-xs text-gray-500">{m.name}</span>}
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
                 <span className="text-xs font-medium px-2 py-0.5 bg-gray-100 text-gray-600">
@@ -132,7 +132,7 @@ export default function AccessManager({ architectureId }) {
                 <button
                   onClick={() => revoke(m)}
                   disabled={busy}
-                  className="text-xs text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                  className="text-xs text-gray-500 hover:text-red-600 transition-colors disabled:opacity-50"
                 >
                   Remove
                 </button>

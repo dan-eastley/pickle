@@ -94,7 +94,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                   key={i}
                   x={OUTER_PAD + 4}
                   y={y + 27 + i * 14}
-                  className={`text-[11px] font-semibold ${labelSel ? colors.heading : 'fill-gray-700'}`}
+                  className={`text-2xs font-semibold ${labelSel ? colors.heading : 'fill-gray-700'}`}
                 >
                   {line}
                 </text>
@@ -153,7 +153,7 @@ function ProcessFlowSVG({ rows, colors, onItemClick, selectedId }) {
                       x={textCX}
                       y={topBaseline + 13 + li * 13}
                       textAnchor="middle"
-                      className={`text-[11px] font-medium ${sel ? 'fill-white' : colors.itemText}`}
+                      className={`text-2xs font-medium ${sel ? 'fill-white' : colors.itemText}`}
                     >
                       {line}
                     </text>
