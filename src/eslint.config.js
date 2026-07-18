@@ -49,6 +49,11 @@ export default [
       // Quotes/apostrophes in copy are fine and readable.
       'react/no-unescaped-entities': 'off',
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^[A-Z_]' }],
+      // Catch referencing a variable/const before its declaration — a temporal
+      // dead zone that surfaces as "Cannot access 'x' before initialization" at
+      // runtime (only reliably in the minified prod build). Functions/classes
+      // are hoisted-by-use in this codebase, so only variables are checked.
+      'no-use-before-define': ['error', { functions: false, classes: false, variables: true }],
       // Surfaced as warnings (tracked tech-debt) rather than blocking — the
       // form-label and autofocus patterns here are deliberate; see
       // BACKLOG.md (Quality, Validation & CI).

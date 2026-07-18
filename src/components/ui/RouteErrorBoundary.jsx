@@ -73,8 +73,11 @@ export default class RouteErrorBoundary extends Component {
             : 'Something on this page didn’t load correctly. Try reloading, or head back and try again.'}
         </p>
 
-        {/* Admins get the full error + stack for diagnosis; nobody else does. */}
-        {!isStaleDeploy && isAdmin && (
+        {/* Admins always get the full error + stack for diagnosis (even for a
+            "stale deploy" classification — a persistent one is a real bug that
+            reload won't fix, and hiding it here is what masked exactly that).
+            Nobody else sees internals. */}
+        {isAdmin && (
           <details open className="mt-4 w-full max-w-2xl text-left">
             <summary className="cursor-pointer text-2xs font-semibold uppercase tracking-wide text-gray-500">
               Error detail (admin only)
