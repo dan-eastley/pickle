@@ -34,6 +34,20 @@ describe('isStaleDeployError', () => {
     expect(isStaleDeployError(new Error('x is not a function'))).toBe(false)
     expect(isStaleDeployError(undefined)).toBe(false)
   })
+
+  it('does NOT treat a bare fetch failure as a stale deploy (would mask real errors)', () => {
+    // A plain TypeError from a failed API/data fetch must surface as the real
+    // error, not the "reloading should fix it" message.
+    expect(isStaleDeployError(new TypeError('Failed to fetch'))).toBe(false)
+    expect(isStaleDeployError(new Error('NetworkError when attempting to fetch resource.'))).toBe(
+      false
+    )
+    // …but a chunk-load failure that mentions fetch is still caught (it carries
+    // the dynamic-import context).
+    expect(
+      isStaleDeployError(new Error('Failed to fetch dynamically imported module: /assets/x.js'))
+    ).toBe(true)
+  })
 })
 
 describe('RouteErrorBoundary stale-deploy recovery', () => {
@@ -88,6 +102,37 @@ describe('RouteErrorBoundary stale-deploy recovery', () => {
     )
     expect(reload).not.toHaveBeenCalled()
     expect(screen.getByText('Something went wrong.')).toBeInTheDocument()
-    expect(screen.getByText('some render bug')).toBeInTheDocument()
+  })
+
+  it('shows a friendly message to non-admins (no raw error leaked)', () => {
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin={false}>
+        <Boom message="secret internal detail" />
+      </RouteErrorBoundary>
+    )
+    expect(screen.getByText('Something went wrong.')).toBeInTheDocument()
+    expect(screen.queryByText(/secret internal detail/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Error detail/i)).not.toBeInTheDocument()
+  })
+
+  it('shows the full error + stack to admins', () => {
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin>
+        <Boom message="secret internal detail" />
+      </RouteErrorBoundary>
+    )
+    expect(screen.getByText(/Error detail \(admin only\)/i)).toBeInTheDocument()
+    expect(screen.getByText(/secret internal detail/)).toBeInTheDocument()
+  })
+
+  it('never shows admin detail for a stale-deploy error (it just reloads)', () => {
+    sessionStorage.setItem('stale-deploy-reloaded', '1') // skip auto-reload
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin>
+        <Boom message={CHUNK_MESSAGE} />
+      </RouteErrorBoundary>
+    )
+    expect(screen.getByText('This page failed to load.')).toBeInTheDocument()
+    expect(screen.queryByText(/Error detail/i)).not.toBeInTheDocument()
   })
 })
