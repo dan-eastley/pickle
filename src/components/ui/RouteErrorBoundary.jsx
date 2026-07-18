@@ -12,17 +12,24 @@ import { isStaleDeployError } from '../../lib/chunkError'
 // Both self-heal by reloading onto the current build, so on the first such
 // error we reload automatically; a sessionStorage guard makes sure a
 // genuinely-broken build degrades to the manual prompt instead of a reload loop.
+//
+// For a genuine error, admins (isAdmin prop, from usePermissions) see the full
+// message + stack for diagnosis; everyone else gets a friendly message with no
+// internals leaked.
 
 const RELOAD_GUARD_KEY = 'stale-deploy-reloaded'
 
 export default class RouteErrorBoundary extends Component {
-  state = { error: null }
+  state = { error: null, errorInfo: null }
 
   static getDerivedStateFromError(error) {
     return { error }
   }
 
-  componentDidCatch(error) {
+  componentDidCatch(error, errorInfo) {
+    // Keep the React component stack for the admin detail view.
+    this.setState({ errorInfo })
+
     if (!isStaleDeployError(error)) return
     let alreadyReloaded = false
     try {
@@ -44,32 +51,48 @@ export default class RouteErrorBoundary extends Component {
       } catch {
         /* ignore */
       }
-      this.setState({ error: null })
+      this.setState({ error: null, errorInfo: null })
     }
   }
 
   render() {
-    if (this.state.error) {
-      const isStaleDeploy = isStaleDeployError(this.state.error)
-      return (
-        <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
-          <p className="text-sm font-semibold text-error-700">
-            {isStaleDeploy ? 'This page failed to load.' : 'Something went wrong.'}
-          </p>
-          <p className="mt-1 text-sm text-gray-500 max-w-sm">
-            {isStaleDeploy
-              ? 'The app may have been updated. Reloading should fix it.'
-              : this.state.error.message}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-1.5 text-sm font-medium bg-brand-600 hover:bg-brand-700 text-white transition-colors"
-          >
-            Reload
-          </button>
-        </div>
-      )
-    }
-    return this.props.children
+    const { error, errorInfo } = this.state
+    if (!error) return this.props.children
+
+    const isStaleDeploy = isStaleDeployError(error)
+    const isAdmin = !!this.props.isAdmin
+
+    return (
+      <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
+        <p className="text-sm font-semibold text-error-700">
+          {isStaleDeploy ? 'This page failed to load.' : 'Something went wrong.'}
+        </p>
+        <p className="mt-1 text-sm text-gray-500 max-w-sm">
+          {isStaleDeploy
+            ? 'The app may have been updated. Reloading should fix it.'
+            : 'Something on this page didn’t load correctly. Try reloading, or head back and try again.'}
+        </p>
+
+        {/* Admins get the full error + stack for diagnosis; nobody else does. */}
+        {!isStaleDeploy && isAdmin && (
+          <details open className="mt-4 w-full max-w-2xl text-left">
+            <summary className="cursor-pointer text-2xs font-semibold uppercase tracking-wide text-gray-500">
+              Error detail (admin only)
+            </summary>
+            <pre className="mt-2 max-h-80 overflow-auto bg-gray-900 p-3 text-2xs leading-relaxed text-gray-100 whitespace-pre-wrap break-words">
+              {error.stack || `${error.name}: ${error.message}`}
+              {errorInfo?.componentStack ? `\n\nComponent stack:${errorInfo.componentStack}` : ''}
+            </pre>
+          </details>
+        )}
+
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-1.5 text-sm font-medium bg-brand-600 hover:bg-brand-700 text-white transition-colors"
+        >
+          Reload
+        </button>
+      </div>
+    )
   }
 }

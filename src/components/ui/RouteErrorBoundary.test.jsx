@@ -102,6 +102,37 @@ describe('RouteErrorBoundary stale-deploy recovery', () => {
     )
     expect(reload).not.toHaveBeenCalled()
     expect(screen.getByText('Something went wrong.')).toBeInTheDocument()
-    expect(screen.getByText('some render bug')).toBeInTheDocument()
+  })
+
+  it('shows a friendly message to non-admins (no raw error leaked)', () => {
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin={false}>
+        <Boom message="secret internal detail" />
+      </RouteErrorBoundary>
+    )
+    expect(screen.getByText('Something went wrong.')).toBeInTheDocument()
+    expect(screen.queryByText(/secret internal detail/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Error detail/i)).not.toBeInTheDocument()
+  })
+
+  it('shows the full error + stack to admins', () => {
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin>
+        <Boom message="secret internal detail" />
+      </RouteErrorBoundary>
+    )
+    expect(screen.getByText(/Error detail \(admin only\)/i)).toBeInTheDocument()
+    expect(screen.getByText(/secret internal detail/)).toBeInTheDocument()
+  })
+
+  it('never shows admin detail for a stale-deploy error (it just reloads)', () => {
+    sessionStorage.setItem('stale-deploy-reloaded', '1') // skip auto-reload
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin>
+        <Boom message={CHUNK_MESSAGE} />
+      </RouteErrorBoundary>
+    )
+    expect(screen.getByText('This page failed to load.')).toBeInTheDocument()
+    expect(screen.queryByText(/Error detail/i)).not.toBeInTheDocument()
   })
 })
