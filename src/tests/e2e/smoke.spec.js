@@ -47,6 +47,45 @@ function architectureRoutes() {
   return routes
 }
 
+// Public routes reachable without a session. These always run — including
+// against prod — and are the suite's core health signal: they catch a broken or
+// stale deployment (missing chunks, JS init errors) the way a real visitor would
+// hit it. Each is checked for a rendered heading, no error boundary, no
+// uncaught JS exception, and no failed same-origin asset/chunk request.
+const PUBLIC_ROUTES = [
+  { path: '/', name: 'home' },
+  { path: '/login', name: 'login' },
+  { path: '/register', name: 'register' },
+  { path: '/docs/index', name: 'docs' },
+]
+
+for (const { path, name } of PUBLIC_ROUTES) {
+  test(`public route is healthy: ${name}`, async ({ page }) => {
+    const pageErrors = []
+    const failedRequests = []
+    page.on('pageerror', (e) => pageErrors.push(e.message))
+    page.on('response', (r) => {
+      // Same-origin asset/chunk failures indicate a broken/stale deploy.
+      const u = new URL(r.url())
+      if (u.origin === new URL(page.url() || 'http://localhost').origin && r.status() >= 400) {
+        failedRequests.push(`${r.status()} ${u.pathname}`)
+      }
+    })
+
+    await page.goto(path, { waitUntil: 'networkidle' })
+
+    // The error boundary must not be showing (this is the "This page failed to
+    // load" / "Something went wrong" the user reported).
+    await expect(page.getByText('This page failed to load.')).toHaveCount(0)
+    await expect(page.getByText('Something went wrong.')).toHaveCount(0)
+    // The page resolved to real content.
+    await expect(page.getByRole('heading').first()).toBeVisible()
+    // No uncaught JS (stale-chunk TDZ, etc.) and no failed same-origin assets.
+    expect(pageErrors, `JS errors on ${path}`).toEqual([])
+    expect(failedRequests, `failed same-origin requests on ${path}`).toEqual([])
+  })
+}
+
 test('homepage renders its key sections', async ({ page }) => {
   await page.goto('/')
   await expect(
@@ -60,6 +99,11 @@ test('homepage renders its key sections', async ({ page }) => {
     })
   ).toBeVisible()
   await expect(page.getByText('This page failed to load.')).toHaveCount(0)
+})
+
+test('footer shows the deployed version (health signal)', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.getByText(/^v\d+\.\d+\.\d+/).first()).toBeVisible()
 })
 
 test('navigates from the homepage to the clients list', async ({ page }) => {
