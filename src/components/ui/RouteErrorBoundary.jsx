@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { isStaleDeployError } from '../../lib/chunkError'
+import { reportError } from '../../lib/reportError'
 
 // Catches render/load errors in the routed content. Resets when the route
 // changes, via a `resetKey` passed from the layout.
@@ -29,6 +30,8 @@ export default class RouteErrorBoundary extends Component {
   componentDidCatch(error, errorInfo) {
     // Keep the React component stack for the admin detail view.
     this.setState({ errorInfo })
+    // Report to the server log (Vercel Runtime Logs) for offline debugging.
+    reportError(error, { kind: 'boundary', componentStack: errorInfo?.componentStack })
 
     if (!isStaleDeployError(error)) return
     let alreadyReloaded = false

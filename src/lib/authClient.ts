@@ -6,7 +6,7 @@
  * user fields so they're typed on the session and accepted by signUp.
  */
 import { createAuthClient } from 'better-auth/react'
-import { inferAdditionalFields, emailOTPClient } from 'better-auth/client/plugins'
+import { inferAdditionalFields, emailOTPClient, twoFactorClient } from 'better-auth/client/plugins'
 
 export const authClient = createAuthClient({
   plugins: [
@@ -19,6 +19,7 @@ export const authClient = createAuthClient({
       },
     }),
     emailOTPClient(),
+    twoFactorClient(),
   ],
 })
 
@@ -29,6 +30,7 @@ export const {
   useSession,
   getSession,
   emailOtp,
+  twoFactor,
   forgetPassword,
   resetPassword,
 } = authClient

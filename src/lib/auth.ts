@@ -13,7 +13,7 @@
  */
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { emailOTP } from 'better-auth/plugins'
+import { emailOTP, twoFactor } from 'better-auth/plugins'
 import { toNodeHandler } from 'better-auth/node'
 import { db } from '../db/index.js'
 import { schema } from '../db/schema.js'
@@ -87,6 +87,21 @@ function buildAuth() {
         overrideDefaultEmailVerification: true,
         sendVerificationOTP: async ({ email, otp, type }) => {
           await sendOtpEmail(email, otp, type)
+        },
+      }),
+      // Second factor: a 6-digit code emailed at each login. Enrolment is
+      // triggered from the login flow (see LoginPage), so once enrolled a user's
+      // password sign-in returns a twoFactorRedirect and requires the code.
+      twoFactor({
+        // Skip the extra "verify to finish enabling" round-trip — email OTP is
+        // itself the verification, and we enrol users transparently.
+        skipVerificationOnEnable: true,
+        otpOptions: {
+          period: 10, // minutes the code stays valid
+          digits: 6,
+          sendOTP: async ({ user: u, otp }) => {
+            await sendOtpEmail(u.email, otp, 'sign-in')
+          },
         },
       }),
     ],
