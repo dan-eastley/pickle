@@ -51,14 +51,9 @@ export default function Breadcrumb() {
   const base = `/architectures/${clientId}/${versionId}`
   const archName = clientsMetadata?.[clientId]?.name ?? clientId
 
-  // Every trail roots back through Architectures → this architecture's
-  // transitions → the current transition.
-  const lead = [
-    { label: 'Architectures', to: '/architectures' },
-    { label: archName, to: `/architectures/${clientId}/transitions` },
-    { label: transitionName ?? versionId, to: `${base}/domains` },
-  ]
-
+  // Resolve display titles first — `lead` below references transitionName, so
+  // these must be declared before it (referencing a const before its
+  // declaration is a temporal-dead-zone ReferenceError at runtime).
   const decisionTitle = useRecordTitle(
     `/api/arch/${clientId}/${versionId}/decisions/${decisionId}/decision.json`,
     decisionId
@@ -71,6 +66,14 @@ export default function Breadcrumb() {
     `/api/arch/${clientId}/${versionId}/transition.json`,
     versionId
   )
+
+  // Every trail roots back through Architectures → this architecture's
+  // transitions → the current transition.
+  const lead = [
+    { label: 'Architectures', to: '/architectures' },
+    { label: archName, to: `/architectures/${clientId}/transitions` },
+    { label: transitionName ?? versionId, to: `${base}/domains` },
+  ]
 
   // ── Discovery routes ──────────────────────────────────────────────────────
   if (pathname.includes('/discovery')) {
