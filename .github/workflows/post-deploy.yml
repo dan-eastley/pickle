@@ -38,6 +38,8 @@ jobs:
         env:
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          # Login is 2FA (email code); the setup reads the code from the DB.
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm run test:e2e
 
       - name: L7 — use cases (XS + Must Have)
