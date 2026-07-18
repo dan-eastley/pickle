@@ -59,63 +59,61 @@ const PUBLIC_ROUTES = [
   { path: '/docs/index', name: 'docs' },
 ]
 
-for (const { path, name } of PUBLIC_ROUTES) {
-  test(`public route is healthy: ${name}`, async ({ page }) => {
-    const pageErrors = []
-    const failedRequests = []
-    page.on('pageerror', (e) => pageErrors.push(e.message))
-    page.on('response', (r) => {
-      // Same-origin asset/chunk failures indicate a broken/stale deploy.
-      const u = new URL(r.url())
-      if (u.origin === new URL(page.url() || 'http://localhost').origin && r.status() >= 400) {
-        failedRequests.push(`${r.status()} ${u.pathname}`)
-      }
+// Public checks run as a real anonymous visitor — force an empty session even
+// when the project carries the authenticated storageState (otherwise /login and
+// /register would redirect a signed-in user away).
+test.describe('public (anonymous)', () => {
+  test.use({ storageState: { cookies: [], origins: [] } })
+
+  for (const { path, name } of PUBLIC_ROUTES) {
+    test(`public route is healthy: ${name}`, async ({ page }) => {
+      const pageErrors = []
+      const failedRequests = []
+      page.on('pageerror', (e) => pageErrors.push(e.message))
+      page.on('response', (r) => {
+        // Same-origin asset/chunk failures indicate a broken/stale deploy.
+        const u = new URL(r.url())
+        if (u.origin === new URL(page.url() || 'http://localhost').origin && r.status() >= 400) {
+          failedRequests.push(`${r.status()} ${u.pathname}`)
+        }
+      })
+
+      await page.goto(path, { waitUntil: 'networkidle' })
+
+      // The error boundary must not be showing (the "This page failed to load" /
+      // "Something went wrong" the user reported).
+      await expect(page.getByText('This page failed to load.')).toHaveCount(0)
+      await expect(page.getByText('Something went wrong.')).toHaveCount(0)
+      // The page resolved to real content.
+      await expect(page.getByRole('heading').first()).toBeVisible()
+      // No uncaught JS (stale-chunk TDZ, etc.) and no failed same-origin assets.
+      expect(pageErrors, `JS errors on ${path}`).toEqual([])
+      expect(failedRequests, `failed same-origin requests on ${path}`).toEqual([])
     })
+  }
 
-    await page.goto(path, { waitUntil: 'networkidle' })
-
-    // The error boundary must not be showing (this is the "This page failed to
-    // load" / "Something went wrong" the user reported).
+  test('homepage renders its key sections', async ({ page }) => {
+    await page.goto('/')
+    await expect(
+      page.getByRole('heading', { name: 'A working architecture repository, not slideware' })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'From vision to build, one step at a time' })
+    ).toBeVisible()
     await expect(page.getByText('This page failed to load.')).toHaveCount(0)
-    await expect(page.getByText('Something went wrong.')).toHaveCount(0)
-    // The page resolved to real content.
-    await expect(page.getByRole('heading').first()).toBeVisible()
-    // No uncaught JS (stale-chunk TDZ, etc.) and no failed same-origin assets.
-    expect(pageErrors, `JS errors on ${path}`).toEqual([])
-    expect(failedRequests, `failed same-origin requests on ${path}`).toEqual([])
   })
-}
 
-test('homepage renders its key sections', async ({ page }) => {
-  await page.goto('/')
-  await expect(
-    page.getByRole('heading', {
-      name: 'A working architecture repository, not slideware',
-    })
-  ).toBeVisible()
-  await expect(
-    page.getByRole('heading', {
-      name: 'From vision to build, one step at a time',
-    })
-  ).toBeVisible()
-  await expect(page.getByText('This page failed to load.')).toHaveCount(0)
+  test('footer shows the deployed version (health signal)', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByText(/^v\d+\.\d+\.\d+/).first()).toBeVisible()
+  })
 })
 
-test('footer shows the deployed version (health signal)', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.getByText(/^v\d+\.\d+\.\d+/).first()).toBeVisible()
-})
-
-test('navigates from the homepage to the clients list', async ({ page }) => {
-  requiresAuth() // /architectures is behind the auth gate
-  await page.goto('/')
-  await page.getByRole('link', { name: 'View Clients' }).first().click()
-  await expect(page).toHaveURL(/\/architectures$/)
-  await expect(page.getByRole('heading', { name: 'Clients', level: 1 })).toBeVisible()
-})
-
-// Hit every artefact, the overview, each domain, and each abstraction page, and
-// assert the route renders without tripping the error boundary.
+// Authenticated coverage — the real reason the smoke exists: hit the overview,
+// every domain, each abstraction, and every artefact, asserting each renders
+// without tripping the error boundary or throwing (this is what would have
+// caught the Breadcrumb crash). Runs with the session from auth.setup.js; skips
+// when no test credentials are configured.
 const routes = architectureRoutes()
 test(`enumerated ${routes.length} architecture routes`, () => {
   expect(routes.length).toBeGreaterThan(10)
@@ -124,9 +122,14 @@ test(`enumerated ${routes.length} architecture routes`, () => {
 for (const route of routes) {
   test(`route renders: ${route.replace(ROUTE_BASE, '')}`, async ({ page }) => {
     requiresAuth()
+    const pageErrors = []
+    page.on('pageerror', (e) => pageErrors.push(e.message))
     await page.goto(route, { waitUntil: 'networkidle' })
     await expect(page.getByText('This page failed to load.')).toHaveCount(0)
+    await expect(page.getByText('Something went wrong.')).toHaveCount(0)
     // A level-1 heading is present once the page has resolved.
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+    // No uncaught JS on the authenticated route (the Breadcrumb TDZ class).
+    expect(pageErrors, `JS errors on ${route}`).toEqual([])
   })
 }
