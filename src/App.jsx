@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { ArchitectureProvider, useArchitecture } from './context/ArchitectureContext'
 import { AuthProvider } from './context/AuthContext'
-import { PermissionsProvider } from './context/PermissionsContext'
+import { PermissionsProvider, usePermissions } from './context/PermissionsContext'
 import RequireAuth from './components/auth/RequireAuth'
 import NavigationProgress from './components/ui/NavigationProgress'
 import RouteErrorBoundary from './components/ui/RouteErrorBoundary'
@@ -40,6 +40,7 @@ const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 function AppRoutes() {
   const { loading, error } = useArchitecture()
   const { pathname } = useLocation()
+  const { isAdmin } = usePermissions()
   useAnalytics()
 
   if (loading) {
@@ -67,7 +68,7 @@ function AppRoutes() {
       {/* Top-level boundary: covers routes rendered outside the layouts (the
           auth pages), whose chunk failures would otherwise blank the app.
           Layout routes have their own boundary in RouteContent. */}
-      <RouteErrorBoundary resetKey={pathname}>
+      <RouteErrorBoundary resetKey={pathname} isAdmin={isAdmin}>
         <Suspense
           fallback={
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
