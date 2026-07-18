@@ -125,7 +125,7 @@ describe('RouteErrorBoundary stale-deploy recovery', () => {
     expect(screen.getByText(/secret internal detail/)).toBeInTheDocument()
   })
 
-  it('never shows admin detail for a stale-deploy error (it just reloads)', () => {
+  it('shows admin detail even for a persistent stale-deploy error (so real bugs are not masked)', () => {
     sessionStorage.setItem('stale-deploy-reloaded', '1') // skip auto-reload
     render(
       <RouteErrorBoundary resetKey="/a" isAdmin>
@@ -133,6 +133,16 @@ describe('RouteErrorBoundary stale-deploy recovery', () => {
       </RouteErrorBoundary>
     )
     expect(screen.getByText('This page failed to load.')).toBeInTheDocument()
+    expect(screen.getByText(/Error detail \(admin only\)/i)).toBeInTheDocument()
+  })
+
+  it('does not show stale-deploy detail to non-admins', () => {
+    sessionStorage.setItem('stale-deploy-reloaded', '1')
+    render(
+      <RouteErrorBoundary resetKey="/a" isAdmin={false}>
+        <Boom message={CHUNK_MESSAGE} />
+      </RouteErrorBoundary>
+    )
     expect(screen.queryByText(/Error detail/i)).not.toBeInTheDocument()
   })
 })
