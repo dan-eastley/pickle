@@ -58,6 +58,24 @@
             "type": "Functional"
         }
     ],
+    "recommendations": [
+        {
+            "recommendation": "**Narrative strength:** Clear, well-grounded context with five systems named. Problem and proposed solution are explicit. Structure supports downstream analysis."
+        },
+        {
+            "recommendation": "**Requirements 30.5a, 30.5b, 30.5c** — Each combines multiple obligations. Example: 30.5a conflates 'identifying completed work,' 'establishing expectation,' and 'pull-based model.' Consider splitting each into focused, single-statement requirements for testability."
+        },
+        {
+            "recommendation": "**Requirements 30.5d, 30.6a–e** — Narrative is rich but lengthy (some >300 words). Consider distilling each requirement title to a single verb + object, with detail moved to acceptance criteria or a separate design spec."
+        },
+        {
+            "recommendation": "**Acronyms & domain terms** — FA5, FA6, EO, ADT, PQS, and LFM are used throughout requirements without a glossary. For a business audience unfamiliar with your domain, add a footnoted glossary or expand first mention."
+        },
+        {
+            "recommendation": "**Acceptance criteria** — Requirements describe *what* will be delivered but lack testable acceptance criteria (e.g., 'ADT can view workload in <3 seconds' or 'case history remains linked across 5 correction cycles'). Consider adding measurable pass/fail conditions."
+        }
+    ],
+    "recommendations-summary": "- **Overall:** Narrative and context are clear and well-grounded. Problem, systems, and proposal are explicit.\n- **Requirements atomicity:** Most requirements conflate multiple obligations (e.g., 30.5a combines demand control, pull-model, and expectation). Break into single statements.\n- **Requirements length:** Some exceed 300 words; distil titles and move detail to acceptance criteria.\n- **Domain terminology:** FA5, FA6, EO, ADT, PQS, LFM used without glossary—clarify for business readers.\n- **Acceptance criteria:** Requirements lack testable, measurable pass/fail conditions. Add explicit criteria.",
     "activity": [
         {
             "timestamp": "2026-09-18T14:07:00.898Z",
