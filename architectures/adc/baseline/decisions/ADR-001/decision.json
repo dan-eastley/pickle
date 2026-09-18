@@ -127,6 +127,15 @@
         }
     ],
     "impact-assessment-summary": "- **Overall impact:** Decision introduces a multi-system asset data governance workflow with complex integration and data transformation. Six core architecture artefacts (APP-DAP, INT-IFC, DAT-DAC, BUS-PRO, DAT-GRD, SOL-layer diagrams) require definition or updates.\n- **Critical gaps:** No application platform definitions for five existing systems + PaaS; no formal interface catalogue; data entity and process hierarchies not yet modelled.\n- **Data governance:** Requires explicit guardrails (traceability, audit trails, role-based decision rights, correction lifecycle) to enforce the controlled, auditable process described in requirements.\n- **Systems of record:** APP-DAP-DAC matrix needed to clarify data mastery (which system owns which asset data type) and resolve temporary-staging vs persistent-storage model for PaaS.\n- **Scope ambiguity:** No indication whether decision applies to baseline only or future transitions; clarify to prevent downstream contradiction.",
+    "referential-integrity": [
+        {
+            "finding": "No existing catalogues in scope for referential integrity check. The ADR narrative and impact assessment propose new artefact definitions (APP-DAP, INT-IFC, DAT-DAC, BUS-PRO, DAT-GRD, solution diagrams) but do not modify existing catalogues. The `adc/baseline` architecture contains no domain instances yet.",
+            "impact": "No referential integrity violations are possible. Referential integrity checks become applicable only after the proposed artefacts are created and populated with data.",
+            "recommendation": "Once proposed artefacts are created and catalogues are populated (via future ADRs or implementation), run a new referential integrity check to validate cross-references within and between catalogues.",
+            "rationale": "Referential integrity checks validate existing data. A baseline architecture with no catalogues instantiated has no references to validate. This finding records that the check passed (no violations) because there was no data to check."
+        }
+    ],
+    "referential-integrity-summary": "- **Referential integrity status:** ✓ Passed (no violations).\n- **Reason:** ADR proposes new artefacts; no existing catalogues modified.\n- **Data scope:** The `adc/baseline` architecture contains no domain instances yet.\n- **Next step:** Re-run referential integrity after proposed artefacts are created and populated.",
     "activity": [
         {
             "timestamp": "2026-09-18T14:07:00.898Z",
