@@ -60,22 +60,25 @@
     ],
     "recommendations": [
         {
-            "recommendation": "**Narrative strength:** Clear, well-grounded context with five systems named. Problem and proposed solution are explicit. Structure supports downstream analysis."
+            "recommendation": "**Narrative strength** — Clear, well-grounded context with five systems explicitly named and their roles defined. Problem and proposed solution are specific. Structure supports downstream analysis."
         },
         {
-            "recommendation": "**Requirements 30.5a, 30.5b, 30.5c** — Each combines multiple obligations. Example: 30.5a conflates 'identifying completed work,' 'establishing expectation,' and 'pull-based model.' Consider splitting each into focused, single-statement requirements for testability."
+            "recommendation": "**Domain terminology** — Terms like 'systems of record', 'Asset Data Capture Forms', 'pull-based model', and 'operational-completion point' are used without definition. For a business reader, expand first mention or add brief inline definitions to aid clarity."
         },
         {
-            "recommendation": "**Requirements 30.5d, 30.6a–e** — Narrative is rich but lengthy (some >300 words). Consider distilling each requirement title to a single verb + object, with detail moved to acceptance criteria or a separate design spec."
+            "recommendation": "**Requirements atomicity** — Every requirement (30.5a–e, 30.6a–e) combines multiple distinct obligations. Example: 30.5a = identify work + establish expectation + pull-based model (3 statements). Example: 30.5d = workload visibility + prioritisation + correction handling + case separation (4+ statements). Break each into single-statement requirements—one verb, one outcome."
         },
         {
-            "recommendation": "**Acronyms & domain terms** — FA5, FA6, EO, ADT, PQS, and LFM are used throughout requirements without a glossary. For a business audience unfamiliar with your domain, add a footnoted glossary or expand first mention."
+            "recommendation": "**Acronyms without glossary** — FA5, FA6, EO, ADT, PQS, LFM, OFFS, ADCF are used throughout without definition. Add a bulleted glossary at the end of the narrative (5–10 lines) so business readers unfamiliar with your domain understand the key terms."
         },
         {
-            "recommendation": "**Acceptance criteria** — Requirements describe *what* will be delivered but lack testable acceptance criteria (e.g., 'ADT can view workload in <3 seconds' or 'case history remains linked across 5 correction cycles'). Consider adding measurable pass/fail conditions."
+            "recommendation": "**Acceptance criteria** — Requirements describe *what* will be built but lack testable conditions. Each should end with pass/fail criteria (e.g., '30.5a: Case expectation is visible and owned until received, exempted, or explicitly closed' or '30.6d: PQS marker links succeed in >95% of cases'). Add a separate 'Acceptance' field or move criteria to a design spec."
+        },
+        {
+            "recommendation": "**Length & detail balance** — Some descriptions exceed 300 words (30.5d, 30.6c, 30.6e). Distil each requirement title to a single verb + object (e.g., 'Control asset data workload' instead of '30.5d Asset Data Workload Control', then move implementation detail to acceptance criteria or a design document."
         }
     ],
-    "recommendations-summary": "- **Overall:** Narrative and context are clear and well-grounded. Problem, systems, and proposal are explicit.\n- **Requirements atomicity:** Most requirements conflate multiple obligations (e.g., 30.5a combines demand control, pull-model, and expectation). Break into single statements.\n- **Requirements length:** Some exceed 300 words; distil titles and move detail to acceptance criteria.\n- **Domain terminology:** FA5, FA6, EO, ADT, PQS, LFM used without glossary—clarify for business readers.\n- **Acceptance criteria:** Requirements lack testable, measurable pass/fail conditions. Add explicit criteria.",
+    "recommendations-summary": "- **Overall:** Narrative is clear and well-structured; systems, roles, and problem are explicit.\n- **Domain terminology:** Nine acronyms (FA5, FA6, EO, ADT, PQS, LFM, OFFS, ADCF) used without glossary. Add a brief definition list so business readers can follow.\n- **Requirements atomicity:** All nine requirements (30.5a–e, 30.6a–e) conflate 3–6 separate obligations each. Split into single-statement requirements for testability (one verb, one outcome).\n- **Acceptance criteria:** Lack testable pass/fail conditions (e.g., visibility duration, success rates, case-history retention). Add measurable criteria per requirement.\n- **Length:** Some descriptions exceed 300 words; move implementation detail to acceptance criteria or design spec.",
     "impact-assessment": [
         {
             "finding": "**Application Domains & Platforms** (`APP-DAP`) — Five systems identified as work execution sources (Oracle Field Services, Oracle Unifier), systems of record (GE Electric Office, IBM Maximo) and reporting endpoint (RRD). Proposed MS PowerPlatform PaaS is not yet mapped to any defined application platform or domain.",
