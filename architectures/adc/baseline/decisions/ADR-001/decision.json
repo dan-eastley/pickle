@@ -1,7 +1,7 @@
 {
     "decision-id": "ADR-001",
     "title": "Baseline Systems",
-    "status": "draft",
+    "status": "proposed",
     "context": "We use 5 systems:\n1. Oracle Field Services - for internally delivered work\n2. Oracle Unifier - for externally delivered work\n3. GE Electric Office - for linear asset data\n4. IBM Maximo - for non-linear asset data\n5. RRD - for work volume reporting to support regulatory reporting ",
     "problem": "We have no mechanism to manage changes to asset data, captured in Oracle Field Service, or Unifier (using standard 'Asset Data Capture Forms'), and drive changes through to systems of record. (GE Electric Office, IBM Maximo, RRD)",
     "proposal": "A PaaS/Low-Code system built on MS PowerPlatform that allows automated and manual (human in the loop) checks.\nInterfaces from work execution/delivery systems to PaaS\nInterfaces from PaaS to system of records.",
@@ -81,6 +81,12 @@
             "timestamp": "2026-09-18T14:07:00.898Z",
             "action": "Created",
             "who": "Dan Pendleton-Eastley"
+        },
+        {
+            "timestamp": "2026-09-18T14:10:20.321Z",
+            "action": "Updated",
+            "who": "Dan Pendleton-Eastley",
+            "notes": "Status → proposed"
         }
     ]
 }
