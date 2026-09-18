@@ -136,6 +136,27 @@
         }
     ],
     "referential-integrity-summary": "- **Referential integrity status:** ✓ Passed (no violations).\n- **Reason:** ADR proposes new artefacts; no existing catalogues modified.\n- **Data scope:** The `adc/baseline` architecture contains no domain instances yet.\n- **Next step:** Re-run referential integrity after proposed artefacts are created and populated.",
+    "strategy-alignment": [
+        {
+            "finding": "**Application Architecture Strategy** (`APP-STR`) — Catalogue not yet populated. Decision mandates multi-system application portfolio integration (Oracle Field Services, Oracle Unifier, GE Electric Office, IBM Maximo, RRD, MS PowerPlatform). Strategic intent for this portfolio and platform rationalisation is not documented.",
+            "impact": "Without explicit Application Strategy, it is unclear whether the five legacy systems and proposed PaaS platform align with the organisation's application modernisation or consolidation intent. Investment decision and long-term sustainability cannot be assessed against documented strategy.",
+            "recommendation": "Before finalising ADR-001, populate **Application Architecture Strategy** (`APP-STR`) with at least two strategic statements addressing: (1) application portfolio rationalisation or consolidation intent; (2) PaaS/low-code platform adoption as a strategic direction for integration and data governance automation.",
+            "rationale": "The decision introduces significant application portfolio expansion (five legacy systems + new PaaS). Strategic context—whether this is a stepping stone to consolidation or a long-term multi-platform model—must be established. Application Strategy provides that context."
+        },
+        {
+            "finding": "**Data Architecture Strategy** (`DAT-STR`) — Catalogue not yet populated. Decision establishes data governance, traceability, and master-data controls (asset data flows, systems of record, audit trails) that are fundamentally strategic in nature.",
+            "impact": "The decision mandates 'controlled' asset data processes, 'visible and owned' exceptions, and immutable audit trails. These are governance choices that reflect strategic intent around data accountability, quality, and auditability. Without documented Data Strategy, these commitments float unanchored.",
+            "recommendation": "Populate **Data Architecture Strategy** (`DAT-STR`) with strategic statements addressing: (1) data governance as a control and accountability mechanism; (2) data traceability and audit requirements across systems of record; (3) master-data ownership and system-of-record definition as strategic assets.",
+            "rationale": "ADR-001 is inherently a data governance decision. It formalises asset data as a governed, auditable, traceable asset moving through multiple systems. This is strategic intent that must be captured in Data Strategy and carried forward to future decisions."
+        },
+        {
+            "finding": "**Integration Architecture Strategy** (`INT-STR`) — Catalogue not yet populated. Decision proposes a hub-and-spoke integration model (PaaS as orchestration point between work execution systems and systems of record) that is a major architectural choice.",
+            "impact": "The PaaS acts as a controlled intermediary with quality checks, workload management, and audit capability. This is an integration pattern choice with long-term implications for system dependencies, scalability, and maintenance. Without documented Integration Strategy, the choice appears tactical rather than strategic.",
+            "recommendation": "Define **Integration Architecture Strategy** (`INT-STR`) to capture: (1) hub-and-spoke integration pattern as a strategic direction for reducing point-to-point coupling; (2) quality gates and orchestration in integration as a control mechanism; (3) API and event-driven communication standards across the integration layer.",
+            "rationale": "The decision commits the architecture to PaaS-mediated integration for asset data governance. This pattern will recur in future decisions affecting the same systems. Strategic codification prevents future contradiction and clarifies the intent for delivery teams and stakeholders."
+        }
+    ],
+    "strategy-alignment-summary": "- **Overall:** Strategy catalogues for Application, Data, and Integration domains are not yet populated. Decision mandates significant architectural commitments (multi-system application portfolio, data governance controls, hub-and-spoke integration) that require explicit strategic anchoring.\n- **Critical gap:** No documented Application Strategy to contextualise legacy system integration and PaaS adoption.\n- **Data governance as strategy:** ADR-001 formalises asset data traceability and audit—fundamentally strategic—but strategy not yet codified.\n- **Integration pattern:** Hub-and-spoke PaaS model is a major architectural choice requiring documented strategic intent.\n- **Recommendation:** Populate **Application Strategy** (`APP-STR`), **Data Strategy** (`DAT-STR`), and **Integration Strategy** (`INT-STR`) before decision moves beyond proposed status. Then re-assess alignment.",
     "activity": [
         {
             "timestamp": "2026-09-18T14:07:00.898Z",
