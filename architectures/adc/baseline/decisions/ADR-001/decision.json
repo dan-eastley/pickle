@@ -148,7 +148,8 @@
             "finding": "**Data Architecture Strategy** (`DAT-STR`) — Catalogue not yet populated. Decision establishes data governance, traceability, and master-data controls (asset data flows, systems of record, audit trails) that are fundamentally strategic in nature.",
             "impact": "The decision mandates 'controlled' asset data processes, 'visible and owned' exceptions, and immutable audit trails. These are governance choices that reflect strategic intent around data accountability, quality, and auditability. Without documented Data Strategy, these commitments float unanchored.",
             "recommendation": "Populate **Data Architecture Strategy** (`DAT-STR`) with strategic statements addressing: (1) data governance as a control and accountability mechanism; (2) data traceability and audit requirements across systems of record; (3) master-data ownership and system-of-record definition as strategic assets.",
-            "rationale": "ADR-001 is inherently a data governance decision. It formalises asset data as a governed, auditable, traceable asset moving through multiple systems. This is strategic intent that must be captured in Data Strategy and carried forward to future decisions."
+            "rationale": "ADR-001 is inherently a data governance decision. It formalises asset data as a governed, auditable, traceable asset moving through multiple systems. This is strategic intent that must be captured in Data Strategy and carried forward to future decisions.",
+            "review": "declined"
         },
         {
             "finding": "**Integration Architecture Strategy** (`INT-STR`) — Catalogue not yet populated. Decision proposes a hub-and-spoke integration model (PaaS as orchestration point between work execution systems and systems of record) that is a major architectural choice.",
