@@ -141,7 +141,8 @@
             "finding": "**Application Architecture Strategy** (`APP-STR`) — Catalogue not yet populated. Decision mandates multi-system application portfolio integration (Oracle Field Services, Oracle Unifier, GE Electric Office, IBM Maximo, RRD, MS PowerPlatform). Strategic intent for this portfolio and platform rationalisation is not documented.",
             "impact": "Without explicit Application Strategy, it is unclear whether the five legacy systems and proposed PaaS platform align with the organisation's application modernisation or consolidation intent. Investment decision and long-term sustainability cannot be assessed against documented strategy.",
             "recommendation": "Before finalising ADR-001, populate **Application Architecture Strategy** (`APP-STR`) with at least two strategic statements addressing: (1) application portfolio rationalisation or consolidation intent; (2) PaaS/low-code platform adoption as a strategic direction for integration and data governance automation.",
-            "rationale": "The decision introduces significant application portfolio expansion (five legacy systems + new PaaS). Strategic context—whether this is a stepping stone to consolidation or a long-term multi-platform model—must be established. Application Strategy provides that context."
+            "rationale": "The decision introduces significant application portfolio expansion (five legacy systems + new PaaS). Strategic context—whether this is a stepping stone to consolidation or a long-term multi-platform model—must be established. Application Strategy provides that context.",
+            "review": "declined"
         },
         {
             "finding": "**Data Architecture Strategy** (`DAT-STR`) — Catalogue not yet populated. Decision establishes data governance, traceability, and master-data controls (asset data flows, systems of record, audit trails) that are fundamentally strategic in nature.",
